@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services - Duta Integra Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em}
+.logo a{color:white;text-decoration:none}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s}
+.nav-links a:hover{color:var(--electric)}
+.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
+.dark-toggle{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);color:#e2e8f0;padding:.45rem .9rem;border-radius:5px;font-size:1rem;cursor:pointer;transition:all .2s;margin-left:1rem;display:flex;align-items:center;justify-content:center;min-width:44px}
+.dark-toggle:hover{background:rgba(0,180,255,.2);border-color:var(--electric)}
+.page-hero{background:var(--navy);padding:5rem 6% 4rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;top:-40%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,180,255,.09) 0%,transparent 65%);pointer-events:none}
+.page-hero-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.75rem}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;margin-bottom:.9rem;max-width:600px}
+.page-hero p{color:rgba(255,255,255,.6);max-width:520px;line-height:1.75;font-size:.97rem}
+.svc-page-section{padding:5rem 6%;background:white}
+.section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.75rem}
+.section-sub{color:var(--gray);max-width:480px;line-height:1.75;margin-bottom:3rem;font-size:.95rem}
+.svc-full-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:3rem}
+.svc-full-card{border:1.5px solid #E5EBF5;border-radius:12px;padding:2.2rem;transition:all .25s}
+.svc-full-card:hover{border-color:var(--electric);box-shadow:0 10px 40px rgba(21,101,192,.1)}
+.svc-full-card .icon{font-size:2rem;margin-bottom:1rem}
+.svc-full-card h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.7rem;color:var(--navy)}
+.svc-full-card p{color:var(--gray);font-size:.9rem;line-height:1.7;margin-bottom:1.2rem}
+.svc-features{list-style:none;margin-bottom:1.4rem}
+.svc-features li{font-size:.85rem;color:var(--navy);padding:.3rem 0;display:flex;align-items:center;gap:.5rem}
+.svc-features li::before{content:'✓';color:var(--electric);font-weight:700;font-size:.9rem}
+.btn-primary{background:var(--electric);color:var(--navy);padding:.85rem 2rem;border-radius:5px;font-weight:700;text-decoration:none;font-size:.92rem;cursor:pointer;border:none;display:inline-block;transition:opacity .2s}
+.btn-primary:hover{opacity:.88}
+.process-section{padding:5rem 6%;background:#F8FAFF}
+.process-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:2.5rem}
+.process-step{text-align:center;padding:1.8rem 1.4rem}
+.step-num{width:44px;height:44px;background:var(--electric);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:var(--navy);font-size:.95rem;margin:0 auto 1rem}
+.process-step h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.5rem;color:var(--navy)}
+.process-step p{color:var(--gray);font-size:.84rem;line-height:1.65}
+.cta-band{padding:5.5rem 6%;text-align:center;background:linear-gradient(135deg,#EBF4FF,#F0F8FF)}
+.cta-band h2{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.9rem}
+.cta-band p{color:var(--gray);max-width:460px;margin:0 auto 2rem;line-height:1.75;font-size:.95rem}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-navy{background:var(--navy);color:white;padding:.88rem 2.2rem;border-radius:5px;font-weight:700;cursor:pointer;border:none;font-size:.92rem;transition:opacity .2s;text-decoration:none;display:inline-block}
+.btn-navy:hover{opacity:.85}
+footer{background:var(--dark);padding:3rem 6% 2rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
+.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;transition:color .2s}
+.footer-col a:hover{color:var(--electric)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
+@media(max-width:768px){.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo"><a href="index.html">DUTA <span>INTEGRA</span> SOLUTIONS</a></div>
+  <ul class="nav-links">
+    <li><a href="services.html">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="cases.html">Case Studies</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-label">Our Services</div>
+  <h1>Everything Your Business Needs to Thrive Digitally</h1>
+  <p>From AI-powered automation to round-the-clock IT support — we're your complete technology partner so you can focus on growing your business.</p>
+</div>
+
+<section class="svc-page-section">
+  <div class="section-eyebrow">Core Offerings</div>
+  <h2 class="section-title">What We Deliver</h2>
+  <div class="svc-full-grid">
+    <div class="svc-full-card">
+      <div class="icon">🤖</div>
+      <h3>AI Software Development</h3>
+      <p>We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
+      <ul class="svc-features">
+        <li>Custom AI chatbots & virtual assistants</li>
+        <li>Business process automation (RPA)</li>
+        <li>Machine learning models & data pipelines</li>
+        <li>AI integration into existing systems</li>
+        <li>Natural language processing (NLP) tools</li>
+        <li>AI-powered dashboards & reporting</li>
+      </ul>
+      <a href="contact.html" class="btn-primary">Get a Quote</a>
+    </div>
+    <div class="svc-full-card">
+      <div class="icon">🖥️</div>
+      <h3>Managed IT Services</h3>
+      <p>We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
+      <ul class="svc-features">
+        <li>24/7 remote IT helpdesk support</li>
+        <li>Network setup, monitoring & management</li>
+        <li>Hardware procurement & maintenance</li>
+        <li>Server management & backups</li>
+        <li>Software licensing & updates</li>
+        <li>Monthly IT health reports</li>
+      </ul>
+      <a href="contact.html" class="btn-primary">Get a Quote</a>
+    </div>
+    <div class="svc-full-card">
+      <div class="icon">☁️</div>
+      <h3>Cloud Migration & Management</h3>
+      <p>Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
+      <ul class="svc-features">
+        <li>Cloud readiness assessment</li>
+        <li>Migration planning & execution</li>
+        <li>AWS, Azure & Google Cloud setup</li>
+        <li>Hybrid cloud architecture</li>
+        <li>Cloud cost optimisation</li>
+        <li>Ongoing cloud management</li>
+      </ul>
+      <a href="contact.html" class="btn-primary">Get a Quote</a>
+    </div>
+    <div class="svc-full-card">
+      <div class="icon">🔒</div>
+      <h3>IT Security & PDPA Compliance</h3>
+      <p>Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
+      <ul class="svc-features">
+        <li>PDPA compliance audit & policy drafting</li>
+        <li>Cybersecurity risk assessment</li>
+        <li>Firewall & endpoint protection</li>
+        <li>Employee security awareness training</li>
+        <li>Incident response planning</li>
+        <li>Ongoing security monitoring</li>
+      </ul>
+      <a href="contact.html" class="btn-primary">Get a Quote</a>
+    </div>
+  </div>
+</section>
+
+<section class="process-section">
+  <div class="section-eyebrow">How We Work</div>
+  <h2 class="section-title">Our Process</h2>
+  <p class="section-sub">Simple, transparent, and built around your needs.</p>
+  <div class="process-steps">
+    <div class="process-step"><div class="step-num">1</div><h4>Free Audit</h4><p>We assess your current IT setup or AI readiness — no obligation, no sales pressure.</p></div>
+    <div class="process-step"><div class="step-num">2</div><h4>Proposal</h4><p>You get a clear, detailed proposal with scope, timeline, and fixed pricing within 3 working days.</p></div>
+    <div class="process-step"><div class="step-num">3</div><h4>Delivery</h4><p>Our team executes the project with weekly check-ins and full transparency throughout.</p></div>
+    <div class="process-step"><div class="step-num">4</div><h4>Support</h4><p>We don't disappear after delivery — ongoing support and optimisation is part of the package.</p></div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <h2>Not Sure Which Service You Need?</h2>
+  <p>Book a free 30-minute consultation and we'll recommend the right solution for your business.</p>
+  <div class="cta-btns">
+    <a href="contact.html" class="btn-navy">Book Free Consultation</a>
+    <a href="pricing.html" class="btn-primary">See Pricing →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo"><a href="index.html">DUTA <span>INTEGRA</span> SOLUTIONS</a></div>
+      <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="about.html">About Us</a>
+      <a href="cases.html">Case Studies</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h5>Services</h5>
+      <a href="services.html">AI Development</a>
+      <a href="services.html">Managed IT</a>
+      <a href="services.html">Cloud Migration</a>
+      <a href="services.html">IT Security</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Cyberjaya, Selangor, Malaysia</p>
+    <p>info@dutaintegrasolutions.com · +60 11-5403 4051</p>
+  </div>
+</footer>
+</body>
+</html>

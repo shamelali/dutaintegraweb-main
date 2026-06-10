@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duta Integra Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
+/* NAV */
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;cursor:pointer}
+.logo span{color:var(--electric)}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--electric)}
+.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
+/* PAGES */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+/* HERO */
+.hero{background:var(--navy);padding:7rem 6% 5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-30%;right:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,180,255,.1) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-20%;left:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(21,101,192,.08) 0%,transparent 65%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,180,255,.12);color:var(--electric);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;padding:.35rem 1rem;border-radius:2px;margin-bottom:1.5rem;border-left:3px solid var(--electric)}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.2rem,4.5vw,3.8rem);font-weight:800;color:white;line-height:1.08;max-width:680px;margin-bottom:1.4rem}
+.hero h1 span{color:var(--electric)}
+.hero p{color:rgba(255,255,255,.6);max-width:500px;font-size:1rem;line-height:1.75;margin-bottom:2.5rem}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary-sm{background:var(--electric);color:var(--navy);padding:.7rem 1.4rem;border-radius:5px;font-weight:700;text-decoration:none;font-size:.85rem;cursor:pointer;border:none;display:inline-block;transition:opacity .2s}
+.btn-primary-sm:hover{opacity:.88}
+.text-navy{color:var(--navy)}
+.btn-outline{border:1.5px solid rgba(255,255,255,.25);color:white;padding:.85rem 2rem;border-radius:5px;font-weight:500;text-decoration:none;font-size:.92rem;cursor:pointer;background:none;transition:border-color .2s}
+.btn-outline:hover{border-color:var(--electric)}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+.stat-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--electric);display:block}
+.stat-label{color:var(--gray);font-size:.8rem;margin-top:.15rem}
+/* SERVICES SECTION on home */
+.services-home{padding:5.5rem 6%;background:white}
+.section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.75rem}
+.section-sub{color:var(--gray);max-width:480px;line-height:1.75;margin-bottom:3rem;font-size:.95rem}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem}
+.svc-card{border:1.5px solid #E5EBF5;border-radius:10px;padding:2rem;cursor:pointer;transition:all .25s}
+.svc-card:hover{border-color:var(--electric);box-shadow:0 8px 36px rgba(21,101,192,.1);transform:translateY(-3px)}
+.svc-icon{width:50px;height:50px;background:linear-gradient(135deg,rgba(0,180,255,.15),rgba(21,101,192,.08));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1.2rem}
+.svc-card h3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.55rem;color:var(--navy)}
+.svc-card p{color:var(--gray);font-size:.87rem;line-height:1.65;margin-bottom:1rem}
+.svc-link{font-size:.8rem;color:var(--electric);font-weight:600;cursor:pointer}
+/* WHY */
+.why{padding:5.5rem 6%;background:var(--navy)}
+.why .section-title{color:white}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.3rem;margin-top:2.5rem}
+.why-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:1.8rem}
+.why-num{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--electric);opacity:.35}
+.why-card h4{font-family:'Syne',sans-serif;color:white;font-size:.95rem;margin:.45rem 0 .5rem}
+.why-card p{color:var(--gray);font-size:.84rem;line-height:1.65}
+/* CLIENTS strip */
+.clients-strip{padding:3.5rem 6%;background:#F0F6FF;text-align:center}
+.clients-strip p{font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gray);margin-bottom:1.5rem}
+.client-logos{display:flex;gap:3rem;justify-content:center;align-items:center;flex-wrap:wrap}
+.client-logo-pill{background:white;border:1.5px solid #D8E5F5;border-radius:8px;padding:.6rem 1.8rem;font-family:'Syne',sans-serif;font-weight:700;color:var(--navy);font-size:.95rem;cursor:pointer;transition:all .2s}
+.client-logo-pill:hover{border-color:var(--electric);color:var(--electric)}
+/* CTA BAND */
+.cta-band{padding:5.5rem 6%;text-align:center;background:linear-gradient(135deg,#EBF4FF,#F0F8FF)}
+.cta-band h2{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.9rem}
+.cta-band p{color:var(--gray);max-width:460px;margin:0 auto 2rem;line-height:1.75;font-size:.95rem}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-navy{background:var(--navy);color:white;padding:.88rem 2.2rem;border-radius:5px;font-weight:700;cursor:pointer;border:none;font-size:.92rem;transition:opacity .2s}
+.btn-navy:hover{opacity:.85}
+/* FOOTER */
+footer{background:var(--dark);padding:3rem 6% 2rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
+.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;cursor:pointer;transition:color .2s}
+.footer-col a:hover{color:var(--electric)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
+/* INNER PAGE HERO */
+.page-hero{background:var(--navy);padding:5rem 6% 4rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;top:-40%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,180,255,.09) 0%,transparent 65%);pointer-events:none}
+.page-hero-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.75rem}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;margin-bottom:.9rem;max-width:600px}
+.page-hero p{color:rgba(255,255,255,.6);max-width:520px;line-height:1.75;font-size:.97rem}
+/* SERVICES PAGE */
+.svc-page-section{padding:5rem 6%;background:white}
+.svc-full-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:3rem}
+.svc-full-card{border:1.5px solid #E5EBF5;border-radius:12px;padding:2.2rem;transition:all .25s}
+.svc-full-card:hover{border-color:var(--electric);box-shadow:0 10px 40px rgba(21,101,192,.1)}
+.svc-full-card .icon{font-size:2rem;margin-bottom:1rem}
+.svc-full-card h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.7rem;color:var(--navy)}
+.svc-full-card p{color:var(--gray);font-size:.9rem;line-height:1.7;margin-bottom:1.2rem}
+.svc-features{list-style:none;margin-bottom:1.4rem}
+.svc-features li{font-size:.85rem;color:var(--navy);padding:.3rem 0;display:flex;align-items:center;gap:.5rem}
+.svc-features li::before{content:'✓';color:var(--electric);font-weight:700;font-size:.9rem}
+.process-section{padding:5rem 6%;background:#F8FAFF}
+.process-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:2.5rem}
+.process-step{text-align:center;padding:1.8rem 1.4rem}
+.step-num{width:44px;height:44px;background:var(--electric);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:var(--navy);font-size:.95rem;margin:0 auto 1rem}
+.process-step h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.5rem;color:var(--navy)}
+.process-step p{color:var(--gray);font-size:.84rem;line-height:1.65}
+/* ABOUT PAGE */
+.about-story{padding:5rem 6%;background:white;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.about-story-text h2{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-bottom:1.2rem;color:var(--navy)}
+.about-story-text p{color:var(--gray);font-size:.93rem;line-height:1.8;margin-bottom:1rem}
+.about-visual{background:var(--navy);border-radius:16px;padding:3rem;display:flex;flex-direction:column;gap:1.5rem}
+.about-stat-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:1.4rem}
+.about-stat-card .val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--electric)}
+.about-stat-card .lbl{color:rgba(255,255,255,.5);font-size:.82rem;margin-top:.2rem}
+.values-section{padding:5rem 6%;background:#F8FAFF}
+.values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.4rem;margin-top:2.5rem}
+.value-card{background:white;border:1.5px solid #E5EBF5;border-radius:10px;padding:1.8rem}
+.value-card .vi{font-size:1.6rem;margin-bottom:.8rem}
+.value-card h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.5rem;color:var(--navy)}
+.value-card p{color:var(--gray);font-size:.85rem;line-height:1.65}
+.team-section{padding:5rem 6%;background:white}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2.5rem}
+.team-card{border:1.5px solid #E5EBF5;border-radius:12px;padding:2rem;text-align:center}
+.team-avatar{width:70px;height:70px;background:linear-gradient(135deg,var(--blue),var(--electric));border-radius:50%;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:white}
+.team-card h4{font-family:'Syne',sans-serif;font-weight:700;margin-bottom:.25rem;color:var(--navy)}
+.team-card .role{color:var(--electric);font-size:.8rem;font-weight:600;margin-bottom:.6rem}
+.team-card p{color:var(--gray);font-size:.83rem;line-height:1.6}
+/* CASE STUDIES */
+.cases-grid{padding:5rem 6%;background:white}
+.cases-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem;margin-top:3rem}
+.case-card{border:1.5px solid #E5EBF5;border-radius:12px;overflow:hidden;transition:all .25s;cursor:pointer}
+.case-card:hover{border-color:var(--electric);box-shadow:0 10px 40px rgba(21,101,192,.1);transform:translateY(-3px)}
+.case-header{padding:2rem;background:var(--navy);position:relative}
+.case-header .client-tag{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.6rem}
+.case-header h3{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;color:white;margin-bottom:.5rem}
+.case-header p{color:rgba(255,255,255,.5);font-size:.84rem}
+.case-body{padding:2rem}
+.case-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.case-tag{background:#EBF4FF;color:var(--blue);font-size:.72rem;font-weight:600;padding:.25rem .6rem;border-radius:4px}
+.case-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.4rem}
+.metric{text-align:center}
+.metric .val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--navy);display:block}
+.metric .lbl{color:var(--gray);font-size:.74rem;margin-top:.15rem}
+.case-body p{color:var(--gray);font-size:.87rem;line-height:1.7;margin-bottom:1.2rem}
+/* PRICING */
+.pricing-section{padding:5rem 6%;background:white}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.8rem;margin-top:3rem}
+.price-card{border:1.5px solid #E5EBF5;border-radius:12px;padding:2.2rem;position:relative;transition:all .25s}
+.price-card.featured{border-color:var(--electric);box-shadow:0 12px 48px rgba(0,180,255,.15)}
+.price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--electric);color:var(--navy);font-size:.72rem;font-weight:700;padding:.3rem .9rem;border-radius:999px;white-space:nowrap}
+.price-card h3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.4rem;color:var(--navy)}
+.price-card .tagline{color:var(--gray);font-size:.83rem;margin-bottom:1.4rem}
+.price-amount{margin-bottom:1.5rem}
+.price-amount .amt{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--navy)}
+.price-amount .period{color:var(--gray);font-size:.82rem;margin-left:.3rem}
+.price-features{list-style:none;margin-bottom:1.8rem}
+.price-features li{font-size:.85rem;color:var(--navy);padding:.4rem 0;border-bottom:1px solid #F0F4FA;display:flex;align-items:center;gap:.55rem}
+.price-features li:last-child{border-bottom:none}
+.price-features li::before{content:'✓';color:var(--electric);font-weight:700}
+.price-features li.na{color:var(--gray);text-decoration:line-through}
+.price-features li.na::before{content:'✗';color:#CBD5E1;font-weight:700}
+.price-cta{width:100%;padding:.85rem;border-radius:7px;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.price-cta.main{background:var(--electric);color:var(--navy);border:none}
+.price-cta.sec{background:none;color:var(--navy);border:1.5px solid #D1DAEA}
+.price-cta:hover{opacity:.85}
+.pricing-note{text-align:center;margin-top:2.5rem;color:var(--gray);font-size:.85rem}
+.pricing-note span{color:var(--electric);font-weight:600}
+.addons-section{padding:3rem 6% 5rem;background:#F8FAFF}
+.addons-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin-top:2rem}
+.addon-card{background:white;border:1.5px solid #E5EBF5;border-radius:10px;padding:1.5rem}
+.addon-card h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.4rem;color:var(--navy)}
+.addon-card .ap{color:var(--electric);font-weight:700;font-size:.9rem;margin-bottom:.4rem}
+.addon-card p{color:var(--gray);font-size:.82rem;line-height:1.6}
+/* CONTACT */
+.contact-section{padding:5rem 6%;background:white;display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:start}
+.contact-info h2{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:.9rem;color:var(--navy)}
+.contact-info p{color:var(--gray);line-height:1.75;font-size:.93rem;margin-bottom:2rem}
+.contact-detail{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:1.4rem}
+.contact-icon{width:40px;height:40px;background:rgba(0,180,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.contact-detail h5{font-weight:600;font-size:.88rem;color:var(--navy);margin-bottom:.2rem}
+.contact-detail p{color:var(--gray);font-size:.84rem;margin:0}
+.contact-form{background:#F8FAFF;border:1.5px solid #E5EBF5;border-radius:14px;padding:2.4rem}
+.contact-form h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;color:var(--navy)}
+.form-group{margin-bottom:1.2rem}
+.form-group label{display:block;font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:.4rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.75rem 1rem;border:1.5px solid #D8E5F5;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--navy);background:white;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--electric)}
+.form-group textarea{resize:vertical;min-height:110px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-submit{width:100%;padding:.9rem;background:var(--electric);color:var(--navy);border:none;border-radius:7px;font-weight:700;font-size:.95rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s;margin-top:.5rem}
+.form-submit:hover{opacity:.88}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--navy);color:white;padding:1rem 1.5rem;border-radius:10px;font-size:.88rem;z-index:9999;border-left:4px solid var(--electric);transform:translateY(100px);opacity:0;transition:all .4s}
+.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:768px){
+.footer-top{grid-template-columns:1fr}
+.about-story{grid-template-columns:1fr}
+.contact-section{grid-template-columns:1fr}
+.form-row{grid-template-columns:1fr}
+.nav-links{gap:1rem}
+}
+/* DARK MODE */
+body.dark-mode{background:#0a0f1d;color:#e2e8f0}
+body.dark-mode nav{background:#050a14;border-bottom-color:rgba(255,255,255,.05)}
+body.dark-mode .logo{color:#e2e8f0}
+body.dark-mode .nav-links a{color:rgba(255,255,255,.6)}
+body.dark-mode .nav-links a:hover{color:var(--electric)}
+body.dark-mode .page-hero{background:#050a14}
+body.dark-mode .hero{background:#050a14}
+body.dark-mode .services-home,body.dark-mode .svc-page-section,body.dark-mode .pricing-section{background:#0f1629}
+body.dark-mode .section-title{color:#e2e8f0}
+body.dark-mode .svc-card{background:#1a2744;border-color:#2d3f5e}
+body.dark-mode .svc-card:hover{border-color:var(--electric)}
+body.dark-mode .svc-card h3{color:#e2e8f0}
+body.dark-mode .clients-strip{background:#0a0f1d}
+body.dark-mode .cta-band{background:linear-gradient(135deg,#0f1629,#1a2744)}
+body.dark-mode .cta-band h2{color:#e2e8f0}
+body.dark-mode .process-section{background:#0f1629}
+body.dark-mode .process-step{background:#1a2744}
+body.dark-mode .process-step h4{color:#e2e8f0}
+body.dark-mode .about-story{background:#0f1629}
+body.dark-mode .about-story-text h2{color:#e2e8f0}
+body.dark-mode .about-visual{background:#1a2744}
+body.dark-mode .values-section,body.dark-mode .team-section{background:#0a0f1d}
+body.dark-mode .value-card,body.dark-mode .team-card{background:#1a2744;border-color:#2d3f5e}
+body.dark-mode .value-card h4,body.dark-mode .team-card h4{color:#e2e8f0}
+body.dark-mode .footer{background:#030508}
+body.dark-mode .footer-brand p{color:rgba(255,255,255,.3)}
+body.dark-mode .footer-col h5{color:rgba(255,255,255,.4)}
+body.dark-mode .footer-col a{color:rgba(255,255,255,.4)}
+body.dark-mode .footer-bottom{border-top-color:rgba(255,255,255,.05)}
+body.dark-mode .footer-bottom p{color:rgba(255,255,255,.25)}
+body.dark-mode .contact-section{background:#0f1629}
+body.dark-mode .contact-info h2{color:#e2e8f0}
+body.dark-mode .contact-form{background:#1a2744;border-color:#2d3f5e}
+body.dark-mode .contact-form h3{color:#e2e8f0}
+body.dark-mode .form-group label{color:#e2e8f0}
+body.dark-mode .form-group input,.form-group select,.form-group textarea{background:#0f1629;border-color:#2d3f5e;color:#e2e8f0}
+body.dark-mode .cases-grid{background:#0f1629}
+body.dark-mode .case-card{background:#1a2744;border-color:#2d3f5e}
+body.dark-mode .case-card .case-header{background:#050a14}
+body.dark-mode .case-metrics .metric .val{color:#e2e8f0}
+body.dark-mode .pricing-grid .price-card{background:#1a2744;border-color:#2d3f5e}
+body.dark-mode .pricing-grid .price-card h3{color:#e2e8f0}
+body.dark-mode .pricing-grid .price-card .amt{color:#e2e8f0}
+body.dark-mode .addons-section{background:#0a0f1d}
+body.dark-mode .addon-card{background:#1a2744;border-color:#2d3f5e}
+body.dark-mode .addon-card h4{color:#e2e8f0}
+body.dark-mode .client-logo-pill{background:#1a2744;border-color:#2d3f5e;color:#e2e8f0}
+body.dark-mode .page{background:#0a0f1d}
+/* DARK MODE TOGGLE BUTTON */
+.dark-toggle{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);color:#e2e8f0;padding:.45rem .9rem;border-radius:5px;font-size:1rem;cursor:pointer;transition:all .2s;margin-left:1rem;display:flex;align-items:center;justify-content:center;min-width:44px}
+.dark-toggle:hover{background:rgba(0,180,255,.2);border-color:var(--electric)}
+.lang-toggle{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);color:#e2e8f0;padding:.45rem .75rem;border-radius:5px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;margin-left:.5rem}
+.lang-toggle:hover{background:rgba(0,180,255,.2);border-color:var(--electric)}
+</style>
+
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ Message sent! We'll get back to you within 24 hours.</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="goPage('home')">DUTA <span>INTEGRA</span> SOLUTIONS</div>
+  <ul class="nav-links">
+    <li><a onclick="goPage('services')">Services</a></li>
+    <li><a onclick="goPage('about')">About</a></li>
+    <li><a onclick="goPage('cases')">Case Studies</a></li>
+    <li><a onclick="goPage('pricing')">Pricing</a></li>
+    <li><a onclick="goPage('contact')" class="nav-cta">Contact Us</a></li>
+    <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button></li>
+    <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
+  </ul>
+</nav>
+
+<!-- ===================== HOME ===================== -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-badge">🇲🇾 Malaysia's AI-First IT Partner</div>
+    <h1>Smart Technology.<br><span>Integrated Solutions.</span></h1>
+    <p>We help Malaysian businesses grow with custom AI software and reliable managed IT — from intelligent chatbots to cloud infrastructure, all under one roof.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="goPage('contact')">Get a Free IT Audit</button>
+      <button class="btn-outline" onclick="goPage('services')">Explore Services →</button>
+    </div>
+    <div class="hero-stats">
+      <div><span class="stat-val">2</span><span class="stat-label">Happy Clients</span></div>
+      <div><span class="stat-val">AI</span><span class="stat-label">Custom Solutions</span></div>
+      <div><span class="stat-val">24/7</span><span class="stat-label">Managed IT Support</span></div>
+      <div><span class="stat-val">100%</span><span class="stat-label">Malaysian-owned</span></div>
+    </div>
+  </section>
+
+  <section class="services-home">
+    <div class="section-eyebrow">What We Do</div>
+    <h2 class="section-title">Two Pillars. One Partner.</h2>
+    <p class="section-sub">We combine cutting-edge AI development with rock-solid managed IT — so you never need to juggle multiple vendors again.</p>
+    <div class="svc-grid">
+      <div class="svc-card" onclick="goPage('services')">
+        <div class="svc-icon">🤖</div>
+        <h3>AI Software Development</h3>
+        <p>Custom AI applications, intelligent chatbots, and process automation built specifically for your business workflows.</p>
+        <span class="svc-link">Learn more →</span>
+      </div>
+      <div class="svc-card" onclick="goPage('services')">
+        <div class="svc-icon">🖥️</div>
+        <h3>Managed IT Services</h3>
+        <p>End-to-end IT management — cloud infrastructure, helpdesk, network security, and hardware maintenance.</p>
+        <span class="svc-link">Learn more →</span>
+      </div>
+      <div class="svc-card" onclick="goPage('services')">
+        <div class="svc-icon">☁️</div>
+        <h3>Cloud Migration & Setup</h3>
+        <p>Move your business to the cloud seamlessly with planning, migration, and ongoing cloud management.</p>
+        <span class="svc-link">Learn more →</span>
+      </div>
+      <div class="svc-card" onclick="goPage('services')">
+        <div class="svc-icon">🔒</div>
+        <h3>IT Security & Compliance</h3>
+        <p>PDPA compliance audits, cybersecurity monitoring, and data protection policies for your peace of mind.</p>
+        <span class="svc-link">Learn more →</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="clients-strip">
+    <p>Trusted by businesses across Malaysia</p>
+    <div class="client-logos">
+      <div class="client-logo-pill" onclick="goPage('cases')">Leish</div>
+      <div class="client-logo-pill" onclick="goPage('cases')">Lapango</div>
+      <div class="client-logo-pill" style="opacity:.4;cursor:default">Your Company?</div>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="section-eyebrow">Why Choose Us</div>
+    <h2 class="section-title">Built for Malaysian SMEs</h2>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-num">01</div><h4>Local Expertise</h4><p>We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.</p></div>
+      <div class="why-card"><div class="why-num">02</div><h4>AI + IT Combined</h4><p>One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.</p></div>
+      <div class="why-card"><div class="why-num">03</div><h4>Transparent Pricing</h4><p>No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.</p></div>
+      <div class="why-card"><div class="why-num">04</div><h4>Fast Onboarding</h4><p>Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.</p></div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <h2>Ready to Modernize Your Business?</h2>
+    <p>Start with a free IT audit or AI readiness assessment — no obligation, no strings attached.</p>
+    <div class="cta-btns">
+      <button class="btn-navy" onclick="goPage('contact')">Book Free Consultation</button>
+      <button class="btn-primary" onclick="goPage('pricing')">View Pricing</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div>
+        <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a onclick="goPage('about')">About Us</a>
+        <a onclick="goPage('cases')">Case Studies</a>
+        <a onclick="goPage('pricing')">Pricing</a>
+        <a onclick="goPage('contact')">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <a onclick="goPage('services')">AI Development</a>
+        <a onclick="goPage('services')">Managed IT</a>
+        <a onclick="goPage('services')">Cloud Migration</a>
+        <a onclick="goPage('services')">IT Security</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Muar, Johor, Malaysia</p>
+      <p>info@dutaintegrasolutions.com · +60 11-5403 4051</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== SERVICES ===================== -->
+<div class="page" id="page-services">
+  <div class="page-hero">
+    <div class="page-hero-label">Our Services</div>
+    <h1>Everything Your Business Needs to Thrive Digitally</h1>
+    <p>From AI-powered automation to round-the-clock IT support — we're your complete technology partner so you can focus on growing your business.</p>
+  </div>
+
+  <section class="svc-page-section">
+    <div class="section-eyebrow">Core Offerings</div>
+    <h2 class="section-title">What We Deliver</h2>
+    <div class="svc-full-grid">
+      <div class="svc-full-card">
+        <div class="icon">🤖</div>
+        <h3>AI Software Development</h3>
+        <p>We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
+        <ul class="svc-features">
+          <li>Custom AI chatbots & virtual assistants</li>
+          <li>Business process automation (RPA)</li>
+          <li>Machine learning models & data pipelines</li>
+          <li>AI integration into existing systems</li>
+          <li>Natural language processing (NLP) tools</li>
+          <li>AI-powered dashboards & reporting</li>
+        </ul>
+        <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+      </div>
+      <div class="svc-full-card">
+        <div class="icon">🖥️</div>
+        <h3>Managed IT Services</h3>
+        <p>We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
+        <ul class="svc-features">
+          <li>24/7 remote IT helpdesk support</li>
+          <li>Network setup, monitoring & management</li>
+          <li>Hardware procurement & maintenance</li>
+          <li>Server management & backups</li>
+          <li>Software licensing & updates</li>
+          <li>Monthly IT health reports</li>
+        </ul>
+        <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+      </div>
+      <div class="svc-full-card">
+        <div class="icon">☁️</div>
+        <h3>Cloud Migration & Management</h3>
+        <p>Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
+        <ul class="svc-features">
+          <li>Cloud readiness assessment</li>
+          <li>Migration planning & execution</li>
+          <li>AWS, Azure & Google Cloud setup</li>
+          <li>Hybrid cloud architecture</li>
+          <li>Cloud cost optimisation</li>
+          <li>Ongoing cloud management</li>
+        </ul>
+        <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+      </div>
+      <div class="svc-full-card">
+        <div class="icon">🔒</div>
+        <h3>IT Security & PDPA Compliance</h3>
+        <p>Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
+        <ul class="svc-features">
+          <li>PDPA compliance audit & policy drafting</li>
+          <li>Cybersecurity risk assessment</li>
+          <li>Firewall & endpoint protection</li>
+          <li>Employee security awareness training</li>
+          <li>Incident response planning</li>
+          <li>Ongoing security monitoring</li>
+        </ul>
+        <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="process-section">
+    <div class="section-eyebrow">How We Work</div>
+    <h2 class="section-title">Our Process</h2>
+    <p class="section-sub">Simple, transparent, and built around your needs.</p>
+    <div class="process-steps">
+      <div class="process-step"><div class="step-num">1</div><h4>Free Audit</h4><p>We assess your current IT setup or AI readiness — no obligation, no sales pressure.</p></div>
+      <div class="process-step"><div class="step-num">2</div><h4>Proposal</h4><p>You get a clear, detailed proposal with scope, timeline, and fixed pricing within 3 working days.</p></div>
+      <div class="process-step"><div class="step-num">3</div><h4>Delivery</h4><p>Our team executes the project with weekly check-ins and full transparency throughout.</p></div>
+      <div class="process-step"><div class="step-num">4</div><h4>Support</h4><p>We don't disappear after delivery — ongoing support and optimisation is part of the package.</p></div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <h2>Not Sure Which Service You Need?</h2>
+    <p>Book a free 30-minute consultation and we'll recommend the right solution for your business.</p>
+    <div class="cta-btns">
+      <button class="btn-navy" onclick="goPage('contact')">Book Free Consultation</button>
+      <button class="btn-primary" onclick="goPage('pricing')">See Pricing →</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+  </footer>
+</div>
+
+<!-- ===================== ABOUT ===================== -->
+<div class="page" id="page-about">
+  <div class="page-hero">
+    <div class="page-hero-label">About Us</div>
+    <h1>Technology With a Malaysian Heart</h1>
+    <p>We started Duta Integra Solutions because Malaysian SMEs deserve world-class technology without the big-city price tag or the runaround.</p>
+  </div>
+
+  <section class="about-story">
+    <div class="about-story-text">
+      <h2>Our Story</h2>
+      <p>Duta Integra Solutions was born in Muar, Johor in 2026 with a simple mission: make AI and enterprise-grade IT accessible to every Malaysian business — not just the large corporations in KL.</p>
+      <p>We noticed that SMEs across Malaysia were falling behind because they couldn't find reliable local technology partners who understood both the business context and the technical depth needed to make real change.</p>
+      <p>So we built that partner. One that speaks your language, understands PDPA and local compliance, moves fast, and stands behind its work long after the project is delivered.</p>
+      <p>Today, we serve clients across multiple industries and are proud to be 100% Malaysian-owned and operated.</p>
+      <button class="btn-primary" style="margin-top:1rem" onclick="goPage('contact')">Work With Us</button>
+    </div>
+    <div class="about-visual">
+      <div class="about-stat-card"><div class="val">2026</div><div class="lbl">Founded in Muar, Johor</div></div>
+      <div class="about-stat-card"><div class="val">2+</div><div class="lbl">Clients Served</div></div>
+      <div class="about-stat-card"><div class="val">100%</div><div class="lbl">Malaysian-Owned</div></div>
+      <div class="about-stat-card"><div class="val">AI + IT</div><div class="lbl">Dual Expertise Under One Roof</div></div>
+    </div>
+  </section>
+
+  <section class="values-section">
+    <div class="section-eyebrow">What We Stand For</div>
+    <h2 class="section-title">Our Values</h2>
+    <div class="values-grid">
+      <div class="value-card"><div class="vi">🎯</div><h4>Clarity Over Jargon</h4><p>We explain everything in plain language. No tech-speak, no confusion — just clear communication at every step.</p></div>
+      <div class="value-card"><div class="vi">🤝</div><h4>Partnership, Not Transaction</h4><p>We're not here for one-off jobs. We aim to be your long-term technology partner as your business grows.</p></div>
+      <div class="value-card"><div class="vi">⚡</div><h4>Speed With Substance</h4><p>We move fast, but never at the expense of quality. Our proposals are ready in 3 days and our work is built to last.</p></div>
+      <div class="value-card"><div class="vi">🇲🇾</div><h4>Proudly Local</h4><p>We understand the Malaysian business landscape — the regulations, the culture, and the unique opportunities here.</p></div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <div class="section-eyebrow">The Team</div>
+    <h2 class="section-title">The People Behind Duta</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">F</div>
+        <h4>Founder & CEO</h4>
+        <div class="role">Strategy · Business Development</div>
+        <p>Leads client relationships, company direction, and growth strategy for Duta Integra Solutions.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">T</div>
+        <h4>Tech Lead</h4>
+        <div class="role">AI Development · Architecture</div>
+        <p>Oversees all technical delivery — from AI model design to cloud infrastructure and system integrations.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">S</div>
+        <h4>IT Support Specialist</h4>
+        <div class="role">Managed IT · Client Support</div>
+        <p>Keeps client systems running smoothly with proactive monitoring, maintenance, and fast response times.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <h2>Want to Know More?</h2>
+    <p>We'd love to meet you — whether over a call, a coffee, or a WhatsApp message.</p>
+    <div class="cta-btns">
+      <button class="btn-navy" onclick="goPage('contact')">Get in Touch</button>
+      <button class="btn-primary" onclick="goPage('cases')">See Our Work →</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+  </footer>
+</div>
+
+<!-- ===================== CASE STUDIES ===================== -->
+<div class="page" id="page-cases">
+  <div class="page-hero">
+    <div class="page-hero-label">Case Studies</div>
+    <h1>Real Work. Real Results.</h1>
+    <p>See how we've helped businesses like yours solve real problems with AI and managed IT — and the measurable impact we delivered.</p>
+  </div>
+
+  <section class="cases-grid">
+    <div class="section-eyebrow">Client Work</div>
+    <h2 class="section-title">Our First Success Stories</h2>
+    <p class="section-sub" style="max-width:560px;color:var(--gray);line-height:1.75;margin-bottom:0">We're proud to have helped Leish and Lapango on their technology journeys. Every engagement starts with listening — and ends with results.</p>
+
+    <div class="cases-list">
+      <!-- LEISH -->
+      <div class="case-card">
+        <div class="case-header">
+          <div class="client-tag">Client · 2026</div>
+          <h3>Leish</h3>
+          <p>AI-powered automation & IT infrastructure setup for a growing Malaysian business</p>
+        </div>
+        <div class="case-body">
+          <div class="case-tags">
+            <span class="case-tag">AI Development</span>
+            <span class="case-tag">Managed IT</span>
+            <span class="case-tag">Automation</span>
+          </div>
+          <div class="case-metrics">
+            <div class="metric"><span class="val">↓60%</span><span class="lbl">Manual tasks reduced</span></div>
+            <div class="metric"><span class="val">3x</span><span class="lbl">Faster response time</span></div>
+            <div class="metric"><span class="val">24/7</span><span class="lbl">IT monitoring</span></div>
+          </div>
+          <p><strong style="color:var(--navy)">Challenge:</strong> Leish was spending too many hours on repetitive administrative tasks and lacked reliable IT infrastructure to support their growing team.</p>
+          <p><strong style="color:var(--navy)">Solution:</strong> We built a custom AI automation workflow to handle their routine processes and set up a fully managed IT environment with 24/7 monitoring and remote support.</p>
+          <p><strong style="color:var(--navy)">Result:</strong> The team reclaimed hours every week, errors dropped significantly, and their IT systems now run without interruption.</p>
+          <button class="btn-primary" style="font-size:.85rem;padding:.7rem 1.4rem" onclick="goPage('contact')">Start a Similar Project</button>
+        </div>
+      </div>
+
+      <!-- LAPANGO -->
+      <div class="case-card">
+        <div class="case-header">
+          <div class="client-tag">Client · 2026</div>
+          <h3>Lapango</h3>
+          <p>Cloud migration & AI chatbot deployment for an expanding operations team</p>
+        </div>
+        <div class="case-body">
+          <div class="case-tags">
+            <span class="case-tag">Cloud Migration</span>
+            <span class="case-tag">AI Chatbot</span>
+            <span class="case-tag">IT Security</span>
+          </div>
+          <div class="case-metrics">
+            <div class="metric"><span class="val">↓40%</span><span class="lbl">IT costs saved</span></div>
+            <div class="metric"><span class="val">80%</span><span class="lbl">Queries automated</span></div>
+            <div class="metric"><span class="val">PDPA</span><span class="lbl">Fully compliant</span></div>
+          </div>
+          <p><strong style="color:var(--navy)">Challenge:</strong> Lapango's legacy on-premise servers were costly, unreliable, and out of step with their growing operational needs. Their team was overwhelmed by repetitive customer queries.</p>
+          <p><strong style="color:var(--navy)">Solution:</strong> We migrated their entire infrastructure to the cloud, deployed an AI chatbot to handle routine customer inquiries, and completed a PDPA compliance audit.</p>
+          <p><strong style="color:var(--navy)">Result:</strong> Lapango cut IT running costs by 40%, automated 80% of routine customer interactions, and are now fully PDPA-compliant with peace of mind.</p>
+          <button class="btn-primary" style="font-size:.85rem;padding:.7rem 1.4rem" onclick="goPage('contact')">Start a Similar Project</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <h2>Want to Be Our Next Success Story?</h2>
+    <p>Whether you need AI, IT support, or cloud migration — let's talk about what's possible for your business.</p>
+    <div class="cta-btns">
+      <button class="btn-navy" onclick="goPage('contact')">Book Free Consultation</button>
+      <button class="btn-primary" onclick="goPage('pricing')">View Pricing →</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+  </footer>
+</div>
+
+<!-- ===================== PRICING ===================== -->
+<div class="page" id="page-pricing">
+  <div class="page-hero">
+    <div class="page-hero-label">Pricing</div>
+    <h1>Transparent Pricing. No Surprises.</h1>
+    <p>Flexible plans designed for Malaysian SMEs — whether you need full managed IT, AI development, or both. All prices in MYR.</p>
+  </div>
+
+  <section class="pricing-section">
+    <div class="section-eyebrow">Managed IT Plans</div>
+    <h2 class="section-title">Monthly IT Support Retainers</h2>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>Starter</h3>
+        <p class="tagline">For small teams getting started with managed IT</p>
+        <div class="price-amount"><span class="amt">RM 799</span><span class="period">/ month</span></div>
+        <ul class="price-features">
+          <li>Up to 5 users supported</li>
+          <li>Remote helpdesk (business hours)</li>
+          <li>Monthly system health check</li>
+          <li>Basic antivirus & endpoint protection</li>
+          <li>Email & communication setup</li>
+          <li class="na">Network monitoring</li>
+          <li class="na">24/7 support</li>
+          <li class="na">PDPA compliance review</li>
+        </ul>
+        <button class="price-cta sec" onclick="goPage('contact')">Get Started</button>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-badge">Most Popular</div>
+        <h3>Business</h3>
+        <p class="tagline">Full managed IT for growing SMEs</p>
+        <div class="price-amount"><span class="amt">RM 1,899</span><span class="period">/ month</span></div>
+        <ul class="price-features">
+          <li>Up to 20 users supported</li>
+          <li>Remote helpdesk (extended hours)</li>
+          <li>24/7 system monitoring & alerts</li>
+          <li>Network setup & management</li>
+          <li>Cloud backup & disaster recovery</li>
+          <li>Monthly IT performance reports</li>
+          <li>PDPA compliance support</li>
+          <li class="na">Dedicated account manager</li>
+        </ul>
+        <button class="price-cta main" onclick="goPage('contact')">Get Started</button>
+      </div>
+
+      <div class="price-card">
+        <h3>Enterprise</h3>
+        <p class="tagline">Full-service IT for larger or complex operations</p>
+        <div class="price-amount"><span class="amt">Custom</span><span class="period">/ month</span></div>
+        <ul class="price-features">
+          <li>Unlimited users</li>
+          <li>24/7 helpdesk & on-site support</li>
+          <li>Full network & server management</li>
+          <li>Dedicated account manager</li>
+          <li>PDPA & compliance full audit</li>
+          <li>Custom SLA agreements</li>
+          <li>Quarterly business IT reviews</li>
+          <li>Priority response guaranteed</li>
+        </ul>
+        <button class="price-cta sec" onclick="goPage('contact')">Request Quote</button>
+      </div>
+    </div>
+    <p class="pricing-note">All plans include a <span>free initial IT audit</span>. Contracts are month-to-month — no lock-in.</p>
+  </section>
+
+  <section class="addons-section">
+    <div class="section-eyebrow">AI Development</div>
+    <h2 class="section-title">AI Project Pricing</h2>
+    <p style="color:var(--gray);font-size:.92rem;margin-bottom:.5rem">AI projects are quoted per engagement. Below are our typical starting prices.</p>
+    <div class="addons-grid">
+      <div class="addon-card"><h4>AI Chatbot</h4><div class="ap">From RM 3,500</div><p>Custom chatbot for your website, WhatsApp, or internal use. Trained on your data.</p></div>
+      <div class="addon-card"><h4>Process Automation</h4><div class="ap">From RM 5,000</div><p>Automate repetitive business workflows — data entry, approvals, reporting, and more.</p></div>
+      <div class="addon-card"><h4>ML Model Development</h4><div class="ap">From RM 8,000</div><p>Custom machine learning models for prediction, classification, or recommendation.</p></div>
+      <div class="addon-card"><h4>AI Integration</h4><div class="ap">From RM 2,500</div><p>Integrate AI tools like ChatGPT, vision APIs, or custom models into your existing systems.</p></div>
+      <div class="addon-card"><h4>Cloud Migration</h4><div class="ap">From RM 4,000</div><p>Full cloud migration project — planning, execution, and post-migration support included.</p></div>
+      <div class="addon-card"><h4>PDPA Compliance Audit</h4><div class="ap">From RM 1,800</div><p>Full audit plus policy documentation and staff training to ensure compliance.</p></div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <h2>Need a Custom Quote?</h2>
+    <p>Every business is different. Tell us what you need and we'll build a package that fits your budget and goals.</p>
+    <div class="cta-btns">
+      <button class="btn-navy" onclick="goPage('contact')">Request Custom Quote</button>
+      <button class="btn-primary" onclick="goPage('services')">Explore Services →</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+  </footer>
+</div>
+
+<!-- ===================== CONTACT ===================== -->
+<div class="page" id="page-contact">
+  <div class="page-hero">
+    <div class="page-hero-label">Contact Us</div>
+    <h1>Let's Talk About Your Business</h1>
+    <p>Whether you have a specific project in mind or just want to explore what's possible — we'd love to hear from you. No pressure, no commitment.</p>
+  </div>
+
+  <section class="contact-section">
+    <div class="contact-info">
+      <h2>Get in Touch</h2>
+      <p>We typically respond within 1 business day. For urgent matters, reach us directly via WhatsApp or phone.</p>
+      <div class="contact-detail">
+        <div class="contact-icon">📍</div>
+        <div><h5>Office Location</h5><p>Muar, Johor, Malaysia</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">✉️</div>
+        <div><h5>Email</h5><p>info@dutaintegrasolutions.com</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">📱</div>
+        <div><h5>Phone / WhatsApp</h5><p>+60 11-5403 4051</p></div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">🕐</div>
+        <div><h5>Business Hours</h5><p>Monday – Friday, 9am – 6pm MYT<br>Weekend support available for managed IT clients</p></div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h3>Send Us a Message</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input type="text" placeholder="Ahmad bin Rahman"></div>
+        <div class="form-group"><label>Company Name</label><input type="text" placeholder="Your Company Sdn Bhd"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email Address *</label><input type="email" placeholder="you@company.com"></div>
+        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" placeholder="+60 12-345 6789"></div>
+      </div>
+      <div class="form-group">
+        <label>What are you interested in? *</label>
+        <select>
+          <option value="">Select a service...</option>
+          <option>AI Software Development</option>
+          <option>Managed IT Services</option>
+          <option>Cloud Migration</option>
+          <option>IT Security & PDPA Compliance</option>
+          <option>Free IT Audit</option>
+          <option>Custom / Multiple Services</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tell us about your business &amp; needs</label>
+        <textarea placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support..."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">Send Message →</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+  </footer>
+</div>
+
+<script>
+// Language Translations
+const translations = {
+  en: {
+    navServices: 'Services', navAbout: 'About', navCases: 'Case Studies', navPricing: 'Pricing', navContact: 'Contact Us',
+    heroBadge: "🇲🇾 Malaysia's AI-First IT Partner", heroTitle1: 'Smart Technology.', heroTitle2: 'Integrated Solutions.',
+    heroDesc: "We help Malaysian businesses grow with custom AI software and reliable managed IT — from intelligent chatbots to cloud infrastructure, all under one roof.",
+    heroBtn1: 'Get a Free IT Audit', heroBtn2: 'Explore Services →',
+    stat1: 'Happy Clients', stat2: 'Custom Solutions', stat3: 'Managed IT Support', stat4: 'Malaysian-owned',
+    servicesEyebrow: 'What We Do', servicesTitle: 'Two Pillars. One Partner.', servicesSub: 'We combine cutting-edge AI development with rock-solid managed IT — so you never need to juggle multiple vendors again.',
+    svc1Title: 'AI Software Development', svc1Desc: 'Custom AI applications, intelligent chatbots, and process automation built specifically for your business workflows.',
+    svc2Title: 'Managed IT Services', svc2Desc: 'End-to-end IT management — cloud infrastructure, helpdesk, network security, and hardware maintenance.',
+    svc3Title: 'Cloud Migration & Setup', svc3Desc: 'Move your business to the cloud seamlessly with planning, migration, and ongoing cloud management.',
+    svc4Title: 'IT Security & Compliance', svc4Desc: 'PDPA compliance audits, cybersecurity monitoring, and data protection policies for your peace of mind.',
+    svcLearnMore: 'Learn more →',
+    clientsTitle: 'Trusted by businesses across Malaysia',
+    whyEyebrow: 'Why Choose Us', whyTitle: 'Built for Malaysian SMEs',
+    why1Title: 'Local Expertise', why1Desc: 'We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.',
+    why2Title: 'AI + IT Combined', why2Desc: 'One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.',
+    why3Title: 'Transparent Pricing', why3Desc: 'No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.',
+    why4Title: 'Fast Onboarding', why4Desc: 'Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.',
+    ctaTitle: 'Ready to Modernize Your Business?', ctaDesc: 'Start with a free IT audit or AI readiness assessment — no obligation, no strings attached.', ctaBtn1: 'Book Free Consultation', ctaBtn2: 'View Pricing',
+    footerDesc: 'Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.',
+    footerCompany: 'Company', footerServices: 'Services'
+  },
+  bm: {
+    navServices: 'Perkhidmatan', navAbout: 'Tentang', navCases: 'Kajian Kes', navPricing: 'Harga', navContact: 'Hubungi Kami',
+    heroBadge: '🇲🇾 Partner IT Pertama Berasaskan AI Malaysia', heroTitle1: 'Teknologi Cerdik.', heroTitle2: 'Penyelesaian Terintegrasi.',
+    heroDesc: 'Kami membantu perniagaan Malaysia berkembang dengan perisian AI tersuai dan IT yang diurus dengan dipercayai — dari chatbot pintar hingga infrastruktur云计算, semua dalam satu perlindungan.',
+    heroBtn1: 'Dapatkan Audit IT Percuma', heroBtn2: 'Terokai Perkhidmatan →',
+    stat1: 'Pelanggan Bahagia', stat2: 'Penyelesaian Tersuai', stat3: ' sokongan IT 24/7', stat4: 'Milikan Malaysia',
+    servicesEyebrow: 'Apa yang Kami Buat', servicesTitle: 'Dua Pilar. Satu Partner.', servicesSub: 'Kami menggabungkan pembangunan AI tercanggih dengan IT yang diurus dengan kukuh — jadi anda tidak perlu berunding dengan vendor lain lagi.',
+    svc1Title: 'Pembangunan Perisian AI', svc1Desc: 'Aplikasi AI tersuai, chatbot pintar, dan automasi proses yang dibina khusus untuk aliran kerja perniagaan anda.',
+    svc2Title: 'Perkhidmatan IT Diurus', svc2Desc: 'Pengurusan IT end-to-end — infrastruktur云计算, helpdesk, keselamatan rangkaian, dan penyelenggaraan perkakasan.',
+    svc3Title: 'Pemindahan & Penylvanan Awan', svc3Desc: 'Pindahkan perniagaan anda ke awan dengan lancar dengan perancangan, pemindahan, dan pengurusan awan yang berterusan.',
+    svc4Title: 'Keselamatan & Pematuhan IT', svc4Desc: 'Audit pematuhan PDPA, pemantauan keselamatan siber, dan dasar perlindungan data untuk ketenangan minda anda.',
+    svcLearnMore: 'Ketahui lebih lanjut →',
+    clientsTitle: 'Dipercayai oleh perniagaan di seluruh Malaysia',
+    whyEyebrow: 'Mengapa Pilih Kami', whyTitle: 'Dibina untuk SME Malaysia',
+    why1Title: 'Kepakaran Tempatan', why1Desc: 'Kami memahami PDPA, SST, ePerolehan, dan landskap SME. Tiada keperluan untuk menjelaskan konteks Malaysia kepada kami.',
+    why2Title: 'AI + IT Digabungkan', why2Desc: 'Satu vendor untuk cita-rata AI dan IT harian anda — lebih mudah, lebih murah, dan lebih baik diselaraskan.',
+    why3Title: 'Harga Telus', why3Desc: 'Tiada yuran tersembunyi. Retainer bulanan yang jelas dan skop projek yang direka untuk perniagaan yang berkembang.',
+    why4Title: 'Onboading Pantas', why4Desc: 'Audit awal percuma, cadangan yang jelas dalam 3 hari bekerja, dan penghantaran mengikut jadual yang anda bolehandalkan.',
+    ctaTitle: 'Bersedia untuk Memodenkan Perniagaan Anda?', ctaDesc: 'Mulakan dengan audit IT percuma atau penilaian kesediaan AI — tiada obligasi, tiada tali.',
+    ctaBtn1: 'Temu ramah Perunding Percuma', ctaBtn2: 'Lihat Harga',
+    footerDesc: 'Partner AI dan IT anda yang dipercayai di Malaysia. Kami membantu SME memodenkan, mengautomasi, dan berkembang melalui teknologi cerdik.',
+    footerCompany: 'Syarikat', footerServices: 'Perkhidmatan'
+  }
+};
+
+let currentLang = 'en';
+
+function toggleLanguage() {
+  currentLang = currentLang === 'en' ? 'bm' : 'en';
+  localStorage.setItem('language', currentLang);
+  document.getElementById('langToggle').textContent = currentLang === 'en' ? 'BM' : 'EN';
+  applyTranslations();
+}
+
+function applyTranslations() {
+  const t = translations[currentLang];
+  // Nav
+  document.querySelectorAll('.nav-links a')[0].textContent = t.navServices;
+  document.querySelectorAll('.nav-links a')[1].textContent = t.navAbout;
+  document.querySelectorAll('.nav-links a')[2].textContent = t.navCases;
+  document.querySelectorAll('.nav-links a')[3].textContent = t.navPricing;
+  document.querySelectorAll('.nav-links a')[4].textContent = t.navContact;
+  // Hero
+  document.querySelector('.hero-badge').textContent = t.heroBadge;
+  document.querySelector('.hero h1').innerHTML = t.heroTitle1 + '<br><span>' + t.heroTitle2 + '</span>';
+  document.querySelector('.hero p').textContent = t.heroDesc;
+  document.querySelector('.btn-primary').textContent = t.heroBtn1;
+  document.querySelector('.btn-outline').textContent = t.heroBtn2;
+  // Stats
+  const stats = document.querySelectorAll('.stat-label');
+  if(stats[0]) stats[0].textContent = t.stat1;
+  if(stats[1]) stats[1].textContent = t.stat2;
+  if(stats[2]) stats[2].textContent = t.stat3;
+  if(stats[3]) stats[3].textContent = t.stat4;
+  // Services
+  document.querySelector('.services-home .section-eyebrow').textContent = t.servicesEyebrow;
+  document.querySelector('.services-home .section-title').textContent = t.servicesTitle;
+  document.querySelector('.services-home .section-sub').textContent = t.servicesSub;
+  // Service Cards
+  const svcCards = document.querySelectorAll('.svc-card');
+  if(svcCards[0]) { svcCards[0].querySelector('h3').textContent = t.svc1Title; svcCards[0].querySelector('p').textContent = t.svc1Desc; svcCards[0].querySelector('.svc-link').textContent = t.svcLearnMore; }
+  if(svcCards[1]) { svcCards[1].querySelector('h3').textContent = t.svc2Title; svcCards[1].querySelector('p').textContent = t.svc2Desc; svcCards[1].querySelector('.svc-link').textContent = t.svcLearnMore; }
+  if(svcCards[2]) { svcCards[2].querySelector('h3').textContent = t.svc3Title; svcCards[2].querySelector('p').textContent = t.svc3Desc; svcCards[2].querySelector('.svc-link').textContent = t.svcLearnMore; }
+  if(svcCards[3]) { svcCards[3].querySelector('h3').textContent = t.svc4Title; svcCards[3].querySelector('p').textContent = t.svc4Desc; svcCards[3].querySelector('.svc-link').textContent = t.svcLearnMore; }
+  // Clients
+  document.querySelector('.clients-strip p').textContent = t.clientsTitle;
+  // Why
+  document.querySelector('.why .section-eyebrow').textContent = t.whyEyebrow;
+  document.querySelector('.why .section-title').textContent = t.whyTitle;
+  const whyCards = document.querySelectorAll('.why-card');
+  if(whyCards[0]) { whyCards[0].querySelector('h4').textContent = t.why1Title; whyCards[0].querySelector('p').textContent = t.why1Desc; }
+  if(whyCards[1]) { whyCards[1].querySelector('h4').textContent = t.why2Title; whyCards[1].querySelector('p').textContent = t.why2Desc; }
+  if(whyCards[2]) { whyCards[2].querySelector('h4').textContent = t.why3Title; whyCards[2].querySelector('p').textContent = t.why3Desc; }
+  if(whyCards[3]) { whyCards[3].querySelector('h4').textContent = t.why4Title; whyCards[3].querySelector('p').textContent = t.why4Desc; }
+  // CTA
+  const ctaBand = document.querySelector('.cta-band');
+  if(ctaBand) { ctaBand.querySelector('h2').textContent = t.ctaTitle; ctaBand.querySelector('p').textContent = t.ctaDesc; ctaBand.querySelector('.btn-navy').textContent = t.ctaBtn1; ctaBand.querySelector('.btn-primary:last-of-type').textContent = t.ctaBtn2; }
+  // Footer
+  document.querySelector('.footer-brand p').textContent = t.footerDesc;
+  document.querySelectorAll('.footer-col h5')[0].textContent = t.footerCompany;
+  document.querySelectorAll('.footer-col h5')[1].textContent = t.footerServices;
+}
+
+// Apply translations on page load if saved
+if (localStorage.getItem('language') === 'bm') {
+  currentLang = 'bm';
+  if (document.getElementById('langToggle')) {
+    document.getElementById('langToggle').textContent = 'EN';
+    applyTranslations();
+  }
+}
+
+// Dark Mode Toggle
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+  document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+}
+
+// Check saved preference on load
+if (localStorage.getItem('darkMode') === 'enabled') {
+  document.body.classList.add('dark-mode');
+  if (document.getElementById('darkToggle')) {
+    document.getElementById('darkToggle').textContent = '☀️';
+  }
+}
+
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function submitForm() {
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+</script>
+</body>
+</html>
