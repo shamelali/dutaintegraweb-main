@@ -1,0 +1,4 @@
+Contact: mailto:hello@dutaintegra.my
+Preferred-Languages: en, ms
+Expires: 2027-06-11T20:00:00.000Z
+Canonical: https://dutaintegra.my/.well-known/security.txt
