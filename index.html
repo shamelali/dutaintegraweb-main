@@ -245,6 +245,12 @@ body.dark-mode .addon-card{background:#1a2744;border-color:#2d3f5e}
 body.dark-mode .addon-card h4{color:#e2e8f0}
 body.dark-mode .client-logo-pill{background:#1a2744;border-color:#2d3f5e;color:#e2e8f0}
 body.dark-mode .page{background:#0a0f1d}
+body.dark-mode .btn-navy{background:white;color:#0a0f1d}
+body.dark-mode .btn-navy:hover{opacity:.9}
+body.dark-mode .hero-btns .btn-primary-sm,.body.dark-mode .btn-primary{background:var(--electric);color:var(--navy)}
+body.dark-mode .price-cta.sec{background:rgba(255,255,255,.08);color:white;border-color:rgba(255,255,255,.2)}
+body.dark-mode .price-cta.sec:hover{border-color:var(--electric)}
+body.dark-mode .form-submit{background:var(--electric);color:var(--navy)}
 /* DARK MODE TOGGLE BUTTON */
 .dark-toggle{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);color:#e2e8f0;padding:.45rem .9rem;border-radius:5px;font-size:1rem;cursor:pointer;transition:all .2s;margin-left:1rem;display:flex;align-items:center;justify-content:center;min-width:44px}
 .dark-toggle:hover{background:rgba(0,180,255,.2);border-color:var(--electric)}
@@ -266,7 +272,7 @@ body.dark-mode .page{background:#0a0f1d}
     <li><a onclick="goPage('about')">About</a></li>
     <li><a onclick="goPage('cases')">Case Studies</a></li>
     <li><a onclick="goPage('pricing')">Pricing</a></li>
-    <li><a onclick="goPage('contact')" class="nav-cta">Contact Us</a></li>
+    <li><a href="#contact" onclick="event.preventDefault();goPage('contact')" class="nav-cta">Contact Us</a></li>
     <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button></li>
     <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
@@ -373,8 +379,8 @@ body.dark-mode .page{background:#0a0f1d}
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Muar, Johor, Malaysia</p>
-      <p>info@dutaintegrasolutions.com · +60 11-5403 4051</p>
+      <p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Cyberjaya, Malaysia</p>
+      <p>hello@dutaintegra.my · +60 11-5403 4051</p>
     </div>
   </footer>
 </div>
@@ -477,7 +483,7 @@ body.dark-mode .page{background:#0a0f1d}
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
-    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
   </footer>
 </div>
 
@@ -492,14 +498,14 @@ body.dark-mode .page{background:#0a0f1d}
   <section class="about-story">
     <div class="about-story-text">
       <h2>Our Story</h2>
-      <p>Duta Integra Solutions was born in Muar, Johor in 2026 with a simple mission: make AI and enterprise-grade IT accessible to every Malaysian business — not just the large corporations in KL.</p>
+      <p>Duta Integra Solutions was born in Cyberjaya in 2026 with a simple mission: make AI and enterprise-grade IT accessible to every Malaysian business — not just the large corporations in KL.</p>
       <p>We noticed that SMEs across Malaysia were falling behind because they couldn't find reliable local technology partners who understood both the business context and the technical depth needed to make real change.</p>
       <p>So we built that partner. One that speaks your language, understands PDPA and local compliance, moves fast, and stands behind its work long after the project is delivered.</p>
       <p>Today, we serve clients across multiple industries and are proud to be 100% Malaysian-owned and operated.</p>
       <button class="btn-primary" style="margin-top:1rem" onclick="goPage('contact')">Work With Us</button>
     </div>
     <div class="about-visual">
-      <div class="about-stat-card"><div class="val">2026</div><div class="lbl">Founded in Muar, Johor</div></div>
+      <div class="about-stat-card"><div class="val">2026</div><div class="lbl">Founded in Cyberjaya</div></div>
       <div class="about-stat-card"><div class="val">2+</div><div class="lbl">Clients Served</div></div>
       <div class="about-stat-card"><div class="val">100%</div><div class="lbl">Malaysian-Owned</div></div>
       <div class="about-stat-card"><div class="val">AI + IT</div><div class="lbl">Dual Expertise Under One Roof</div></div>
@@ -557,7 +563,7 @@ body.dark-mode .page{background:#0a0f1d}
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
-    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
   </footer>
 </div>
 
@@ -642,7 +648,7 @@ body.dark-mode .page{background:#0a0f1d}
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
-    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
   </footer>
 </div>
 
@@ -742,7 +748,7 @@ body.dark-mode .page{background:#0a0f1d}
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
-    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
   </footer>
 </div>
 
@@ -760,11 +766,11 @@ body.dark-mode .page{background:#0a0f1d}
       <p>We typically respond within 1 business day. For urgent matters, reach us directly via WhatsApp or phone.</p>
       <div class="contact-detail">
         <div class="contact-icon">📍</div>
-        <div><h5>Office Location</h5><p>Muar, Johor, Malaysia</p></div>
+        <div><h5>Office Location</h5><p>Cyberjaya, Malaysia</p></div>
       </div>
       <div class="contact-detail">
         <div class="contact-icon">✉️</div>
-        <div><h5>Email</h5><p>info@dutaintegrasolutions.com</p></div>
+        <div><h5>Email</h5><p>hello@dutaintegra.my</p></div>
       </div>
       <div class="contact-detail">
         <div class="contact-icon">📱</div>
@@ -812,7 +818,7 @@ body.dark-mode .page{background:#0a0f1d}
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
-    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
+    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
   </footer>
 </div>
 
