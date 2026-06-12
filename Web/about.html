@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Us - Duta Integra Solutions</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
 :root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
 *{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+.ti{color:var(--electric)}
 body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
 nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
 .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em}
@@ -35,7 +37,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 .section-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.75rem}
 .values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.4rem;margin-top:2.5rem}
 .value-card{background:white;border:1.5px solid #E5EBF5;border-radius:10px;padding:1.8rem}
-.value-card .vi{font-size:1.6rem;margin-bottom:.8rem}
+.value-card .vi{font-size:1.6rem;margin-bottom:.8rem;display:flex;align-items:center;justify-content:center}
 .value-card h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.5rem;color:var(--navy)}
 .value-card p{color:var(--gray);font-size:.85rem;line-height:1.65}
 .team-section{padding:5rem 6%;background:white}
@@ -100,10 +102,10 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   <div class="section-eyebrow">What We Believe</div>
   <h2 class="section-title">Our Values</h2>
   <div class="values-grid">
-    <div class="value-card"><div class="vi">🎯</div><h4>Client-First</h4><p>We measure our success by your business outcomes, not by billable hours.</p></div>
-    <div class="value-card"><div class="vi">💡</div><h4>Innovation with Purpose</h4><p>We only adopt tech that solves real problems — not just trends.</p></div>
-    <div class="value-card"><div class="vi">🤝</div><h4>Long-Term Partnership</h4><p>We're here for the marathon, not the sprint. We stay after delivery.</p></div>
-    <div class="value-card"><div class="vi">🌱</div><h4>Local Growth</h4><p>We invest in Malaysian talent and help other local businesses succeed.</p></div>
+    <div class="value-card"><div class="vi"><i class="ti ti-target"></i></div><h4>Client-First</h4><p>We measure our success by your business outcomes, not by billable hours.</p></div>
+    <div class="value-card"><div class="vi"><i class="ti ti-bulb"></i></div><h4>Innovation with Purpose</h4><p>We only adopt tech that solves real problems — not just trends.</p></div>
+    <div class="value-card"><div class="vi"><i class="ti ti-handshake"></i></div><h4>Long-Term Partnership</h4><p>We're here for the marathon, not the sprint. We stay after delivery.</p></div>
+    <div class="value-card"><div class="vi"><i class="ti ti-leaf"></i></div><h4>Local Growth</h4><p>We invest in Malaysian talent and help other local businesses succeed.</p></div>
   </div>
 </section>
 

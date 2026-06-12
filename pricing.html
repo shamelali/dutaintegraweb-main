@@ -8,6 +8,7 @@
 <style>
 :root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
 *{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+.ti{color:var(--electric)}
 body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
 nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
 .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em}
@@ -30,6 +31,9 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 .price-card.featured{border-color:var(--electric);box-shadow:0 12px 48px rgba(0,180,255,.15)}
 .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--electric);color:var(--navy);font-size:.72rem;font-weight:700;padding:.3rem .9rem;border-radius:999px;white-space:nowrap}
 .price-card h3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.4rem;color:var(--navy)}
+.price-card:nth-child(1) h3{color:#0D9488}
+.price-card:nth-child(2) h3{color:#00B4FF}
+.price-card:nth-child(3) h3{color:#7C3AED}
 .price-card .tagline{color:var(--gray);font-size:.83rem;margin-bottom:1.4rem}
 .price-amount{margin-bottom:1.5rem}
 .price-amount .amt{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--navy)}

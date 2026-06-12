@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Duta Integra Solutions</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
 :root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#7A8FAD;--dark:#060F1F}
 *{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+.ti{color:var(--electric)}
 body{font-family:'Inter',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
 /* NAV */
 nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
@@ -47,7 +49,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 .svc-card{border:1.5px solid #E5EBF5;border-radius:10px;padding:2rem;cursor:pointer;transition:all .25s}
 .svc-card:hover{border-color:var(--electric);box-shadow:0 8px 36px rgba(21,101,192,.1);transform:translateY(-3px)}
 .svc-icon{width:50px;height:50px;background:linear-gradient(135deg,rgba(0,180,255,.15),rgba(21,101,192,.08));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1.2rem}
-.svc-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.55rem;color:var(--navy)}
+.svc-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.55rem;color:#7C3AED}
 .svc-card p{color:var(--gray);font-size:.87rem;line-height:1.65;margin-bottom:1rem}
 .svc-link{font-size:.8rem;color:var(--electric);font-weight:600;cursor:pointer}
 /* WHY */
@@ -92,10 +94,10 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 .svc-full-card{border:1.5px solid #E5EBF5;border-radius:12px;padding:2.2rem;transition:all .25s}
 .svc-full-card:hover{border-color:var(--electric);box-shadow:0 10px 40px rgba(21,101,192,.1)}
 .svc-full-card .icon{font-size:2rem;margin-bottom:1rem}
-.svc-full-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.7rem;color:var(--navy)}
+.svc-full-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.7rem;color:#7C3AED}
 .svc-full-card p{color:var(--gray);font-size:.9rem;line-height:1.7;margin-bottom:1.2rem}
 .svc-features{list-style:none;margin-bottom:1.4rem}
-.svc-features li{font-size:.85rem;color:var(--navy);padding:.3rem 0;display:flex;align-items:center;gap:.5rem}
+.svc-features li{font-size:.85rem;color:#1E293B;padding:.3rem 0;display:flex;align-items:center;gap:.5rem}
 .svc-features li::before{content:'✓';color:var(--electric);font-weight:700;font-size:.9rem}
 .process-section{padding:5rem 6%;background:#F8FAFF}
 .process-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:2.5rem}
@@ -114,7 +116,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 .values-section{padding:5rem 6%;background:#F8FAFF}
 .values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.4rem;margin-top:2.5rem}
 .value-card{background:white;border:1.5px solid #E5EBF5;border-radius:10px;padding:1.8rem}
-.value-card .vi{font-size:1.6rem;margin-bottom:.8rem}
+.value-card .vi{font-size:1.6rem;margin-bottom:.8rem;display:flex;align-items:center;justify-content:center}
 .value-card h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.5rem;color:var(--navy)}
 .value-card p{color:var(--gray);font-size:.85rem;line-height:1.65}
 .team-section{padding:5rem 6%;background:white}
@@ -148,6 +150,9 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 .price-card.featured{border-color:var(--electric);box-shadow:0 12px 48px rgba(0,180,255,.15)}
 .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--electric);color:var(--navy);font-size:.72rem;font-weight:700;padding:.3rem .9rem;border-radius:999px;white-space:nowrap}
 .price-card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.4rem;color:var(--navy)}
+.price-card:nth-child(1) h3{color:#0D9488}
+.price-card:nth-child(2) h3{color:#00B4FF}
+.price-card:nth-child(3) h3{color:#7C3AED}
 .price-card .tagline{color:var(--gray);font-size:.83rem;margin-bottom:1.4rem}
 .price-amount{margin-bottom:1.5rem}
 .price-amount .amt{font-family:'Plus Jakarta Sans',sans-serif;font-size:2.4rem;font-weight:800;color:var(--navy)}
@@ -210,12 +215,13 @@ body.dark-mode .services-home,body.dark-mode .svc-page-section,body.dark-mode .p
 body.dark-mode .section-title{color:#e2e8f0}
 body.dark-mode .svc-card{background:#1a2744;border-color:#2d3f5e}
 body.dark-mode .svc-card:hover{border-color:var(--electric)}
-body.dark-mode .svc-card h3{color:#e2e8f0}
+body.dark-mode .svc-card h3{color:#C084FC}
+body.dark-mode .svc-full-card h3{color:#C084FC}
 body.dark-mode .clients-strip{background:#0a0f1d}
 body.dark-mode .clients-strip p{color:rgba(255,255,255,.55)}
 body.dark-mode .cta-band{background:linear-gradient(135deg,#0f1629,#1a2744)}
 body.dark-mode .cta-band h2{color:#e2e8f0}
-body.dark-mode .section-sub,body.dark-mode .svc-card p,body.dark-mode .svc-full-card p,body.dark-mode .svc-features li,body.dark-mode .case-body p,body.dark-mode .process-step p,body.dark-mode .value-card p,body.dark-mode .team-card p,body.dark-mode .addon-card p,body.dark-mode .pricing-note,body.dark-mode .contact-info p,body.dark-mode .price-card .tagline,body.dark-mode .price-features li,body.dark-mode .cta-band p,body.dark-mode .section-sub,body.dark-mode .about-story-text p{color:#b0c4de}
+body.dark-mode .section-sub,body.dark-mode .svc-card p,body.dark-mode .svc-full-card p,body.dark-mode .svc-features li,body.dark-mode .case-body p,body.dark-mode .process-step p,body.dark-mode .value-card p,body.dark-mode .team-card p,body.dark-mode .addon-card p,body.dark-mode .pricing-note,body.dark-mode .contact-info p,body.dark-mode .price-card .tagline,body.dark-mode .price-features li,body.dark-mode .cta-band p,body.dark-mode .section-sub,body.dark-mode .about-story-text p{color:#cbd5e1}
 body.dark-mode .process-section{background:#0f1629}
 body.dark-mode .process-step{background:#1a2744}
 body.dark-mode .process-step h4{color:#e2e8f0}
@@ -247,7 +253,9 @@ body.dark-mode .case-card{background:#1a2744;border-color:#2d3f5e}
 body.dark-mode .case-card .case-header{background:#050a14}
 body.dark-mode .case-metrics .metric .val{color:#e2e8f0}
 body.dark-mode .pricing-grid .price-card{background:#1a2744;border-color:#2d3f5e}
-body.dark-mode .pricing-grid .price-card h3{color:#e2e8f0}
+body.dark-mode .pricing-grid .price-card:nth-child(1) h3{color:#5EEAD4}
+body.dark-mode .pricing-grid .price-card:nth-child(2) h3{color:#00B4FF}
+body.dark-mode .pricing-grid .price-card:nth-child(3) h3{color:#C084FC}
 body.dark-mode .pricing-grid .price-card .amt{color:#e2e8f0}
 body.dark-mode .addons-section{background:#0a0f1d}
 body.dark-mode .addon-card{background:#1a2744;border-color:#2d3f5e}
@@ -280,7 +288,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
     <li><a onclick="goPage('cases')">Case Studies</a></li>
     <li><a onclick="goPage('pricing')">Pricing</a></li>
     <li><a href="#contact" onclick="event.preventDefault();goPage('contact')" class="nav-cta">Contact Us</a></li>
-    <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button></li>
+    <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
     <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
 </nav>
@@ -309,27 +317,33 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
     <p class="section-sub">We combine cutting-edge AI development with rock-solid managed IT — so you never need to juggle multiple vendors again.</p>
     <div class="svc-grid">
       <div class="svc-card" onclick="goPage('services')">
-        <div class="svc-icon">🤖</div>
+        <div class="svc-icon"><i class="ti ti-robot"></i></div>
         <h3>AI Software Development</h3>
         <p>Custom AI applications, intelligent chatbots, and process automation built specifically for your business workflows.</p>
         <span class="svc-link">Learn more →</span>
       </div>
       <div class="svc-card" onclick="goPage('services')">
-        <div class="svc-icon">🖥️</div>
+        <div class="svc-icon"><i class="ti ti-device-desktop"></i></div>
         <h3>Managed IT Services</h3>
         <p>End-to-end IT management — cloud infrastructure, helpdesk, network security, and hardware maintenance.</p>
         <span class="svc-link">Learn more →</span>
       </div>
       <div class="svc-card" onclick="goPage('services')">
-        <div class="svc-icon">☁️</div>
+        <div class="svc-icon"><i class="ti ti-cloud"></i></div>
         <h3>Cloud Migration & Setup</h3>
         <p>Move your business to the cloud seamlessly with planning, migration, and ongoing cloud management.</p>
         <span class="svc-link">Learn more →</span>
       </div>
       <div class="svc-card" onclick="goPage('services')">
-        <div class="svc-icon">🔒</div>
+        <div class="svc-icon"><i class="ti ti-shield-lock"></i></div>
         <h3>IT Security & Compliance</h3>
         <p>PDPA compliance audits, cybersecurity monitoring, and data protection policies for your peace of mind.</p>
+        <span class="svc-link">Learn more →</span>
+      </div>
+      <div class="svc-card" onclick="goPage('services')">
+        <div class="svc-icon"><i class="ti ti-chart-bar"></i></div>
+        <h3>Business Intelligence (Launching Next)</h3>
+        <p>Data-driven insights, predictive BI analytics, and intelligent dashboards to help you make smarter business decisions.</p>
         <span class="svc-link">Learn more →</span>
       </div>
     </div>
@@ -339,7 +353,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
     <p>Trusted by businesses across Malaysia</p>
     <div class="client-logos">
       <div class="client-logo-pill" onclick="goPage('cases')">Leish</div>
-      <div class="client-logo-pill" onclick="goPage('cases')">Lapango</div>
+      <div class="client-logo-pill" onclick="goPage('cases')">Eastelpro</div>
       <div class="client-logo-pill" style="opacity:.4;cursor:default">Your Company?</div>
     </div>
   </section>
@@ -402,10 +416,10 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 
   <section class="svc-page-section">
     <div class="section-eyebrow">Core Offerings</div>
-    <h2 class="section-title">What We Deliver</h2>
+    <h2 class="section-title" style="color:var(--electric)">What We Deliver</h2>
     <div class="svc-full-grid">
       <div class="svc-full-card">
-        <div class="icon">🤖</div>
+        <div class="icon"><i class="ti ti-robot"></i></div>
         <h3>AI Software Development</h3>
         <p>We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
         <ul class="svc-features">
@@ -419,7 +433,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
         <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
       </div>
       <div class="svc-full-card">
-        <div class="icon">🖥️</div>
+        <div class="icon"><i class="ti ti-device-desktop"></i></div>
         <h3>Managed IT Services</h3>
         <p>We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
         <ul class="svc-features">
@@ -433,7 +447,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
         <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
       </div>
       <div class="svc-full-card">
-        <div class="icon">☁️</div>
+        <div class="icon"><i class="ti ti-cloud"></i></div>
         <h3>Cloud Migration & Management</h3>
         <p>Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
         <ul class="svc-features">
@@ -447,7 +461,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
         <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
       </div>
       <div class="svc-full-card">
-        <div class="icon">🔒</div>
+        <div class="icon"><i class="ti ti-shield-lock"></i></div>
         <h3>IT Security & PDPA Compliance</h3>
         <p>Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
         <ul class="svc-features">
@@ -459,6 +473,20 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
           <li>Ongoing security monitoring</li>
         </ul>
         <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+      </div>
+      <div class="svc-full-card">
+        <div class="icon"><i class="ti ti-chart-bar"></i></div>
+        <h3>Business Intelligence (Launching Next)</h3>
+        <p>Transform raw data into actionable insights with our upcoming Business Intelligence solutions — interactive dashboards, predictive analytics, and automated reporting.</p>
+        <ul class="svc-features">
+          <li>Sales intelligence & revenue tracking</li>
+          <li>Marketing campaign performance analytics</li>
+          <li>Inventory & fulfillment monitoring</li>
+          <li>Retail & branch performance benchmarking</li>
+          <li>AI-powered insights & recommendations</li>
+          <li>Real-time operational dashboards</li>
+        </ul>
+        <button class="btn-primary" onclick="goPage('contact')">Get Notified</button>
       </div>
     </div>
   </section>
@@ -523,16 +551,16 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
     <div class="section-eyebrow">What We Stand For</div>
     <h2 class="section-title">Our Values</h2>
     <div class="values-grid">
-      <div class="value-card"><div class="vi">🎯</div><h4>Clarity Over Jargon</h4><p>We explain everything in plain language. No tech-speak, no confusion — just clear communication at every step.</p></div>
-      <div class="value-card"><div class="vi">🤝</div><h4>Partnership, Not Transaction</h4><p>We're not here for one-off jobs. We aim to be your long-term technology partner as your business grows.</p></div>
-      <div class="value-card"><div class="vi">⚡</div><h4>Speed With Substance</h4><p>We move fast, but never at the expense of quality. Our proposals are ready in 3 days and our work is built to last.</p></div>
-      <div class="value-card"><div class="vi">🇲🇾</div><h4>Proudly Local</h4><p>We understand the Malaysian business landscape — the regulations, the culture, and the unique opportunities here.</p></div>
+      <div class="value-card"><div class="vi"><i class="ti ti-target"></i></div><h4>Clarity Over Jargon</h4><p>We explain everything in plain language. No tech-speak, no confusion — just clear communication at every step.</p></div>
+      <div class="value-card"><div class="vi"><i class="ti ti-handshake"></i></div><h4>Partnership, Not Transaction</h4><p>We're not here for one-off jobs. We aim to be your long-term technology partner as your business grows.</p></div>
+      <div class="value-card"><div class="vi"><i class="ti ti-bolt"></i></div><h4>Speed With Substance</h4><p>We move fast, but never at the expense of quality. Our proposals are ready in 3 days and our work is built to last.</p></div>
+      <div class="value-card"><div class="vi"><i class="ti ti-flag"></i></div><h4>Proudly Local</h4><p>We understand the Malaysian business landscape — the regulations, the culture, and the unique opportunities here.</p></div>
     </div>
   </section>
 
   <section class="team-section">
     <div class="section-eyebrow">The Team</div>
-    <h2 class="section-title">The People Behind Duta</h2>
+    <h2 class="section-title">The People Behind Duta Integra</h2>
     <div class="team-grid">
       <div class="team-card">
         <div class="team-avatar">F</div>
@@ -585,7 +613,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
   <section class="cases-grid">
     <div class="section-eyebrow">Client Work</div>
     <h2 class="section-title">Our First Success Stories</h2>
-    <p class="section-sub" style="max-width:560px;color:var(--gray);line-height:1.75;margin-bottom:0">We're proud to have helped Leish and Lapango on their technology journeys. Every engagement starts with listening — and ends with results.</p>
+    <p class="section-sub" style="max-width:560px;color:var(--gray);line-height:1.75;margin-bottom:0">We're proud to have helped Leish and Eastelpro on their technology journeys. Every engagement starts with listening — and ends with results.</p>
 
     <div class="cases-list">
       <!-- LEISH -->
@@ -617,7 +645,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
       <div class="case-card">
         <div class="case-header">
           <div class="client-tag">Client · 2026</div>
-          <h3>Lapango</h3>
+          <h3>Eastelpro</h3>
           <p>Cloud migration & AI chatbot deployment for an expanding operations team</p>
         </div>
         <div class="case-body">
@@ -631,9 +659,9 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
             <div class="metric"><span class="val">80%</span><span class="lbl">Queries automated</span></div>
             <div class="metric"><span class="val">PDPA</span><span class="lbl">Fully compliant</span></div>
           </div>
-          <p><strong style="color:var(--navy)">Challenge:</strong> Lapango's legacy on-premise servers were costly, unreliable, and out of step with their growing operational needs. Their team was overwhelmed by repetitive customer queries.</p>
+          <p><strong style="color:var(--navy)">Challenge:</strong> Eastelpro's legacy on-premise servers were costly, unreliable, and out of step with their growing operational needs. Their team was overwhelmed by repetitive customer queries.</p>
           <p><strong style="color:var(--navy)">Solution:</strong> We migrated their entire infrastructure to the cloud, deployed an AI chatbot to handle routine customer inquiries, and completed a PDPA compliance audit.</p>
-          <p><strong style="color:var(--navy)">Result:</strong> Lapango cut IT running costs by 40%, automated 80% of routine customer interactions, and are now fully PDPA-compliant with peace of mind.</p>
+          <p><strong style="color:var(--navy)">Result:</strong> Eastelpro cut IT running costs by 40%, automated 80% of routine customer interactions, and are now fully PDPA-compliant with peace of mind.</p>
           <button class="btn-primary" style="font-size:.85rem;padding:.7rem 1.4rem" onclick="goPage('contact')">Start a Similar Project</button>
         </div>
       </div>
@@ -772,19 +800,19 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
       <h2>Get in Touch</h2>
       <p>We typically respond within 1 business day. For urgent matters, reach us directly via WhatsApp or phone.</p>
       <div class="contact-detail">
-        <div class="contact-icon">📍</div>
+        <div class="contact-icon"><i class="ti ti-map-pin"></i></div>
         <div><h5>Office Location</h5><p>Cyberjaya, Malaysia</p></div>
       </div>
       <div class="contact-detail">
-        <div class="contact-icon">✉️</div>
+        <div class="contact-icon"><i class="ti ti-mail"></i></div>
         <div><h5>Email</h5><p>hello@dutaintegra.my</p></div>
       </div>
       <div class="contact-detail">
-        <div class="contact-icon">📱</div>
+        <div class="contact-icon"><i class="ti ti-phone"></i></div>
         <div><h5>Phone / WhatsApp</h5><p>+60 11-5403 4051</p></div>
       </div>
       <div class="contact-detail">
-        <div class="contact-icon">🕐</div>
+        <div class="contact-icon"><i class="ti ti-clock"></i></div>
         <div><h5>Business Hours</h5><p>Monday – Friday, 9am – 6pm MYT<br>Weekend support available for managed IT clients</p></div>
       </div>
     </div>
@@ -807,6 +835,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
           <option>Managed IT Services</option>
           <option>Cloud Migration</option>
           <option>IT Security & PDPA Compliance</option>
+          <option>Business Intelligence</option>
           <option>Free IT Audit</option>
           <option>Custom / Multiple Services</option>
         </select>
@@ -843,6 +872,7 @@ const translations = {
     svc2Title: 'Managed IT Services', svc2Desc: 'End-to-end IT management — cloud infrastructure, helpdesk, network security, and hardware maintenance.',
     svc3Title: 'Cloud Migration & Setup', svc3Desc: 'Move your business to the cloud seamlessly with planning, migration, and ongoing cloud management.',
     svc4Title: 'IT Security & Compliance', svc4Desc: 'PDPA compliance audits, cybersecurity monitoring, and data protection policies for your peace of mind.',
+    svc5Title: 'Business Intelligence (Launching Next)', svc5Desc: 'Data-driven insights, predictive BI analytics, and intelligent dashboards to help you make smarter business decisions.',
     svcLearnMore: 'Learn more →',
     clientsTitle: 'Trusted by businesses across Malaysia',
     whyEyebrow: 'Why Choose Us', whyTitle: 'Built for Malaysian SMEs',
@@ -918,6 +948,7 @@ function applyTranslations() {
   if(svcCards[1]) { svcCards[1].querySelector('h3').textContent = t.svc2Title; svcCards[1].querySelector('p').textContent = t.svc2Desc; svcCards[1].querySelector('.svc-link').textContent = t.svcLearnMore; }
   if(svcCards[2]) { svcCards[2].querySelector('h3').textContent = t.svc3Title; svcCards[2].querySelector('p').textContent = t.svc3Desc; svcCards[2].querySelector('.svc-link').textContent = t.svcLearnMore; }
   if(svcCards[3]) { svcCards[3].querySelector('h3').textContent = t.svc4Title; svcCards[3].querySelector('p').textContent = t.svc4Desc; svcCards[3].querySelector('.svc-link').textContent = t.svcLearnMore; }
+  if(svcCards[4]) { svcCards[4].querySelector('h3').textContent = t.svc5Title; svcCards[4].querySelector('p').textContent = t.svc5Desc; svcCards[4].querySelector('.svc-link').textContent = t.svcLearnMore; }
   // Clients
   document.querySelector('.clients-strip p').textContent = t.clientsTitle;
   // Why
@@ -951,19 +982,19 @@ function toggleDarkMode() {
   document.body.classList.toggle('dark-mode');
   const isDark = document.body.classList.contains('dark-mode');
   localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-  document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('darkToggle').innerHTML = isDark ? '<i class="ti ti-sun"></i>' : '<i class="ti ti-moon"></i>';
 }
 
 // Dark mode defaults to enabled. If user explicitly chose light, stay light.
 if (localStorage.getItem('darkMode') === 'disabled') {
   document.body.classList.remove('dark-mode');
   if (document.getElementById('darkToggle')) {
-    document.getElementById('darkToggle').textContent = '🌙';
+    document.getElementById('darkToggle').innerHTML = '<i class="ti ti-moon"></i>';
   }
 } else {
   document.body.classList.add('dark-mode');
   if (document.getElementById('darkToggle')) {
-    document.getElementById('darkToggle').textContent = '☀️';
+    document.getElementById('darkToggle').innerHTML = '<i class="ti ti-sun"></i>';
   }
 }
 

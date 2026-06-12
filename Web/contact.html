@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact Us - Duta Integra Solutions</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
 :root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
 *{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+.ti{color:var(--electric)}
 body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
 nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
 .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em}
@@ -80,19 +82,19 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <p>Whether you're ready to start a project or just want to learn more, we're here to help. Fill out the form and we'll get back to you within 24 hours.</p>
     
     <div class="contact-detail">
-      <div class="contact-icon">📍</div>
+      <div class="contact-icon"><i class="ti ti-map-pin"></i></div>
       <div><h5>Office Location</h5><p>Cyberjaya, Selangor, Malaysia</p></div>
     </div>
     <div class="contact-detail">
-      <div class="contact-icon">✉️</div>
+      <div class="contact-icon"><i class="ti ti-mail"></i></div>
       <div><h5>Email</h5><p>info@dutaintegrasolutions.com</p></div>
     </div>
     <div class="contact-detail">
-      <div class="contact-icon">📱</div>
+      <div class="contact-icon"><i class="ti ti-phone"></i></div>
       <div><h5>Phone / WhatsApp</h5><p>+60 11-5403 4051</p></div>
     </div>
     <div class="contact-detail">
-      <div class="contact-icon">🕐</div>
+      <div class="contact-icon"><i class="ti ti-clock"></i></div>
       <div><h5>Business Hours</h5><p>Monday – Friday, 9am – 6pm MYT<br>Weekend support available for managed IT clients</p></div>
     </div>
   </div>
@@ -116,6 +118,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
           <option>Managed IT Services</option>
           <option>Cloud Migration</option>
           <option>IT Security & PDPA Compliance</option>
+          <option>Business Intelligence</option>
           <option>Free IT Audit</option>
           <option>Custom / Multiple Services</option>
         </select>
