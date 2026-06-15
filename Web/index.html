@@ -63,7 +63,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 .clients-strip{padding:3.5rem 6%;background:#F0F6FF;text-align:center}
 .clients-strip p{font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gray);margin-bottom:1.5rem}
 .client-logos{display:flex;gap:3rem;justify-content:center;align-items:center;flex-wrap:wrap}
-.client-logo-pill{background:white;border:1.5px solid #D8E5F5;border-radius:8px;padding:.6rem 1.8rem;font-family:'Syne',sans-serif;font-weight:700;color:var(--navy);font-size:.95rem;cursor:pointer;transition:all .2s}
+.client-logo-pill{background:white;border:1.5px solid #D8E5F5;border-radius:8px;padding:.6rem 1.8rem;font-family:'Syne',sans-serif;font-weight:700;color:var(--navy);font-size:.95rem;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
 .client-logo-pill:hover{border-color:var(--electric);color:var(--electric)}
 /* CTA BAND */
 .cta-band{padding:5.5rem 6%;text-align:center;background:linear-gradient(135deg,#EBF4FF,#F0F8FF)}
@@ -349,8 +349,9 @@ body.dark-mode .page{background:#0a0f1d}
   <section class="clients-strip">
     <p>Trusted by businesses across Malaysia</p>
     <div class="client-logos">
-      <div class="client-logo-pill">Leish</div>
-      <div class="client-logo-pill">Eastelpro</div>
+      <a class="client-logo-pill" href="https://leish.my" target="_blank" rel="noopener">Leish</a>
+      <a class="client-logo-pill" href="https://eastelpro.vercel.app" target="_blank" rel="noopener">Eastelpro</a>
+      <a class="client-logo-pill" href="https://duta-connect.vercel.app" target="_blank" rel="noopener">DUTAConnect</a>
       <div class="client-logo-pill" style="opacity:.4;cursor:default">Your Company?</div>
     </div>
   </section>
