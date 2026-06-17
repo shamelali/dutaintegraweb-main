@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <!-- Hexagon with connected nodes - AI/IT integration symbol -->
+  <polygon points="30,2 56,16 56,44 30,58 4,44 4,16" fill="#0B1D3A" stroke="#00B4FF" stroke-width="3"/>
+  <!-- Connection lines -->
+  <line x1="30" y1="2" x2="30" y2="58" stroke="#00B4FF" stroke-width="1.5" opacity="0.4"/>
+  <line x1="4" y1="16" x2="56" y2="44" stroke="#00B4FF" stroke-width="1.5" opacity="0.4"/>
+  <line x1="56" y1="16" x2="4" y2="44" stroke="#00B4FF" stroke-width="1.5" opacity="0.4"/>
+  <!-- Center node -->
+  <circle cx="30" cy="30" r="8" fill="#00B4FF"/>
+  <!-- Outer nodes -->
+  <circle cx="30" cy="2" r="4.5" fill="#0B1D3A" stroke="#00B4FF" stroke-width="2"/>
+  <circle cx="56" cy="16" r="4.5" fill="#0B1D3A" stroke="#00B4FF" stroke-width="2"/>
+  <circle cx="56" cy="44" r="4.5" fill="#0B1D3A" stroke="#00B4FF" stroke-width="2"/>
+  <circle cx="30" cy="58" r="4.5" fill="#0B1D3A" stroke="#00B4FF" stroke-width="2"/>
+  <circle cx="4" cy="44" r="4.5" fill="#0B1D3A" stroke="#00B4FF" stroke-width="2"/>
+  <circle cx="4" cy="16" r="4.5" fill="#0B1D3A" stroke="#00B4FF" stroke-width="2"/>
+  <!-- "DI" text -->
+  <text x="30" y="35" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-weight="800" font-size="14" fill="#FFFFFF" text-anchor="middle">DI</text>
+</svg>

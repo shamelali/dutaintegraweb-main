@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Duta Integra Solutions</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" href="assets/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
@@ -14,8 +16,10 @@ body{font-family:'Inter',sans-serif;background:var(--white);color:var(--navy);ov
 canvas#network-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
 /* NAV */
 nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
-.logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;cursor:pointer}
+.logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;cursor:pointer;display:flex;align-items:center}
 .logo span{color:var(--electric)}
+.logo img{height:40px;width:auto}
+.footer .logo img{height:36px}
 .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
 .nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
 .nav-links a:hover{color:var(--electric)}
@@ -195,6 +199,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .form-submit{width:100%;padding:.85rem;background:var(--electric);color:var(--navy);border:none;border-radius:8px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:'Inter',sans-serif;transition:all .25s;margin-top:.5rem;line-height:1.4}
 .form-submit:hover{background:#0098d4;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,180,255,.3)}
+.form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--navy);color:white;padding:1rem 1.5rem;border-radius:10px;font-size:.88rem;z-index:9999;border-left:4px solid var(--electric);transform:translateY(100px);opacity:0;transition:all .4s}
 .toast.show{transform:translateY(0);opacity:1}
 @media(max-width:768px){
@@ -282,7 +287,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 
 <!-- NAV -->
 <nav>
-  <div class="logo" onclick="goPage('home')">DUTA <span>INTEGRA</span> SOLUTIONS</div>
+  <div class="logo" onclick="goPage('home')"><img src="assets/logo-white.svg" alt="Duta Integra Solutions" class="logo-img logo-light"></div>
   <ul class="nav-links">
     <li><a onclick="goPage('services')">Services</a></li>
     <li><a onclick="goPage('about')">About</a></li>
@@ -383,7 +388,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
   <footer>
     <div class="footer-top">
       <div class="footer-brand">
-        <div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div>
+        <div class="logo"><img src="assets/logo-white.svg" alt="Duta Integra Solutions"></div>
         <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
       </div>
       <div class="footer-col">
@@ -516,7 +521,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 
   <footer>
     <div class="footer-top">
-      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-brand"><div class="logo"><img src="assets/logo-white.svg" alt="Duta Integra Solutions"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
@@ -596,7 +601,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 
   <footer>
     <div class="footer-top">
-      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-brand"><div class="logo"><img src="assets/logo-white.svg" alt="Duta Integra Solutions"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
@@ -681,7 +686,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 
   <footer>
     <div class="footer-top">
-      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-brand"><div class="logo"><img src="assets/logo-white.svg" alt="Duta Integra Solutions"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
@@ -781,7 +786,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 
   <footer>
     <div class="footer-top">
-      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-brand"><div class="logo"><img src="assets/logo-white.svg" alt="Duta Integra Solutions"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
@@ -822,16 +827,16 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
     <div class="contact-form">
       <h3>Send Us a Message</h3>
       <div class="form-row">
-        <div class="form-group"><label>Full Name *</label><input type="text" placeholder="Ahmad bin Rahman"></div>
-        <div class="form-group"><label>Company Name</label><input type="text" placeholder="Your Company Sdn Bhd"></div>
+        <div class="form-group"><label>Full Name *</label><input type="text" id="contact-name" placeholder="Ahmad bin Rahman" required></div>
+        <div class="form-group"><label>Company Name</label><input type="text" id="contact-company" placeholder="Your Company Sdn Bhd"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Email Address *</label><input type="email" placeholder="you@company.com"></div>
-        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" placeholder="+60 12-345 6789"></div>
+        <div class="form-group"><label>Email Address *</label><input type="email" id="contact-email" placeholder="you@company.com" required></div>
+        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="contact-phone" placeholder="+60 12-345 6789"></div>
       </div>
       <div class="form-group">
         <label>What are you interested in? *</label>
-        <select>
+        <select id="contact-service" required>
           <option value="">Select a service...</option>
           <option>AI Software Development</option>
           <option>Managed IT Services</option>
@@ -844,15 +849,15 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
       </div>
       <div class="form-group">
         <label>Tell us about your business &amp; needs</label>
-        <textarea placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support..."></textarea>
+        <textarea id="contact-message" placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support..."></textarea>
       </div>
-      <button class="form-submit" onclick="submitForm()">Send Message →</button>
+      <button class="form-submit" id="contact-submit" onclick="submitForm()">Send Message →</button>
     </div>
   </section>
 
   <footer>
     <div class="footer-top">
-      <div class="footer-brand"><div class="logo">DUTA <span>INTEGRA</span> SOLUTIONS</div><p>Your trusted AI and IT partner in Malaysia.</p></div>
+      <div class="footer-brand"><div class="logo"><img src="assets/logo-white.svg" alt="Duta Integra Solutions"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
       <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
@@ -985,6 +990,17 @@ function toggleDarkMode() {
   const isDark = document.body.classList.contains('dark-mode');
   localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
   document.getElementById('darkToggle').innerHTML = isDark ? '<i class="ti ti-sun"></i>' : '<i class="ti ti-moon"></i>';
+  updateLogos(isDark);
+}
+
+function updateLogos(isDark) {
+  document.querySelectorAll('.logo img, .footer .logo img').forEach(img => {
+    if (isDark) {
+      img.src = img.src.replace('logo-dark.svg', 'logo-white.svg').replace('logo-dark.png', 'logo-white.png');
+    } else {
+      img.src = img.src.replace('logo-white.svg', 'logo-dark.svg').replace('logo-white.png', 'logo-dark.png');
+    }
+  });
 }
 
 // Dark mode defaults to enabled. If user explicitly chose light, stay light.
@@ -993,11 +1009,13 @@ if (localStorage.getItem('darkMode') === 'disabled') {
   if (document.getElementById('darkToggle')) {
     document.getElementById('darkToggle').innerHTML = '<i class="ti ti-moon"></i>';
   }
+  updateLogos(false);
 } else {
   document.body.classList.add('dark-mode');
   if (document.getElementById('darkToggle')) {
     document.getElementById('darkToggle').innerHTML = '<i class="ti ti-sun"></i>';
   }
+  updateLogos(true);
 }
 
 function goPage(id) {
@@ -1006,9 +1024,50 @@ function goPage(id) {
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 function submitForm() {
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4000);
+  const name = document.getElementById('contact-name').value.trim();
+  const company = document.getElementById('contact-company').value.trim();
+  const email = document.getElementById('contact-email').value.trim();
+  const phone = document.getElementById('contact-phone').value.trim();
+  const service = document.getElementById('contact-service').value;
+  const message = document.getElementById('contact-message').value.trim();
+  const submitBtn = document.getElementById('contact-submit');
+
+  if (!name || !email || !service) {
+    alert('Please fill in all required fields (Name, Email, Service).');
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+
+  fetch('/api/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, company, email, phone, service, message })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4000);
+      document.getElementById('contact-name').value = '';
+      document.getElementById('contact-company').value = '';
+      document.getElementById('contact-email').value = '';
+      document.getElementById('contact-phone').value = '';
+      document.getElementById('contact-service').value = '';
+      document.getElementById('contact-message').value = '';
+    } else {
+      alert('Failed to send message: ' + (data.error || 'Please try again later.'));
+    }
+  })
+  .catch(() => {
+    alert('Network error. Please check your connection and try again.');
+  })
+  .finally(() => {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send Message →';
+  });
 }
 </script>
 
