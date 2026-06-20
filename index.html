@@ -58,11 +58,16 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 .svc-card p{color:var(--gray);font-size:.87rem;line-height:1.65;margin-bottom:1rem}
 .svc-link{font-size:.8rem;color:var(--electric);font-weight:600;cursor:pointer}
 /* WHY */
-.why{padding:5.5rem 6%;background:var(--navy);background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80');background-size:cover;background-position:center;position:relative}
+.why{padding:5.5rem 6%;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(11,29,58,.88),rgba(11,29,58,.80)),url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80');background-size:cover;background-position:center}
 .why .section-title{color:white}
-.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.3rem;margin-top:2.5rem}
-.why-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:1.8rem}
-.why-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:2.2rem;font-weight:800;color:var(--electric);opacity:.35}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2.5rem}
+.why-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:1.8rem;transition:all .3s ease;position:relative;overflow:hidden}
+.why-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,180,255,.08),rgba(21,101,192,.04));border-radius:14px;opacity:0;transition:opacity .3s}
+.why-card:hover{transform:translateY(-4px);border-color:rgba(0,180,255,.3);box-shadow:0 12px 40px rgba(0,180,255,.12)}
+.why-card:hover::before{opacity:1}
+.why-icon{width:48px;height:48px;background:linear-gradient(135deg,rgba(0,180,255,.18),rgba(21,101,192,.10));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:1.1rem;transition:background .3s}
+.why-card:hover .why-icon{background:linear-gradient(135deg,rgba(0,180,255,.30),rgba(21,101,192,.20))}
+.why-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:2.2rem;font-weight:800;color:var(--electric);opacity:.18;position:absolute;top:.8rem;right:1rem;line-height:1}
 .why-card h4{font-family:'Plus Jakarta Sans',sans-serif;color:white;font-size:.95rem;margin:.45rem 0 .5rem}
 .why-card p{color:rgba(255,255,255,.6);font-size:.84rem;line-height:1.65}
 /* CLIENTS strip */
@@ -374,10 +379,10 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
     <div class="section-eyebrow">Why Choose Us</div>
     <h2 class="section-title">Built for Malaysian SMEs</h2>
     <div class="why-grid">
-      <div class="why-card"><div class="why-num">01</div><h4>Local Expertise</h4><p>We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.</p></div>
-      <div class="why-card"><div class="why-num">02</div><h4>AI + IT Combined</h4><p>One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.</p></div>
-      <div class="why-card"><div class="why-num">03</div><h4>Transparent Pricing</h4><p>No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.</p></div>
-      <div class="why-card"><div class="why-num">04</div><h4>Fast Onboarding</h4><p>Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="ti ti-map-pin"></i></div><div class="why-num">01</div><h4>Local Expertise</h4><p>We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="ti ti-brain"></i></div><div class="why-num">02</div><h4>AI + IT Combined</h4><p>One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="ti ti-receipt"></i></div><div class="why-num">03</div><h4>Transparent Pricing</h4><p>No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="ti ti-rocket"></i></div><div class="why-num">04</div><h4>Fast Onboarding</h4><p>Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.</p></div>
     </div>
   </section>
 
