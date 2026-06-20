@@ -1,5 +1,8 @@
 {
   "name": "duta-integra-solutions",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "resend": "^4.5.2"
+  }
 }
