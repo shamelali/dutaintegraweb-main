@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "username": "Duta Integra Solutions",
+  "default_agent": "ai-services",
+  "agent": {
+    "ai-services": {
+      "description": "Internal AI services delivery agent for Duta Integra — chatbots, RPA, ML, AI integration, NLP, and dashboards.",
+      "mode": "primary"
+    },
+    "managed-it-services": {
+      "description": "Managed IT Services delivery agent — 24/7 remote helpdesk, network setup & monitoring, hardware procurement & maintenance, server management & backups, software licensing & updates, monthly IT health reports.",
+      "mode": "primary"
+    },
+    "cloud-migration": {
+      "description": "Cloud Migration & Management delivery agent — cloud readiness assessment, migration planning & execution, AWS/Azure/Google Cloud setup, hybrid cloud architecture, cloud cost optimisation, post-migration support and ongoing cloud management.",
+      "mode": "primary"
+    },
+    "it-security-pdpa": {
+      "description": "IT Security & PDPA Compliance delivery agent — PDPA compliance audit & policy drafting, cybersecurity risk assessment, firewall & endpoint protection, employee security awareness training, incident response planning, ongoing security monitoring.",
+      "mode": "primary"
+    }
+  }
+}
