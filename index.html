@@ -29,9 +29,11 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 .page{display:none;min-height:100vh;background:transparent}
 .page.active{display:block}
 /* HERO */
-.hero{background-color:rgba(11,29,58,.82);background-image:url('https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1400&q=80');background-size:cover;background-position:center;padding:7rem 6% 5rem;position:relative;overflow:hidden;z-index:1}
-.hero::before{content:'';position:absolute;top:-30%;right:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,180,255,.1) 0%,transparent 65%);pointer-events:none}
-.hero::after{content:'';position:absolute;bottom:-20%;left:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(21,101,192,.08) 0%,transparent 65%);pointer-events:none}
+.hero{background:#060F1F;padding:7rem 6% 5rem;position:relative;overflow:hidden;z-index:1}
+.hero-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(0,180,255,.08) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;z-index:0}
+.hero-content{position:relative;z-index:1}
+.hero::before{content:'';position:absolute;top:-40%;right:-10%;width:900px;height:900px;background:radial-gradient(circle,rgba(0,180,255,.12) 0%,rgba(21,101,192,.05) 40%,transparent 65%);pointer-events:none;z-index:0}
+.hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:700px;height:700px;background:radial-gradient(circle,rgba(21,101,192,.10) 0%,transparent 60%);pointer-events:none;z-index:0}
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,180,255,.12);color:var(--electric);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;padding:.35rem 1rem;border-radius:2px;margin-bottom:1.5rem;border-left:3px solid var(--electric)}
 .hero h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2.2rem,4.5vw,3.8rem);font-weight:800;color:white;line-height:1.08;max-width:680px;margin-bottom:1.4rem}
 .hero h1 span{color:var(--electric)}
@@ -42,9 +44,11 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 .text-navy{color:var(--navy)}
 .btn-outline{border:1.5px solid rgba(255,255,255,.3);color:white;padding:.75rem 1.8rem;border-radius:8px;font-weight:600;text-decoration:none;font-size:.92rem;cursor:pointer;background:transparent;transition:all .25s;font-family:'Inter',sans-serif;line-height:1.4}
 .btn-outline:hover{border-color:var(--electric);background:rgba(0,180,255,.08);transform:translateY(-1px)}
-.hero-stats{display:flex;gap:3rem;margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
-.stat-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:2rem;font-weight:800;color:var(--electric);display:block}
-.stat-label{color:rgba(255,255,255,.6);font-size:.8rem;margin-top:.15rem}
+.hero-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin-top:3.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.08)}
+.hero-list-item{display:flex;align-items:center;gap:.7rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.65rem 1rem;transition:all .25s;cursor:default}
+.hero-list-item:hover{background:rgba(0,180,255,.08);border-color:rgba(0,180,255,.2);transform:translateY(-2px)}
+.hero-list-item i{font-size:1.1rem;color:var(--electric)}
+.hero-list-item span{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500}
 /* SERVICES SECTION on home */
 .services-home{padding:5.5rem 6%;background:white}
 .section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
@@ -221,7 +225,7 @@ body.dark-mode .logo{color:#e2e8f0}
 body.dark-mode .nav-links a{color:rgba(255,255,255,.75)}
 body.dark-mode .nav-links a:hover{color:var(--electric)}
 body.dark-mode .page-hero{background:rgba(5,10,20,.88)}
-body.dark-mode .hero{background:rgba(5,10,20,.88)}
+body.dark-mode .hero{background:#050a14}
 body.dark-mode .services-home,body.dark-mode .svc-page-section,body.dark-mode .pricing-section{background:#0f1629}
 body.dark-mode .section-title{color:#e2e8f0}
 body.dark-mode .svc-card{background:#1a2744;border-color:#2d3f5e}
@@ -307,18 +311,23 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 <!-- ===================== HOME ===================== -->
 <div class="page active" id="page-home">
   <section class="hero">
-    <div class="hero-badge">🇲🇾 Malaysia's AI-First IT Partner</div>
-    <h1>Smart Technology.<br><span>Integrated Solutions.</span></h1>
-    <p>We help Malaysian businesses grow with custom AI software and reliable managed IT — from intelligent chatbots to cloud infrastructure, all under one roof.</p>
-    <div class="hero-btns">
-      <button class="btn-primary" onclick="goPage('contact')">Get a Free IT Audit</button>
-      <button class="btn-outline" onclick="goPage('services')">Explore Services →</button>
-    </div>
-    <div class="hero-stats">
-      <div><span class="stat-val">2</span><span class="stat-label">Happy Clients</span></div>
-      <div><span class="stat-val">AI</span><span class="stat-label">Custom Solutions</span></div>
-      <div><span class="stat-val">24/7</span><span class="stat-label">Managed IT Support</span></div>
-      <div><span class="stat-val">100%</span><span class="stat-label">Malaysian-owned</span></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">🇲🇾 Malaysia's AI-First IT Partner</div>
+      <h1>Smart Technology.<br><span>Integrated Solutions.</span></h1>
+      <p>We help Malaysian businesses grow with custom AI software and reliable managed IT — from intelligent chatbots to cloud infrastructure, all under one roof.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="goPage('contact')">Get a Free IT Audit</button>
+        <button class="btn-outline" onclick="goPage('services')">Explore Services →</button>
+      </div>
+      <div class="hero-list">
+        <div class="hero-list-item"><i class="ti ti-robot"></i><span>AI Chatbots & Automation</span></div>
+        <div class="hero-list-item"><i class="ti ti-code"></i><span>Custom Software Development</span></div>
+        <div class="hero-list-item"><i class="ti ti-cloud"></i><span>Cloud Infrastructure</span></div>
+        <div class="hero-list-item"><i class="ti ti-shield-lock"></i><span>IT Security & Compliance</span></div>
+        <div class="hero-list-item"><i class="ti ti-headset"></i><span>24/7 Managed IT Support</span></div>
+        <div class="hero-list-item"><i class="ti ti-database"></i><span>Data Analytics & BI</span></div>
+      </div>
     </div>
   </section>
 
