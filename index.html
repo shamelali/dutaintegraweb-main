@@ -18,15 +18,14 @@ canvas#network-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;
 nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
 .logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;cursor:pointer;display:flex;align-items:center;gap:15px;padding:10px}
 .logo span{color:var(--electric)}
-.logo-img{height:60px;width:auto;transition:transform .3s ease}
-.logo-img:hover{transform:scale(1.05)}
-@media(max-width:768px){.logo-img{height:40px}}
 .footer .logo img{height:84px}
 .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
 .nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
 .nav-links a:hover{color:var(--electric)}
 .nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.5rem 1.4rem;border-radius:8px;font-weight:700!important;transition:all .25s!important}
 .nav-cta:hover{background:#0098d4!important;transform:translateY(-1px)}
+.logo-img{height:32px;width:auto;display:block}
+@media(max-width:768px){.logo-img{height:28px}}
 /* PAGES */
 .page{display:none;min-height:100vh;background:transparent}
 .page.active{display:block}
@@ -298,7 +297,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 
 <!-- NAV -->
 <nav>
-  <div class="logo" onclick="goPage('home')"><img src="assets/Dislogo.png" alt="Duta Integra Solutions" class="logo-img logo-light"></div>
+  <div class="logo" onclick="goPage('home')"><img src="assets/logo-icon.svg" alt="Duta Integra Solutions" class="logo-img logo-light"></div>
   <ul class="nav-links">
     <li><a onclick="goPage('services')">Services</a></li>
     <li><a onclick="goPage('about')">About</a></li>
