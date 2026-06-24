@@ -13,9 +13,11 @@
 .ti{color:var(--electric)}
 body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
 nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;display:flex;align-items:center}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;display:flex;align-items:center;gap:15px;padding:10px}
 .logo a{color:white;text-decoration:none}
-.logo img{height:40px;width:auto}
+.logo-img{height:60px;width:auto;transition:transform .3s ease}
+.logo-img:hover{transform:scale(1.05)}
+@media(max-width:768px){.logo-img{height:40px}}
 .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
 .nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s}
 .nav-links a:hover{color:var(--electric)}
@@ -60,7 +62,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 </head>
 <body>
 <nav>
-  <div class="logo"><img src="assets/logo-white.svg" alt="Duta Integra Solutions"></div>
+  <div class="logo"><img src="assets/Dislogo.png" alt="Duta Integra Solutions" class="logo-img"></div>
   <ul class="nav-links">
     <li><a href="services.html">Services</a></li>
     <li><a href="about.html">About</a></li>
@@ -136,7 +138,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <footer>
   <div class="footer-top">
     <div class="footer-brand">
-      <div class="logo"><img src="assets/logo-white.svg" alt="Duta Integra Solutions"></div>
+      <div class="logo"><img src="assets/Dislogo.png" alt="Duta Integra Solutions" class="logo-img"></div>
       <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
     </div>
     <div class="footer-col">
