@@ -4,3 +4,10 @@ node_modules
 .venv
 __pycache__
 *.pyc
+
+# Working artifacts
+*.md~
+*.pdf~
+build-*.py
+.opik_example.py
+financial-projection.md
