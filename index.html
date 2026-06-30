@@ -158,6 +158,9 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 .metric .val{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem;font-weight:800;color:var(--navy);display:block}
 .metric .lbl{color:var(--gray);font-size:.74rem;margin-top:.15rem}
 .case-body p{color:var(--gray);font-size:.87rem;line-height:1.7;margin-bottom:1.2rem}
+.case-btns{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.btn-outline-sm{background:transparent;color:var(--blue);border:1.5px solid var(--blue);padding:.5rem 1rem;border-radius:5px;font-weight:600;text-decoration:none;font-size:.85rem;display:inline-block;transition:all .2s;cursor:pointer}
+.btn-outline-sm:hover{background:var(--blue);color:white}
 /* PRICING */
 .pricing-section{padding:5rem 6%;background:white}
 .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.8rem;margin-top:3rem}
@@ -301,7 +304,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
   <ul class="nav-links">
     <li><a onclick="goPage('services')">Services</a></li>
     <li><a onclick="goPage('about')">About</a></li>
-    <li><a onclick="goPage('cases')">Case Studies</a></li>
+    <li><a onclick="goPage('cases')">Projects</a></li>
     <li><a onclick="goPage('pricing')">Pricing</a></li>
     <li><a href="#contact" onclick="event.preventDefault();goPage('contact')" class="nav-cta">Contact Us</a></li>
     <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
@@ -379,7 +382,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
     <p>What we build for the future</p>
     <div class="client-logos">
       <a class="client-logo-pill" href="https://leish.my" target="_blank" rel="noopener">Leish</a>
-      <a class="client-logo-pill" href="https://eastelpro.vercel.app" target="_blank" rel="noopener">Eastelpro</a>
+      <a class="client-logo-pill" href="https://eastelpro-vercel.vercel.app/" target="_blank" rel="noopener">Eastelpro</a>
       <a class="client-logo-pill" href="https://duta-connect.vercel.app" target="_blank" rel="noopener">DUTAConnect</a>
       <a class="client-logo-pill" href="https://agmx-project.vercel.app" target="_blank" rel="noopener" style="opacity:.7">AGMX</a>
       <div class="client-logo-pill" style="opacity:.4;cursor:default">Your Company?</div>
@@ -415,7 +418,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
       <div class="footer-col">
         <h5>Company</h5>
         <a onclick="goPage('about')">About Us</a>
-        <a onclick="goPage('cases')">Case Studies</a>
+        <a onclick="goPage('cases')">Projects</a>
         <a onclick="goPage('pricing')">Pricing</a>
         <a onclick="goPage('contact')">Contact</a>
       </div>
@@ -543,7 +546,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><img src="assets/Dislogo.png" alt="Duta Integra Solutions" class="logo-img"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
@@ -623,7 +626,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><img src="assets/Dislogo.png" alt="Duta Integra Solutions" class="logo-img"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
@@ -633,70 +636,97 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 <!-- ===================== CASE STUDIES ===================== -->
 <div class="page" id="page-cases">
   <div class="page-hero">
-    <div class="page-hero-label">Case Studies</div>
-    <h1>Real Work. Real Results.</h1>
-    <p>See how we've helped businesses like yours solve real problems with AI and managed IT — and the measurable impact we delivered.</p>
+    <div class="page-hero-label">Projects</div>
+    <h1>Projects We've Delivered</h1>
+    <p>Real products we've built for clients across Malaysia. Click through to preview them live.</p>
   </div>
 
   <section class="cases-grid">
-    <div class="section-eyebrow">Client Work</div>
-    <h2 class="section-title">Our First Success Stories</h2>
-    <p class="section-sub" style="max-width:560px;color:var(--gray);line-height:1.75;margin-bottom:0">We're proud to have helped Leish and Eastelpro on their technology journeys. Every engagement starts with listening — and ends with results.</p>
+    <div class="section-eyebrow">Our Portfolio</div>
+    <h2 class="section-title">Our Projects</h2>
+    <p class="section-sub" style="max-width:560px;color:var(--gray);line-height:1.75;margin-bottom:0">Every project we take on is built from the ground up by our team. Here are some of the products we've developed.</p>
 
     <div class="cases-list">
-      <!-- LEISH -->
       <div class="case-card">
-        <div class="case-header" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80');background-size:cover;background-position:center;padding:3rem 2rem;position:relative">
-          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(11,29,58,.85),rgba(11,29,58,.7))"></div>
-          <div style="position:relative;z-index:1">
-          <div class="client-tag">Client · 2026</div>
+        <div class="case-header">
+          <div class="client-tag">Project · 2026</div>
           <h3>Leish</h3>
-          <p>AI-powered automation & IT infrastructure setup for a growing Malaysian business</p>
-          </div>
+          <p>Beauty Booking Marketplace</p>
         </div>
         <div class="case-body">
           <div class="case-tags">
-            <span class="case-tag">AI Development</span>
-            <span class="case-tag">Managed IT</span>
+            <span class="case-tag">AI Chatbot</span>
             <span class="case-tag">Automation</span>
+            <span class="case-tag">E-Commerce</span>
           </div>
           <div class="case-metrics">
-            <div class="metric"><span class="val">↓60%</span><span class="lbl">Manual tasks reduced</span></div>
-            <div class="metric"><span class="val">3x</span><span class="lbl">Faster response time</span></div>
-            <div class="metric"><span class="val">24/7</span><span class="lbl">IT monitoring</span></div>
+            <div class="metric"><span class="val">70%</span><span class="lbl">Less Enquiries</span></div>
+            <div class="metric"><span class="val">24/7</span><span class="lbl">Support</span></div>
+            <div class="metric"><span class="val">3x</span><span class="lbl">Efficiency</span></div>
           </div>
-          <p><strong style="color:var(--navy)">Challenge:</strong> Leish was spending too many hours on repetitive administrative tasks and lacked reliable IT infrastructure to support their growing team.</p>
-          <p><strong style="color:var(--navy)">Solution:</strong> We built a custom AI automation workflow to handle their routine processes and set up a fully managed IT environment with 24/7 monitoring and remote support.</p>
-          <p><strong style="color:var(--navy)">Result:</strong> The team reclaimed hours every week, errors dropped significantly, and their IT systems now run without interruption.</p>
-          <button class="btn-primary" style="font-size:.85rem;padding:.7rem 1.4rem" onclick="goPage('contact')">Start a Similar Project</button>
+          <p>We built Leish — a beauty booking marketplace with an AI-powered customer service chatbot that handles 70% of enquiries automatically, giving users instant booking assistance around the clock.</p>
+          <div class="case-btns">
+            <a href="https://leish.my" target="_blank" rel="noopener noreferrer" class="btn-outline-sm">Preview ↗</a>
+            <button class="btn-primary" style="font-size:.85rem;padding:.6rem 1.2rem" onclick="goPage('contact')">View Details</button>
+          </div>
         </div>
       </div>
 
-      <!-- LAPANGO -->
       <div class="case-card">
-        <div class="case-header" style="background-image:url('https://images.unsplash.com/photo-1556761175-4b46a572b786?w=800&q=80');background-size:cover;background-position:center;padding:3rem 2rem;position:relative">
-          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(11,29,58,.85),rgba(11,29,58,.7))"></div>
-          <div style="position:relative;z-index:1">
-          <div class="client-tag">Client · 2026</div>
+        <div class="case-header">
+          <div class="client-tag">Project · 2026</div>
           <h3>Eastelpro</h3>
-          <p>Cloud migration & AI chatbot deployment for an expanding operations team</p>
-          </div>
+          <p>WiFi Marketing & SIM Platform</p>
         </div>
         <div class="case-body">
           <div class="case-tags">
-            <span class="case-tag">Cloud Migration</span>
-            <span class="case-tag">AI Chatbot</span>
-            <span class="case-tag">IT Security</span>
+            <span class="case-tag">Cloud</span>
+            <span class="case-tag">Managed IT</span>
+            <span class="case-tag">Web Platform</span>
           </div>
           <div class="case-metrics">
-            <div class="metric"><span class="val">↓40%</span><span class="lbl">IT costs saved</span></div>
-            <div class="metric"><span class="val">80%</span><span class="lbl">Queries automated</span></div>
-            <div class="metric"><span class="val">PDPA</span><span class="lbl">Fully compliant</span></div>
+            <div class="metric"><span class="val">99.9%</span><span class="lbl">Uptime</span></div>
+            <div class="metric"><span class="val">50%</span><span class="lbl">Cost Save</span></div>
+            <div class="metric"><span class="val">0</span><span class="lbl">Downtime</span></div>
           </div>
-          <p><strong style="color:var(--navy)">Challenge:</strong> Eastelpro's legacy on-premise servers were costly, unreliable, and out of step with their growing operational needs. Their team was overwhelmed by repetitive customer queries.</p>
-          <p><strong style="color:var(--navy)">Solution:</strong> We migrated their entire infrastructure to the cloud, deployed an AI chatbot to handle routine customer inquiries, and completed a PDPA compliance audit.</p>
-          <p><strong style="color:var(--navy)">Result:</strong> Eastelpro cut IT running costs by 40%, automated 80% of routine customer interactions, and are now fully PDPA-compliant with peace of mind.</p>
-          <button class="btn-primary" style="font-size:.85rem;padding:.7rem 1.4rem" onclick="goPage('contact')">Start a Similar Project</button>
+          <p>We built EastelPro — a full-stack WiFi marketing platform with captive portal, PDPA consent logging, OTP authentication, and an affiliate commission engine. Complete with cloud infrastructure and managed IT.</p>
+          <div class="case-btns">
+            <a href="https://eastelpro-vercel.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-outline-sm">Preview ↗</a>
+            <button class="btn-primary" style="font-size:.85rem;padding:.6rem 1.2rem" onclick="goPage('contact')">View Details</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-header">
+          <div class="client-tag">Project · 2026</div>
+          <h3>AGMX</h3>
+          <p>AGM Operating System (Updating)</p>
+        </div>
+        <div class="case-body">
+          <div class="case-tags">
+            <span class="case-tag">AI/ML</span>
+            <span class="case-tag">Web Application</span>
+            <span class="case-tag">Compliance</span>
+          </div>
+          <div class="case-metrics">
+            <div class="metric"><span class="val">98%</span><span class="lbl">Compliance</span></div>
+            <div class="metric"><span class="val">16</span><span class="lbl">AGMs Run</span></div>
+            <div class="metric"><span class="val">4</span><span class="lbl">AI Agents</span></div>
+          </div>
+          <p>We built AGMX — Malaysia's first AI-powered cooperative governance operating system. End-to-end AGM management with e-voting, compliance automation (Akta Koperasi 1993), and a 4-agent AI Governance Copilot.</p>
+          <div class="case-btns">
+            <a href="https://agmx-project.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-outline-sm">Preview ↗</a>
+            <button class="btn-primary" style="font-size:.85rem;padding:.6rem 1.2rem" onclick="goPage('contact')">View Details</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-header">
+          <div class="client-tag" style="color:var(--electric);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:.6rem">Launching Soon</div>
+          <h3>DutaConnect</h3>
+          <p>Community Platform</p>
         </div>
       </div>
     </div>
@@ -714,7 +744,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><img src="assets/Dislogo.png" alt="Duta Integra Solutions" class="logo-img"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
@@ -814,7 +844,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><img src="assets/Dislogo.png" alt="Duta Integra Solutions" class="logo-img"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
@@ -885,7 +915,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><img src="assets/Dislogo.png" alt="Duta Integra Solutions" class="logo-img"></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Case Studies</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
@@ -896,7 +926,7 @@ body.dark-mode .price-cta.sec:hover{background:rgba(255,255,255,.14);border-colo
 // Language Translations
 const translations = {
   en: {
-    navServices: 'Services', navAbout: 'About', navCases: 'Case Studies', navPricing: 'Pricing', navContact: 'Contact Us',
+    navServices: 'Services', navAbout: 'About', navCases: 'Projects', navPricing: 'Pricing', navContact: 'Contact Us',
     heroBadge: "🇲🇾 Malaysia's AI-First IT Partner", heroTitle1: 'Smart Technology.', heroTitle2: 'Integrated Solutions.',
     heroDesc: "We help Malaysian businesses grow with custom AI software and reliable managed IT — from intelligent chatbots to cloud infrastructure, all under one roof.",
     heroBtn1: 'Get a Free IT Audit', heroBtn2: 'Explore Services →',
@@ -916,10 +946,12 @@ const translations = {
     why4Title: 'Fast Onboarding', why4Desc: 'Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.',
     ctaTitle: 'Ready to Modernize Your Business?', ctaDesc: 'Start with a free IT audit or AI readiness assessment — no obligation, no strings attached.', ctaBtn1: 'Book Free Consultation', ctaBtn2: 'View Pricing',
     footerDesc: 'Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.',
-    footerCompany: 'Company', footerServices: 'Services'
+    footerCompany: 'Company', footerServices: 'Services',
+    casesHeroLabel: 'Projects', casesTitle: 'Projects We\'ve Delivered', casesSub: 'Real products we\'ve built for clients across Malaysia. Click through to preview them live.',
+    casesSectionEyebrow: 'Our Portfolio', casesSectionTitle: 'Our Projects', casesSectionSub: 'Every project we take on is built from the ground up by our team. Here are some of the products we\'ve developed.'
   },
   bm: {
-    navServices: 'Perkhidmatan', navAbout: 'Tentang Kami', navCases: 'Kajian Kes', navPricing: 'Harga', navContact: 'Hubungi Kami',
+    navServices: 'Perkhidmatan', navAbout: 'Tentang Kami', navCases: 'Projek', navPricing: 'Harga', navContact: 'Hubungi Kami',
     heroBadge: '🇲🇾 Rakan Kongsia IT Berasaskan AI Malaysia', heroTitle1: 'Teknologi Pintar.', heroTitle2: 'Penyelesaian Bersepadu.',
     heroDesc: 'Kami membantu perniagaan Malaysia berkembang dengan perisian AI tersuai dan perkhidmatan IT yang boleh dipercayai — dari chatbot pintar hingga infrastruktur awan, semuanya di bawah satu bumbung.',
     heroBtn1: 'Dapatkan Audit IT Percuma', heroBtn2: 'Terokai Perkhidmatan →',
@@ -963,8 +995,8 @@ const translations = {
     val4Title: 'Bangga Tempatan', val4Desc: 'Kami faham landskap perniagaan Malaysia — peraturan, budaya, dan peluang unik di sini.',
     teamEyebrow: 'Pasukan', teamTitle: 'Orang-Orang Di Sebalik Duta Integra',
     // Cases
-    casesHeroLabel: 'Kajian Kes', casesTitle: 'Kerja Sebenar. Keputusan Sebenar.', casesSub: 'Lihat bagaimana kami membantu perniagaan seperti anda menyelesaikan masalah sebenar dengan AI dan IT.',
-    casesSectionEyebrow: 'Kerja Pelanggan', casesSectionTitle: 'Kisah Kejayaan Pertama Kami', casesSectionSub: 'Kami berbangga telah membantu Leish dan Eastelpro dalam perjalanan teknologi mereka.',
+    casesHeroLabel: 'Projek', casesTitle: 'Projek Yang Telah Kami Sampaikan', casesSub: 'Produk sebenar yang kami bina. Klik untuk pratonton secara langsung.',
+    casesSectionEyebrow: 'Portfolio Kami', casesSectionTitle: 'Projek Kami', casesSectionSub: 'Setiap projek dibina dari awal oleh pasukan kami. Berikut adalah beberapa produk yang telah kami bangunkan.',
     cta3Title: 'Ingin Menjadi Kisah Kejayaan seterusnya?', cta3Desc: 'Sama ada anda perlukan AI, sokongan IT, atau migrasi awan — mari bincangkan apa yang boleh dilakukan untuk perniagaan anda.', cta3Btn1: 'Tempah Perundingan Percuma', cta3Btn2: 'Lihat Harga →',
     // Pricing
     pricingHeroLabel: 'Harga', pricingTitle: 'Harga Telus. Tiada Kejutan.', pricingSub: 'Pelan fleksibel untuk SME Malaysia — sama ada anda perlukan IT terurus penuh, pembangunan AI, atau kedua-duanya. Semua harga dalam MYR.',
@@ -1050,6 +1082,22 @@ function applyTranslations() {
   document.querySelector('.footer-brand p').textContent = t.footerDesc;
   document.querySelectorAll('.footer-col h5')[0].textContent = t.footerCompany;
   document.querySelectorAll('.footer-col h5')[1].textContent = t.footerServices;
+  // Cases
+  const casesPage = document.querySelector('#page-cases');
+  if(casesPage) {
+    const hl = casesPage.querySelector('.page-hero-label');
+    if(hl) hl.textContent = t.casesHeroLabel;
+    const h1 = casesPage.querySelector('.page-hero h1');
+    if(h1) h1.textContent = t.casesTitle;
+    const hp = casesPage.querySelector('.page-hero p');
+    if(hp) hp.textContent = t.casesSub;
+    const se = casesPage.querySelector('.cases-grid .section-eyebrow');
+    if(se) se.textContent = t.casesSectionEyebrow;
+    const st = casesPage.querySelector('.cases-grid .section-title');
+    if(st) st.textContent = t.casesSectionTitle;
+    const ss = casesPage.querySelector('.cases-grid .section-sub');
+    if(ss) ss.textContent = t.casesSectionSub;
+  }
 }
 
 // Apply translations on page load if saved
