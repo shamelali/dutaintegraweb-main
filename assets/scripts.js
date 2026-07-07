@@ -194,9 +194,7 @@ function toggleDarkMode() {
 }
 
 function updateLogos(isDark) {
-  document.querySelectorAll('.logo img, .footer .logo img').forEach(img => {
-    img.src = 'assets/Dislogo.png';
-  });
+  // New DIS logo works in both modes - no swap needed
 }
 
 // Dark mode defaults to enabled. If user explicitly chose light, stay light.

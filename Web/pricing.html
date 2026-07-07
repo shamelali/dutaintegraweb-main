@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pricing - Duta Integra Solutions</title>
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" href="../assets/dis-favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
@@ -12,9 +13,11 @@
 .ti{color:var(--electric)}
 body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
 nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;display:flex;align-items:center}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;display:flex;align-items:center;gap:12px}
+.logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;background:linear-gradient(180deg,#e8eaf0 0%,#b0b8c8 40%,#8a94a8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.footer .logo-text{font-size:1.1rem}
 .logo a{color:white;text-decoration:none}
-.logo img{height:40px;width:auto}
+.logo img{height:100px;width:auto}
 .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
 .nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s}
 .nav-links a:hover{color:var(--electric)}
@@ -77,7 +80,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 </head>
 <body>
 <nav>
-  <div class="logo"><img src="../assets/logo-white.svg" alt="Duta Integra Solutions"></div>
+  <div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture></div>
   <ul class="nav-links">
     <li><a href="services.html">Services</a></li>
     <li><a href="about.html">About</a></li>
@@ -192,7 +195,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <footer>
   <div class="footer-top">
     <div class="footer-brand">
-      <div class="logo"><img src="../assets/logo-white.svg" alt="Duta Integra Solutions"></div>
+<div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div>
       <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
     </div>
     <div class="footer-col">
