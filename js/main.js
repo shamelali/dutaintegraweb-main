@@ -215,20 +215,77 @@ function syncThemeIcon() {
   });
 }
 
-const PROMO_END = new Date("2026-09-12T23:59:59+08:00");
+function mytNow() {
+  return new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kuala_Lumpur" }));
+}
+
+function promoState() {
+  const d = mytNow();
+  const y = d.getFullYear();
+  const m = d.getMonth() + 1;
+  if (y === 2026 && m === 8) {
+    return { live: true, pct: 69, key: "aug", end: new Date("2026-08-31T23:59:59+08:00") };
+  }
+  if (y === 2026 && m === 9) {
+    return { live: true, pct: 63, key: "sep", end: new Date("2026-09-30T23:59:59+08:00") };
+  }
+  return { live: false, pct: 0, key: "", end: null };
+}
 
 function promoLive() {
-  return Date.now() < PROMO_END.getTime();
+  return promoState().live;
+}
+
+function formatRM(n) {
+  return "RM " + Number(n).toLocaleString("en-MY");
+}
+
+function applyPromoPrices() {
+  const p = promoState();
+  if (!p.live) return;
+  document.body.classList.add("promo-live");
+  const ms = isMsPath();
+  const pill = p.key === "aug"
+    ? (ms ? "Merdeka · potongan 69%" : "Merdeka · 69% off")
+    : (ms ? "September · potongan 63%" : "September · 63% off");
+  document.querySelectorAll(".launch-pill").forEach((el) => { el.textContent = pill; });
+
+  document.querySelectorAll("[data-list]").forEach((el) => {
+    const list = Number(el.getAttribute("data-list"));
+    if (!list) return;
+    const sale = Math.round(list * (1 - p.pct / 100));
+    const from = el.hasAttribute("data-from");
+    const period = el.getAttribute("data-period") || "";
+    const prefix = from ? (ms ? "Dari " : "From ") : "";
+    const now = el.querySelector("[data-promo-now]");
+    if (now) {
+      now.textContent = prefix + formatRM(sale);
+      return;
+    }
+    el.innerHTML =
+      '<span class="was">' + prefix + formatRM(list) + period + "</span>" +
+      '<span data-promo-now>' + prefix + formatRM(sale) + "</span>" +
+      (period ? "<small>" + period + "</small>" : "");
+  });
 }
 
 function injectPromoBar() {
-  if (!promoLive() || document.querySelector(".promo-bar")) return;
+  const p = promoState();
+  if (!p.live || document.querySelector(".promo-bar")) return;
   const bar = document.createElement("div");
   bar.className = "promo-bar";
   const ms = isMsPath();
-  bar.innerHTML = ms
-    ? '<div class="wrap"><div><strong>Bulan pelancaran</strong> — bulan pertama potongan 50% untuk mana-mana retainer. Tawaran tamat 12 Sep 2026.</div><div><span class="promo-clock" id="promo-clock"></span> &nbsp; <a href="/ms/pricing">Lihat tawaran →</a></div></div>'
-    : '<div class="wrap"><div><strong>Launch month</strong> — first month 50% off any retainer. Offer ends 12 Sep 2026.</div><div><span class="promo-clock" id="promo-clock"></span> &nbsp; <a href="/pricing">See offer →</a></div></div>';
+  const offer = p.key === "aug"
+    ? (ms
+      ? "<strong>Promosi Merdeka</strong> — potongan 69% semua perkhidmatan pada Ogos. Potongan 63% pada September."
+      : "<strong>Merdeka promo</strong> — 69% off all services in August. 63% off in September.")
+    : (ms
+      ? "<strong>Promosi September</strong> — potongan 63% semua perkhidmatan sehingga 30 Sep 2026."
+      : "<strong>September promo</strong> — 63% off all services through 30 Sep 2026.");
+  const link = ms ? "/ms/pricing" : "/pricing";
+  const cta = ms ? "Lihat harga →" : "See pricing →";
+  bar.innerHTML =
+    '<div class="wrap"><div>' + offer + '</div><div><span class="promo-clock" id="promo-clock"></span> &nbsp; <a href="' + link + '">' + cta + "</a></div></div>";
   const nav = document.querySelector(".nav");
   if (nav) nav.insertAdjacentElement("afterend", bar);
   else document.body.prepend(bar);
@@ -237,8 +294,9 @@ function injectPromoBar() {
 
 function tickPromoClock() {
   const el = document.getElementById("promo-clock");
-  if (!el) return;
-  const left = PROMO_END.getTime() - Date.now();
+  const p = promoState();
+  if (!el || !p.end) return;
+  const left = p.end.getTime() - Date.now();
   if (left <= 0) {
     document.body.classList.remove("promo-live");
     document.querySelector(".promo-bar")?.remove();
@@ -252,12 +310,15 @@ function tickPromoClock() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (enforceLangPreference()) return;
+  rememberLangFromPath();
+  bindLangSwitch();
   if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark");
   }
   if (promoLive()) document.body.classList.add("promo-live");
+  applyPromoPrices();
   injectPromoBar();
-  applyLang(currentLang());
   syncThemeIcon();
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeNav();
