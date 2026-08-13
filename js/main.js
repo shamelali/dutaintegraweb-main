@@ -285,11 +285,38 @@ function injectPromoBar() {
   const link = ms ? "/ms/pricing" : "/pricing";
   const cta = ms ? "Lihat harga →" : "See pricing →";
   bar.innerHTML =
-    '<div class="wrap"><div>' + offer + '</div><div><span class="promo-clock" id="promo-clock"></span> &nbsp; <a href="' + link + '">' + cta + "</a></div></div>";
+    '<div class="wrap">' +
+      '<div class="promo-copy">' +
+        '<img class="promo-flag" src="/assets/img/jalur-gemilang.svg" width="28" height="14" alt="" />' +
+        "<div>" + offer + "</div>" +
+      "</div>" +
+      '<div class="promo-meta"><span class="promo-clock" id="promo-clock"></span><a href="' + link + '">' + cta + "</a></div>" +
+    "</div>";
   const nav = document.querySelector(".nav");
   if (nav) nav.insertAdjacentElement("afterend", bar);
   else document.body.prepend(bar);
   tickPromoClock();
+}
+
+function dressMerdeka() {
+  const p = promoState();
+  if (!p.live) return;
+  const ms = isMsPath();
+  document.querySelectorAll("[data-promo-month]").forEach((el) => {
+    el.classList.toggle("is-now", el.getAttribute("data-promo-month") === p.key);
+  });
+  const badge = document.querySelector(".hero .badge");
+  if (badge && !document.querySelector(".hero-merdeka")) {
+    const chip = document.createElement("div");
+    chip.className = "hero-merdeka";
+    chip.innerHTML =
+      '<img src="/assets/img/jalur-gemilang.svg" width="22" height="11" alt="" />' +
+      "<span>" + (p.key === "aug"
+        ? (ms ? "Merdeka · <b>potongan 69%</b>" : "Merdeka · <b>69% off</b>")
+        : (ms ? "September · <b>potongan 63%</b>" : "September · <b>63% off</b>")) +
+      "</span>";
+    badge.insertAdjacentElement("afterend", chip);
+  }
 }
 
 function tickPromoClock() {
@@ -305,7 +332,10 @@ function tickPromoClock() {
   const d = Math.floor(left / 86400000);
   const h = Math.floor((left % 86400000) / 3600000);
   const m = Math.floor((left % 3600000) / 60000);
-  el.textContent = d + "d " + String(h).padStart(2, "0") + "h " + String(m).padStart(2, "0") + "m left";
+  const ms = isMsPath();
+  el.textContent = ms
+    ? (d + "h " + String(h).padStart(2, "0") + "j " + String(m).padStart(2, "0") + "m lagi")
+    : (d + "d " + String(h).padStart(2, "0") + "h " + String(m).padStart(2, "0") + "m left");
   setTimeout(tickPromoClock, 30000);
 }
 
@@ -319,6 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (promoLive()) document.body.classList.add("promo-live");
   applyPromoPrices();
   injectPromoBar();
+  dressMerdeka();
   syncThemeIcon();
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeNav();

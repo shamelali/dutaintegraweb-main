@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140" width="280" height="140" role="img" aria-label="Jalur Gemilang">
+  <rect width="280" height="140" fill="#CC0001"/>
+  <rect y="10" width="280" height="10" fill="#FFFFFF"/>
+  <rect y="30" width="280" height="10" fill="#FFFFFF"/>
+  <rect y="50" width="280" height="10" fill="#FFFFFF"/>
+  <rect y="70" width="280" height="10" fill="#FFFFFF"/>
+  <rect y="90" width="280" height="10" fill="#FFFFFF"/>
+  <rect y="110" width="280" height="10" fill="#FFFFFF"/>
+  <rect y="130" width="280" height="10" fill="#FFFFFF"/>
+  <rect width="140" height="80" fill="#010066"/>
+  <path fill="#FFCC00" fill-rule="evenodd" d="M34 40a22 22 0 1 0 44 0a22 22 0 1 0-44 0M49.6 40a16.8 16.8 0 1 0 33.6 0a16.8 16.8 0 1 0-33.6 0"/>
+  <polygon fill="#FFCC00" points="104.00,22.80 105.54,33.27 111.46,24.50 108.30,34.61 117.45,29.28 110.22,37.01 120.77,36.17 110.90,40.00 120.77,43.83 110.22,42.99 117.45,50.72 108.30,45.39 111.46,55.50 105.54,46.73 104.00,57.20 102.46,46.73 96.54,55.50 99.70,45.39 90.55,50.72 97.78,42.99 87.23,43.83 97.10,40.00 87.23,36.17 97.78,37.01 90.55,29.28 99.70,34.61 96.54,24.50 102.46,33.27"/>
+</svg>
