@@ -104,7 +104,30 @@ function counterpartPath() {
 }
 
 function toggleLang() {
+  const goingMs = !isMsPath();
+  localStorage.setItem("lang", goingMs ? "ms" : "en");
   location.href = counterpartPath();
+}
+
+function rememberLangFromPath() {
+  localStorage.setItem("lang", isMsPath() ? "ms" : "en");
+}
+
+function enforceLangPreference() {
+  const pref = localStorage.getItem("lang");
+  if (pref === "ms" && !isMsPath()) {
+    location.replace(counterpartPath());
+    return true;
+  }
+  return false;
+}
+
+function bindLangSwitch() {
+  document.querySelectorAll(".lang-switch a[hreflang]").forEach((a) => {
+    a.addEventListener("click", () => {
+      localStorage.setItem("lang", a.getAttribute("hreflang") === "ms" ? "ms" : "en");
+    });
+  });
 }
 
 function toggleDark() {
