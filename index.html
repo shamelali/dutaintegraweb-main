@@ -11,6 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="alternate" hreflang="en" href="https://dutaintegra.my/" />
+  <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/" />
+  <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/" />
   <meta property="og:title" content="Duta Integra Solutions" />
   <meta property="og:description" content="Enterprise-grade AI systems and managed IT, built for Malaysian SMEs." />
   <meta property="og:type" content="website" />
@@ -36,7 +39,7 @@
         <a class="nav-cta" href="contact.html" data-i18n="nav_quote">Get a quote</a>
       </nav>
       <div class="nav-tools">
-        <button class="tool" type="button" onclick="toggleLang()" data-lang-label title="Language">BM</button>
+        <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/" hreflang="en">EN</a><a class="lang-opt" href="/ms/" hreflang="ms">BM</a></div>
         <button class="tool" type="button" onclick="toggleDark()" data-theme-icon title="Theme" aria-label="Toggle theme">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
         </button>
@@ -50,7 +53,7 @@
       <a href="pricing.html" onclick="closeNav()" data-i18n="nav_pricing">Pricing</a>
       <a class="nav-cta" href="contact.html" onclick="closeNav()" data-i18n="nav_quote">Get a quote</a>
       <div class="drawer-tools">
-        <button class="tool" type="button" onclick="toggleLang()" data-lang-label>BM</button>
+        <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/" hreflang="en">EN</a><a class="lang-opt" href="/ms/" hreflang="ms">BM</a></div>
         <button class="tool" type="button" onclick="toggleDark()" data-theme-icon aria-label="Toggle theme">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
         </button>

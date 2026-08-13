@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="alternate" hreflang="en" href="https://dutaintegra.my/services" />
+  <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/services" />
+  <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/services" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -27,7 +30,7 @@
         <a class="nav-cta" href="contact.html" data-i18n="nav_quote">Get a quote</a>
       </nav>
       <div class="nav-tools">
-        <button class="tool" type="button" onclick="toggleLang()" data-lang-label>BM</button>
+        <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/services" hreflang="en">EN</a><a class="lang-opt" href="/ms/services" hreflang="ms">BM</a></div>
         <button class="tool" type="button" onclick="toggleDark()" data-theme-icon aria-label="Toggle theme">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
         </button>
@@ -39,6 +42,7 @@
       <a href="work.html" onclick="closeNav()">Work</a>
       <a href="about.html" onclick="closeNav()">About</a>
       <a href="pricing.html" onclick="closeNav()">Pricing</a>
+      <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/services" hreflang="en">EN</a><a class="lang-opt" href="/ms/services" hreflang="ms">BM</a></div>
       <a class="nav-cta" href="contact.html" onclick="closeNav()">Get a quote</a>
     </div>
   </header>

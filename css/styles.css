@@ -281,6 +281,36 @@ body.promo-live .then { display: block; }
   place-items: center;
 }
 .tool:hover { color: var(--paper); border-color: var(--gold); }
+.lang-switch {
+  display: inline-flex;
+  border: 0.5px solid rgba(255,255,255,.16);
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 34px;
+}
+.lang-opt {
+  display: grid;
+  place-items: center;
+  min-width: 36px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #B8BEC8;
+}
+.lang-opt.is-active {
+  background: var(--gold);
+  color: var(--navy) !important;
+}
+.lang-opt:hover:not(.is-active) { color: var(--paper); }
+.drawer .lang-switch { margin-top: 14px; height: 36px; width: auto; }
+.drawer .lang-switch a.lang-opt {
+  display: grid;
+  width: auto;
+  padding: 0 14px;
+  border-bottom: 0;
+  color: #D5D8DE;
+}
 .burger {
   display: none;
   width: 40px;
@@ -824,10 +854,8 @@ body.promo-live .then { display: block; }
 }
 .page-hero.campus {
   background:
-    linear-gradient(101px),
-    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse at 80% 0%, #000 10%, transparent 70%);
+    linear-gradient(100deg, rgba(15,24,34,.88) 0%, rgba(30,45,61,.62) 100%),
+    url("../assets/img/about-campus.jpg") center / cover no-repeat;
 }
 .page-hero .wrap { position: relative; }
 .page-hero h1 {
@@ -1223,17 +1251,6 @@ body.dark .metrics b { color: var(--gold); }
   .hero h1 { max-width: none; }
   .strip-inner { flex-direction: column; align-items: flex-start; }
   .brand-name { font-size: 14px; }
-  .brand-mark { height: 36px; }
-  .section { padding: 56px 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}
-rand-name { font-size: 14px; }
   .brand-mark { height: 36px; }
   .section { padding: 56px 0; }
 }

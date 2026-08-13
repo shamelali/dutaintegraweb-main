@@ -87,26 +87,24 @@ const i18n = {
   }
 };
 
-function currentLang() {
-  return localStorage.getItem("lang") === "bm" ? "bm" : "en";
+function isMsPath() {
+  return location.pathname === "/ms" || location.pathname.startsWith("/ms/");
 }
 
-function applyLang(lang) {
-  const dict = i18n[lang] || i18n.en;
-  document.documentElement.lang = lang === "bm" ? "ms" : "en";
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.getAttribute("data-i18n");
-    if (dict[key]) el.textContent = dict[key];
-  });
-  document.querySelectorAll("[data-lang-label]").forEach((el) => {
-    el.textContent = lang === "bm" ? "EN" : "BM";
-  });
+function currentLang() {
+  return isMsPath() ? "bm" : "en";
+}
+
+function counterpartPath() {
+  const raw = location.pathname.replace(/\/index\.html$/, "/").replace(/\.html$/, "");
+  if (raw === "/ms" || raw === "/ms/") return "/";
+  if (raw.startsWith("/ms/")) return raw.slice(3) || "/";
+  if (raw === "/" || raw === "") return "/ms/";
+  return "/ms" + raw;
 }
 
 function toggleLang() {
-  const next = currentLang() === "en" ? "bm" : "en";
-  localStorage.setItem("lang", next);
-  applyLang(next);
+  location.href = counterpartPath();
 }
 
 function toggleDark() {
@@ -204,11 +202,10 @@ function injectPromoBar() {
   if (!promoLive() || document.querySelector(".promo-bar")) return;
   const bar = document.createElement("div");
   bar.className = "promo-bar";
-  bar.innerHTML =
-    '<div class="wrap">' +
-    "<div><strong>Launch month</strong> — first month 50% off any retainer. Offer ends 12 Sep 2026.</div>" +
-    '<div><span class="promo-clock" id="promo-clock"></span> &nbsp; <a href="pricing.html">See offer →</a></div>' +
-    "</div>";
+  const ms = isMsPath();
+  bar.innerHTML = ms
+    ? '<div class="wrap"><div><strong>Bulan pelancaran</strong> — bulan pertama potongan 50% untuk mana-mana retainer. Tawaran tamat 12 Sep 2026.</div><div><span class="promo-clock" id="promo-clock"></span> &nbsp; <a href="/ms/pricing">Lihat tawaran →</a></div></div>'
+    : '<div class="wrap"><div><strong>Launch month</strong> — first month 50% off any retainer. Offer ends 12 Sep 2026.</div><div><span class="promo-clock" id="promo-clock"></span> &nbsp; <a href="/pricing">See offer →</a></div></div>';
   const nav = document.querySelector(".nav");
   if (nav) nav.insertAdjacentElement("afterend", bar);
   else document.body.prepend(bar);

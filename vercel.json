@@ -14,6 +14,22 @@
       "source": "/cases.html",
       "destination": "/work",
       "permanent": true
+    },
+    {
+      "source": "/ms/cases",
+      "destination": "/ms/work",
+      "permanent": true
+    },
+    {
+      "source": "/ms/cases.html",
+      "destination": "/ms/work",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/ms",
+      "destination": "/ms/index.html"
     }
   ],
   "headers": [

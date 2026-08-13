@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="alternate" hreflang="en" href="https://dutaintegra.my/pricing" />
+  <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/pricing" />
+  <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/pricing" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -27,7 +30,7 @@
         <a class="nav-cta" href="contact.html" data-i18n="nav_quote">Get a quote</a>
       </nav>
       <div class="nav-tools">
-        <button class="tool" type="button" onclick="toggleLang()" data-lang-label>BM</button>
+        <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/pricing" hreflang="en">EN</a><a class="lang-opt" href="/ms/pricing" hreflang="ms">BM</a></div>
         <button class="tool" type="button" onclick="toggleDark()" data-theme-icon aria-label="Toggle theme">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
         </button>
@@ -39,6 +42,7 @@
       <a href="work.html" onclick="closeNav()">Work</a>
       <a href="about.html" onclick="closeNav()">About</a>
       <a href="pricing.html" onclick="closeNav()">Pricing</a>
+      <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/pricing" hreflang="en">EN</a><a class="lang-opt" href="/ms/pricing" hreflang="ms">BM</a></div>
       <a class="nav-cta" href="contact.html" onclick="closeNav()">Get a quote</a>
     </div>
   </header>
@@ -55,9 +59,51 @@
     <section class="section">
       <div class="wrap">
         <div class="section-head">
-          <div class="eyebrow">Monthly retainers</div>
-          <h2>One partner. One monthly fee.</h2>
-          <p>Pick a tier and scale up as you grow. Launch offer is the first month only, for retainers started by 12 September 2026.</p>
+          <div class="eyebrow">Individual services</div>
+          <h2>Pick what you need</h2>
+          <p>Each line is priced on its own. Stack them, or take a bundled retainer below.</p>
+        </div>
+        <div class="addons">
+          <article class="addon">
+            <h3>Managed IT retainer</h3>
+            <div class="ap">RM 2,000 / month</div>
+            <p>Helpdesk, cloud, security, PDPA, monthly health report. The Foundation tier.</p>
+          </article>
+          <article class="addon">
+            <h3>Sales automation retainer</h3>
+            <div class="ap">RM 1,500 / month</div>
+            <p>CRM pipelines, WhatsApp capture, outreach sequences, handoff into billing.</p>
+          </article>
+          <article class="addon">
+            <h3>Content creation retainer</h3>
+            <div class="ap">RM 1,000 / month</div>
+            <p>Content engine and calendar so the site and channels stay alive.</p>
+          </article>
+          <article class="addon">
+            <h3>Ads management retainer</h3>
+            <div class="ap">RM 800 / month</div>
+            <p>Paid media management and campaign optimisation. The cheapest door into a retainer.</p>
+          </article>
+          <article class="addon">
+            <h3>Website / profile</h3>
+            <div class="ap">RM 2,500</div>
+            <p>One-off. Professional website or business profile — designed, built, and deployed.</p>
+          </article>
+          <article class="addon">
+            <h3>Custom AI system</h3>
+            <div class="ap">From RM 18,000</div>
+            <p>One-off build — chatbot, automation, or a full product sprint. Or take AI Partner and amortise it monthly.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Bundled retainers</div>
+          <h2>Or take the package</h2>
+          <p>One partner, one monthly fee. Growth is all four retainers together. Launch offer is the first month only, for retainers started by 12 September 2026.</p>
         </div>
         <div class="tiers">
           <article class="tier">
@@ -120,48 +166,6 @@
           </article>
         </div>
         <p class="note">All tiers include a <b>free initial IT audit</b>. Contracts are month-to-month — no lock-in.</p>
-      </div>
-    </section>
-
-    <section class="section" style="padding-top:0">
-      <div class="wrap">
-        <div class="section-head">
-          <div class="eyebrow">À la carte · from the operating model</div>
-          <h2>Buy a line item, or take the bundle</h2>
-          <p>Same unit rates as the 12-month plan. Add them on top of Foundation, or take Growth and get all four retainers in one fee.</p>
-        </div>
-        <div class="addons">
-          <article class="addon">
-            <h3>Managed IT retainer</h3>
-            <div class="ap">RM 2,000 / month</div>
-            <p>Helpdesk, cloud, security, PDPA, monthly health report. The Foundation tier.</p>
-          </article>
-          <article class="addon">
-            <h3>Sales automation retainer</h3>
-            <div class="ap">RM 1,500 / month</div>
-            <p>CRM pipelines, WhatsApp capture, outreach sequences, handoff into billing.</p>
-          </article>
-          <article class="addon">
-            <h3>Content creation retainer</h3>
-            <div class="ap">RM 1,000 / month</div>
-            <p>Content engine and calendar so the site and channels stay alive.</p>
-          </article>
-          <article class="addon">
-            <h3>Ads management retainer</h3>
-            <div class="ap">RM 800 / month</div>
-            <p>Paid media management and campaign optimisation. The cheapest door into a retainer.</p>
-          </article>
-          <article class="addon">
-            <h3>Website / profile</h3>
-            <div class="ap">RM 2,500</div>
-            <p>One-off. Professional website or business profile — designed, built, and deployed.</p>
-          </article>
-          <article class="addon">
-            <h3>Custom AI system</h3>
-            <div class="ap">From RM 18,000</div>
-            <p>One-off build — chatbot, automation, or a full product sprint. Or take AI Partner and amortise it monthly.</p>
-          </article>
-        </div>
       </div>
     </section>
 
