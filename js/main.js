@@ -8,7 +8,7 @@ const i18n = {
     nav_pricing: "Pricing",
     nav_quote: "Get a quote",
     hero_badge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA",
-    hero_title: "Enterprise-grade AI systems and managed IT, built for Malaysian SMEs",
+    hero_title: 'Enterprise-grade <em class="accent">AI systems</em> and <em class="accent">managed IT</em>, built for <em class="accent">Malaysian SMEs</em>',
     hero_lead: "Custom AI apps, chatbots, automation, and secure cloud infrastructure — delivered by a Cyberjaya-based team, since 2021.",
     hero_cta1: "Book a discovery call",
     hero_cta2: "View our work",
@@ -33,8 +33,8 @@ const i18n = {
     work_eye: "Selected work",
     work_title: "Systems we have shipped",
     why_eye: "Why choose us",
-    why_title: "Built for Malaysian SMEs",
-    cta_title: "Ready to modernise your business?",
+    why_title: 'Built for <em class="accent">Malaysian SMEs</em>',
+    cta_title: 'Ready to <em class="accent">modernise</em> your business?',
     cta_sub: "Start with a free IT audit or AI readiness assessment — no obligation.",
     cta1: "Book free consultation",
     cta2: "View pricing",
@@ -50,7 +50,7 @@ const i18n = {
     nav_pricing: "Harga",
     nav_quote: "Minta sebut harga",
     hero_badge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA",
-    hero_title: "Sistem AI dan IT terurus peringkat perusahaan, dibina untuk SME Malaysia",
+    hero_title: 'Sistem <em class="accent">AI</em> dan <em class="accent">IT terurus</em> peringkat perusahaan, dibina untuk <em class="accent">SME Malaysia</em>',
     hero_lead: "Aplikasi AI tersuai, chatbot, automasi, dan infrastruktur awan yang selamat — disampaikan oleh pasukan Cyberjaya, sejak 2021.",
     hero_cta1: "Tempah sesi penemuan",
     hero_cta2: "Lihat kerja kami",
@@ -75,8 +75,8 @@ const i18n = {
     work_eye: "Kerja terpilih",
     work_title: "Sistem yang telah kami hantar",
     why_eye: "Mengapa pilih kami",
-    why_title: "Dibina untuk SME Malaysia",
-    cta_title: "Bersedia memodenkan perniagaan anda?",
+    why_title: 'Dibina untuk <em class="accent">SME Malaysia</em>',
+    cta_title: 'Bersedia <em class="accent">memodenkan</em> perniagaan anda?',
     cta_sub: "Mulakan dengan audit IT percuma atau penilaian kesediaan AI — tanpa obligasi.",
     cta1: "Tempah perundingan percuma",
     cta2: "Lihat harga",
@@ -144,53 +144,109 @@ function closeNav() {
   document.querySelector(".nav")?.classList.remove("is-open");
 }
 
+function showToast(message, isError) {
+  const t = document.getElementById("toast");
+  if (!t) {
+    if (isError) alert(message);
+    return;
+  }
+  t.textContent = message;
+  t.classList.toggle("is-error", !!isError);
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), isError ? 5200 : 4200);
+}
+
 function submitForm(e) {
   e.preventDefault();
   const form = e.target;
   const data = Object.fromEntries(new FormData(form).entries());
+  const ms = isMsPath();
+
+  // Honeypot
+  if (data.website || data.hp) return;
+
   if (!data.name || !data.email || !data.service) {
-    alert("Please fill in name, email, and the service you need.");
+    showToast(
+      ms
+        ? "Sila isi nama, e-mel, dan perkhidmatan yang diperlukan."
+        : "Please fill in name, email, and the service you need.",
+      true
+    );
     return;
   }
+
   const btn = form.querySelector("[type=submit]");
   const original = btn.textContent;
   btn.disabled = true;
-  btn.textContent = "Sending…";
+  btn.textContent = ms ? "Menghantar…" : "Sending…";
 
   const payload = {
-    name: data.name,
-    company: data.company || "",
-    email: data.email,
-    phone: data.phone || "",
-    service: data.service,
-    message: data.message || ""
+    name: String(data.name || "").trim(),
+    company: String(data.company || "").trim(),
+    email: String(data.email || "").trim(),
+    phone: String(data.phone || "").trim(),
+    service: String(data.service || "").trim(),
+    message: String(data.message || "").trim(),
+    website: data.website || "",
   };
 
-  const done = (ok) => {
+  const finish = (ok, note) => {
     btn.disabled = false;
     btn.textContent = original;
     if (ok) {
       form.reset();
-      const t = document.getElementById("toast");
-      if (t) {
-        t.textContent = i18n[currentLang()].toast;
-        t.classList.add("show");
-        setTimeout(() => t.classList.remove("show"), 4200);
-      }
+      // Re-apply interest query if present
+      prefillserviceFromQuery(form);
+      showToast(note || i18n[currentLang()].toast, false);
+    } else if (note) {
+      showToast(note, true);
     }
   };
 
   fetch("/api/send-email", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
-    .then((r) => r.json())
-    .then((d) => {
-      if (d && d.success) done(true);
-      else fallbackWhatsApp(payload, done);
+    .then(async (r) => {
+      let d = null;
+      try {
+        d = await r.json();
+      } catch {
+        d = null;
+      }
+      if (r.ok && d && d.success) {
+        finish(true);
+        return;
+      }
+      // API missing key / server down → graceful WhatsApp fallback
+      if (r.status === 503 || r.status >= 500 || !r.ok) {
+        fallbackWhatsApp(payload, () =>
+          finish(
+            true,
+            ms
+              ? "E-mel sementara tidak tersedia — kami buka WhatsApp supaya anda boleh hantar terus."
+              : "Email is temporarily unavailable — opening WhatsApp so you can send directly."
+          )
+        );
+        return;
+      }
+      finish(
+        false,
+        (d && d.error) ||
+          (ms ? "Gagal menghantar. Cuba lagi atau WhatsApp kami." : "Could not send. Try again or WhatsApp us.")
+      );
     })
-    .catch(() => fallbackWhatsApp(payload, done));
+    .catch(() => {
+      fallbackWhatsApp(payload, () =>
+        finish(
+          true,
+          ms
+            ? "Sambungan gagal — kami buka WhatsApp sebagai sandaran."
+            : "Connection failed — opening WhatsApp as a fallback."
+        )
+      );
+    });
 }
 
 function fallbackWhatsApp(payload, done) {
@@ -200,7 +256,48 @@ function fallbackWhatsApp(payload, done) {
       `Interest: ${payload.service}\n\n${payload.message || ""}`
   );
   window.open(`https://wa.me/601154034051?text=${text}`, "_blank", "noopener");
-  done(true);
+  if (typeof done === "function") done(true);
+}
+
+function prefillserviceFromQuery(form) {
+  const root = form || document.querySelector("form.form");
+  if (!root) return;
+  const params = new URLSearchParams(location.search);
+  const interest = params.get("interest") || params.get("service");
+  if (!interest) return;
+  const select = root.querySelector("[name=service]");
+  if (!select) return;
+  const want = interest.trim().toLowerCase();
+  let matched = false;
+  Array.from(select.options).forEach((opt) => {
+    if (opt.value && opt.value.toLowerCase() === want) {
+      select.value = opt.value;
+      matched = true;
+    }
+  });
+  if (!matched) {
+    // fuzzy contains
+    Array.from(select.options).forEach((opt) => {
+      if (!matched && opt.value && (want.includes(opt.value.toLowerCase()) || opt.value.toLowerCase().includes(want))) {
+        select.value = opt.value;
+        matched = true;
+      }
+    });
+  }
+  if (!matched && want) {
+    // inject temporary option so the value still submits
+    const opt = document.createElement("option");
+    opt.value = interest.trim();
+    opt.textContent = interest.trim();
+    opt.selected = true;
+    select.appendChild(opt);
+  }
+  const msg = root.querySelector("[name=message]");
+  if (msg && !msg.value) {
+    msg.placeholder = isMsPath()
+      ? `Minat: ${interest.trim()} — beritahu kami tentang perniagaan anda…`
+      : `Interest: ${interest.trim()} — tell us about your business…`;
+  }
 }
 
 const sunIcon =
@@ -240,15 +337,21 @@ function formatRM(n) {
   return "RM " + Number(n).toLocaleString("en-MY");
 }
 
+function fromLabelHtml() {
+  return isMsPath()
+    ? '<small class="price-from">Dari</small> '
+    : '<small class="price-from">From</small> ';
+}
+
 function applyPromoPrices() {
   const p = promoState();
   if (!p.live) return;
   document.body.classList.add("promo-live");
   const ms = isMsPath();
   const pill = p.key === "aug"
-    ? (ms ? "Merdeka · potongan 69%" : "Merdeka · 69% off")
+    ? (ms ? '<span class="accent">Merdeka</span> · potongan 69%' : '<span class="accent">Merdeka</span> · 69% off')
     : (ms ? "September · potongan 63%" : "September · 63% off");
-  document.querySelectorAll(".launch-pill").forEach((el) => { el.textContent = pill; });
+  document.querySelectorAll(".launch-pill").forEach((el) => { el.innerHTML = pill; });
 
   document.querySelectorAll("[data-list]").forEach((el) => {
     const list = Number(el.getAttribute("data-list"));
@@ -256,16 +359,21 @@ function applyPromoPrices() {
     const sale = Math.round(list * (1 - p.pct / 100));
     const from = el.hasAttribute("data-from");
     const period = el.getAttribute("data-period") || "";
-    const prefix = from ? (ms ? "Dari " : "From ") : "";
+    const prefixHtml = from ? fromLabelHtml() : "";
     const now = el.querySelector("[data-promo-now]");
     if (now) {
-      now.textContent = prefix + formatRM(sale);
+      now.innerHTML = prefixHtml + formatRM(sale);
+      // Keep strikethrough "was" prefix styled too when present
+      const was = el.querySelector(".was");
+      if (was && from && !was.querySelector(".price-from")) {
+        was.innerHTML = prefixHtml + formatRM(list);
+      }
       return;
     }
     el.innerHTML =
-      '<span class="was">' + prefix + formatRM(list) + period + "</span>" +
-      '<span data-promo-now>' + prefix + formatRM(sale) + "</span>" +
-      (period ? "<small>" + period + "</small>" : "");
+      '<span class="was">' + prefixHtml + formatRM(list) + period + "</span>" +
+      '<span data-promo-now>' + prefixHtml + formatRM(sale) + "</span>" +
+      (period ? '<small class="price-period">' + period + "</small>" : "");
   });
 }
 
@@ -277,8 +385,8 @@ function injectPromoBar() {
   const ms = isMsPath();
   const offer = p.key === "aug"
     ? (ms
-      ? "<strong>Promosi Merdeka</strong> — potongan 69% semua perkhidmatan pada Ogos. Potongan 63% pada September."
-      : "<strong>Merdeka promo</strong> — 69% off all services in August. 63% off in September.")
+      ? 'Promosi <strong class="accent">Merdeka</strong> — potongan 69% semua perkhidmatan pada Ogos. Potongan 63% pada September.'
+      : '<strong class="accent">Merdeka</strong> promo — 69% off all services in August. 63% off in September.')
     : (ms
       ? "<strong>Promosi September</strong> — potongan 63% semua perkhidmatan sehingga 30 Sep 2026."
       : "<strong>September promo</strong> — 63% off all services through 30 Sep 2026.");
@@ -312,7 +420,7 @@ function dressMerdeka() {
     chip.innerHTML =
       '<img src="/assets/img/jalur-gemilang.svg" width="22" height="11" alt="" />' +
       "<span>" + (p.key === "aug"
-        ? (ms ? "Merdeka · <b>potongan 69%</b>" : "Merdeka · <b>69% off</b>")
+        ? (ms ? '<em class="accent">Merdeka</em> · <b>potongan 69%</b>' : '<em class="accent">Merdeka</em> · <b>69% off</b>')
         : (ms ? "September · <b>potongan 63%</b>" : "September · <b>63% off</b>")) +
       "</span>";
     badge.insertAdjacentElement("afterend", chip);
@@ -339,6 +447,144 @@ function tickPromoClock() {
   setTimeout(tickPromoClock, 30000);
 }
 
+function ensureServiceDialog() {
+  let dialog = document.getElementById("svc-dialog");
+  if (dialog) return dialog;
+  dialog = document.createElement("dialog");
+  dialog.id = "svc-dialog";
+  dialog.className = "svc-dialog";
+  dialog.setAttribute("aria-labelledby", "svc-dialog-title");
+  const ms = isMsPath();
+  const closeLabel = ms ? "Tutup" : "Close";
+  const ctaLabel = ms ? "Dapatkan sebut harga" : "Get a quote";
+  const ctaHref = ms ? "/ms/contact" : "/contact";
+  dialog.innerHTML =
+    '<div class="svc-dialog-card">' +
+      '<button type="button" class="svc-dialog-close" data-dialog-close aria-label="' + closeLabel + '">×</button>' +
+      '<div class="svc-dialog-kicker" id="svc-dialog-kicker"></div>' +
+      '<h3 id="svc-dialog-title"></h3>' +
+      '<div class="svc-dialog-price" id="svc-dialog-price"></div>' +
+      '<div class="svc-dialog-body" id="svc-dialog-body"></div>' +
+      '<div class="svc-dialog-actions">' +
+        '<a class="btn btn-gold" id="svc-dialog-cta" href="' + ctaHref + '">' + ctaLabel + "</a>" +
+        '<button type="button" class="btn btn-line" data-dialog-close>' + closeLabel + "</button>" +
+      "</div>" +
+    "</div>";
+  document.body.appendChild(dialog);
+  dialog.addEventListener("click", (e) => {
+    if (e.target === dialog) closeServiceDialog();
+  });
+  dialog.querySelectorAll("[data-dialog-close]").forEach((btn) => {
+    btn.addEventListener("click", closeServiceDialog);
+  });
+  return dialog;
+}
+
+function closeServiceDialog() {
+  const dialog = document.getElementById("svc-dialog");
+  if (!dialog) return;
+  if (typeof dialog.close === "function") dialog.close();
+  else dialog.removeAttribute("open");
+}
+
+function openServiceDialog(card) {
+  const dialog = ensureServiceDialog();
+  const title = card.querySelector("h3")?.textContent?.trim() || "";
+  const kicker =
+    card.querySelector(".tag")?.textContent?.trim() ||
+    card.querySelector(".launch-pill")?.textContent?.trim() ||
+    (card.classList.contains("tier")
+      ? (isMsPath() ? "Pakej retainer" : "Bundled retainer")
+      : (isMsPath() ? "Perkhidmatan" : "Service"));
+  const priceEl =
+    card.querySelector(".price") ||
+    card.querySelector(".ap");
+  const detail = card.querySelector(".detail-panel");
+
+  document.getElementById("svc-dialog-kicker").textContent = kicker;
+  document.getElementById("svc-dialog-title").textContent = title;
+  document.getElementById("svc-dialog-price").innerHTML = priceEl
+    ? priceEl.innerHTML
+    : "";
+  const body = document.getElementById("svc-dialog-body");
+  body.innerHTML = "";
+  if (detail) {
+    body.innerHTML = detail.innerHTML;
+  } else {
+    const blurb = Array.from(card.querySelectorAll(":scope > p")).find(
+      (p) => !p.classList.contains("then")
+    );
+    const list = card.querySelector(":scope > ul");
+    if (blurb) body.appendChild(blurb.cloneNode(true));
+    if (list) body.appendChild(list.cloneNode(true));
+    if (!blurb && !list) {
+      const tag = card.querySelector(".tag");
+      if (tag) {
+        const p = document.createElement("p");
+        p.textContent = tag.textContent.trim();
+        body.appendChild(p);
+      }
+    }
+  }
+
+  const cta = document.getElementById("svc-dialog-cta");
+  if (cta) {
+    const interest = encodeURIComponent(title);
+    const base = isMsPath() ? "/ms/contact" : "/contact";
+    cta.href = base + "?interest=" + interest;
+  }
+
+  if (typeof dialog.showModal === "function") dialog.showModal();
+  else dialog.setAttribute("open", "");
+}
+
+function bindServiceCards() {
+  const cards = document.querySelectorAll(".addon, .tier");
+  if (!cards.length) return;
+  const ms = isMsPath();
+  const hintText = ms ? "Klik untuk butiran" : "Click for details";
+
+  cards.forEach((card) => {
+    card.classList.add("is-clickable");
+    if (!card.hasAttribute("tabindex")) card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+    const label = card.querySelector("h3")?.textContent?.trim() || "service";
+    card.setAttribute(
+      "aria-label",
+      (ms ? "Lihat butiran: " : "View details: ") + label
+    );
+
+    if (!card.querySelector(".click-hint")) {
+      const hint = document.createElement("div");
+      hint.className = "click-hint";
+      hint.textContent = hintText;
+      const main = card.querySelector(".addon-main");
+      const btn = card.querySelector(":scope > .btn, .addon-main > .btn");
+      if (btn) btn.parentElement.insertBefore(hint, btn);
+      else if (main) main.appendChild(hint);
+      else card.appendChild(hint);
+    }
+
+    const open = (e) => {
+      if (e.target.closest("a, button, input, select, textarea, label")) return;
+      e.preventDefault();
+      openServiceDialog(card);
+    };
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        if (e.target.closest("a, button")) return;
+        e.preventDefault();
+        openServiceDialog(card);
+      }
+    });
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeServiceDialog();
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   if (enforceLangPreference()) return;
   rememberLangFromPath();
@@ -351,6 +597,8 @@ document.addEventListener("DOMContentLoaded", () => {
   injectPromoBar();
   dressMerdeka();
   syncThemeIcon();
+  bindServiceCards();
+  prefillserviceFromQuery();
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeNav();
   });

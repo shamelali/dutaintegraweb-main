@@ -40,7 +40,16 @@ npm install               # installs resend for api/send-email.js
 
 ## Env / Secrets
 
-`.env.example` documents `RESEND_API_KEY`. Add via:
+See **`EMAIL_SETUP.md`** for the full Resend walkthrough.
+
+`.env.example` documents:
+- `RESEND_API_KEY` (required)
+- `EMAIL_FROM` / `EMAIL_TO` / `EMAIL_AUTOREPLY` (optional)
+
+Add on Vercel:
 ```bash
 vercel env add RESEND_API_KEY
+vercel --prod
 ```
+
+Contact form: `contact.html` → `POST /api/send-email` → Resend → `hello@dutaintegra.my` (+ visitor auto-reply). Falls back to WhatsApp if the API is unavailable.

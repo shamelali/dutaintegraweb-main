@@ -11,3 +11,8 @@ __pycache__
 build-*.py
 .opik_example.py
 financial-projection.md
+
+# Secrets
+.env
+.env.*
+!.env.example
