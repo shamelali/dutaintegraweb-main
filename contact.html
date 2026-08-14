@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css?v=20260814m" />
+  <link rel="stylesheet" href="css/styles.css?v=20260814u" />
   <link rel="alternate" hreflang="en" href="https://dutaintegra.my/contact" />
   <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/contact" />
   <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/contact" />
@@ -96,48 +96,59 @@
           </div>
         </div>
 
-        <form class="form" onsubmit="submitForm(event)">
+        <form class="form" onsubmit="submitForm(event)" novalidate>
           <h3>Send us a message</h3>
+          <!-- Honeypot — leave empty -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
           <div class="form-row">
             <div class="field">
               <label for="name">Full name *</label>
-              <input id="name" name="name" type="text" placeholder="Ahmad bin Rahman" required />
+              <input id="name" name="name" type="text" placeholder="Ahmad bin Rahman" required maxlength="120" autocomplete="name" />
             </div>
             <div class="field">
               <label for="company">Company</label>
-              <input id="company" name="company" type="text" placeholder="Your Company Sdn Bhd" />
+              <input id="company" name="company" type="text" placeholder="Your Company Sdn Bhd" maxlength="160" autocomplete="organization" />
             </div>
           </div>
           <div class="form-row">
             <div class="field">
               <label for="email">Email *</label>
-              <input id="email" name="email" type="email" placeholder="you@company.com" required />
+              <input id="email" name="email" type="email" placeholder="you@company.com" required maxlength="160" autocomplete="email" />
             </div>
             <div class="field">
               <label for="phone">Phone / WhatsApp</label>
-              <input id="phone" name="phone" type="tel" placeholder="+60 12-345 6789" />
+              <input id="phone" name="phone" type="tel" placeholder="+60 12-345 6789" maxlength="40" autocomplete="tel" />
             </div>
           </div>
           <div class="field">
             <label for="service">What are you interested in? *</label>
             <select id="service" name="service" required>
               <option value="">Select a service…</option>
-              <option>Foundation retainer</option>
-              <option>Growth retainer</option>
-              <option>AI Partner retainer</option>
-              <option>AI software development</option>
-              <option>Managed IT</option>
-              <option>Cloud migration</option>
-              <option>IT security &amp; PDPA</option>
-              <option>Free IT audit</option>
-              <option>Custom / multiple</option>
+              <option value="Business Website">Business Website</option>
+              <option value="Website Care Plan">Website Care Plan</option>
+              <option value="Foundation retainer">Foundation retainer</option>
+              <option value="Growth retainer">Growth retainer</option>
+              <option value="AI Partner retainer">AI Partner retainer</option>
+              <option value="Sales Automation Retainer">Sales Automation Retainer</option>
+              <option value="Content Creation Retainer">Content Creation Retainer</option>
+              <option value="Ads Management Retainer">Ads Management Retainer</option>
+              <option value="Custom AI Systems">Custom AI Systems</option>
+              <option value="Managed IT">Managed IT</option>
+              <option value="Cloud migration">Cloud migration</option>
+              <option value="IT security & PDPA">IT security &amp; PDPA</option>
+              <option value="Free IT audit">Free IT audit</option>
+              <option value="Custom / multiple">Custom / multiple</option>
             </select>
           </div>
           <div class="field">
             <label for="message">Tell us about the business</label>
-            <textarea id="message" name="message" placeholder="e.g. We’re a 15-person retail company in Johor looking to automate inventory and get proper IT support…"></textarea>
+            <textarea id="message" name="message" maxlength="5000" placeholder="e.g. We’re a 15-person retail company in Johor looking to automate inventory and get proper IT support…"></textarea>
           </div>
           <button class="btn btn-gold btn-block" type="submit">Send message →</button>
+          <p class="form-note">We reply to <b>hello@dutaintegra.my</b> within one business day. Your details stay private.</p>
         </form>
       </div>
     </section>
@@ -184,6 +195,6 @@
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
     <span>WhatsApp</span>
   </a>
-  <script src="js/main.js?v=20260814m"></script>
+  <script src="js/main.js?v=20260814u"></script>
 </body>
 </html>
