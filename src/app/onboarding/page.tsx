@@ -9,11 +9,19 @@ import { Button } from "@/components/Button";
 import { cn } from "@/lib/utils";
 
 function OnboardingContent() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const searchParams = useSearchParams();
   const isNew = searchParams.get("new") === "1";
 
   const [submitted, setSubmitted] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-24 text-center text-stone-500 dark:text-stone-400">
+        Loading…
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -28,11 +36,18 @@ function OnboardingContent() {
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Button href="/login?redirect=%2Fonboarding">Sign in to apply</Button>
-          <Button href="/register" variant="outline">Create a free account</Button>
+          <Button href="/register" variant="outline">
+            Create a free account
+          </Button>
         </div>
         <p className="mt-6 text-sm text-stone-400 dark:text-stone-500">
-          <Link href="/artists" className="text-rose-600 hover:text-rose-700 dark:text-rose-500 dark:hover:text-rose-400">Browse artists</Link> on the
-          platform first, if you like.
+          <Link
+            href="/artists"
+            className="text-rose-600 hover:text-rose-700 dark:text-rose-500 dark:hover:text-rose-400"
+          >
+            Browse artists
+          </Link>{" "}
+          on the platform first, if you like.
         </p>
       </div>
     );
@@ -46,18 +61,32 @@ function OnboardingContent() {
     return (
       <div className="mx-auto max-w-lg px-4 py-24 text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-8 w-8 text-emerald-600 dark:text-emerald-400">
-            <path fillRule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 111.4-1.4l2.8 2.79 6.8-6.8a1 1 0 011.4 0z" clipRule="evenodd" />
+          <svg
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className="h-8 w-8 text-emerald-600 dark:text-emerald-400"
+          >
+            <path
+              fillRule="evenodd"
+              d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 111.4-1.4l2.8 2.79 6.8-6.8a1 1 0 011.4 0z"
+              clipRule="evenodd"
+            />
           </svg>
         </div>
-        <h1 className="mt-6 font-display text-3xl font-semibold text-stone-900 dark:text-stone-100">Application received!</h1>
+        <h1 className="mt-6 font-display text-3xl font-semibold text-stone-900 dark:text-stone-100">
+          Application received!
+        </h1>
         <p className="mt-3 text-stone-600 dark:text-stone-400">
-          Thanks, {user.name}! Our team reviews every application — you&apos;ll hear from us within 2
-          working days once your profile is live.
+          Thanks, {user.name}! Our team reviews every application — you&apos;ll hear from us within
+          2 working days once your profile is live.
         </p>
-        <p className="mt-4 text-sm text-stone-400 dark:text-stone-500">Demo build — no application was actually submitted.</p>
+        <p className="mt-4 text-sm text-stone-400 dark:text-stone-500">
+          Demo build — no application was actually submitted.
+        </p>
         <div className="mt-8 flex justify-center gap-3">
-          <Button href="/dashboard" variant="outline">Go to Dashboard</Button>
+          <Button href="/dashboard" variant="outline">
+            Go to Dashboard
+          </Button>
           <Button href="/artists">Browse Artists</Button>
         </div>
       </div>
@@ -87,66 +116,144 @@ function OnboardingContent() {
       >
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label className={labelCls}>Professional name</label>
-            <input required defaultValue={user.name} placeholder="e.g. Aisha Azman" className={inputCls} />
+            <label htmlFor="onb-name" className={labelCls}>
+              Professional name
+            </label>
+            <input
+              id="onb-name"
+              name="name"
+              autoComplete="name"
+              required
+              defaultValue={user.name}
+              placeholder="e.g. Aisha Azman"
+              className={inputCls}
+            />
           </div>
           <div>
-            <label className={labelCls}>Phone / WhatsApp</label>
-            <input required placeholder="+60 1x-xxxxxxx" className={inputCls} />
+            <label htmlFor="onb-phone" className={labelCls}>
+              Phone / WhatsApp
+            </label>
+            <input
+              id="onb-phone"
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              inputMode="tel"
+              required
+              placeholder="+60 1x-xxxxxxx"
+              className={inputCls}
+            />
           </div>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label className={labelCls}>State</label>
-            <select required defaultValue="" className={inputCls}>
-              <option value="" disabled>Select state…</option>
+            <label htmlFor="onb-state" className={labelCls}>
+              State
+            </label>
+            <select id="onb-state" name="state" required defaultValue="" className={inputCls}>
+              <option value="" disabled>
+                Select state…
+              </option>
               {MALAYSIA_STATES.map((s) => (
-                <option key={s} value={s}>{s}</option>
+                <option key={s} value={s}>
+                  {s}
+                </option>
               ))}
             </select>
           </div>
           <div>
-            <label className={labelCls}>Area / District</label>
-            <select required defaultValue="" className={inputCls}>
-              <option value="" disabled>Select area…</option>
-              {Object.values(AREAS_BY_STATE).flat().map((a) => (
-                <option key={a} value={a}>{a}</option>
-              ))}
+            <label htmlFor="onb-area" className={labelCls}>
+              Area / District
+            </label>
+            <select id="onb-area" name="area" required defaultValue="" className={inputCls}>
+              <option value="" disabled>
+                Select area…
+              </option>
+              {Object.values(AREAS_BY_STATE)
+                .flat()
+                .map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
 
-        <div>
-          <label className={labelCls}>Specialties</label>
+        <fieldset>
+          <legend className={labelCls}>Specialties</legend>
           <div className="flex flex-wrap gap-2">
-            {["Bridal", "Soft Glam", "Airbrush", "HD Makeup", "Editorial", "Groom", "Natural", "Corporate", "Traditional"].map((s, i) => (
+            {[
+              "Bridal",
+              "Soft Glam",
+              "Airbrush",
+              "HD Makeup",
+              "Editorial",
+              "Groom",
+              "Natural",
+              "Corporate",
+              "Traditional",
+            ].map((s, i) => (
               <label key={s} className="cursor-pointer">
-                <input type="checkbox" className="peer sr-only" defaultChecked={i < 3} />
-                <span className={cn(
-                  "inline-block rounded-full border px-3 py-1.5 text-sm transition-colors",
-                  "border-stone-300 bg-white text-stone-600 peer-checked:border-rose-600 peer-checked:bg-rose-600 peer-checked:text-white dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300",
-                )}>
+                <input
+                  type="checkbox"
+                  name="specialties"
+                  value={s}
+                  className="peer sr-only"
+                  defaultChecked={i < 3}
+                />
+                <span
+                  className={cn(
+                    "inline-block rounded-full border px-3 py-1.5 text-sm transition-colors",
+                    "border-stone-300 bg-white text-stone-600 peer-checked:border-rose-600 peer-checked:bg-rose-600 peer-checked:text-white dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300",
+                  )}
+                >
                   {s}
                 </span>
               </label>
             ))}
           </div>
+        </fieldset>
+
+        <div>
+          <label htmlFor="onb-years" className={labelCls}>
+            Years of experience
+          </label>
+          <input
+            id="onb-years"
+            name="yearsExperience"
+            type="number"
+            min={0}
+            max={60}
+            required
+            placeholder="e.g. 8"
+            className={inputCls}
+          />
         </div>
 
         <div>
-          <label className={labelCls}>Years of experience</label>
-          <input type="number" min={0} max={60} required placeholder="e.g. 8" className={inputCls} />
+          <label htmlFor="onb-portfolio" className={labelCls}>
+            Portfolio link (Instagram or website)
+          </label>
+          <input
+            id="onb-portfolio"
+            name="portfolioUrl"
+            type="url"
+            inputMode="url"
+            required
+            placeholder="https://instagram.com/your.handle"
+            className={inputCls}
+          />
         </div>
 
         <div>
-          <label className={labelCls}>Portfolio link (Instagram or website)</label>
-          <input required placeholder="https://instagram.com/your.handle" className={inputCls} />
-        </div>
-
-        <div>
-          <label className={labelCls}>About you</label>
+          <label htmlFor="onb-about" className={labelCls}>
+            About you
+          </label>
           <textarea
+            id="onb-about"
+            name="about"
             rows={4}
             required
             placeholder="Your style, experience, favourite looks to create…"
@@ -154,7 +261,9 @@ function OnboardingContent() {
           />
         </div>
 
-        <Button type="submit" className="w-full">Submit Application</Button>
+        <Button type="submit" className="w-full">
+          Submit Application
+        </Button>
       </form>
     </div>
   );
@@ -162,7 +271,11 @@ function OnboardingContent() {
 
 export default function OnboardingPage() {
   return (
-    <Suspense fallback={<div className="mx-auto max-w-lg px-4 py-24 text-center text-stone-500">Loading…</div>}>
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-lg px-4 py-24 text-center text-stone-500">Loading…</div>
+      }
+    >
       <OnboardingContent />
     </Suspense>
   );

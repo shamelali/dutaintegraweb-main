@@ -12,7 +12,8 @@ const variants: Record<Variant, string> = {
     "bg-stone-900 text-white hover:bg-stone-700 focus-visible:outline-stone-900 dark:bg-white dark:text-stone-900 dark:hover:bg-stone-200",
   outline:
     "border border-stone-300 bg-white text-stone-800 hover:border-stone-400 hover:bg-stone-50 focus-visible:outline-stone-400 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-stone-600 dark:hover:bg-stone-800",
-  ghost: "text-stone-700 hover:bg-stone-200/60 focus-visible:outline-stone-400 dark:text-stone-300 dark:hover:bg-stone-800",
+  ghost:
+    "text-stone-700 hover:bg-stone-200/60 focus-visible:outline-stone-400 dark:text-stone-300 dark:hover:bg-stone-800",
 };
 
 const sizes: Record<Size, string> = {

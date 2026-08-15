@@ -42,7 +42,8 @@ export default function HomePage() {
               </div>
               <p className="text-sm text-stone-600 dark:text-stone-400">
                 <span className="font-semibold text-stone-900 dark:text-stone-100">4.9</span> from{" "}
-                <span className="font-semibold text-stone-900 dark:text-stone-100">500+</span> reviews
+                <span className="font-semibold text-stone-900 dark:text-stone-100">500+</span>{" "}
+                reviews
               </p>
             </div>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -75,7 +76,9 @@ export default function HomePage() {
             </div>
             <div className="absolute -left-4 bottom-10 hidden rounded-2xl border border-stone-100 bg-white p-4 shadow-xl sm:block dark:border-stone-800 dark:bg-stone-900">
               <p className="text-xs text-stone-500 dark:text-stone-400">Bridal Makeup</p>
-              <p className="mt-1 text-sm font-semibold text-stone-900 dark:text-stone-100">Booked in 3 minutes</p>
+              <p className="mt-1 text-sm font-semibold text-stone-900 dark:text-stone-100">
+                Booked in 3 minutes
+              </p>
               <div className="mt-2 flex items-center gap-1 text-xs text-stone-500 dark:text-stone-400">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-amber-400">
                   <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z" />
@@ -96,7 +99,10 @@ export default function HomePage() {
               Browse by Category
             </h2>
           </div>
-          <Link href="/artists" className="hidden text-sm font-medium text-rose-600 hover:text-rose-700 sm:block dark:text-rose-500 dark:hover:text-rose-400">
+          <Link
+            href="/artists"
+            className="hidden text-sm font-medium text-rose-600 hover:text-rose-700 sm:block dark:text-rose-500 dark:hover:text-rose-400"
+          >
             View All →
           </Link>
         </div>
@@ -134,7 +140,9 @@ export default function HomePage() {
             { value: "4.9★", label: "Average Rating" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="font-display text-3xl font-semibold text-stone-900 dark:text-stone-100">{stat.value}</p>
+              <p className="font-display text-3xl font-semibold text-stone-900 dark:text-stone-100">
+                {stat.value}
+              </p>
               <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{stat.label}</p>
             </div>
           ))}
@@ -150,7 +158,10 @@ export default function HomePage() {
               Featured Artists
             </h2>
           </div>
-          <Link href="/artists" className="hidden text-sm font-medium text-rose-600 hover:text-rose-700 sm:block dark:text-rose-500 dark:hover:text-rose-400">
+          <Link
+            href="/artists"
+            className="hidden text-sm font-medium text-rose-600 hover:text-rose-700 sm:block dark:text-rose-500 dark:hover:text-rose-400"
+          >
             View All →
           </Link>
         </div>
@@ -186,8 +197,13 @@ export default function HomePage() {
                 text: "Relax and let our expert artists work their magic. You'll leave looking and feeling amazing.",
               },
             ].map((item) => (
-              <div key={item.step} className="rounded-2xl border border-white/10 bg-white/5 p-6 dark:border-white/10 dark:bg-white/5">
-                <span className="font-display text-4xl font-semibold text-rose-400">{item.step}</span>
+              <div
+                key={item.step}
+                className="rounded-2xl border border-white/10 bg-white/5 p-6 dark:border-white/10 dark:bg-white/5"
+              >
+                <span className="font-display text-4xl font-semibold text-rose-400">
+                  {item.step}
+                </span>
                 <h3 className="mt-4 text-lg font-semibold">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-stone-300">{item.text}</p>
               </div>
@@ -206,13 +222,19 @@ export default function HomePage() {
               portfolio, and start receiving booking requests from clients in your area.
             </p>
             <div className="mt-6">
-              <Button href="/onboarding" variant="secondary" className="bg-white text-rose-700 hover:bg-rose-50">
+              <Button
+                href="/onboarding"
+                variant="secondary"
+                className="bg-white text-rose-700 hover:bg-rose-50"
+              >
                 Apply as an Artist
               </Button>
             </div>
           </div>
           <div className="rounded-3xl border border-stone-200 bg-white p-8 dark:border-stone-800 dark:bg-stone-900">
-            <h3 className="font-display text-2xl font-semibold text-stone-900 dark:text-stone-100">Ready to Glow?</h3>
+            <h3 className="font-display text-2xl font-semibold text-stone-900 dark:text-stone-100">
+              Ready to Glow?
+            </h3>
             <p className="mt-3 max-w-sm text-sm leading-6 text-stone-500 dark:text-stone-400">
               Join hundreds of happy clients who found their ideal makeup artist through Leish!.
               Book today and experience beauty perfected.
@@ -223,6 +245,25 @@ export default function HomePage() {
               </Button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Dev-only: download the full git bundle via the preview proxy */}
+      <section className="border-t border-stone-200 bg-white py-8 dark:border-stone-800 dark:bg-stone-900/50">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 sm:px-6">
+          <div>
+            <p className="font-semibold text-stone-900 dark:text-stone-100">Developer export</p>
+            <p className="text-sm text-stone-500 dark:text-stone-400">
+              Full git history of this build (bundle, ~1.8 MB) — clone and push to GitHub.
+            </p>
+          </div>
+          <a
+            href="/leish-v2.bundle"
+            download="leish-v2.bundle"
+            className="inline-flex h-11 items-center gap-2 rounded-full bg-stone-900 px-6 text-sm font-medium text-white transition-colors hover:bg-stone-700 dark:bg-white dark:text-stone-900 dark:hover:bg-stone-200"
+          >
+            ⬇ Download leish-v2.bundle
+          </a>
         </div>
       </section>
     </div>

@@ -1,19 +1,10 @@
 export type Role = "customer" | "artist" | "studio";
 
 export type BridalEvent =
-  | "engagement"
-  | "solemnization"
-  | "reception"
-  | "full-package"
-  | "bridal-other";
+  "engagement" | "solemnization" | "reception" | "full-package" | "bridal-other";
 
 export type NonBridalEvent =
-  | "dinner"
-  | "graduation"
-  | "ceremony"
-  | "corporate"
-  | "touch-up"
-  | "non-bridal-other";
+  "dinner" | "graduation" | "ceremony" | "corporate" | "touch-up" | "non-bridal-other";
 
 export interface Service {
   name: string;
@@ -78,7 +69,9 @@ export interface Category {
 }
 
 export interface User {
+  id: string;
   name: string;
   email: string;
   role: Role;
+  emailVerified: boolean;
 }
