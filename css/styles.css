@@ -619,6 +619,7 @@ body.promo-live .then { display: block; }
   margin: 16px 0 22px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 .entry-connector::before, .entry-connector::after {
@@ -1789,13 +1790,15 @@ body.dark .metrics b,
 body.dark .svc-dialog-price,
 body.dark .note b,
 body.dark .addon.featured-addon .price,
-body.dark .addon.featured-addon .price [data-promo-now] {
+body.dark .addon.featured-addon .price [data-promo-now],
+body.dark .entry-step .es-price {
   color: var(--gold);
 }
 body.dark .meta,
 body.dark .member .role,
 body.dark .click-hint,
-body.dark .eyebrow { color: var(--gold); }
+body.dark .eyebrow,
+body.dark .entry-step .pill { color: var(--gold); }
 body.dark .tier .icon,
 body.dark .svc-ico,
 body.dark .detail .ico {
