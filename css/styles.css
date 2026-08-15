@@ -264,13 +264,15 @@ body.promo-live .then { display: block; }
 .was {
   display: block;
   font-family: var(--font-b);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 400;
   color: var(--muted);
   text-decoration: line-through;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
+  opacity: 0.75;
 }
 .tier.is-featured .was { color: #8B919A; }
+.then { margin-top: -2px; }
 
 .nav {
   position: sticky;
@@ -625,7 +627,7 @@ body.promo-live .then { display: block; }
   font-weight: 700;
   font-size: 30px;
   color: var(--navy);
-  margin: 4px 0 18px;
+  margin: 4px 0 8px;
   line-height: 1;
 }
 .tier.is-featured .price { color: var(--gold); }
