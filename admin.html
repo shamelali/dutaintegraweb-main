@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard Preview — Duta Integra Solutions</title>
+  <meta name="description" content="Custom Next.js & Neon PostgreSQL Admin Dashboard with WhatsApp Quick Action, CSV Export, and AI Token Cost-Cap Safeguard." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=20260814u" />
+  <style>
+    .admin-layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - var(--nav-h)); }
+    .sidebar { background: var(--navy-ink); color: #B8BEC8; padding: 24px; border-right: 0.5px solid rgba(255,255,255,.08); }
+    .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: #B8BEC8; font-size: 13.5px; border-radius: var(--radius); margin-bottom: 4px; }
+    .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,.06); color: var(--paper); }
+    .sidebar a.active { border-left: 3px solid var(--gold); }
+    .main-content { padding: 32px; background: var(--paper); }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--white); border: 0.5px solid var(--line); border-top: 3px solid var(--gold); padding: 20px; }
+    .kpi-card .val { font-family: var(--font-d); font-size: 32px; font-weight: 700; color: var(--navy); margin-top: 4px; }
+    .table-card { background: var(--white); border: 0.5px solid var(--line); padding: 24px; margin-bottom: 24px; }
+    .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
+    th { background: var(--paper-2); padding: 12px; font-family: var(--font-d); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); }
+    td { padding: 12px; border-bottom: 0.5px solid var(--line-2); color: var(--ink); }
+    .status-badge { display: inline-block; padding: 3px 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; border-radius: var(--radius); }
+    .status-new { background: rgba(201,162,39,.15); color: var(--gold-3); }
+    .status-contacted { background: rgba(47,107,79,.15); color: var(--ok); }
+    .status-closed { background: rgba(30,45,61,.1); color: var(--navy); }
+    .btn-wa-sm { display: inline-flex; align-items: center; gap: 6px; background: #25D366; color: #fff; padding: 5px 10px; font-size: 12px; font-weight: 500; border-radius: var(--radius); }
+    .btn-wa-sm:hover { background: #1ebe5d; color: #fff; }
+    .safeguard-panel { background: var(--navy); color: var(--paper); padding: 24px; border-top: 3px solid var(--gold); }
+    .safeguard-panel h3 { color: var(--paper); margin-bottom: 8px; }
+    .safeguard-panel p { color: #B8BEC8; font-size: 13.5px; margin-bottom: 16px; }
+    .safeguard-controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .safeguard-controls input { background: var(--navy-ink); border: 0.5px solid rgba(255,255,255,.2); color: var(--paper); padding: 10px; border-radius: var(--radius); font-family: var(--font-b); }
+    @media (max-width: 900px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/">
+        <img class="brand-mark" src="assets/dis-logo-nav.webp" alt="" width="56" height="42" />
+        <div class="brand-name">DUTA INTEGRA <span>ADMIN PORTAL</span></div>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <span style="color: var(--gold); font-size: 13px; font-family: var(--font-d); letter-spacing: 0.08em;">CUSTOM PREMIUM MODE (NEON + VERCEL)</span>
+        <a href="/">← Back to Public Site</a>
+      </nav>
+      <div class="nav-tools">
+        <button class="tool" type="button" onclick="toggleDark()" data-theme-icon aria-label="Toggle theme">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div style="font-family: var(--font-d); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px;">Navigation</div>
+      <a href="#" class="active">📊 Overview &amp; Leads</a>
+      <a href="#">🤖 AI Token Usage &amp; Caps</a>
+      <a href="#">👥 RBAC Access Control</a>
+      <a href="#">⚙️ Neon DB &amp; Sync</a>
+      <div style="margin-top: 36px; padding-top: 20px; border-top: 0.5px solid rgba(255,255,255,.08); font-size: 12px; color: #8B919A;">
+        Connected to Neon DB<br><strong style="color: #25D366;">● ap-southeast-1 (Active)</strong>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main">
+      <div class="section-head" style="margin-bottom: 24px;">
+        <div class="eyebrow">Client Dashboard Preview</div>
+        <h2>Inbound Leads &amp; AI Safeguard Control</h2>
+        <p>Interactive demonstration of Feature 1 (One-Click WhatsApp), Feature 2 (CSV Exporter), and Feature 3 (AI Token Cost-Cap Safeguard).</p>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="kpi-card">
+          <div class="eyebrow">Total Leads (Pipeline)</div>
+          <div class="val" id="leadCount">4</div>
+        </div>
+        <div class="kpi-card">
+          <div class="eyebrow">AI Tokens Used Today</div>
+          <div class="val" id="tokenUsage">14,250</div>
+        </div>
+        <div class="kpi-card">
+          <div class="eyebrow">Monthly Infrastructure Cost</div>
+          <div class="val">RM 0</div>
+        </div>
+      </div>
+
+      <!-- Feature 1 & 2: Lead Pipeline Table & CSV Export -->
+      <div class="table-card">
+        <div class="table-header">
+          <div>
+            <h3 style="font-size: 20px;">Inbound Leads Pipeline</h3>
+            <p style="font-size: 13px; color: var(--muted); font-weight: 300;">Feature 1 (One-Click WhatsApp) &amp; Feature 2 (CSV Exporter)</p>
+          </div>
+          <button class="btn btn-gold" onclick="exportLeadsCSV()">📥 Export Leads to CSV</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="leadsTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Client Name</th>
+                <th>Phone Number</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Quick Action (WhatsApp)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#101</td>
+                <td><b>Dato' Sri Hisham</b> (Lapango)</td>
+                <td>+60 12-345 6789</td>
+                <td><span class="status-badge status-new">New</span></td>
+                <td>2026-08-14 10:22</td>
+                <td>
+                  <a class="btn-wa-sm" href="https://wa.me/60123456789?text=Hi%20Dato'%20Sri%20Hisham,%20thank%20you%20for%20reaching%20out%20to%20Duta%20Integra.%20We%20received%20your%20inquiry..." target="_blank" rel="noopener">
+                    💬 WhatsApp
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>#102</td>
+                <td><b>Puan Aminah</b> (Eastelpro)</td>
+                <td>+60 19-888 1122</td>
+                <td><span class="status-badge status-contacted">Contacted</span></td>
+                <td>2026-08-14 09:15</td>
+                <td>
+                  <a class="btn-wa-sm" href="https://wa.me/60198881122?text=Hi%20Puan%20Aminah,%20following%20up%20on%20your%20WiFi%20marketing%20portal%20inquiry..." target="_blank" rel="noopener">
+                    💬 WhatsApp
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>#103</td>
+                <td><b>Mr. Marcus Tan</b> (AGMX)</td>
+                <td>+60 16-555 9900</td>
+                <td><span class="status-badge status-closed">Closed</span></td>
+                <td>2026-08-13 16:40</td>
+                <td>
+                  <a class="btn-wa-sm" href="https://wa.me/60165559900?text=Hi%20Marcus,%20congratulations%20on%20the%20AGMX%20deployment%20go-live..." target="_blank" rel="noopener">
+                    💬 WhatsApp
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>#104</td>
+                <td><b>Encik Zulkifli</b> (SME Retail JB)</td>
+                <td>+60 11-5403 4051</td>
+                <td><span class="status-badge status-new">New</span></td>
+                <td>2026-08-14 11:05</td>
+                <td>
+                  <a class="btn-wa-sm" href="https://wa.me/601154034051?text=Hi%20Encik%20Zulkifli,%20thank%20you%20for%20your%20interest%20in%20our%20SME%20Growth%20Website..." target="_blank" rel="noopener">
+                    💬 WhatsApp
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Feature 3: AI Token Cost-Cap Safeguard Switch -->
+      <div class="safeguard-panel">
+        <div class="eyebrow" style="color: var(--gold); margin-bottom: 6px;">Feature 3</div>
+        <h3>AI Token "Cost-Cap" Safeguard Switch</h3>
+        <p>Set a maximum daily token budget for your custom AI chatbots and automated workflows. If usage exceeds this threshold, the Edge middleware instantly pauses API routing to protect against unexpected LLM billing spikes.</p>
+        <div class="safeguard-controls">
+          <div>
+            <label style="display:block; font-size:12px; color:#B8BEC8; margin-bottom:4px;">Daily Token Threshold Cap:</label>
+            <input type="number" id="tokenCapInput" value="50000" step="5000" min="10000" style="width: 180px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:12px; color:#B8BEC8; margin-bottom:4px;">Current Status:</label>
+            <span id="safeguardStatus" style="display: inline-block; padding: 8px 14px; background: rgba(47,107,79,.3); color: #4ade80; border: 0.5px solid #4ade80; font-family: var(--font-d); font-weight: 700; font-size: 13px;">✅ SAFE (14,250 / 50,000)</span>
+          </div>
+          <button class="btn btn-gold" style="align-self: flex-end;" onclick="updateTokenCap()">Update Safeguard</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-bottom" style="border-top:0; padding-top:0;">
+        <span>© 2026 Duta Integra Solutions Sdn Bhd. Admin Dashboard Demo.</span>
+        <span>Vercel Edge + Neon PostgreSQL (ap-southeast-1)</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast">CSV Export Generated Successfully!</div>
+
+  <script src="js/main.js?v=20260814u"></script>
+  <script>
+    function exportLeadsCSV() {
+      const leads = [
+        { id: "#101", name: "Dato' Sri Hisham (Lapango)", phone: "+60 12-345 6789", status: "New", date: "2026-08-14 10:22" },
+        { id: "#102", name: "Puan Aminah (Eastelpro)", phone: "+60 19-888 1122", status: "Contacted", date: "2026-08-14 09:15" },
+        { id: "#103", name: "Mr. Marcus Tan (AGMX)", phone: "+60 16-555 9900", status: "Closed", date: "2026-08-13 16:40" },
+        { id: "#104", name: "Encik Zulkifli (SME Retail JB)", phone: "+60 11-5403 4051", status: "New", date: "2026-08-14 11:05" }
+      ];
+      
+      const headers = ["ID", "Client Name", "Phone Number", "Status", "Created At"];
+      const rows = leads.map(l => [l.id, `"${l.name}"`, l.phone, l.status, l.date]);
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `duta_integra_leads_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    function updateTokenCap() {
+      const cap = document.getElementById("tokenCapInput").value;
+      const statusEl = document.getElementById("safeguardStatus");
+      statusEl.innerHTML = `✅ SAFE (14,250 / ${Number(cap).toLocaleString()})`
+      const toast = document.getElementById("toast");
+      toast.textContent = `AI Token Daily Safeguard updated to ${Number(cap).toLocaleString()} tokens!`;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+  </script>
+</body>
+</html>
