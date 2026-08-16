@@ -9,6 +9,7 @@ const TO = (process.env.EMAIL_TO || "hello@dutaintegra.my")
   .map((s) => s.trim())
   .filter(Boolean);
 const REPLY_COPY = process.env.EMAIL_AUTOREPLY !== "false";
+const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
 
 function esc(value) {
   return String(value ?? "")
@@ -200,6 +201,24 @@ export default async function handler(req, res) {
         });
       } catch (autoErr) {
         console.error("Auto-reply failed:", autoErr);
+      }
+    }
+
+    // Best-effort Slack notification
+    if (SLACK_WEBHOOK_URL) {
+      try {
+        const slackPayload = {
+          text: `*New contact form submission*\n*Name:* ${name}\n*Email:* ${email}\n*Service:* ${service}\n${phone ? "*Phone:* " + phone : ""}\n${message ? "*Message:* " + (message.length > 200 ? message.substring(0, 200) + "..." : message) : ""}`,
+         mrkdwn: true,
+        };
+        await fetch(SLACK_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(slackPayload),
+        });
+      } catch (slackErr) {
+        console.error("Slack notification failed:", slackErr);
+        // Don't break the email response if Slack fails
       }
     }
 
