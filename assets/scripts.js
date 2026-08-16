@@ -288,46 +288,15 @@ function submitForm() {
     submitBtn.textContent = 'Send Message →';
   });
 }
-// === NETWORK BACKGROUND ANIMATION ===
+// === CIRCUIT BOARD BACKGROUND ===
 const bgCanvas=document.getElementById('network-bg'),bgCtx=bgCanvas.getContext('2d')
-let bgW,bgH
-function bgResize(){bgW=bgCanvas.width=window.innerWidth;bgH=bgCanvas.height=window.innerHeight}
+let w,h
+function bgResize(){w=bgCanvas.width=window.innerWidth;h=bgCanvas.height=window.innerHeight}
 bgResize()
 window.addEventListener('resize',bgResize)
-const BPR=Math.min(window.devicePixelRatio||1,2)
-bgCanvas.width=bgW*BPR;bgCanvas.height=bgH*BPR;bgCtx.scale(BPR,BPR)
-const BN=100,BED=280,BF=950;let bt=0,bf=0
-const br=(a,b)=>Math.random()*(b-a)+a,bl=(a,b,t)=>a+(b-a)*t,bc=(v,m,M)=>Math.max(m,Math.min(M,v))
-const bnodes=[]
-for(let i=0;i<BN;i++){const t=br(0,Math.PI*2),p=br(-Math.PI/2,Math.PI/2),r=br(250,750);bnodes.push({bx:r*Math.cos(t)*Math.cos(p),by:r*Math.sin(p),bz:r*Math.sin(t)*Math.cos(p),dx:0,dy:0,dz:0,vx:br(-.06,.06),vy:br(-.06,.06),vz:br(-.06,.06),pulse:br(0,Math.PI*2)})}
-for(const n of bnodes){n.dx=n.bx;n.dy=n.by;n.dz=n.bz}
-let bedges=[]
-function bbuild(){const e=[];for(let i=0;i<bnodes.length;i++)for(let j=i+1;j<bnodes.length;j++){const d=Math.hypot(bnodes[i].dx-bnodes[j].dx,bnodes[i].dy-bnodes[j].dy,bnodes[i].dz-bnodes[j].dz);if(d<BED)e.push({a:i,b:j})};bedges=e}
-bbuild()
-const bsignals=[];for(let i=0;i<Math.floor(bedges.length*.6);i++)bsignals.push({ei:i%bedges.length,progress:br(-.3,1),speed:br(.004,.018),size:br(1.5,3.5)})
-const bflares=[];for(let i=0;i<30;i++)bflares.push({x:br(0,bgW),y:br(0,bgH),vx:br(-.5,.5),vy:br(-.5,.5),life:br(0,1),maxLife:br(80,220),size:br(1,2.5)})
-const bbursts=[];function badd(x,y,s){bbursts.push({x,y,life:0,maxLife:28,size:s})}
-function brotY(x,z,a){const c=Math.cos(a),s=Math.sin(a);return{x:x*c+z*s,z:-x*s+z*c}}
-function bproj(x,y,z){const s=BF/(BF+z);return{x:x*s+bgW/2,y:y*s+bgH/2,s,z}}
-function bglow(x,y,r,g,b,rad,a){a=bc(a,0,1);const gd=bgCtx.createRadialGradient(x,y,0,x,y,rad);gd.addColorStop(0,`rgba(${r},${g},${b},${a})`);gd.addColorStop(.25,`rgba(${r},${g},${b},${a*.5})`);gd.addColorStop(1,`rgba(${r},${g},${b},0)`);bgCtx.fillStyle=gd;bgCtx.beginPath();bgCtx.arc(x,y,rad,0,Math.PI*2);bgCtx.fill()}
-function bdf(z){return bc((z+700)/2400,0,1)}
-function bloop(){bf++;bt+=.016;const rA=bt*.10
-for(const n of bnodes){n.dx+=n.vx;n.dy+=n.vy;n.dz+=n.vz;n.pulse+=.025;if(Math.abs(n.dx-n.bx)>350){n.vx*=-1;n.dx=n.bx+Math.sign(n.dx-n.bx)*350}if(Math.abs(n.dy-n.by)>250){n.vy*=-1;n.dy=n.by+Math.sign(n.dy-n.by)*250}if(Math.abs(n.dz-n.bz)>350){n.vz*=-1;n.dz=n.bz+Math.sign(n.dz-n.bz)*350}}
-if(bf%60===0)bbuild()
-for(const s of bsignals){s.progress+=s.speed;if(s.progress>1.2){if(bedges[s.ei]){const nb=bnodes[bedges[s.ei].b],rr=brotY(nb.dx,nb.dz,rA),pp=bproj(rr.x,nb.dy,rr.z);badd(pp.x,pp.y,s.size*2.5)}s.progress=br(-.4,-.05);s.speed=br(.004,.018);s.ei=Math.floor(Math.random()*bedges.length)}}
-for(const f of bflares){f.x+=f.vx;f.y+=f.vy;f.life++;if(f.life>f.maxLife||f.x<-80||f.x>bgW+80||f.y<-80||f.y>bgH+80){f.x=br(-30,bgW+30);f.y=br(-30,bgH+30);f.vx=br(-.7,.7);f.vy=br(-.7,.7);f.life=0;f.maxLife=br(80,220)}}
-for(let i=bbursts.length-1;i>=0;i--){bbursts[i].life++;if(bbursts[i].life>bbursts[i].maxLife)bbursts.splice(i,1)}
-bgCtx.clearRect(0,0,bgW,bgH)
-const vg=bgCtx.createRadialGradient(bgW/2,bgH/2,bgH*.3,bgW/2,bgH/2,bgH*.9);vg.addColorStop(0,'rgba(5,10,20,0)');vg.addColorStop(1,'rgba(5,10,20,.6)');bgCtx.fillStyle=vg;bgCtx.fillRect(0,0,bgW,bgH)
-const tg=bgCtx.createRadialGradient(bgW/2,0,0,bgW/2,0,bgH*.6);tg.addColorStop(0,'rgba(0,100,200,.03)');tg.addColorStop(1,'rgba(0,100,200,0)');bgCtx.fillStyle=tg;bgCtx.fillRect(0,0,bgW,bgH)
-const pc=new Map()
-function gp(i){if(pc.has(i))return pc.get(i);const n=bnodes[i],rr=brotY(n.dx,n.dz,rA),pp=bproj(rr.x,n.dy,rr.z);pc.set(i,pp);return pp}
-bgCtx.lineCap='round'
-for(const e of bedges){const p1=gp(e.a),p2=gp(e.b),da=bdf((p1.z+p2.z)/2),dd=Math.hypot(p2.x-p1.x,p2.y-p1.y);if(dd<8||da<.02)continue;const a=da*.14;bgCtx.strokeStyle=`rgba(0,160,255,${a*.5})`;bgCtx.lineWidth=3;bgCtx.beginPath();bgCtx.moveTo(p1.x,p1.y);bgCtx.lineTo(p2.x,p2.y);bgCtx.stroke();bgCtx.strokeStyle=`rgba(60,195,255,${a*.6})`;bgCtx.lineWidth=.7;bgCtx.beginPath();bgCtx.moveTo(p1.x,p1.y);bgCtx.lineTo(p2.x,p2.y);bgCtx.stroke()}
-for(const s of bsignals){const e=bedges[s.ei];if(!e)continue;const p1=gp(e.a),p2=gp(e.b),dd=Math.hypot(p2.x-p1.x,p2.y-p1.y);if(dd<8)continue;const t=bc(s.progress,0,1),x=bl(p1.x,p2.x,t),y=bl(p1.y,p2.y,t),az=(p1.z+p2.z)/2,da=bdf(az);if(da<.02)continue;const ang=Math.atan2(p2.y-p1.y,p2.x-p1.x),tl=Math.min(dd*.1,32);for(let i=1;i<=7;i++){const ft=i/7;bglow(x-Math.cos(ang)*tl*ft,y-Math.sin(ang)*tl*ft,0,180,255,12-ft*7,da*.3*(1-ft))};bglow(x,y,0,180,255,22*s.size,da*.35);bglow(x,y,100,225,255,9*s.size,da*.55);bgCtx.shadowColor=`rgba(0,180,255,${da*.25})`;bgCtx.shadowBlur=15;bgCtx.fillStyle=`rgba(200,240,255,${da*.9})`;bgCtx.beginPath();bgCtx.arc(x,y,2*s.size,0,Math.PI*2);bgCtx.fill();bgCtx.shadowBlur=0}
-for(const b of bbursts){const t=b.life/b.maxLife,a=(1-t)*.7;bglow(b.x,b.y,0,180,255,5+t*35,a);bglow(b.x,b.y,100,220,255,2+t*10,a*.5)}
-for(const f of bflares){const a=.5*(1-f.life/f.maxLife);bglow(f.x,f.y,0,180,255,14,a*.12);bglow(f.x,f.y,100,212,255,5,a*.18);bgCtx.fillStyle=`rgba(200,240,255,${a*.45})`;bgCtx.beginPath();bgCtx.arc(f.x,f.y,f.size,0,Math.PI*2);bgCtx.fill()}
-const border=bnodes.map((n,i)=>i).sort((a,b)=>gp(a).z-gp(b).z)
-for(const i of border){const n=bnodes[i],p=gp(i),da=bdf(p.z);if(da<.02)continue;const pulse=.6+.4*Math.sin(n.pulse+bt*.5),r=2.2*p.s*pulse;bglow(p.x,p.y,0,180,255,18*p.s,da*.10);bgCtx.shadowColor=`rgba(0,180,255,${da*.12})`;bgCtx.shadowBlur=12;bgCtx.fillStyle=`rgba(0,180,255,${da*.4})`;bgCtx.beginPath();bgCtx.arc(p.x,p.y,r*.45,0,Math.PI*2);bgCtx.fill();bgCtx.shadowBlur=0;bgCtx.fillStyle=`rgba(180,235,255,${da*.6})`;bgCtx.beginPath();bgCtx.arc(p.x,p.y,r*.12,0,Math.PI*2);bgCtx.fill()}
-requestAnimationFrame(bloop)}
-bloop()
+const NP=40,BED=150;let t=0
+const particles=[]
+for(let i=0;i<NP;i++){const theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1),r=350+Math.random()*100;particles.push({x:r*Math.sin(phi)*Math.cos(theta),y:r*Math.sin(phi)*Math.sin(theta),z:r*Math.cos(phi),vx:(Math.random()-0.5)*0.008,vy:(Math.random()-0.5)*0.008,vz:(Math.random()-0.5)*0.008})}
+const proj=(x,y,z)=>{const f=700/(700+z);return{x:w/2+x*f,y:h/2+y*f}}
+const render=()=>{t+=0.016;ctx.clearRect(0,0,w,h);ctx.fillStyle='#0F1822';ctx.fillRect(0,0,w,h);ctx.strokeStyle='rgba(201,162,39,0.4)';ctx.lineWidth=1;ctx.globalAlpha=0.5;for(let i=0;i<particles.length;i++){const p1=particles[i],p1p=proj(p1.x,p1.y,p1.z);for(let j=i+1;j<particles.length;j++){const p2=particles[j],dx=p1.x-p2.x,dy=p1.y-p2.y,dz=p1.z-p2.z,dist=Math.sqrt(dx*dx+dy*dy+dz*dz);if(dist<BED){const p2p=proj(p2.x,p2.y,p2.z);ctx.beginPath();ctx.moveTo(p1p.x,p1p.y);ctx.lineTo(p2p.x,p2p.y);ctx.stroke()}}}particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.z+=p.vz;if(Math.abs(p.x)>400)p.vx*=-0.3;if(Math.abs(p.y)>400)p.vy*=-0.3;if(Math.abs(p.z)>400)p.vz*=-0.3});ctx.globalAlpha=1;requestAnimationFrame(render)}
+render()
