@@ -6,6 +6,7 @@ __pycache__
 *.pyc
 
 # Working artifacts
+Web/
 *.md~
 *.pdf~
 build-*.py
