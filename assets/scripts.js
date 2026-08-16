@@ -2,18 +2,19 @@
 const translations = {
   en: {
     navServices: 'Services', navAbout: 'About', navCases: 'Projects', navPricing: 'Pricing', navContact: 'Contact Us',
-    heroBadge: "🇲🇾 Malaysia's AI-First IT Partner", heroTitle1: 'Smart Technology.', heroTitle2: 'Integrated Solutions.',
-    heroDesc: "We help Malaysian businesses grow with custom AI software and reliable managed IT — from intelligent chatbots to cloud infrastructure, all under one roof.",
-    heroBtn1: 'Get a Free IT Audit', heroBtn2: 'Explore Services →',
+    heroBadge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA", heroTitle1: 'Enterprise-grade AI systems and managed IT, built for ', heroTitle2: 'Malaysian SMEs',
+    heroDesc: "Custom AI apps, chatbots, automation, and secure cloud infrastructure — delivered by a Cyberjaya-based team, since 2021.",
+    heroBtn1: 'Book a discovery call', heroBtn2: 'View our work',
     stat1: 'Happy Clients', stat2: 'Custom Solutions', stat3: 'Managed IT Support', stat4: 'Malaysian-owned',
-    servicesEyebrow: 'What We Do', servicesTitle: 'Two Pillars. One Partner.', servicesSub: 'We combine cutting-edge AI development with rock-solid managed IT — so you never need to juggle multiple vendors again.',
-    svc1Title: 'AI Software Development', svc1Desc: 'Custom AI applications, intelligent chatbots, and process automation built specifically for your business workflows.',
-    svc2Title: 'Managed IT Services', svc2Desc: 'End-to-end IT management — cloud infrastructure, helpdesk, network security, and hardware maintenance.',
-    svc3Title: 'Cloud Migration & Setup', svc3Desc: 'Move your business to the cloud seamlessly with planning, migration, and ongoing cloud management.',
-    svc4Title: 'IT Security & Compliance', svc4Desc: 'PDPA compliance audits, cybersecurity monitoring, and data protection policies for your peace of mind.',
-    svc5Title: 'Business Intelligence (Launching Next)', svc5Desc: 'Data-driven insights, predictive BI analytics, and intelligent dashboards to help you make smarter business decisions.',
+    servicesEyebrow: 'Service Tiers', servicesTitle: 'Three Tiers. One Partner.', servicesSub: 'From managed IT to full AI partnership — pick the tier that matches where your business is today, and grow into the next one as you scale.',
+    svc1Title: 'AI Software Dev', svc1Desc: 'Custom apps, chatbots, agent workflows',
+    svc2Title: 'Managed IT', svc2Desc: 'Cloud infra, helpdesk, security, PDPA',
+    svc3Title: 'Sales Automation', svc3Desc: 'CRM pipelines and outreach systems',
+    svc4Title: 'Content & Ads', svc4Desc: 'Content engine and paid media management',
     svcLearnMore: 'Learn more →',
     clientsTitle: 'What we build for the future',
+    trustStrip: 'Trusted by Lapango, Eastelpro, AGMX and growing SME clients across Malaysia',
+    trustLink: 'See client outcomes →',
     whyEyebrow: 'Why Choose Us', whyTitle: 'Built for Malaysian SMEs',
     why1Title: 'Local Expertise', why1Desc: 'We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.',
     why2Title: 'AI + IT Combined', why2Desc: 'One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.',
@@ -27,18 +28,19 @@ const translations = {
   },
   bm: {
     navServices: 'Perkhidmatan', navAbout: 'Tentang Kami', navCases: 'Projek', navPricing: 'Harga', navContact: 'Hubungi Kami',
-    heroBadge: '🇲🇾 Rakan Kongsia IT Berasaskan AI Malaysia', heroTitle1: 'Teknologi Pintar.', heroTitle2: 'Penyelesaian Bersepadu.',
-    heroDesc: 'Kami membantu perniagaan Malaysia berkembang dengan perisian AI tersuai dan perkhidmatan IT yang boleh dipercayai — dari chatbot pintar hingga infrastruktur awan, semuanya di bawah satu bumbung.',
-    heroBtn1: 'Dapatkan Audit IT Percuma', heroBtn2: 'Terokai Perkhidmatan →',
+    heroBadge: 'AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA', heroTitle1: 'Sistem AI dan IT terurus peringkat perusahaan, dibina untuk ', heroTitle2: 'SME Malaysia',
+    heroDesc: 'Aplikasi AI tersuai, chatbot, automasi, dan infrastruktur awan yang selamat — disampaikan oleh pasukan Cyberjaya, sejak 2026.',
+    heroBtn1: 'Buat janji temu', heroBtn2: 'Lihat kerja kami',
     stat1: 'Pelanggan Gembira', stat2: 'Penyelesaian Tersuai', stat3: 'Sokongan IT 24/7', stat4: 'Dimiliki Malaysia',
-    servicesEyebrow: 'Apa Yang Kami Lakukan', servicesTitle: 'Dua Tunggak. Satu Rakan Kongsi.', servicesSub: 'Kami menggabungkan pembangunan AI terkini dengan perkhidmatan IT yang mantap — jadi anda tidak perlu berurusan dengan pelbagai vendor lagi.',
-    svc1Title: 'Pembangunan Perisian AI', svc1Desc: 'Aplikasi AI tersuai, chatbot pintar, dan automasi proses yang dibina khusus untuk aliran kerja perniagaan anda.',
-    svc2Title: 'Perkhidmatan IT Terurus', svc2Desc: 'Pengurusan IT menyeluruh — infrastruktur awan, meja bantuan, keselamatan rangkaian, dan penyelenggaraan perkakasan.',
-    svc3Title: 'Migrasi & Persediaan Awan', svc3Desc: 'Pindahkan perniagaan anda ke awan dengan lancar melalui perancangan, migrasi, dan pengurusan awan berterusan.',
-    svc4Title: 'Keselamatan & Pematuhan IT', svc4Desc: 'Audit pematuhan PDPA, pemantauan keselamatan siber, dan dasar perlindungan data untuk ketenangan fikiran anda.',
-    svc5Title: 'Perniagaan Pintar (Akan Datang)', svc5Desc: 'Wawasan berasaskan data, analitik BI ramalan, dan papan pemuka pintar untuk membantu anda membuat keputusan perniagaan yang lebih bijak.',
+    servicesEyebrow: 'Tahap Perkhidmatan', servicesTitle: 'Tiga Tahap. Satu Rakan Kongsi.', servicesSub: 'Dari IT terurus kepada perkongsian AI penuh — pilih tahap yang sesuai dengan perniagaan anda hari ini, dan kembangkan bersama kami.',
+    svc1Title: 'Pembangunan Perisian AI', svc1Desc: 'Aplikasi tersuai, chatbot, aliran kerja agen',
+    svc2Title: 'IT Terurus', svc2Desc: 'Infrastruktur awan, helpdesk, keselamatan, PDPA',
+    svc3Title: 'Automasi Jualan', svc3Desc: 'Saluran CRM dan sistem outreach',
+    svc4Title: 'Kandungan & Iklan', svc4Desc: 'Enjin kandungan dan pengurusan media berbayar',
     svcLearnMore: 'Ketahui Lebih Lanjut →',
     clientsTitle: 'Apa yang kami bina untuk masa depan',
+    trustStrip: 'Dipercayai oleh Lapango, Eastelpro, AGMX dan SME yang berkembang di seluruh Malaysia',
+    trustLink: 'Lihat hasil pelanggan →',
     whyEyebrow: 'Mengapa Pilih Kami', whyTitle: 'Dibina untuk SME Malaysia',
     why1Title: 'Pakar Tempatan', why1Desc: 'Kami memahami PDPA, SST, ePerolehan, dan landskap SME. Tidak perlu menjelaskan konteks Malaysia kepada kami.',
     why2Title: 'AI + IT Digabungkan', why2Desc: 'Satu vendor untuk keperluan AI dan IT harian anda — lebih mudah, lebih murah, dan lebih terselaras.',
@@ -111,53 +113,76 @@ function toggleLanguage() {
 
 function applyTranslations() {
   const t = translations[currentLang];
-  // Nav
-  document.querySelectorAll('.nav-links a')[0].textContent = t.navServices;
-  document.querySelectorAll('.nav-links a')[1].textContent = t.navAbout;
-  document.querySelectorAll('.nav-links a')[2].textContent = t.navCases;
-  document.querySelectorAll('.nav-links a')[3].textContent = t.navPricing;
-  document.querySelectorAll('.nav-links a')[4].textContent = t.navContact;
-  // Hero
-  document.querySelector('.hero-badge').textContent = t.heroBadge;
-  document.querySelector('.hero h1').innerHTML = t.heroTitle1 + '<br><span>' + t.heroTitle2 + '</span>';
-  document.querySelector('.hero p').textContent = t.heroDesc;
-  document.querySelector('.btn-primary').textContent = t.heroBtn1;
-  document.querySelector('.btn-outline').textContent = t.heroBtn2;
-  // Stats
+  const activePage = document.querySelector('.page.active');
+  const isHome = !activePage || activePage.id === 'page-home';
+
+  // Nav (present on all pages)
+  const navLinks = document.querySelectorAll('.nav-links a');
+  if(navLinks[0]) navLinks[0].textContent = t.navServices;
+  if(navLinks[1]) navLinks[1].textContent = t.navAbout;
+  if(navLinks[2]) navLinks[2].textContent = t.navCases;
+  if(navLinks[3]) navLinks[3].textContent = t.navPricing;
+  if(navLinks[4]) navLinks[4].textContent = t.navContact;
+
+  // Hero (home page only)
+  if(isHome) {
+    const heroBadge = document.querySelector('.hero-badge');
+    if(heroBadge) heroBadge.textContent = t.heroBadge;
+    const heroH1 = document.querySelector('.hero h1');
+    if(heroH1) heroH1.innerHTML = t.heroTitle1 + '<span>' + t.heroTitle2 + '</span>';
+    const heroP = document.querySelector('.hero p');
+    if(heroP) heroP.textContent = t.heroDesc;
+    const btnGold = document.querySelector('.btn-gold');
+    if(btnGold) btnGold.textContent = t.heroBtn1;
+    const btnOutline = document.querySelector('.btn-outline');
+    if(btnOutline) btnOutline.textContent = t.heroBtn2;
+  }
+
+  // Stats (present on all pages)
   const stats = document.querySelectorAll('.stat-label');
   if(stats[0]) stats[0].textContent = t.stat1;
   if(stats[1]) stats[1].textContent = t.stat2;
   if(stats[2]) stats[2].textContent = t.stat3;
   if(stats[3]) stats[3].textContent = t.stat4;
-  // Services
-  document.querySelector('.services-home .section-eyebrow').textContent = t.servicesEyebrow;
-  document.querySelector('.services-home .section-title').textContent = t.servicesTitle;
-  document.querySelector('.services-home .section-sub').textContent = t.servicesSub;
-  // Service Cards
-  const svcCards = document.querySelectorAll('.svc-card');
-  if(svcCards[0]) { svcCards[0].querySelector('h3').textContent = t.svc1Title; svcCards[0].querySelector('p').textContent = t.svc1Desc; svcCards[0].querySelector('.svc-link').textContent = t.svcLearnMore; }
-  if(svcCards[1]) { svcCards[1].querySelector('h3').textContent = t.svc2Title; svcCards[1].querySelector('p').textContent = t.svc2Desc; svcCards[1].querySelector('.svc-link').textContent = t.svcLearnMore; }
-  if(svcCards[2]) { svcCards[2].querySelector('h3').textContent = t.svc3Title; svcCards[2].querySelector('p').textContent = t.svc3Desc; svcCards[2].querySelector('.svc-link').textContent = t.svcLearnMore; }
-  if(svcCards[3]) { svcCards[3].querySelector('h3').textContent = t.svc4Title; svcCards[3].querySelector('p').textContent = t.svc4Desc; svcCards[3].querySelector('.svc-link').textContent = t.svcLearnMore; }
-  if(svcCards[4]) { svcCards[4].querySelector('h3').textContent = t.svc5Title; svcCards[4].querySelector('p').textContent = t.svc5Desc; svcCards[4].querySelector('.svc-link').textContent = t.svcLearnMore; }
-  // Clients
-  document.querySelector('.clients-strip p').textContent = t.clientsTitle;
-  // Why
-  document.querySelector('.why .section-eyebrow').textContent = t.whyEyebrow;
-  document.querySelector('.why .section-title').textContent = t.whyTitle;
+
+  // Service Cards (present on all pages)
+  const svcCards = document.querySelectorAll('.svc-concept-card');
+  if(svcCards[0]) { svcCards[0].querySelector('h3').textContent = t.svc1Title; svcCards[0].querySelector('p').textContent = t.svc1Desc; }
+  if(svcCards[1]) { svcCards[1].querySelector('h3').textContent = t.svc2Title; svcCards[1].querySelector('p').textContent = t.svc2Desc; }
+  if(svcCards[2]) { svcCards[2].querySelector('h3').textContent = t.svc3Title; svcCards[2].querySelector('p').textContent = t.svc3Desc; }
+  if(svcCards[3]) { svcCards[3].querySelector('h3').textContent = t.svc4Title; svcCards[3].querySelector('p').textContent = t.svc4Desc; }
+
+  // Clients (present on all pages)
+  const clientsStrip = document.querySelector('.clients-strip p');
+  if(clientsStrip) clientsStrip.textContent = t.clientsTitle;
+
+  // Trust strip (present on all pages)
+  const ts = document.querySelector('.trust-strip');
+  if(ts) { ts.querySelector('span').textContent = t.trustStrip; ts.querySelector('.trust-strip-link').textContent = t.trustLink; }
+
+  // Why section (present on all pages)
+  const whyEyebrow = document.querySelector('.why .section-eyebrow');
+  if(whyEyebrow) whyEyebrow.textContent = t.whyEyebrow;
+  const whyTitle = document.querySelector('.why .section-title');
+  if(whyTitle) whyTitle.textContent = t.whyTitle;
   const whyCards = document.querySelectorAll('.why-card');
   if(whyCards[0]) { whyCards[0].querySelector('h4').textContent = t.why1Title; whyCards[0].querySelector('p').textContent = t.why1Desc; }
   if(whyCards[1]) { whyCards[1].querySelector('h4').textContent = t.why2Title; whyCards[1].querySelector('p').textContent = t.why2Desc; }
   if(whyCards[2]) { whyCards[2].querySelector('h4').textContent = t.why3Title; whyCards[2].querySelector('p').textContent = t.why3Desc; }
   if(whyCards[3]) { whyCards[3].querySelector('h4').textContent = t.why4Title; whyCards[3].querySelector('p').textContent = t.why4Desc; }
-  // CTA
+
+  // CTA (present on all pages)
   const ctaBand = document.querySelector('.cta-band');
-  if(ctaBand) { ctaBand.querySelector('h2').textContent = t.ctaTitle; ctaBand.querySelector('p').textContent = t.ctaDesc; ctaBand.querySelector('.btn-navy').textContent = t.ctaBtn1; ctaBand.querySelector('.btn-primary:last-of-type').textContent = t.ctaBtn2; }
-  // Footer
-  document.querySelector('.footer-brand p').textContent = t.footerDesc;
-  document.querySelectorAll('.footer-col h5')[0].textContent = t.footerCompany;
-  document.querySelectorAll('.footer-col h5')[1].textContent = t.footerServices;
-  // Cases
+  if(ctaBand) { ctaBand.querySelector('h2').textContent = t.ctaTitle; ctaBand.querySelector('p').textContent = t.ctaDesc; const btnNavy = ctaBand.querySelector('.btn-navy'); if(btnNavy) btnNavy.textContent = t.ctaBtn1; const btnPrimaryLast = ctaBand.querySelector('.btn-primary:last-of-type'); if(btnPrimaryLast) btnPrimaryLast.textContent = t.ctaBtn2; }
+
+  // Footer (present on all pages)
+  const footerBrandP = document.querySelector('.footer-brand p');
+  if(footerBrandP) footerBrandP.textContent = t.footerDesc;
+  const footerColH5s = document.querySelectorAll('.footer-col h5');
+  if(footerColH5s[0]) footerColH5s[0].textContent = t.footerCompany;
+  if(footerColH5s[1]) footerColH5s[1].textContent = t.footerServices;
+
+  // Cases (page-specific)
   const casesPage = document.querySelector('#page-cases');
   if(casesPage) {
     const hl = casesPage.querySelector('.page-hero-label');
