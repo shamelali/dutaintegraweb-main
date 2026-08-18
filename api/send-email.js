@@ -10,6 +10,7 @@ const TO = (process.env.EMAIL_TO || "hello@dutaintegra.my")
   .filter(Boolean);
 const REPLY_COPY = process.env.EMAIL_AUTOREPLY !== "false";
 const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 
 function esc(value) {
   return String(value ?? "")
@@ -144,6 +145,30 @@ export default async function handler(req, res) {
   // Honeypot — bots fill hidden fields
   if (body.website || body.hp) {
     return res.status(200).json({ success: true, skipped: true });
+  }
+
+  // Verify Turnstile token
+  if (TURNSTILE_SECRET_KEY) {
+    const turnstileResponse = body.turnstile;
+    if (!turnstileResponse) {
+      return res.status(400).json({ error: "Turnstile verification failed." });
+    }
+    const turnstileVerify = await fetch(
+      "https://challenges.cloudflare.com/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret: TURNSTILE_SECRET_KEY,
+          response: turnstileResponse,
+        }),
+      }
+    );
+    const turnstileData = await turnstileVerify.json();
+    if (!turnstileData.success) {
+      console.error("Turnstile verification failed:", turnstileData);
+      return res.status(400).json({ error: "Bot detection activated." });
+    }
   }
 
   const name = String(body.name || "").trim();

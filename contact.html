@@ -9,6 +9,8 @@
 <link rel="icon" type="image/png" href="assets/dis-favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<!-- Cloudflare Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
 <style>
 :root{--navy:#0B1D3A;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
 *{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
@@ -131,7 +133,8 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <label for="contact-message">Tell us about your business & needs</label>
         <textarea id="contact-message" placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support..."></textarea>
       </div>
-      <button type="submit" class="form-submit" id="contact-submit">Send Message →</button>
+      <div class="form-group" style="margin-bottom:1.2rem;"><input type="hidden" name="turnstile" id="turnstile-response" value=""><div id="turnstile-widget" data-sitekey="YOUR_SITE_KEY" data-callback="onTurnstileVerify" data-expired-callback="onTurnstileExpired" style="width: 100%; margin-top: .8rem;"></div></div>
+<button type="submit" class="form-submit" id="contact-submit">Send Message →</button>
     </form>
   </div>
 </section>
@@ -164,6 +167,16 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 </footer>
 
 <script>
+function onTurnstileVerify() {
+  // Callback called when user completes Turnstile verification
+  // The response is automatically placed in the hidden input
+}
+
+function onTurnstileExpired() {
+  // Callback called when the Turnstile widget expires
+  alert('Turnstile verification expired. Please try again.');
+}
+
 function submitForm() {
   const name = document.getElementById('contact-name').value.trim();
   const company = document.getElementById('contact-company').value.trim();
@@ -184,7 +197,7 @@ function submitForm() {
   fetch('/api/send-email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, company, email, phone, service, message })
+    body: JSON.stringify({ name, company, email, phone, service, message, turnstile: turnstileResponse })
   })
   .then(res => res.json())
   .then(data => {
