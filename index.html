@@ -43,6 +43,42 @@
       <div class="hero-btns">
         <button class="btn-gold" onclick="goPage('contact')">Book a discovery call</button>
         <button class="btn-outline" onclick="goPage('cases')">View our work</button>
+        <button class="btn-silver" onclick="openAuditModal()">Free AI + IT Audit</button>
+        <button class="btn-whatsapp" onclick="openWhatsAppWidget()">WhatsApp</button>
+      </div>
+
+      <div class="audit-modal" id="auditModal">
+        <div class="audit-modal-content">
+          <div class="audit-modal-header">
+            <h3>Free AI + IT Audit</h3>
+            <span class="audit-modal-close" onclick="closeAuditModal()">×</span>
+          </div>
+          <div class="audit-modal-body">
+            <p>Get a combined AI readiness assessment and IT health check — normally RM 500 value — completely free.</p>
+            <p>We'll evaluate your current systems and identify AI opportunities within 3 working days.</p>
+            <form class="audit-form">
+              <div class="form-row">
+                <div class="form-group"><label>Full Name *</label><input type="text" required></div>
+                <div class="form-group"><label>Company Name</label><input type="text"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Email Address *</label><input type="email" required></div>
+                <div class="form-group"><label>Phone / WhatsApp</label><input type="tel"></div>
+              </div>
+              <div class="form-group">
+                <label>Primary Business Challenge</label>
+                <select>
+                  <option>Automating repetitive tasks</option>
+                  <option>Improving customer service</option>
+                  <option>Optimizing operations & costs</option>
+                  <option>Enhancing data security & PDPA compliance</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-gold" style="width:100%;">Book My Free Audit</button>
+            </form>
+          </div>
+        </div>
       </div>
       <div class="trust-bar">
         <div class="trust-stat"><span class="t-val">2026</span><span class="t-lbl">Founded</span></div>
@@ -627,6 +663,137 @@
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
   </footer>
 </div>
+
+<script src="https://cdn.jsdelivr.net/lunr.js/2.10.0/lunr.min.js"></script>
+
+<script>
+  // Lunr.js client-side search index
+  document.addEventListener('DOMContentLoaded', function() {
+    // Build search index from all page content
+    const idx = lunr(function() {
+      this.field('title', { boost: 10 });
+      this.field('text', { boost: 1 });
+      this.field('tags', { boost: 5 });
+    });
+
+    // Index all pages
+    document.querySelectorAll('.page').forEach((page, pageIdx) => {
+      if (!page.classList.contains('active')) return; // only index active page initially
+      
+      const title = page.querySelector('h1')?.textContent || '';
+      const text = page.innerText || '';
+      const tags = [];
+      
+      // Extract case tags
+      page.querySelectorAll('.case-tag').forEach(tag => {
+        tags.push(tag.textContent.toLowerCase());
+      });
+      
+      // Extract service tags from why-section
+      page.querySelectorAll('.why-card h4').forEach(h4 => {
+        tags.push(h4.textContent.toLowerCase());
+      });
+      
+      // Extract why card titles/numbers
+      page.querySelectorAll('.why-num').forEach(num => {
+        tags.push(num.textContent.toLowerCase());
+      });
+
+      if (title || text.trim()) {
+        idx.addDoc({
+          id: 'page-' + pageIdx,
+          title: title,
+          text: text,
+          tags: tags
+        });
+      }
+    });
+
+    // Add search button to nav
+    const nav = document.querySelector('nav');
+    if (nav) {
+      const searchBtn = document.createElement('button');
+      searchBtn.className = 'nav-cta';
+      searchBtn.innerHTML = '<i class="ti ti-search"></i> Search';
+      searchBtn.style.cssText = 'padding: .5rem 1rem; font-size: .88rem;';
+      searchBtn.addEventListener('click', toggleSearch);
+      // Insert after the lang-toggle button
+      const langToggle = document.querySelector('.lang-toggle');
+      if (langToggle) {
+        langToggle.parentNode.insertBefore(searchBtn, langToggle.nextSibling);
+      } else {
+        nav.appendChild(searchBtn);
+      }
+    }
+
+    // Search overlay
+    const overlay = document.createElement('div');
+    overlay.style = `
+      position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 1000;
+      backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center;
+    `;
+    overlay.innerHTML = `
+      <div style="background: var(--white); padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; text-align: center;">
+        <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: 'Rajdhani',sans-serif; color: var(--navy);">Search</h3>
+        <input type="text" id="search-input" style="width: 100%; padding: .8rem; border: 1.5px solid #E5EBF5; border-radius: 7px; font-family: 'Inter',sans-serif; font-size: .95rem; margin-bottom: 1rem;">
+        <div id="search-results" style="max-height: 300px; overflow-y: auto; text-align: left;"></div>
+        <button onclick="closeSearch()" style="margin-top: 1rem; padding: .5rem 1.5rem; background: var(--electric); color: var(--navy); border: none; border-radius: 7px; font-weight: 700; cursor: pointer;">Close</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+
+    function toggleSearch() {
+      const isShowing = overlay.style.display === 'flex';
+      closeSearch();
+      if (!isShowing) {
+        overlay.style.display = 'flex';
+        setTimeout(() => searchInput.focus(), 100);
+      }
+    }
+
+    function closeSearch() {
+      overlay.style.display = 'none';
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+    }
+
+    searchInput.addEventListener('input', function() {
+      const query = this.value.trim();
+      if (!query) {
+        searchResults.innerHTML = '';
+        return;
+      }
+
+      const results = idx.search(query);
+      searchResults.innerHTML = '';
+
+      if (results.length === 0) {
+        searchResults.innerHTML = '<div style="padding: 1rem; color: var(--gray);">No results found. Try broader terms.</div>';
+        return;
+      }
+
+      results.slice(0, 10).forEach(result => {
+        const doc = idx.getDoc(result.id);
+        const resultDiv = document.createElement('div');
+        resultDiv.style = `padding: .8rem; border-bottom: 1px solid #F0F4FA; cursor: pointer; transition: background .2s;}`;
+        resultDiv.innerHTML = `
+          <div style="font-weight: 700; color: var(--navy); font-family: 'Rajdhani',sans-serif; font-size: 1.1rem; margin-bottom: .3rem;">${doc.title || 'Page'}</div>
+          <div style="font-size: .85rem; color: var(--gray); line-height: 1.4;">${(doc.text.substring(0, 200) + '...').replace(/\n/g, ' ')}</div>
+        `;
+        resultDiv.addEventListener('click', function() {
+          // Navigate to the matching page
+          const pageId = doc.id.replace('page-', '');
+          goPage('page-' + pageId);
+          closeSearch();
+        });
+        searchResults.appendChild(resultDiv);
+      });
+    });
+  });
+</script>
 
 <script src="assets/scripts.js"></script>
 </body>

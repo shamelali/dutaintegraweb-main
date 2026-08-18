@@ -209,6 +209,23 @@ if (localStorage.getItem('language') === 'bm') {
   }
 }
 
+// Audit Modal
+function openAuditModal() {
+  const modal = document.getElementById('auditModal');
+  if(modal) modal.classList.add('show');
+}
+
+function closeAuditModal() {
+  const modal = document.getElementById('auditModal');
+  if(modal) modal.classList.remove('show');
+}
+
+// WhatsApp Widget
+function openWhatsAppWidget() {
+  const whatsappUrl = 'https://wa.me/+601154034051?text=Hi%2C%20I%27m%20from%20%5BCompany%5D%2C%20interested%20in%20AI%20%2B%20IT%20for%20SMEs.%20Send%20me%20the%203-day%20proposal.';
+  window.open(whatsappUrl, '_blank');
+}
+
 // Dark Mode Toggle
 function toggleDarkMode() {
   document.body.classList.toggle('dark-mode');

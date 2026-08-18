@@ -44,6 +44,24 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 /* INDUSTRIAL-GRADE HERO: TRUST BAR + GOLD ACCENTS */
 .btn-gold,.btn-gold-sm{background:var(--gold);color:var(--navy);padding:.75rem 1.8rem;border-radius:8px;font-weight:700;font-size:.92rem;cursor:pointer;border:none;display:inline-block;transition:all .25s;font-family:'Inter',sans-serif;text-decoration:none;line-height:1.4}
 .btn-gold:hover,.btn-gold-sm:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,162,39,.35)}
+
+.btn-whatsapp{background:var(--green);color:var(--navy);padding:.75rem 1.8rem;border-radius:8px;font-weight:700;font-size:.92rem;cursor:pointer;border:none;display:inline-block;transition:all .25s;font-family:'Inter',sans-serif;text-decoration:none;line-height:1.4}
+.btn-whatsapp:hover{background:#075e54;transform:translateY(-1px);box-shadow:0 4px 16px rgba(7,94,84,.3)}
+
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes modalOut{from{opacity:1;transform:scale(1) translateY(0)}to{opacity:0;transform:scale(.95) translateY(10px)}}
+
+.audit-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:1050}
+.audit-modal.show{display:flex}
+.audit-modal-content{background:var(--white);margin:2rem;border-radius:12px;width:90%;max-width:500px;animation:modalIn .3s ease;position:relative}
+.audit-modal-header{padding:1.5rem 2rem;border-bottom:1px solid #E5EBF5;display:flex;justify-content:between;align-items:center}
+.audit-modal-close{background:transparent;border:none;color:var(--navy);font-size:1.5rem;font-weight:700;cursor:pointer}
+.audit-modal-body{padding:2rem}
+.audit-form .form-group{margin-bottom:1rem}
+.audit-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.audit-form .form-group label{display:block;font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:.4rem}
+.audit-form .form-group input,.audit-form .form-group select,.audit-form .form-group textarea{width:100%;padding:.75rem 1rem;border:1.5px solid #D8E5F5;border-radius:7px;font-family:'Inter',sans-serif;font-size:.88rem;color:var(--navy);background:white;outline:none;transition:border-color .2s}
+.audit-form .form-group input:focus,.audit-form .form-group select:focus,.audit-form .form-group textarea:focus{border-color:var(--electric)}
 .hero h1 span{color:var(--gold)}
 .hero-badge.gold{background:rgba(201,162,39,.12);color:var(--gold);border-left-color:var(--gold)}
 .trust-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.2rem;margin-top:3rem;padding:1.8rem 0 0;border-top:1px solid rgba(255,255,255,.09)}
