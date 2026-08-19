@@ -1,229 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Contact Duta Integra Solutions for a free IT audit or AI readiness assessment. Based in Cyberjaya, Malaysia. Phone: +60 11-5403 4051. Email: hello@dutaintegra.my">
-<title>Contact Us - Duta Integra Solutions</title>
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="icon" type="image/png" href="assets/dis-favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-<!-- Cloudflare Turnstile -->
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
-<style>
-:root{--navy:#0B1D3A;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
-*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
-.ti{color:var(--electric)}
-body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
-nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;display:flex;align-items:center;gap:15px;padding:10px}
-.logo a{color:white;text-decoration:none}
-.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
-.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s}
-.nav-links a:hover{color:var(--electric)}
-.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
-.logo-img{height:32px;width:auto;display:block}
-@media(max-width:768px){.logo-img{height:28px}}
-.page-hero{background:linear-gradient(135deg,rgba(11,29,58,.82),rgba(11,29,58,.75)),url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80');background-size:cover;background-position:center;padding:5rem 6% 4rem;position:relative;overflow:hidden}
-.page-hero::before{content:'';position:absolute;top:-40%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,180,255,.09) 0%,transparent 65%);pointer-events:none}
-.page-hero-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.75rem}
-.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;margin-bottom:.9rem;max-width:600px}
-.page-hero p{color:rgba(255,255,255,.6);max-width:520px;line-height:1.75;font-size:.97rem}
-.contact-section{padding:5rem 6%;background:white;display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:start}
-.contact-info h2{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:.9rem;color:var(--navy)}
-.contact-info p{color:var(--gray);line-height:1.75;font-size:.93rem;margin-bottom:2rem}
-.contact-detail{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:1.4rem}
-.contact-icon{width:40px;height:40px;background:rgba(0,180,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.contact-detail h5{font-weight:600;font-size:.88rem;color:var(--navy);margin-bottom:.2rem}
-.contact-detail p{color:var(--gray);font-size:.84rem;margin:0}
-.contact-form{background:#F8FAFF;border:1.5px solid #E5EBF5;border-radius:14px;padding:2.4rem}
-.contact-form h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;color:var(--navy)}
-.form-group{margin-bottom:1.2rem}
-.form-group label{display:block;font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:.4rem}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:.75rem 1rem;border:1.5px solid #D8E5F5;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--navy);background:white;outline:none;transition:border-color .2s}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--electric)}
-.form-group textarea{resize:vertical;min-height:110px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.form-submit{width:100%;padding:.9rem;background:var(--electric);color:var(--navy);border:none;border-radius:7px;font-weight:700;font-size:.95rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s;margin-top:.5rem}
-.form-submit:hover{opacity:.88}
-.toast{position:fixed;bottom:2rem;right:2rem;background:var(--navy);color:white;padding:1rem 1.5rem;border-radius:10px;font-size:.88rem;z-index:9999;border-left:4px solid var(--electric);transform:translateY(100px);opacity:0;transition:all .4s}
-.toast.show{transform:translateY(0);opacity:1}
-.cta-band{padding:5.5rem 6%;text-align:center;background:linear-gradient(135deg,#EBF4FF,#F0F8FF)}
-.cta-band h2{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.9rem}
-.cta-band p{color:var(--gray);max-width:460px;margin:0 auto 2rem;line-height:1.75;font-size:.95rem}
-footer{background:var(--dark);padding:3rem 6% 2rem}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
-.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
-.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
-.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;transition:color .2s}
-.footer-col a:hover{color:var(--electric)}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
-@media(max-width:768px){.footer-top{grid-template-columns:1fr}.contact-section{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.nav-links{gap:1rem}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — Duta Integra Solutions</title>
+  <meta name="description" content="Book a discovery call with Duta Integra Solutions. Based in Cyberjaya. WhatsApp us or email hello@dutaintegra.my." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="icon" type="image/png" href="assets/dis-favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=20260819a" />
+  <link rel="alternate" hreflang="en" href="https://dutaintegra.my/contact" />
+  <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/contact" />
+  <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/contact" />
+  <meta property="og:title" content="Contact Us — Duta Integra Solutions" />
+  <meta property="og:description" content="Book a discovery call. WhatsApp us or email hello@dutaintegra.my." />
+  <meta property="og:image" content="assets/img/og-share.jpg" />
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ProfessionalService","name":"Duta Integra Solutions","url":"https://dutaintegra.my","email":"hello@dutaintegra.my","telephone":"+601154034051","address":{"@type":"PostalAddress","addressLocality":"Cyberjaya","addressCountry":"MY"},"foundingDate":"2025","areaServed":"MY","openingHours":"Mo-Fr 09:00-18:00"}
+  </script>
 </head>
 <body>
-<nav>
-  <div class="logo"><picture><source srcset="assets/dis-logo-nav.webp" type="image/webp"><img src="assets/dis-logo-nav.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></div>
-  <ul class="nav-links">
-    <li><a href="services.html">Services</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="cases.html">Projects</a></li>
-    <li><a href="pricing.html">Pricing</a></li>
-    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
-  </ul>
-</nav>
+<canvas id="network-bg"></canvas>
+<div class="toast" id="toast"></div>
 
-<div class="toast" id="toast">✅ Message sent! We'll get back to you within 24 hours.</div>
-
-<div class="page-hero">
-  <div class="page-hero-label">Contact Us</div>
-  <h1>Let's Start a Conversation</h1>
-  <p>Ready to transform your business with AI and IT? We'd love to hear from you.</p>
-</div>
-
-<section class="contact-section">
-  <div class="contact-info">
-    <h2>Get in Touch</h2>
-    <p>Whether you're ready to start a project or just want to learn more, we're here to help. Fill out the form and we'll get back to you within 24 hours.</p>
-    
-    <div class="contact-detail">
-      <div class="contact-icon"><i class="ti ti-map-pin"></i></div>
-      <div><h5>Office Location</h5><p>Cyberjaya, Selangor, Malaysia</p></div>
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-inner wrap">
+    <div class="brand">
+      <picture><source srcset="assets/dis-logo-nav.webp" type="image/webp" /><img class="brand-mark" src="assets/dis-logo-nav.png" alt="Duta Integra Solutions" /></picture>
+      <span class="brand-name">Duta <span>Integra</span></span>
     </div>
-    <div class="contact-detail">
-      <div class="contact-icon"><i class="ti ti-mail"></i></div>
-      <div><h5>Email</h5><p>info@dutaintegrasolutions.com</p></div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="services">Services</a>
+      <a href="about">About</a>
+      <a href="work">Work</a>
+      <a href="pricing">Pricing</a>
+      <a href="comparison">Compare</a>
+      <a href="contact" class="nav-cta">Get a quote</a>
     </div>
-    <div class="contact-detail">
-      <div class="contact-icon"><i class="ti ti-phone"></i></div>
-      <div><h5>Phone / WhatsApp</h5><p>+60 11-5403 4051</p></div>
-    </div>
-    <div class="contact-detail">
-      <div class="contact-icon"><i class="ti ti-clock"></i></div>
-      <div><h5>Business Hours</h5><p>Monday – Friday, 9am – 6pm MYT<br>Weekend support available for managed IT clients</p></div>
+    <div class="nav-tools">
+      <button class="tool" onclick="toggleDark()" data-theme-icon title="Toggle theme"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+      <div class="lang-switch"><a class="lang-opt is-active" href="/contact">EN</a><a class="lang-opt" href="/ms/contact" hreflang="ms">BM</a></div>
+      <button class="burger" onclick="toggleNav()" aria-label="Menu"><span></span></button>
     </div>
   </div>
+  <div class="drawer">
+    <a href="/">Home</a>
+    <a href="services">Services</a>
+    <a href="about">About</a>
+    <a href="work">Work</a>
+    <a href="pricing">Pricing</a>
+    <a href="comparison">Compare</a>
+    <a href="contact" class="nav-cta">Get a quote</a>
+  </div>
+</header>
 
-  <div class="contact-form">
-    <h3>Send Us a Message</h3>
-    <form onsubmit="submitForm(); return false;">
-      <div class="form-row">
-        <div class="form-group"><label>Full Name *</label><input type="text" id="contact-name" placeholder="Ahmad bin Rahman" required></div>
-        <div class="form-group"><label>Company Name</label><input type="text" id="contact-company" placeholder="Your Company Sdn Bhd"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Email Address *</label><input type="email" id="contact-email" placeholder="you@company.com" required></div>
-        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="contact-phone" placeholder="+60 12-345 6789"></div>
-      </div>
-      <div class="form-group">
-        <label for="contact-service">What are you interested in? *</label>
-        <select id="contact-service" required>
-          <option value="">Select a service...</option>
-          <option>AI Software Development</option>
-          <option>Managed IT Services</option>
-          <option>Cloud Migration</option>
-          <option>IT Security & PDPA Compliance</option>
-          <option>Free IT Audit</option>
-          <option>Business Website - from RM500</option>
-          <option>Custom / Multiple Services</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="contact-message">Tell us about your business & needs</label>
-        <textarea id="contact-message" placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support..."></textarea>
-      </div>
-      <div class="form-group" style="margin-bottom:1.2rem;"><input type="hidden" name="turnstile" id="turnstile-response" value=""><div id="turnstile-widget" data-sitekey="YOUR_SITE_KEY" data-callback="onTurnstileVerify" data-expired-callback="onTurnstileExpired" style="width: 100%; margin-top: .8rem;"></div></div>
-<button type="submit" class="form-submit" id="contact-submit">Send Message →</button>
-    </form>
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Contact Us</div>
+    <h1>Let's Talk About Your Business</h1>
+    <p>Whether you have a specific project in mind or just want to explore what's possible — we'd love to hear from you. No pressure, no commitment.</p>
   </div>
 </section>
 
-<footer>
-  <div class="footer-top">
-    <div class="footer-brand">
-      <div class="logo"><picture><source srcset="assets/dis-logo-footer.webp" type="image/webp"><img src="assets/dis-logo-footer.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></div>
-      <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
+<!-- CONTACT SECTION -->
+<section class="section">
+  <div class="wrap contact">
+    <div class="cinfo">
+      <h2>Get in Touch</h2>
+      <p>We typically respond within 1 business day. For urgent matters, reach us directly via WhatsApp or phone.</p>
+
+      <div class="detail">
+        <div class="ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <h5>Office Location</h5>
+          <p>Level 22, Tamarind Suites, Persiaran Bestari, 63000 Cyberjaya</p>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <h5>Email</h5>
+          <a href="mailto:hello@dutaintegra.my">hello@dutaintegra.my</a>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div>
+          <h5>Phone / WhatsApp</h5>
+          <a href="tel:+601154034051">+60 11-5403 4051</a>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <h5>Business Hours</h5>
+          <p>Monday &ndash; Friday, 9am &ndash; 6pm MYT<br />Weekend support available for managed IT clients</p>
+        </div>
+      </div>
     </div>
-    <div class="footer-col">
-      <h5>Company</h5>
-      <a href="about.html">About Us</a>
-      <a href="cases.html">Projects</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="contact.html">Contact</a>
-    </div>
-    <div class="footer-col">
-      <h5>Services</h5>
-      <a href="services.html">AI Development</a>
-      <a href="services.html">Managed IT</a>
-      <a href="services.html">Cloud Migration</a>
-      <a href="services.html">IT Security</a>
+
+    <div>
+      <form class="form" onsubmit="submitForm(event)">
+        <h3>Send Us a Message</h3>
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" placeholder="Ahmad bin Rahman" required />
+          </div>
+          <div class="field">
+            <label for="company">Company Name</label>
+            <input type="text" id="company" name="company" placeholder="Your Company Sdn Bhd" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" placeholder="you@company.com" required />
+          </div>
+          <div class="field">
+            <label for="phone">Phone / WhatsApp</label>
+            <input type="tel" id="phone" name="phone" placeholder="+60 12-345 6789" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="service">What are you interested in? *</label>
+          <select id="service" name="service" required>
+            <option value="">Select a service&hellip;</option>
+            <option>AI Software Development</option>
+            <option>Managed IT Services</option>
+            <option>Cloud Migration</option>
+            <option>IT Security &amp; PDPA Compliance</option>
+            <option>Business Intelligence</option>
+            <option>Free IT Audit</option>
+            <option>Custom / Multiple Services</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="message">Tell us about your business &amp; needs</label>
+          <textarea id="message" name="message" placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support&hellip;"></textarea>
+        </div>
+        <!-- Honeypot -->
+        <div class="hp-field">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="field">
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAABC0uL5b_6x8X6zQ" data-theme="auto"></div>
+        </div>
+        <button type="submit" class="btn btn-gold" style="width:100%;font-size:1rem;padding:13px 20px">Send Message &rarr;</button>
+        <p class="form-note">We typically respond within 1 business day. All messages are <b>encrypted</b> and never shared.</p>
+      </form>
     </div>
   </div>
-  <div class="footer-bottom">
-    <p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Cyberjaya, Selangor, Malaysia</p>
-    <p>info@dutaintegrasolutions.com · +60 11-5403 4051</p>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap">
+    <div class="eyebrow">Prefer WhatsApp?</div>
+    <h2>Chat With Us Directly</h2>
+    <p>Reach us instantly on WhatsApp — we're here Monday to Friday, 9am&ndash;6pm MYT.</p>
+    <div class="cta-actions">
+      <a class="btn btn-gold" href="https://wa.me/601154034051" target="_blank" rel="noopener">WhatsApp Now</a>
+      <a class="btn btn-ghost" href="mailto:hello@dutaintegra.my">Email Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <picture><source srcset="assets/dis-logo-footer.webp" type="image/webp" /><img class="brand-mark" src="assets/dis-logo-footer.png" alt="Duta Integra Solutions" /></picture>
+        <p>Your trusted AI and IT partner in Malaysia.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="about">About Us</a>
+        <a href="work">Projects</a>
+        <a href="pricing">Pricing</a>
+        <a href="contact">Contact</a>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <a href="services">AI Development</a>
+        <a href="services">Managed IT</a>
+        <a href="services">Cloud Migration</a>
+        <a href="services">IT Security</a>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <p style="margin-top:0;font-size:13.5px">Cyberjaya, Malaysia</p>
+        <p style="font-size:13.5px">hello@dutaintegra.my</p>
+        <p style="font-size:13.5px">+60 11-5403 4051</p>
+        <a class="btn-wa" href="https://wa.me/601154034051" target="_blank" rel="noopener" style="margin-top:10px;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Duta Integra Solutions. All rights reserved.</p>
+      <p>hello@dutaintegra.my</p>
+    </div>
   </div>
 </footer>
 
-<script>
-function onTurnstileVerify() {
-  // Callback called when user completes Turnstile verification
-  // The response is automatically placed in the hidden input
-}
-
-function onTurnstileExpired() {
-  // Callback called when the Turnstile widget expires
-  alert('Turnstile verification expired. Please try again.');
-}
-
-function submitForm() {
-  const name = document.getElementById('contact-name').value.trim();
-  const company = document.getElementById('contact-company').value.trim();
-  const email = document.getElementById('contact-email').value.trim();
-  const phone = document.getElementById('contact-phone').value.trim();
-  const service = document.getElementById('contact-service').value;
-  const message = document.getElementById('contact-message').value.trim();
-  const submitBtn = document.getElementById('contact-submit');
-
-  if (!name || !email || !service) {
-    alert('Please fill in all required fields (Name, Email, Service).');
-    return;
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Sending...';
-
-  fetch('/api/send-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, company, email, phone, service, message, turnstile: turnstileResponse })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      const toast = document.getElementById('toast');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 4000);
-      document.getElementById('contact-name').value = '';
-      document.getElementById('contact-company').value = '';
-      document.getElementById('contact-email').value = '';
-      document.getElementById('contact-phone').value = '';
-      document.getElementById('contact-service').value = '';
-      document.getElementById('contact-message').value = '';
-    } else {
-      alert('Failed to send message: ' + (data.error || 'Please try again later.'));
-    }
-  })
-  .catch(() => {
-    alert('Network error. Please check your connection and try again.');
-  })
-  .finally(() => {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Send Message →';
-  });
-}
-</script>
+<script src="js/main.js?v=20260819a"></script>
 </body>
 </html>

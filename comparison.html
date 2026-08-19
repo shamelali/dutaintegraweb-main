@@ -1,266 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Duta Integra Solutions — Competitor Comparison</title>
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="icon" type="image/png" href="assets/dis-favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare — Duta Integra Solutions vs Competitors</title>
+  <meta name="description" content="Compare Duta Integra Solutions vs NCS, MIMOS, and Sapizon. See why Duta Integra is the only AI-first IT partner for Malaysian SMEs." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="icon" type="image/png" href="assets/dis-favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=20260819a" />
+  <meta property="og:title" content="Compare — Duta Integra Solutions" />
+  <meta property="og:description" content="See how Duta Integra stacks up against NCS, MIMOS, and Sapizon." />
+  <meta property="og:image" content="assets/img/og-share.jpg" />
 </head>
-<body class="dark-mode">
+<body>
+<canvas id="network-bg"></canvas>
+<div class="toast" id="toast"></div>
 
-<nav>
-  <div class="logo" onclick="goPage('home')"><picture><source srcset="assets/dis-logo-nav.webp" type="image/webp"><img src="assets/dis-logo-nav.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></div>
-  <ul class="nav-links">
-    <li><a onclick="goPage('home')">Home</a></li>
-    <li><a onclick="goPage('comparison')">Comparison</a></li>
-    <li><a onclick="goPage('services')">Services</a></li>
-    <li><a onclick="goPage('about')">About</a></li>
-    <li><a onclick="goPage('cases')">Projects</a></li>
-    <li><a onclick="goPage('pricing')">Pricing</a></li>
-    <li><a href="#contact" onclick="event.preventDefault();goPage('contact')" class="nav-cta">Contact Us</a></li>
-    <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
-    <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
-  </ul>
-</nav>
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-inner wrap">
+    <div class="brand">
+      <picture><source srcset="assets/dis-logo-nav.webp" type="image/webp" /><img class="brand-mark" src="assets/dis-logo-nav.png" alt="Duta Integra Solutions" /></picture>
+      <span class="brand-name">Duta <span>Integra</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="services">Services</a>
+      <a href="about">About</a>
+      <a href="work">Work</a>
+      <a href="pricing">Pricing</a>
+      <a href="comparison" class="is-active">Compare</a>
+      <a href="contact" class="nav-cta">Get a quote</a>
+    </div>
+    <div class="nav-tools">
+      <button class="tool" onclick="toggleDark()" data-theme-icon title="Toggle theme"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+      <div class="lang-switch"><a class="lang-opt is-active" href="/comparison">EN</a></div>
+      <button class="burger" onclick="toggleNav()" aria-label="Menu"><span></span></button>
+    </div>
+  </div>
+  <div class="drawer">
+    <a href="/">Home</a>
+    <a href="services">Services</a>
+    <a href="about">About</a>
+    <a href="work">Work</a>
+    <a href="pricing">Pricing</a>
+    <a href="comparison">Compare</a>
+    <a href="contact" class="nav-cta">Get a quote</a>
+  </div>
+</header>
 
-<div class="page active" id="page-home">
-  <section class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-content">
-      <div class="hero-badge gold">AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA</div>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge gold">AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA</div>
       <h1>Find the Right Technology Partner for Your SME</h1>
-      <p>Compare four Malaysian technology providers — and discover why Duta Integra is the only one that combines AI development, managed IT, and local PDPA compliance under a single monthly retainer.</p>
-      <div class="hero-btns">
-        <button class="btn-gold" onclick="goPage('contact')">Book a Free Audit</button>
-        <button class="btn-outline" onclick="goPage('cases')">View Client Outcomes</button>
+      <p class="lead">Compare four Malaysian technology providers — and discover why Duta Integra is the only one that combines AI development, managed IT, and local PDPA compliance under a single monthly retainer.</p>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href="contact">Book a Free Audit</a>
+        <a class="btn btn-ghost" href="work">View Client Outcomes</a>
       </div>
     </div>
-  </section>
+    <aside class="panel" aria-label="Why Duta Integra">
+      <div class="panel-head">WHY <b>DUTA INTEGRA</b></div>
+      <div class="row"><span class="k">AI + IT under one roof</span><span class="v">YES</span></div>
+      <div class="row"><span class="k">Monthly retainer (no lock-in)</span><span class="v">YES</span></div>
+      <div class="row"><span class="k">PDPA native</span><span class="v">YES</span></div>
+      <div class="row"><span class="k">3-day proposal</span><span class="v">YES</span></div>
+      <div class="panel-foot">
+        <span>Entry price</span>
+        <strong>RM 1,899/mo</strong>
+      </div>
+    </aside>
+  </div>
+</section>
 
-  <section class="comparison-section" style="padding: 6rem 6% 4rem;">
-    <div class="section-eyebrow" style="color:var(--gold);margin-bottom:2rem;">Compare & Decide</div>
-    <h2 class="section-title" style="color:var(--navy);margin-bottom:1.5rem;">Duta Integra vs. NCS vs. MIMOS vs. Sapizon</h2>
-    <p style="color:var(--gray);max-width:600px;margin:0 auto 3rem;font-size:1.05rem;line-height:1.7;">Use the comparison table below to evaluate which partner best fits your SME's needs — on price, speed, compliance, and long-term support.</p>
-
-    <div class="comparison-table" style="width:100%;border-collapse:collapse;background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">
-      <thead>
-        <tr style="background:var(--navy);color:white">
-          <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;">Feature</th>
-          <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;">Duta Integra</th>
-          <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;">NCS</th>
-          <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;">MIMOS</th>
-          <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;">Sapizon</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="border-bottom:1px solid #E5EBF5">
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Primary Positioning</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">AI-first IT partner for Malaysian SMEs</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:#7A8FAD;vertical-align:top;">Hardware reseller + IT services</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:#7A8FAD;vertical-align:top;">National R&D grant beneficiary</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:#7A8FAD;vertical-align:top;">Testing + SME AI starter kits</td>
-        </tr>
-        <tr style="border-bottom:1px solid #E5EBF5;background:#F8FAFF">
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Price Entry Point</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">RM 1,899/mo retainer; RM 3k+ projects</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">RM 30k+ project minimum</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Grant-subsidised (70% off); RM 50k+ projects</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">RM 35k starter kit; RM 20k+ projects</td>
-        </tr>
-        <tr style="border-bottom:1px solid #E5EBF5">
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">AI Focus</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Full-cycle: dev + ops + compliance</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">AI as add-on to hardware deals</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Research-driven, grant-tied</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Starter kits, not full operations</td>
-        </tr>
-        <tr style="border-bottom:1px solid #E5EBF5;background:#F8FAFF">
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">PDPA/Compliance</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Built-in, core differentiator</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Available as module</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Framework consultancy</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Templates & training</td>
-        </tr>
-        <tr style="border-bottom:1px solid #E5EBF5">
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Speed / Agility</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Fast (3-day proposal, on-schedule)</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Slow (corporate processes)</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Very slow (bureaucracy)</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Fast (agency model)</td>
-        </tr>
-        <tr style="border-bottom:1px solid #E5EBF5;background:#F8FAFF">
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Target SME Size</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">5-25 employees, Cyberjaya/KL</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">20-200 employees, Klang Valley/Penang</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Grant-eligible SMEs (specific sectors)</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">10-100 employees, tech-exposed</td>
-        </tr>
-        <tr style="border-bottom:1px solid #E5EBF5">
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Key Differentiator</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--navy);vertical-align:top;">Local Malay context + WhatsApp fallback</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Wide product selection</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Grant funding depth</td>
-          <td style="padding:1.2rem 1.5rem;font-size:.85rem;color:var(--gray);vertical-align:top;">Low-cost starter kits</td>
-        </tr>
-      </tbody>
+<!-- COMPARISON TABLE from A -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Compare &amp; Decide</div>
+      <h2>Duta Integra vs. NCS vs. MIMOS vs. Sapizon</h2>
+      <p>Use the comparison table below to evaluate which partner best fits your SME's needs — on price, speed, compliance, and long-term support.</p>
     </div>
 
-    <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid #E5EBF5">
-      <h3 style="font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom 1rem;">Why This Matters for Your SME</h3>
-      <ul style="color:var(--gray);font-size:.95rem;line-height:1.8;max-width:600px;margin:0 auto;">
-        <li><strong>Single monthly retainer:</strong> Duta Integra is the only provider that combines AI development + managed IT + PDPA compliance under one transparent monthly fee — no project-by-project surprises.</li>
-        <li><br></li>
-        <li><strong>Speed:</strong> Get a detailed proposal within 3 working days, not months of grant applications or corporate sales cycles.</li>
-        <li><br></li>
-        <li><strong>Local compliance:</strong> AI systems built with Malaysian PDPA compliance, Bahasa Malaysia support, and local cybersecurity standards — not generic imported tools.</li>
-        <li><br></li>
-        <li><strong>Always-available support:</strong> WhatsApp fallback ensures you can reach your technology partner the way Malaysian SMEs prefer — even if the email API is down.</li>
-      </ul>
+    <div class="comparison-table">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:var(--navy);color:white">
+            <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;text-align:left">Feature</th>
+            <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;text-align:left">Duta Integra</th>
+            <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;text-align:left">NCS</th>
+            <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;text-align:left">MIMOS</th>
+            <th style="padding:1.2rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;text-align:left">Sapizon</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Primary Positioning</strong></td><td>AI-first IT partner for Malaysian SMEs</td><td style="color:var(--muted)">Hardware reseller + IT services</td><td style="color:var(--muted)">National R&amp;D grant beneficiary</td><td style="color:var(--muted)">Testing + SME AI starter kits</td></tr>
+          <tr style="background:var(--paper)"><td><strong>Price Entry Point</strong></td><td>RM 1,899/mo retainer; RM 3k+ projects</td><td>RM 30k+ project minimum</td><td>Grant-subsidised (70% off); RM 50k+ projects</td><td>RM 35k starter kit; RM 20k+ projects</td></tr>
+          <tr><td><strong>AI Focus</strong></td><td>Full-cycle: dev + ops + compliance</td><td style="color:var(--muted)">AI as add-on to hardware deals</td><td style="color:var(--muted)">Research-driven, grant-tied</td><td style="color:var(--muted)">Starter kits, not full operations</td></tr>
+          <tr style="background:var(--paper)"><td><strong>PDPA / Compliance</strong></td><td>Built-in, core differentiator</td><td style="color:var(--muted)">Available as module</td><td style="color:var(--muted)">Framework consultancy</td><td style="color:var(--muted)">Templates &amp; training</td></tr>
+          <tr><td><strong>Speed / Agility</strong></td><td>Fast (3-day proposal, on-schedule)</td><td style="color:var(--muted)">Slow (corporate processes)</td><td style="color:var(--muted)">Very slow (bureaucracy)</td><td style="color:var(--muted)">Fast (agency model)</td></tr>
+          <tr style="background:var(--paper)"><td><strong>Target SME Size</strong></td><td>5-25 employees, Cyberjaya/KL</td><td style="color:var(--muted)">20-200 employees, Klang Valley/Penang</td><td style="color:var(--muted)">Grant-eligible SMEs (specific sectors)</td><td style="color:var(--muted)">10-100 employees, tech-exposed</td></tr>
+          <tr><td><strong>Key Differentiator</strong></td><td>Local Malay context + WhatsApp fallback</td><td style="color:var(--muted)">Wide product selection</td><td style="color:var(--muted)">Grant funding depth</td><td style="color:var(--muted)">Low-cost starter kits</td></tr>
+        </tbody>
+      </table>
     </div>
-  </section>
 
-  <footer style="margin-top:4rem;">
+    <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid var(--line)">
+      <h3 style="font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:1rem;text-align:center">Why This Matters for Your SME</h3>
+      <div style="max-width:600px;margin:0 auto;color:var(--muted);font-size:.95rem;line-height:1.8">
+        <p><strong>Single monthly retainer:</strong> Duta Integra is the only provider that combines AI development + managed IT + PDPA compliance under one transparent monthly fee — no project-by-project surprises.</p>
+        <p style="margin-top:1rem"><strong>Speed:</strong> Get a detailed proposal within 3 working days, not months of grant applications or corporate sales cycles.</p>
+        <p style="margin-top:1rem"><strong>Local compliance:</strong> AI systems built with Malaysian PDPA compliance, Bahasa Malaysia support, and local cybersecurity standards — not generic imported tools.</p>
+        <p style="margin-top:1rem"><strong>Always-available support:</strong> WhatsApp fallback ensures you can reach your technology partner the way Malaysian SMEs prefer — even if the email API is down.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap">
+    <div class="eyebrow">Ready to Switch?</div>
+    <h2>See the Difference for Yourself</h2>
+    <p>Book a free discovery call and we'll show you how Duta Integra can transform your business technology.</p>
+    <div class="cta-actions">
+      <a class="btn btn-gold" href="contact">Book Free Consultation</a>
+      <a class="btn btn-ghost" href="pricing">View Pricing</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
     <div class="footer-top">
-      <div class="footer-brand"><div class="logo"><picture><source srcset="assets/dis-logo-footer.webp" type="image/webp"><img src="assets/dis-logo-footer.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
-      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+      <div>
+        <picture><source srcset="assets/dis-logo-footer.webp" type="image/webp" /><img class="brand-mark" src="assets/dis-logo-footer.png" alt="Duta Integra Solutions" /></picture>
+        <p>Your trusted AI and IT partner in Malaysia.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="about">About Us</a>
+        <a href="work">Projects</a>
+        <a href="pricing">Pricing</a>
+        <a href="contact">Contact</a>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <a href="services">AI Development</a>
+        <a href="services">Managed IT</a>
+        <a href="services">Cloud Migration</a>
+        <a href="services">IT Security</a>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <p style="margin-top:0;font-size:13.5px">Level 22, Tamarind Suites, Persiaran Bestari, 63000 Cyberjaya</p>
+        <p style="font-size:13.5px">hello@dutaintegra.my</p>
+        <p style="font-size:13.5px">+60 11-5403 4051</p>
+      </div>
     </div>
-    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>hello@dutaintegra.my</p></div>
-  </footer>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Duta Integra Solutions. All rights reserved.</p>
+      <p>hello@dutaintegra.my</p>
+    </div>
+  </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/lunr.js/2.10.0/lunr.min.js"></script>
-
-<script>
-  // Lunr.js client-side search index
-  document.addEventListener('DOMContentLoaded', function() {
-    // Build search index from all page content
-    const idx = lunr(function() {
-      this.field('title', { boost: 10 });
-      this.field('text', { boost: 1 });
-      this.field('tags', { boost: 5 });
-    });
-
-    // Index all pages
-    document.querySelectorAll('.page').forEach((page, pageIdx) => {
-      if (!page.classList.contains('active')) return;
-      
-      const title = page.querySelector('h1')?.textContent || '';
-      const text = page.innerText || '';
-      const tags = [];
-      
-      // Extract case tags
-      page.querySelectorAll('.case-tag').forEach(tag => {
-        tags.push(tag.textContent.toLowerCase());
-      });
-      
-      // Extract service tags from why-section
-      page.querySelectorAll('.why-card h4').forEach(h4 => {
-        tags.push(h4.textContent.toLowerCase());
-      });
-      
-      // Extract why card titles/numbers
-      page.querySelectorAll('.why-num').forEach(num => {
-        tags.push(num.textContent.toLowerCase());
-      });
-
-      if (title || text.trim()) {
-        idx.addDoc({
-          id: 'page-' + pageIdx,
-          title: title,
-          text: text,
-          tags: tags
-        });
-      }
-    });
-
-    // Add search button to nav
-    const nav = document.querySelector('nav');
-    if (nav) {
-      const searchBtn = document.createElement('button');
-      searchBtn.className = 'nav-cta';
-      searchBtn.innerHTML = '<i class="ti ti-search"></i> Search';
-      searchBtn.style.cssText = 'padding: .5rem 1rem; font-size: .88rem;';
-      searchBtn.addEventListener('click', toggleSearch);
-      const langToggle = document.querySelector('.lang-toggle');
-      if (langToggle) {
-        langToggle.parentNode.insertBefore(searchBtn, langToggle.nextSibling);
-      } else {
-        nav.appendChild(searchBtn);
-      }
-    }
-
-    // Search overlay
-    const overlay = document.createElement('div');
-    overlay.style = `
-      position: fixed; inset: 0; background: rgba(0,0,.8); z-index: 1000;
-      backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center;
-    `;
-    overlay.innerHTML = `
-      <div style="background: var(--white); padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; text-align: center;">
-        <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-family: 'Rajdhani',sans-serif; color: var(--navy);">Search</h3>
-        <input type="text" id="search-input" style="width: 100%; padding: .8rem; border: 1.5px solid #E5EBF5; border-radius: 7px; font-family: 'Inter',sans-serif; font-size: .95rem; margin-bottom: 1rem;">
-        <div id="search-results" style="max-height: 300px; overflow-y: auto; text-align: left;"></div>
-        <button onclick="closeSearch()" style="margin-top: 1rem; padding: .5rem 1.5rem; background: var(--electric); color: var(--navy); border: none; border-radius: 7px; font-weight: 700; cursor: pointer;">Close</button>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-
-    const searchInput = document.getElementById('search-input');
-    const searchResults = document.getElementById('search-results');
-
-    function toggleSearch() {
-      const isShowing = overlay.style.display === 'flex';
-      closeSearch();
-      if (!isShowing) {
-        overlay.style.display = 'flex';
-        setTimeout(() => searchInput.focus(), 100);
-      }
-    }
-
-    function closeSearch() {
-      overlay.style.display = 'none';
-      searchInput.value = '';
-      searchResults.innerHTML = '';
-    }
-
-    searchInput.addEventListener('input', function() {
-      const query = this.value.trim();
-      if (!query) {
-        searchResults.innerHTML = '';
-        return;
-      }
-
-      const results = idx.search(query);
-      searchResults.innerHTML = '';
-
-      if (results.length === 0) {
-        searchResults.innerHTML = '<div style="padding: 1rem; color: var(--gray);">No results found. Try broader terms.</div>';
-        return;
-      }
-
-      results.slice(0, 10).forEach(result => {
-        const doc = idx.getDoc(result.id);
-        const resultDiv = document.createElement('div');
-        resultDiv.style = `padding: .8rem; border-bottom: 1px solid #F0F4FA; cursor: pointer; transition: background .2s;}`;
-        resultDiv.innerHTML = `
-          <div style="font-weight: 700; color: var(--navy); font-family: 'Rajdhani',sans-serif; font-size: 1.1rem; margin-bottom: .3rem;">${doc.title || 'Page'}</div>
-          <div style="font-size: .85rem; color: var(--gray); line-height: 1.4;">${(doc.text.substring(0, 200) + '...').replace(/\n/g, ' ')}</div>
-        `;
-        resultDiv.addEventListener('click', function() {
-          const pageId = doc.id.replace('page-', '');
-          goPage('page-' + pageId);
-          closeSearch();
-        });
-        searchResults.appendChild(resultDiv);
-      });
-    });
-  });
-</script>
-
-<script src="assets/scripts.js"></script>
+<script src="js/main.js?v=20260819a"></script>
 </body>
 </html>

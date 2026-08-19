@@ -9,7 +9,7 @@ const i18n = {
     nav_quote: "Get a quote",
     hero_badge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA",
     hero_title: 'Enterprise-grade <em class="accent">AI systems</em> and <em class="accent">managed IT</em>, built for <em class="accent">Malaysian SMEs</em>',
-    hero_lead: "Custom AI apps, chatbots, automation, and secure cloud infrastructure — delivered by a Cyberjaya-based team, since 2021.",
+    hero_lead: "Custom AI apps, chatbots, automation, and secure cloud infrastructure — delivered by a Cyberjaya-based team, since 2025.",
     hero_cta1: "Book a discovery call",
     hero_cta2: "View our work",
     stat1: "Founded",
@@ -51,7 +51,7 @@ const i18n = {
     nav_quote: "Minta sebut harga",
     hero_badge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA",
     hero_title: 'Sistem <em class="accent">AI</em> dan <em class="accent">IT terurus</em> peringkat perusahaan, dibina untuk <em class="accent">SME Malaysia</em>',
-    hero_lead: "Aplikasi AI tersuai, chatbot, automasi, dan infrastruktur awan yang selamat — disampaikan oleh pasukan Cyberjaya, sejak 2021.",
+    hero_lead: "Aplikasi AI tersuai, chatbot, automasi, dan infrastruktur awan yang selamat — disampaikan oleh pasukan Cyberjaya, sejak 2025.",
     hero_cta1: "Tempah sesi penemuan",
     hero_cta2: "Lihat kerja kami",
     stat1: "Ditubuhkan",
@@ -585,21 +585,206 @@ function bindServiceCards() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (enforceLangPreference()) return;
-  rememberLangFromPath();
-  bindLangSwitch();
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
+/* =========================================================
+   TRANSFERRED FROM DEPLOYMENT A
+   ========================================================= */
+
+/* ---------- Canvas network background ---------- */
+function initNetworkBg() {
+  const canvas = document.getElementById('network-bg');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const NP = 40, BED = 150;
+  const particles = [];
+  for (let i = 0; i < NP; i++) {
+    const theta = Math.random() * Math.PI * 2, phi = Math.acos(2 * Math.random() - 1), r = 350 + Math.random() * 100;
+    particles.push({
+      x: r * Math.sin(phi) * Math.cos(theta),
+      y: r * Math.sin(phi) * Math.sin(theta),
+      z: r * Math.cos(phi),
+      vx: (Math.random() - 0.5) * 0.008,
+      vy: (Math.random() - 0.5) * 0.008,
+      vz: (Math.random() - 0.5) * 0.008
+    });
   }
-  if (promoLive()) document.body.classList.add("promo-live");
-  applyPromoPrices();
-  injectPromoBar();
-  dressMerdeka();
-  syncThemeIcon();
-  bindServiceCards();
-  prefillserviceFromQuery();
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeNav();
+  const proj = (x, y, z) => { const f = 700 / (700 + z); return { x: w / 2 + x * f, y: h / 2 + y * f }; };
+  function render() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#0F1822';
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(201,162,39,0.4)';
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.5;
+    for (let i = 0; i < particles.length; i++) {
+      const p1 = particles[i], p1p = proj(p1.x, p1.y, p1.z);
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j],
+          dx = p1.x - p2.x, dy = p1.y - p2.y, dz = p1.z - p2.z,
+          dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (dist < BED) {
+          const p2p = proj(p2.x, p2.y, p2.z);
+          ctx.beginPath();
+          ctx.moveTo(p1p.x, p1p.y);
+          ctx.lineTo(p2p.x, p2p.y);
+          ctx.stroke();
+        }
+      }
+    }
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.z += p.vz;
+      if (Math.abs(p.x) > 400) p.vx *= -0.3;
+      if (Math.abs(p.y) > 400) p.vy *= -0.3;
+      if (Math.abs(p.z) > 400) p.vz *= -0.3;
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+/* ---------- Audit Modal ---------- */
+function openAuditModal() {
+  const modal = document.getElementById('auditModal');
+  if (modal) modal.classList.add('show');
+}
+function closeAuditModal() {
+  const modal = document.getElementById('auditModal');
+  if (modal) modal.classList.remove('show');
+}
+
+/* ---------- WhatsApp Widget ---------- */
+function openWhatsAppWidget() {
+  window.open('https://wa.me/+601154034051?text=Hi%2C%20I%27m%20from%20%5BCompany%5D%2C%20interested%20in%20AI%20%2B%20IT%20for%20SMEs.%20Send%20me%20the%203-day%20proposal.', '_blank');
+}
+
+/* ---------- Search with Lunr.js ---------- */
+function initSearch() {
+  if (typeof lunr === 'undefined') return;
+  const idx = lunr(function () {
+    this.field('title', { boost: 10 });
+    this.field('text', { boost: 1 });
+    this.field('tags', { boost: 5 });
   });
+  document.querySelectorAll('.page').forEach((page, pageIdx) => {
+    if (!page.classList.contains('active')) return;
+    const title = page.querySelector('h1')?.textContent || '';
+    const text = page.innerText || '';
+    const tags = [];
+    page.querySelectorAll('.case-tag').forEach(tag => tags.push(tag.textContent.toLowerCase()));
+    page.querySelectorAll('.why-card h4, .value-card h4, .price-card h3').forEach(h4 => tags.push(h4.textContent.toLowerCase()));
+    if (title || text.trim()) {
+      idx.addDoc({ id: 'page-' + pageIdx, title, text, tags });
+    }
+  });
+  // Search button
+  const nav = document.querySelector('.nav');
+  if (nav) {
+    const searchBtn = document.createElement('button');
+    searchBtn.className = 'tool';
+    searchBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-5-5"/></svg>';
+    searchBtn.title = 'Search';
+    searchBtn.addEventListener('click', toggleSearch);
+    const tools = nav.querySelector('.nav-tools');
+    if (tools) tools.prepend(searchBtn);
+  }
+  // Overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'search-overlay';
+  overlay.innerHTML =
+    '<div class="search-box">' +
+      '<h3>Search</h3>' +
+      '<input type="text" id="search-input" placeholder="Type to search…" />' +
+      '<div class="search-results" id="search-results"></div>' +
+      '<button class="btn btn-ghost" onclick="closeSearch()" style="margin-top:1rem">Close</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  const input = document.getElementById('search-input');
+  const results = document.getElementById('search-results');
+  function toggleSearch() {
+    const showing = overlay.classList.contains('show');
+    closeSearch();
+    if (!showing) {
+      overlay.classList.add('show');
+      setTimeout(() => input?.focus(), 100);
+    }
+  }
+  window.toggleSearch = toggleSearch;
+  window.closeSearch = function () {
+    overlay.classList.remove('show');
+    if (input) input.value = '';
+    if (results) results.innerHTML = '';
+  };
+  if (input) {
+    input.addEventListener('input', function () {
+      const query = this.value.trim();
+      if (!query) { results.innerHTML = ''; return; }
+      const found = idx.search(query);
+      results.innerHTML = '';
+      if (found.length === 0) {
+        results.innerHTML = '<div style="padding:1rem;color:var(--muted)">No results found. Try broader terms.</div>';
+        return;
+      }
+      found.slice(0, 10).forEach(r => {
+        const doc = idx.getDoc(r.id);
+        const div = document.createElement('div');
+        div.className = 'search-result-item';
+        div.innerHTML = '<h4>' + (doc?.title || 'Page') + '</h4><p>' + ((doc?.text?.substring(0, 200) || '') + '…').replace(/\n/g, ' ') + '</p>';
+        div.addEventListener('click', () => { closeSearch(); });
+        results.appendChild(div);
+      });
+    });
+  }
+}
+
+/* ---------- Comprehensive translations (from Deployment A) ---------- */
+const translationsA = {
+  en: {
+    navServices: 'Services', navAbout: 'About', navCases: 'Projects', navPricing: 'Pricing', navContact: 'Contact Us',
+    heroBadge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA",
+    heroTitle1: 'Enterprise-grade AI systems and managed IT, built for ',
+    heroTitle2: 'Malaysian SMEs',
+    heroDesc: "Custom AI apps, chatbots, automation, and secure cloud infrastructure — delivered by a Cyberjaya-based team, since 2025.",
+    heroBtn1: 'Book a discovery call', heroBtn2: 'View our work',
+    servicesEyebrow: 'Service Tiers', servicesTitle: 'Three Tiers. One Partner.',
+    svc1Title: 'AI Software Dev', svc1Desc: 'Custom apps, chatbots, agent workflows',
+    svc2Title: 'Managed IT', svc2Desc: 'Cloud infra, helpdesk, security, PDPA',
+    svc3Title: 'Sales Automation', svc3Desc: 'CRM pipelines and outreach systems',
+    svc4Title: 'Content & Ads', svc4Desc: 'Content engine and paid media management',
+    trustStrip: 'Trusted by Lapango, Eastelpro, AGMX and growing SME clients across Malaysia',
+    whyEyebrow: 'Why Choose Us', whyTitle: 'Built for Malaysian SMEs',
+    ctaTitle: 'Ready to Modernize Your Business?', ctaDesc: 'Start with a free IT audit or AI readiness assessment — no obligation, no strings attached.', ctaBtn1: 'Book Free Consultation', ctaBtn2: 'View Pricing',
+    footerDesc: 'Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.',
+    footerCompany: 'Company', footerServices: 'Services',
+  },
+  bm: {
+    navServices: 'Perkhidmatan', navAbout: 'Tentang Kami', navCases: 'Projek', navPricing: 'Harga', navContact: 'Hubungi Kami',
+    heroBadge: 'AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA',
+    heroTitle1: 'Sistem AI dan IT terurus peringkat perusahaan, dibina untuk ',
+    heroTitle2: 'SME Malaysia',
+    heroDesc: 'Aplikasi AI tersuai, chatbot, automasi, dan infrastruktur awan yang selamat — disampaikan oleh pasukan Cyberjaya, sejak 2026.',
+    heroBtn1: 'Buat janji temu', heroBtn2: 'Lihat kerja kami',
+    servicesEyebrow: 'Tahap Perkhidmatan', servicesTitle: 'Tiga Tahap. Satu Rakan Kongsi.',
+    svc1Title: 'Pembangunan Perisian AI', svc1Desc: 'Aplikasi tersuai, chatbot, aliran kerja agen',
+    svc2Title: 'IT Terurus', svc2Desc: 'Infrastruktur awan, helpdesk, keselamatan, PDPA',
+    svc3Title: 'Automasi Jualan', svc3Desc: 'Saluran CRM dan sistem outreach',
+    svc4Title: 'Kandungan & Iklan', svc4Desc: 'Enjin kandungan dan pengurusan media berbayar',
+    trustStrip: 'Dipercayai oleh Lapango, Eastelpro, AGMX dan SME yang berkembang di seluruh Malaysia',
+    whyEyebrow: 'Mengapa Pilih Kami', whyTitle: 'Dibina untuk SME Malaysia',
+    ctaTitle: 'Bersedia Memodenkan Perniagaan Anda?', ctaDesc: 'Mulakan dengan audit IT percuma atau penilaian kesediaan AI — tanpa obligasi, tanpa komitmen.', ctaBtn1: 'Tempah Perundingan Percuma', ctaBtn2: 'Lihat Harga',
+    footerDesc: 'Rakan kongsi AI dan IT anda yang dipercayai di Malaysia. Kami membantu SME memodenkan, mengautomasi, dan berkembang melalui teknologi pintar.',
+    footerCompany: 'Syarikat', footerServices: 'Perkhidmatan',
+  }
+};
+
+/* Init on load */
+document.addEventListener('DOMContentLoaded', () => {
+  // Preserve existing B inits — just augment them
+  if (document.getElementById('network-bg') && document.body.classList.contains('dark-mode')) {
+    initNetworkBg();
+  }
+  initSearch();
 });

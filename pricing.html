@@ -1,231 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Transparent monthly retainers for Malaysian SMEs: Foundation (RM1,899), Growth (RM3,900), and AI Partner (from RM6,900). All tiers include free initial IT audit. Month-to-month contracts, no lock-in.">
-<title>Pricing - Duta Integra Solutions</title>
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="icon" type="image/png" href="assets/dis-favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{--navy:#0B1D3A;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
-*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
-.ti{color:var(--electric)}
-body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
-nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;display:flex;align-items:center;gap:15px;padding:10px}
-.logo a{color:white;text-decoration:none}
-.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
-.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s}
-.nav-links a:hover{color:var(--electric)}
-.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
-.logo-img{height:32px;width:auto;display:block}
-@media(max-width:768px){.logo-img{height:28px}}
-.page-hero{background:linear-gradient(135deg,rgba(11,29,58,.82),rgba(11,29,58,.75)),url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1400&q=80');background-size:cover;background-position:center;padding:5rem 6% 4rem;position:relative;overflow:hidden}
-.page-hero::before{content:'';position:absolute;top:-40%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,180,255,.09) 0%,transparent 65%);pointer-events:none}
-.page-hero-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.75rem}
-.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;margin-bottom:.9rem;max-width:600px}
-.page-hero p{color:rgba(255,255,255,.6);max-width:520px;line-height:1.75;font-size:.97rem}
-.pricing-section{padding:5rem 6%;background:white}
-.section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
-.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.75rem}
-.section-sub{color:var(--gray);max-width:480px;line-height:1.75;margin-bottom:3rem;font-size:.95rem}
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.8rem;margin-top:3rem}
-.price-card{border:1.5px solid #E5EBF5;border-radius:12px;padding:2.2rem;position:relative;transition:all .25s}
-.price-card.featured{border-color:var(--electric);box-shadow:0 12px 48px rgba(0,180,255,.15)}
-.price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--electric);color:var(--navy);font-size:.72rem;font-weight:700;padding:.3rem .9rem;border-radius:999px;white-space:nowrap}
-.price-card h3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.4rem;color:var(--navy)}
-.price-card:nth-child(1) h3{color:#0D9488}
-.price-card:nth-child(2) h3{color:#00B4FF}
-.price-card:nth-child(3) h3{color:#7C3AED}
-.price-card .tagline{color:var(--gray);font-size:.83rem;margin-bottom:1.4rem}
-.price-amount{margin-bottom:1.5rem}
-.price-amount .amt{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--navy)}
-.price-amount .period{color:var(--gray);font-size:.82rem;margin-left:.3rem}
-.price-features{list-style:none;margin-bottom:1.8rem}
-.price-features li{font-size:.85rem;color:var(--navy);padding:.4rem 0;border-bottom:1px solid #F0F4FA;display:flex;align-items:center;gap:.55rem}
-.price-features li:last-child{border-bottom:none}
-.price-features li::before{content:'✓';color:var(--electric);font-weight:700}
-.price-features li.na{color:var(--gray);text-decoration:line-through}
-.price-features li.na::before{content:'✗';color:#CBD5E1;font-weight:700}
-.price-cta{width:100%;padding:.85rem;border-radius:7px;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
-.price-cta.main{background:var(--electric);color:var(--navy);border:none;text-decoration:none;display:inline-block;text-align:center}
-.price-cta.sec{background:none;color:var(--navy);border:1.5px solid #D1DAEA;text-decoration:none;display:inline-block;text-align:center}
-.price-cta:hover{opacity:.85}
-.pricing-note{text-align:center;margin-top:2.5rem;color:var(--gray);font-size:.85rem}
-.pricing-note span{color:var(--electric);font-weight:600}
-.addons-section{padding:3rem 6% 5rem;background:#F8FAFF}
-.addons-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin-top:2rem}
-.addon-card{background:white;border:1.5px solid #E5EBF5;border-radius:10px;padding:1.5rem}
-.addon-card h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.4rem;color:var(--navy)}
-.addon-card .ap{color:var(--electric);font-weight:700;font-size:.9rem;margin-bottom:.4rem}
-.addon-card p{color:var(--gray);font-size:.82rem;line-height:1.6}
-.cta-band{padding:5.5rem 6%;text-align:center;background:linear-gradient(135deg,#EBF4FF,#F0F8FF)}
-.cta-band h2{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.9rem}
-.cta-band p{color:var(--gray);max-width:460px;margin:0 auto 2rem;line-height:1.75;font-size:.95rem}
-.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-.btn-navy{background:var(--navy);color:white;padding:.88rem 2.2rem;border-radius:5px;font-weight:700;cursor:pointer;border:none;font-size:.92rem;transition:opacity .2s;text-decoration:none;display:inline-block}
-.btn-navy:hover{opacity:.85}
-footer{background:var(--dark);padding:3rem 6% 2rem}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
-.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
-.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
-.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;transition:color .2s}
-.footer-col a:hover{color:var(--electric)}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
-@media(max-width:768px){.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — Duta Integra Solutions</title>
+  <meta name="description" content="Transparent pricing for Malaysian SMEs. Monthly retainers from RM 1,899. Foundation, Growth, and AI Partner tiers. No hidden fees." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="icon" type="image/png" href="assets/dis-favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=20260819a" />
+  <link rel="alternate" hreflang="en" href="https://dutaintegra.my/pricing" />
+  <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/pricing" />
+  <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/pricing" />
+  <meta property="og:title" content="Pricing — Duta Integra Solutions" />
+  <meta property="og:description" content="Transparent monthly retainers for Malaysian SMEs. From RM 1,899/mo." />
+  <meta property="og:image" content="assets/img/og-share.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ProfessionalService","name":"Duta Integra Solutions","url":"https://dutaintegra.my","email":"hello@dutaintegra.my","telephone":"+601154034051","address":{"@type":"PostalAddress","addressLocality":"Cyberjaya","addressCountry":"MY"},"foundingDate":"2025","areaServed":"MY"}
+  </script>
 </head>
 <body>
-<nav>
-  <div class="logo"><picture><source srcset="assets/dis-logo-nav.webp" type="image/webp"><img src="assets/dis-logo-nav.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></div>
-  <ul class="nav-links">
-    <li><a href="services.html">Services</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="cases.html">Projects</a></li>
-    <li><a href="pricing.html">Pricing</a></li>
-    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
-  </ul>
-</nav>
+<canvas id="network-bg"></canvas>
+<div class="toast" id="toast"></div>
 
-<div class="page-hero">
-  <div class="page-hero-label">Pricing</div>
-  <h1>Simple, Transparent Pricing</h1>
-  <p>No hidden fees. No surprises. Just clear pricing designed for Malaysian SMEs.</p>
-</div>
-
-<section class="pricing-section">
-  <div class="section-eyebrow">Service Tiers</div>
-  <h2 class="section-title">Monthly Retainers</h2>
-  <p class="section-sub">One partner, one monthly fee. Pick a tier below and scale up as you grow — every tier is a recurring retainer, no per-project surprises.</p>
-
-  <div class="pricing-grid">
-    <div class="price-card">
-      <h3>Foundation</h3>
-      <p class="tagline">Managed IT, security & compliance</p>
-      <div class="price-amount"><span class="amt">RM 1,899</span><span class="period">/ month</span></div>
-      <ul class="price-features">
-        <li>24/7 managed IT support & helpdesk</li>
-        <li>Cloud infrastructure & backups</li>
-        <li>Security monitoring & incident response</li>
-        <li>PDPA compliance support</li>
-        <li>Monthly system health reports</li>
-        <li>Dedicated IT engineer</li>
-        <li class="na">Sales & marketing automation</li>
-        <li class="na">Content & ads management</li>
-        <li class="na">Custom AI development</li>
-      </ul>
-      <a href="contact.html" class="price-cta sec">Get Started</a>
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-inner wrap">
+    <div class="brand">
+      <picture><source srcset="assets/dis-logo-nav.webp" type="image/webp" /><img class="brand-mark" src="assets/dis-logo-nav.png" alt="Duta Integra Solutions" /></picture>
+      <span class="brand-name">Duta <span>Integra</span></span>
     </div>
-
-    <div class="price-card featured">
-      <div class="price-badge">Most Popular</div>
-      <h3>Growth</h3>
-      <p class="tagline">Foundation + your growth engine</p>
-      <div class="price-amount"><span class="amt">RM 3,900</span><span class="period">/ month</span></div>
-      <ul class="price-features">
-        <li>Everything in Foundation</li>
-        <li>Sales & workflow automation</li>
-        <li>Content creation & management</li>
-        <li>Ads management & campaign optimization</li>
-        <li>Monthly performance reporting</li>
-        <li>Dedicated account manager</li>
-        <li class="na">Custom AI development</li>
-      </ul>
-      <a href="contact.html" class="price-cta main">Get Started</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="services">Services</a>
+      <a href="about">About</a>
+      <a href="work">Work</a>
+      <a href="pricing" class="is-active">Pricing</a>
+      <a href="comparison">Compare</a>
+      <a href="contact" class="nav-cta">Get a quote</a>
     </div>
-
-    <div class="price-card">
-      <h3>AI Partner</h3>
-      <p class="tagline">Growth + custom AI development</p>
-      <div class="price-amount"><span class="amt">From RM 6,900</span><span class="period">/ month</span></div>
-      <ul class="price-features">
-        <li>Everything in Growth</li>
-        <li>Dedicated AI development retainer</li>
-        <li>Custom chatbots & process automation</li>
-        <li>AI integration into existing systems</li>
-        <li>Priority roadmap & support</li>
-        <li>Quarterly strategy reviews</li>
-        <li>All features included</li>
-      </ul>
-      <a href="contact.html" class="price-cta sec">Request a Proposal</a>
+    <div class="nav-tools">
+      <button class="tool" onclick="toggleDark()" data-theme-icon title="Toggle theme"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+      <div class="lang-switch"><a class="lang-opt is-active" href="/pricing">EN</a><a class="lang-opt" href="/ms/pricing" hreflang="ms">BM</a></div>
+      <button class="burger" onclick="toggleNav()" aria-label="Menu"><span></span></button>
     </div>
-    <div class="price-card"><h3>Website Development</h3><p class="tagline">Online presence for SMEs</p><div class="price-amount"><span class="amt">From RM2,500</span><span class="period"> one-time</span></div><ul class="price-features"><li>5-page website structure</li><li>Responsive design (mobile-friendly)</li><li>Contact form integration</li><li>Basic SEO setup</li><li>One-year hosting support</li><li>Admin training</li></ul><a href="contact.html" class="price-cta sec">Get Yours</a></div>
   </div>
+  <div class="drawer">
+    <a href="/">Home</a>
+    <a href="services">Services</a>
+    <a href="about">About</a>
+    <a href="work">Work</a>
+    <a href="pricing">Pricing</a>
+    <a href="comparison">Compare</a>
+    <a href="contact" class="nav-cta">Get a quote</a>
+  </div>
+</header>
 
-  <p class="pricing-note">All tiers include <span>free initial IT audit</span> worth RM2,000. Contracts are month-to-month — no lock-in.</p>
-</section>
-
-<section class="addons-section">
-  <div class="section-eyebrow">Project-Based Work</div>
-  <h2 class="section-title">One-Off Projects</h2>
-  <p style="color:var(--gray);font-size:.92rem;margin-bottom:2rem">Need something built, not maintained? These are quoted per engagement. Add them on top of any retainer tier.</p>
-
-  <div class="addons-grid">
-    <div class="addon-card">
-      <h4>Custom Website / Profile</h4>
-      <div class="ap">From RM3,000</div>
-      <p>Fast, professional website or business profile — designed, built, and deployed for you.</p>
-    </div>
-    <div class="addon-card">
-      <h4>AI Implementation</h4>
-      <div class="ap">From RM5,000</div>
-      <p>Custom AI chatbots, automation, and ML solutions tailored to your business.</p>
-    </div>
-    <div class="addon-card">
-      <h4>Cloud Migration</h4>
-      <div class="ap">From RM8,000</div>
-      <p>Complete migration to AWS, Azure, or Google Cloud with zero downtime.</p>
-    </div>
-    <div class="addon-card">
-      <h4>PDPA Compliance</h4>
-      <div class="ap">RM3,500</div>
-      <p>Full audit, policy documents, and compliance setup for Malaysian PDPA.</p>
-    </div>
-    <div class="addon-card">
-      <h4>Staff Training</h4>
-      <div class="ap">RM1,500/session</div>
-      <p>Cybersecurity awareness training for your team (in-person or online).</p>
-    </div>
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Pricing</div>
+    <h1>Transparent Pricing. No Surprises.</h1>
+    <p>Flexible plans designed for Malaysian SMEs — whether you need full managed IT, AI development, or both. All prices in MYR.</p>
   </div>
 </section>
 
-<section class="cta-band">
-  <h2>Not Sure What's Right for You?</h2>
-  <p>Book a free 30-minute consultation and we'll recommend the best solution for your needs and budget.</p>
-  <div class="cta-btns">
-    <a href="contact.html" class="btn-navy">Book Free Consultation</a>
-    <a href="services.html" class="btn-primary">View Services →</a>
+<!-- RETAINERS (from Deployment A) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Service Tiers</div>
+      <h2>Monthly Retainers</h2>
+      <p>One partner, one monthly fee. Pick a tier below and scale up as you grow — every tier is built as a recurring retainer, no per-project surprises.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3 style="color:#0D9488">Foundation</h3>
+        <p class="tagline">Managed IT, security &amp; compliance</p>
+        <div class="price-amount"><span class="amt">RM 1,899</span><span class="period">/ month</span></div>
+        <ul class="price-features">
+          <li>24/7 managed IT support &amp; helpdesk</li>
+          <li>Cloud infrastructure &amp; backups</li>
+          <li>Security monitoring &amp; incident response</li>
+          <li>PDPA compliance support</li>
+          <li>Monthly system health reports</li>
+          <li>Dedicated IT engineer</li>
+          <li class="na">Sales &amp; marketing automation</li>
+          <li class="na">Content &amp; ads management</li>
+          <li class="na">Custom AI development</li>
+        </ul>
+        <a class="price-cta sec" href="contact?interest=Foundation">Get Started</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-badge">Most Popular</div>
+        <h3 style="color:#00B4FF">Growth</h3>
+        <p class="tagline">Foundation + your growth engine</p>
+        <div class="price-amount"><span class="amt">RM 3,900</span><span class="period">/ month</span></div>
+        <ul class="price-features">
+          <li>Everything in Foundation</li>
+          <li>Sales &amp; workflow automation</li>
+          <li>Content creation &amp; management</li>
+          <li>Ads management &amp; campaign optimization</li>
+          <li>Monthly performance reporting</li>
+          <li>Dedicated account manager</li>
+          <li class="na">Custom AI development</li>
+        </ul>
+        <a class="price-cta main" href="contact?interest=Growth">Get Started</a>
+      </div>
+
+      <div class="price-card">
+        <h3 style="color:#7C3AED">AI Partner</h3>
+        <p class="tagline">Growth + custom AI development</p>
+        <div class="price-amount"><span class="amt">From RM 6,900</span><span class="period">/ month</span></div>
+        <ul class="price-features">
+          <li>Everything in Growth</li>
+          <li>Dedicated AI development retainer</li>
+          <li>Custom chatbots &amp; process automation</li>
+          <li>AI integration into existing systems</li>
+          <li>Priority roadmap &amp; support</li>
+          <li>Quarterly strategy reviews</li>
+          <li>All features included</li>
+        </ul>
+        <a class="price-cta sec" href="contact?interest=AI%20Partner">Request a Proposal</a>
+      </div>
+    </div>
+    <p class="pricing-note">All tiers include a <span>free initial IT audit</span>. Contracts are month-to-month — no lock-in.</p>
   </div>
 </section>
 
-<footer>
-  <div class="footer-top">
-    <div class="footer-brand">
-      <div class="logo"><picture><source srcset="assets/dis-logo-footer.webp" type="image/webp"><img src="assets/dis-logo-footer.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></div>
-      <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
+<!-- ONE-OFF PROJECTS (from Deployment A) -->
+<section class="section" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Project-Based Work</div>
+      <h2>One-Off Projects</h2>
+      <p style="color:var(--muted);font-weight:300;max-width:600px">Need something built, not maintained? These are quoted per engagement. Add them on top of any retainer tier.</p>
     </div>
-    <div class="footer-col">
-      <h5>Company</h5>
-      <a href="about.html">About Us</a>
-      <a href="cases.html">Projects</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="contact.html">Contact</a>
-    </div>
-    <div class="footer-col">
-      <h5>Services</h5>
-      <a href="services.html">AI Development</a>
-      <a href="services.html">Managed IT</a>
-      <a href="services.html">Cloud Migration</a>
-      <a href="services.html">IT Security</a>
+    <div class="addons-grid">
+      <div class="addon-card">
+        <h4>Custom Website / Profile</h4>
+        <div class="ap">From RM 3,000</div>
+        <p>Fast, professional website or business profile — designed, built, and deployed for you.</p>
+      </div>
+      <div class="addon-card">
+        <h4>AI Chatbot</h4>
+        <div class="ap">From RM 3,500</div>
+        <p>Custom chatbot for your website, WhatsApp, or internal use. Trained on your data.</p>
+      </div>
+      <div class="addon-card">
+        <h4>Process Automation</h4>
+        <div class="ap">From RM 5,000</div>
+        <p>Automate repetitive business workflows — data entry, approvals, reporting, and more.</p>
+      </div>
+      <div class="addon-card">
+        <h4>ML Model Development</h4>
+        <div class="ap">From RM 8,000</div>
+        <p>Custom machine learning models for prediction, classification, or recommendation.</p>
+      </div>
+      <div class="addon-card">
+        <h4>Cloud Migration</h4>
+        <div class="ap">From RM 4,000</div>
+        <p>Full cloud migration project — planning, execution, and post-migration support included.</p>
+      </div>
+      <div class="addon-card">
+        <h4>PDPA Compliance Audit</h4>
+        <div class="ap">From RM 1,800</div>
+        <p>Full audit plus policy documentation and staff training to ensure compliance.</p>
+      </div>
     </div>
   </div>
-  <div class="footer-bottom">
-    <p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Cyberjaya, Selangor, Malaysia</p>
-    <p>info@dutaintegrasolutions.com · +60 11-5403 4051</p>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap">
+    <div class="eyebrow">Need a Custom Quote?</div>
+    <h2>Every Business Is Different</h2>
+    <p>Tell us what you need and we'll build a package that fits your budget and goals.</p>
+    <div class="cta-actions">
+      <a class="btn btn-gold" href="contact">Request Custom Quote</a>
+      <a class="btn btn-ghost" href="services">Explore Services &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <picture><source srcset="assets/dis-logo-footer.webp" type="image/webp" /><img class="brand-mark" src="assets/dis-logo-footer.png" alt="Duta Integra Solutions" /></picture>
+        <p>Your trusted AI and IT partner in Malaysia.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="about">About Us</a>
+        <a href="work">Projects</a>
+        <a href="pricing">Pricing</a>
+        <a href="contact">Contact</a>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <a href="services">AI Development</a>
+        <a href="services">Managed IT</a>
+        <a href="services">Cloud Migration</a>
+        <a href="services">IT Security</a>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <p style="margin-top:0;font-size:13.5px">Cyberjaya, Malaysia</p>
+        <p style="font-size:13.5px">hello@dutaintegra.my</p>
+        <p style="font-size:13.5px">+60 11-5403 4051</p>
+        <a class="btn-wa" href="https://wa.me/601154034051" target="_blank" rel="noopener" style="margin-top:10px;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Duta Integra Solutions. All rights reserved.</p>
+      <p>hello@dutaintegra.my</p>
+    </div>
   </div>
 </footer>
+
+<script src="js/main.js?v=20260819a"></script>
 </body>
 </html>

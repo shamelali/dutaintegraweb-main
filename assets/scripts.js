@@ -3,7 +3,7 @@ const translations = {
   en: {
     navServices: 'Services', navAbout: 'About', navCases: 'Projects', navPricing: 'Pricing', navContact: 'Contact Us',
     heroBadge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA", heroTitle1: 'Enterprise-grade AI systems and managed IT, built for ', heroTitle2: 'Malaysian SMEs',
-    heroDesc: "Custom AI apps, chatbots, automation, and secure cloud infrastructure — delivered by a Cyberjaya-based team, since 2021.",
+    heroDesc: "Custom AI apps, chatbots, automation, and secure cloud infrastructure — delivered by a Cyberjaya-based team, since 2025.",
     heroBtn1: 'Book a discovery call', heroBtn2: 'View our work',
     stat1: 'Happy Clients', stat2: 'Custom Solutions', stat3: 'Managed IT Support', stat4: 'Malaysian-owned',
     servicesEyebrow: 'Service Tiers', servicesTitle: 'Three Tiers. One Partner.', servicesSub: 'From managed IT to full AI partnership — pick the tier that matches where your business is today, and grow into the next one as you scale.',

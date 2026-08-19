@@ -1,216 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Comprehensive IT services for Malaysian SMEs: AI software development, managed IT, cloud migration, and PDPA compliance. Transparent monthly retainers from RM1,899.">
-<title>Services - Duta Integra Solutions</title>
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="icon" type="image/png" href="assets/dis-favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-<style>
-:root{--navy:#0B1D3A;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
-*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
-.ti{color:var(--electric)}
-body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
-nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;display:flex;align-items:center;gap:15px;padding:10px}
-.logo a{color:white;text-decoration:none}
-.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
-.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s}
-.nav-links a:hover{color:var(--electric)}
-.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
-.logo-img{height:32px;width:auto;display:block}
-@media(max-width:768px){.logo-img{height:28px}}
-.dark-toggle{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);color:#e2e8f0;padding:.45rem .9rem;border-radius:5px;font-size:1rem;cursor:pointer;transition:all .2s;margin-left:1rem;display:flex;align-items:center;justify-content:center;min-width:44px}
-.dark-toggle:hover{background:rgba(0,180,255,.2);border-color:var(--electric)}
-.page-hero{background:linear-gradient(135deg,rgba(11,29,58,.82),rgba(11,29,58,.75)),url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1400&q=80');background-size:cover;background-position:center;padding:5rem 6% 4rem;position:relative;overflow:hidden}
-.page-hero::before{content:'';position:absolute;top:-40%;right:-5%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,180,255,.09) 0%,transparent 65%);pointer-events:none}
-.page-hero-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.75rem}
-.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;margin-bottom:.9rem;max-width:600px}
-.page-hero p{color:rgba(255,255,255,.6);max-width:520px;line-height:1.75;font-size:.97rem}
-.svc-page-section{padding:5rem 6%;background:white}
-.section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
-.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.75rem}
-.section-sub{color:var(--gray);max-width:480px;line-height:1.75;margin-bottom:3rem;font-size:.95rem}
-.svc-full-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:3rem}
-.svc-full-card{border:1.5px solid #E5EBF5;border-radius:12px;padding:2.2rem;transition:all .25s}
-.svc-full-card:hover{border-color:var(--electric);box-shadow:0 10px 40px rgba(21,101,192,.1)}
-.svc-full-card .icon{font-size:2rem;margin-bottom:1rem}
-.svc-full-card h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.7rem;color:#7C3AED}
-.svc-full-card p{color:var(--gray);font-size:.9rem;line-height:1.7;margin-bottom:1.2rem}
-.svc-features{list-style:none;margin-bottom:1.4rem}
-.svc-features li{font-size:.85rem;color:#1E293B;padding:.3rem 0;display:flex;align-items:center;gap:.5rem}
-.svc-features li::before{content:'✓';color:var(--electric);font-weight:700;font-size:.9rem}
-.btn-primary{background:var(--electric);color:var(--navy);padding:.85rem 2rem;border-radius:5px;font-weight:700;text-decoration:none;font-size:.92rem;cursor:pointer;border:none;display:inline-block;transition:opacity .2s}
-.btn-primary:hover{opacity:.88}
-.process-section{padding:5rem 6%;background:#F8FAFF}
-.process-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:2.5rem}
-.process-step{text-align:center;padding:1.8rem 1.4rem}
-.step-num{width:44px;height:44px;background:var(--electric);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:var(--navy);font-size:.95rem;margin:0 auto 1rem}
-.process-step h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.5rem;color:var(--navy)}
-.process-step p{color:var(--gray);font-size:.84rem;line-height:1.65}
-.cta-band{padding:5.5rem 6%;text-align:center;background:linear-gradient(135deg,#EBF4FF,#F0F8FF)}
-.cta-band h2{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.9rem}
-.cta-band p{color:var(--gray);max-width:460px;margin:0 auto 2rem;line-height:1.75;font-size:.95rem}
-.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-.btn-navy{background:var(--navy);color:white;padding:.88rem 2.2rem;border-radius:5px;font-weight:700;cursor:pointer;border:none;font-size:.92rem;transition:opacity .2s;text-decoration:none;display:inline-block}
-.btn-navy:hover{opacity:.85}
-footer{background:var(--dark);padding:3rem 6% 2rem}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
-.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
-.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
-.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;transition:color .2s}
-.footer-col a:hover{color:var(--electric)}
-.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
-@media(max-width:768px){.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — Duta Integra Solutions</title>
+  <meta name="description" content="Comprehensive IT services for Malaysian SMEs: AI software development, managed IT, cloud migration, and PDPA compliance. Transparent monthly retainers from RM 1,899." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="icon" type="image/png" href="assets/dis-favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=20260819a" />
+  <link rel="alternate" hreflang="en" href="https://dutaintegra.my/services" />
+  <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/services" />
+  <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/services" />
+  <meta property="og:title" content="Services — Duta Integra Solutions" />
+  <meta property="og:description" content="AI software development, managed IT, cloud migration, and PDPA compliance for Malaysian SMEs." />
+  <meta property="og:image" content="assets/img/og-share.jpg" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ProfessionalService","name":"Duta Integra Solutions","url":"https://dutaintegra.my","email":"hello@dutaintegra.my","telephone":"+601154034051","address":{"@type":"PostalAddress","addressLocality":"Cyberjaya","addressCountry":"MY"},"foundingDate":"2025","areaServed":"MY"}
+  </script>
 </head>
 <body>
-<nav>
-  <div class="logo"><picture><source srcset="assets/dis-logo-nav.webp" type="image/webp"><img src="assets/dis-logo-nav.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></div>
-  <ul class="nav-links">
-    <li><a href="services.html">Services</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="cases.html">Projects</a></li>
-    <li><a href="pricing.html">Pricing</a></li>
-    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
-  </ul>
-</nav>
+<div class="toast" id="toast"></div>
+<canvas id="network-bg"></canvas>
 
-<div class="page-hero">
-  <div class="page-hero-label">Our Services</div>
-  <h1>Everything Your Business Needs to Thrive Digitally</h1>
-  <p>From AI-powered automation to round-the-clock IT support — we're your complete technology partner so you can focus on growing your business.</p>
-</div>
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-inner wrap">
+    <div class="brand">
+      <picture><source srcset="assets/dis-logo-nav.webp" type="image/webp" /><img class="brand-mark" src="assets/dis-logo-nav.png" alt="Duta Integra Solutions" /></picture>
+      <span class="brand-name">Duta <span>Integra</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="services" class="is-active">Services</a>
+      <a href="about">About</a>
+      <a href="work">Work</a>
+      <a href="pricing">Pricing</a>
+      <a href="comparison">Compare</a>
+      <a href="contact" class="nav-cta">Get a quote</a>
+    </div>
+    <div class="nav-tools">
+      <button class="tool" onclick="toggleDark()" data-theme-icon title="Toggle theme"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+      <div class="lang-switch"><a class="lang-opt is-active" href="/services">EN</a><a class="lang-opt" href="/ms/services" hreflang="ms">BM</a></div>
+      <button class="burger" onclick="toggleNav()" aria-label="Menu"><span></span></button>
+    </div>
+  </div>
+  <div class="drawer">
+    <a href="/">Home</a>
+    <a href="services">Services</a>
+    <a href="about">About</a>
+    <a href="work">Work</a>
+    <a href="pricing">Pricing</a>
+    <a href="comparison">Compare</a>
+    <a href="contact" class="nav-cta">Get a quote</a>
+  </div>
+</header>
 
-<section class="svc-page-section">
-  <div class="section-eyebrow">Core Offerings</div>
-  <h2 class="section-title" style="color:var(--electric)">What We Deliver</h2>
-  <div class="svc-full-grid">
-    <div class="svc-full-card">
-      <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" alt="AI Development" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:1.2rem">
-      <div class="icon"><i class="ti ti-robot"></i></div>
-      <h3>AI Software Development</h3>
-      <p>We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
-      <ul class="svc-features">
-        <li>Custom AI chatbots & virtual assistants</li>
-        <li>Business process automation (RPA)</li>
-        <li>Machine learning models & data pipelines</li>
-        <li>AI integration into existing systems</li>
-        <li>Natural language processing (NLP) tools</li>
-        <li>AI-powered dashboards & reporting</li>
-      </ul>
-      <a href="contact.html" class="btn-primary">Get a Quote</a>
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow">Our Services</div>
+    <h1>Everything Your Business Needs to Thrive Digitally</h1>
+    <p>From AI-powered automation to round-the-clock IT support — we're your complete technology partner so you can focus on growing your business.</p>
+  </div>
+</section>
+
+<!-- SERVICES FULL GRID (from Deployment A) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Core Offerings</div>
+      <h2>What We Deliver</h2>
+      <p>Every service is available as part of a monthly retainer or as a stand-alone project. All backed by local PDPA compliance and Malaysian support.</p>
     </div>
-    <div class="svc-full-card">
-      <div class="icon"><i class="ti ti-device-desktop"></i></div>
-      <h3>Managed IT Services</h3>
-      <p>We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
-      <ul class="svc-features">
-        <li>24/7 remote IT helpdesk support</li>
-        <li>Network setup, monitoring & management</li>
-        <li>Hardware procurement & maintenance</li>
-        <li>Server management & backups</li>
-        <li>Software licensing & updates</li>
-        <li>Monthly IT health reports</li>
-      </ul>
-      <a href="contact.html" class="btn-primary">Get a Quote</a>
-    </div>
-    <div class="svc-full-card">
-      <div class="icon"><i class="ti ti-cloud"></i></div>
-      <h3>Cloud Migration & Management</h3>
-      <p>Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
-      <ul class="svc-features">
-        <li>Cloud readiness assessment</li>
-        <li>Migration planning & execution</li>
-        <li>AWS, Azure & Google Cloud setup</li>
-        <li>Hybrid cloud architecture</li>
-        <li>Cloud cost optimisation</li>
-        <li>Ongoing cloud management</li>
-      </ul>
-      <a href="contact.html" class="btn-primary">Get a Quote</a>
-    </div>
-    <div class="svc-full-card">
-      <div class="icon"><i class="ti ti-shield-lock"></i></div>
-      <h3>IT Security & PDPA Compliance</h3>
-      <p>Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
-      <ul class="svc-features">
-        <li>PDPA compliance audit & policy drafting</li>
-        <li>Cybersecurity risk assessment</li>
-        <li>Firewall & endpoint protection</li>
-        <li>Employee security awareness training</li>
-        <li>Incident response planning</li>
-        <li>Ongoing security monitoring</li>
-      </ul>
-      <a href="contact.html" class="btn-primary">Get a Quote</a>
-    </div>
-    <div class="svc-full-card">
-      <div class="icon"><i class="ti ti-chart-bar"></i></div>
-      <h3>Business Intelligence (Launching Next)</h3>
-      <p>Transform raw data into actionable insights with our upcoming Business Intelligence solutions — interactive dashboards, predictive analytics, and automated reporting.</p>
-      <ul class="svc-features">
-        <li>Sales intelligence & revenue tracking</li>
-        <li>Marketing campaign performance analytics</li>
-        <li>Inventory & fulfillment monitoring</li>
-        <li>Retail & branch performance benchmarking</li>
-        <li>AI-powered insights & recommendations</li>
-        <li>Real-time operational dashboards</li>
-      </ul>
-      <a href="contact.html" class="btn-primary">Get Notified</a>
+    <div class="svc-full-grid">
+      <div class="svc-full-card">
+        <div class="icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>AI Software Development</h3>
+        <p>We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
+        <ul class="svc-features">
+          <li>Custom AI chatbots &amp; virtual assistants</li>
+          <li>Business process automation (RPA)</li>
+          <li>Machine learning models &amp; data pipelines</li>
+          <li>AI integration into existing systems</li>
+          <li>Natural language processing (NLP) tools</li>
+          <li>AI-powered dashboards &amp; reporting</li>
+        </ul>
+        <a class="btn btn-gold" href="contact?interest=AI%20Software%20Development">Get a Quote</a>
+      </div>
+      <div class="svc-full-card">
+        <div class="icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 10h-1.3A2 2 0 0 0 14 12v.5M18 10h1.3A2 2 0 0 1 22 12v.5M14 12v-2M14 12v.5"/><path d="M18 10v6"/><path d="M2 10h6v6H2z"/><path d="M10 22V10l4-4 4 4v12"/></svg>
+        </div>
+        <h3>Managed IT Services</h3>
+        <p>We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
+        <ul class="svc-features">
+          <li>24/7 remote IT helpdesk support</li>
+          <li>Network setup, monitoring &amp; management</li>
+          <li>Hardware procurement &amp; maintenance</li>
+          <li>Server management &amp; backups</li>
+          <li>Software licensing &amp; updates</li>
+          <li>Monthly IT health reports</li>
+        </ul>
+        <a class="btn btn-gold" href="contact?interest=Managed%20IT%20Services">Get a Quote</a>
+      </div>
+      <div class="svc-full-card">
+        <div class="icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Cloud Migration &amp; Management</h3>
+        <p>Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
+        <ul class="svc-features">
+          <li>Cloud readiness assessment</li>
+          <li>Migration planning &amp; execution</li>
+          <li>AWS, Azure &amp; Google Cloud setup</li>
+          <li>Hybrid cloud architecture</li>
+          <li>Cloud cost optimisation</li>
+          <li>Ongoing cloud management</li>
+        </ul>
+        <a class="btn btn-gold" href="contact?interest=Cloud%20Migration">Get a Quote</a>
+      </div>
+      <div class="svc-full-card">
+        <div class="icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>IT Security &amp; PDPA Compliance</h3>
+        <p>Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
+        <ul class="svc-features">
+          <li>PDPA compliance audit &amp; policy drafting</li>
+          <li>Cybersecurity risk assessment</li>
+          <li>Firewall &amp; endpoint protection</li>
+          <li>Employee security awareness training</li>
+          <li>Incident response planning</li>
+          <li>Ongoing security monitoring</li>
+        </ul>
+        <a class="btn btn-gold" href="contact?interest=IT%20Security%20%26%20PDPA">Get a Quote</a>
+      </div>
+      <div class="svc-full-card" style="opacity:.85">
+        <div class="icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3>Business Intelligence <span style="font-size:.75rem;color:var(--muted);font-weight:400">(Launching Next)</span></h3>
+        <p>Transform raw data into actionable insights with our upcoming Business Intelligence solutions — interactive dashboards, predictive analytics, and automated reporting.</p>
+        <ul class="svc-features">
+          <li>Sales intelligence &amp; revenue tracking</li>
+          <li>Marketing campaign performance analytics</li>
+          <li>Inventory &amp; fulfillment monitoring</li>
+          <li>AI-powered insights &amp; recommendations</li>
+          <li>Real-time operational dashboards</li>
+        </ul>
+        <a class="btn btn-ghost" href="contact?interest=Business%20Intelligence" style="color:var(--navy);border-color:var(--line)">Get Notified</a>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="process-section">
-  <div class="section-eyebrow">How We Work</div>
-  <h2 class="section-title">Our Process</h2>
-  <p class="section-sub">Simple, transparent, and built around your needs.</p>
-  <div class="process-steps">
-    <div class="process-step"><div class="step-num">1</div><h4>Free Audit</h4><p>We assess your current IT setup or AI readiness — no obligation, no sales pressure.</p></div>
-    <div class="process-step"><div class="step-num">2</div><h4>Proposal</h4><p>You get a clear, detailed proposal with scope, timeline, and fixed pricing within 3 working days.</p></div>
-    <div class="process-step"><div class="step-num">3</div><h4>Delivery</h4><p>Our team executes the project with weekly check-ins and full transparency throughout.</p></div>
-    <div class="process-step"><div class="step-num">4</div><h4>Support</h4><p>We don't disappear after delivery — ongoing support and optimisation is part of the package.</p></div>
+<!-- PROCESS (from Deployment A) -->
+<section class="section" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">How We Work</div>
+      <h2>Our Process</h2>
+      <p>Simple, transparent, and built around your needs.</p>
+    </div>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-num">1</div>
+        <h4>Free Audit</h4>
+        <p>We assess your current IT setup or AI readiness — no obligation, no sales pressure.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">2</div>
+        <h4>Proposal</h4>
+        <p>You get a clear, detailed proposal with scope, timeline, and fixed pricing within 3 working days.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">3</div>
+        <h4>Delivery</h4>
+        <p>Our team executes the project with weekly check-ins and full transparency throughout.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">4</div>
+        <h4>Support</h4>
+        <p>We don't disappear after delivery — ongoing support and optimisation is part of the package.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="cta-band">
-  <h2>Not Sure Which Service You Need?</h2>
-  <p>From managed IT retainers at RM1,899/month to custom AI partnerships — we have a tier for every growing SME. <a href="pricing.html">See our retainer plans →</a></p>
-  <div class="cta-btns">
-    <a href="contact.html" class="btn-navy">Book Free Consultation</a>
-    <a href="pricing.html" class="btn-primary">View Pricing Details →</a>
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap">
+    <div class="eyebrow">Not Sure Which Service You Need?</div>
+    <h2>Let Us Help You Decide</h2>
+    <p>Book a free 30-minute consultation and we'll recommend the right solution for your business.</p>
+    <div class="cta-actions">
+      <a class="btn btn-gold" href="contact">Book Free Consultation</a>
+      <a class="btn btn-ghost" href="pricing">See Pricing &rarr;</a>
+    </div>
   </div>
 </section>
 
-<footer>
-  <div class="footer-top">
-    <div class="footer-brand">
-      <div class="logo"><picture><source srcset="assets/dis-logo-footer.webp" type="image/webp"><img src="assets/dis-logo-footer.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></div>
-      <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <picture><source srcset="assets/dis-logo-footer.webp" type="image/webp" /><img class="brand-mark" src="assets/dis-logo-footer.png" alt="Duta Integra Solutions" /></picture>
+        <p>Your trusted AI and IT partner in Malaysia.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="about">About Us</a>
+        <a href="work">Projects</a>
+        <a href="pricing">Pricing</a>
+        <a href="contact">Contact</a>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <a href="services">AI Development</a>
+        <a href="services">Managed IT</a>
+        <a href="services">Cloud Migration</a>
+        <a href="services">IT Security</a>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <p style="margin-top:0;font-size:13.5px">Cyberjaya, Malaysia</p>
+        <p style="font-size:13.5px">hello@dutaintegra.my</p>
+        <p style="font-size:13.5px">+60 11-5403 4051</p>
+        <a class="btn-wa" href="https://wa.me/601154034051" target="_blank" rel="noopener" style="margin-top:10px;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+      </div>
     </div>
-    <div class="footer-col">
-      <h5>Company</h5>
-      <a href="about.html">About Us</a>
-      <a href="cases.html">Projects</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="contact.html">Contact</a>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Duta Integra Solutions. All rights reserved.</p>
+      <p>hello@dutaintegra.my</p>
     </div>
-    <div class="footer-col">
-      <h5>Services</h5>
-      <a href="services.html">AI Development</a>
-      <a href="services.html">Managed IT</a>
-      <a href="services.html">Cloud Migration</a>
-      <a href="services.html">IT Security</a>
-      <a href="services.html">Business Website</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Cyberjaya, Selangor, Malaysia</p>
-    <p>info@dutaintegrasolutions.com · +60 11-5403 4051</p>
   </div>
 </footer>
+
+<script src="js/main.js?v=20260819a"></script>
 </body>
 </html>
