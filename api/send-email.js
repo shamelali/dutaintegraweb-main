@@ -2,6 +2,13 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Security: only allow emails from verified origins
+const ALLOWED_ORIGINS = [
+  "https://dutaintegra.my",
+  "https://www.dutaintegra.my",
+  "https://dutaintegraweb-main-mpjnmndfb-shamelalis-projects.vercel.app"
+];
+
 const FROM =
   process.env.EMAIL_FROM || "Duta Integra Website <noreply@dutaintegra.my>";
 const TO = (process.env.EMAIL_TO || "hello@dutaintegra.my")
@@ -10,13 +17,38 @@ const TO = (process.env.EMAIL_TO || "hello@dutaintegra.my")
   .filter(Boolean);
 const REPLY_COPY = process.env.EMAIL_AUTOREPLY !== "false";
 
-function esc(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+// Honeypot field - should remain empty
+const HONEYPOT = process.env.HONEYPOT_FIELD || "website-bot";
+
+// Rate limiting config
+const MAX_SUBMISSIONS = Number(process.env.RATE_LIMIT_MAX) || 5;
+const RATE_WINDOW = Number(process.env.RATE_WINDOW) || 60000; // 1 minute
+
+// Rate tracking (in-memory for serverless; use Redis in production)
+let submissionCount = 0;
+let lastReset = Date.now();
+
+function checkRateLimit() {
+  const now = Date.now();
+  if (now - lastReset > RATE_WINDOW) {
+    submissionCount = 0;
+    lastReset = now;
+  }
+  return submissionCount < MAX_SUBMISSIONS;
+}
+
+function incrementSubmissionCount() {
+  submissionCount++;
+}
+
+// Input validation and sanitation
+function sanitizeHTML(value) {
+  return String(value)
+    .replace(/&/g, "&")
+    .replace(/</g, "<")
+    .replace(/>/g, ">")
+    .replace(/"/g, """)
+    .replace(/'/g, "'");
 }
 
 function isEmail(value) {
@@ -26,186 +58,143 @@ function isEmail(value) {
 function buildAdminHtml({ name, company, email, phone, service, message }) {
   const row = (label, value, highlight = false) => {
     if (!value) return "";
+    const h = highlight ? "<strong>" : "";
     return `
-      <div class="field">
-        <div class="field-label">${esc(label)}</div>
-        <div class="field-value${highlight ? " highlight" : ""}">${value}</div>
-      </div>`;
+      <div style="margin-bottom: 12px;">
+        <strong style="display: block; margin-bottom: 4px;">${bUILDADMINLABEL(label)}</strong>
+        <p>${bUILDADMINVALUE(value)}</p>
+      </div>
+    `;
   };
 
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <style>
-    body { font-family: Inter, Segoe UI, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1E2D3D; max-width: 600px; margin: 0 auto; padding: 20px; background: #F8F9FB; }
-    .card { background: #fff; border: 1px solid #D5D9E0; border-top: 3px solid #C9A227; border-radius: 2px; overflow: hidden; }
-    .header { background: #1E2D3D; color: #F8F9FB; padding: 22px 24px; }
-    .header h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 0.02em; }
-    .header p { margin: 6px 0 0; color: #B8BEC8; font-size: 13px; }
-    .content { padding: 22px 24px; }
-    .field { margin-bottom: 14px; }
-    .field-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #8B919A; font-weight: 600; margin-bottom: 4px; }
-    .field-value { font-size: 15px; color: #1E2D3D; background: #F8F9FB; padding: 10px 12px; border: 1px solid #E6E9EE; border-radius: 2px; }
-    .field-value.highlight { border-left: 3px solid #C9A227; font-weight: 600; }
-    .message-box { white-space: pre-wrap; background: #F8F9FB; padding: 14px; border: 1px solid #E6E9EE; border-radius: 2px; }
-    a { color: #1E2D3D; }
-    .footer { text-align: center; padding: 16px 8px 0; font-size: 12px; color: #8B919A; }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <div class="header">
-      <h1>New contact form submission</h1>
-      <p>dutaintegra.my · ${esc(new Date().toLocaleString("en-MY", { timeZone: "Asia/Kuala_Lumpur" }))} MYT</p>
+  const bUILDADMINLABEL = (l) => l.replace(/\b\w/g, c => c.toUpperCase());
+  const bUILDADMINVALUE = (v) => sanitizeHTML(v);
+
+  return `
+    <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
+      <h2 style="color: #1a1a2e;">New Contact Form Submission</h2>
+      <p style="color: #4a4a6a;">Received from dutaintegra.my website</p>
+      <div style="border-top: 1px solid #e0e0e0; padding-top: 16px; margin-top: 16px;">
+        ${row("Name", name, true)}
+        ${row("Company", company)}
+        ${row("Email", email, true)}
+        ${row("Phone", phone)}
+        ${row("Service", service, true)}
+        ${row("Message", message)}
+      </div>
+      <hr style="margin: 24px 0; border: none; border-top: 1px solid #e0e0e0;">
+      <p style="color: #6a6a8a; font-size: 0.875rem;">
+        This email was sent from the dutaintegra.my contact form.<br>
+        Received at: ${new Date().toISOString()}<br>
+        Origin: ${typeof window !== "undefined" ? window.location.origin : "Server-side"}
+      </p>
     </div>
-    <div class="content">
-      ${row("Name", esc(name), true)}
-      ${row("Company", esc(company))}
-      ${row("Email", `<a href="mailto:${esc(email)}">${esc(email)}</a>`)}
-      ${row("Phone / WhatsApp", esc(phone))}
-      ${row("Service interest", esc(service), true)}
-      ${
-        message
-          ? `<div class="field"><div class="field-label">Message</div><div class="message-box">${esc(message)}</div></div>`
-          : ""
-      }
-    </div>
-  </div>
-  <div class="footer">Sent from the Duta Integra Solutions website contact form.</div>
-</body>
-</html>`;
+  `;
 }
 
-function buildAutoReplyHtml({ name, service }) {
-  const first = String(name || "").trim().split(/\s+/)[0] || "there";
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <style>
-    body { font-family: Inter, Segoe UI, Helvetica, Arial, sans-serif; line-height: 1.65; color: #1E2D3D; max-width: 600px; margin: 0 auto; padding: 20px; background: #F8F9FB; }
-    .card { background: #fff; border: 1px solid #D5D9E0; border-top: 3px solid #C9A227; border-radius: 2px; padding: 28px 24px; }
-    h1 { margin: 0 0 12px; font-size: 20px; color: #1E2D3D; }
-    p { margin: 0 0 12px; color: #5F5E5A; }
-    .gold { color: #C9A227; font-weight: 600; }
-    .meta { margin-top: 20px; padding-top: 16px; border-top: 1px solid #E6E9EE; font-size: 13px; color: #8B919A; }
-    a { color: #1E2D3D; }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h1>Thanks, ${esc(first)} — we got your message.</h1>
-    <p>The Duta Integra team will reply within <span class="gold">one business day</span>.</p>
-    <p>You asked about: <strong>${esc(service)}</strong>.</p>
-    <p>If something is urgent, WhatsApp us at <a href="https://wa.me/601154034051">+60 11-5403 4051</a>.</p>
-    <div class="meta">
-      Duta Integra Solutions · Cyberjaya, Malaysia<br />
-      <a href="mailto:hello@dutaintegra.my">hello@dutaintegra.my</a> · <a href="https://dutaintegra.my">dutaintegra.my</a>
-    </div>
-  </div>
-</body>
-</html>`;
-}
-
-export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Cache-Control", "no-store");
-
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
+// Parse the incoming request body
+async function handler(request) {
+  // Origin check
+  const origin = request.headers.get("origin") || "";
+  const originAllowed = ALLOWED_ORIGINS.some(o => origin.startsWith(o));
+  if (!originAllowed) {
+    return new Response(
+      JSON.stringify({ error: "Forbidden: Invalid origin" }),
+      { status: 403, headers: { "Content-Type": "application/json" } }
+    );
   }
 
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  // Honeypot check - if honeypot is filled, it's a bot
+  const formData = await request.formData();
+  const honeypot = formData.get("website-bot");
+  if (honeypot && honeypot.trim() !== "") {
+    return new Response(
+      JSON.stringify({ error: "Bot detection triggered" }),
+      { status: 403, headers: { "Content-Type": "application/json" } }
+    );
   }
 
-  if (!process.env.RESEND_API_KEY) {
-    console.error("RESEND_API_KEY is not set");
-    return res.status(503).json({
-      error: "Email is not configured. Set RESEND_API_KEY in the environment.",
-      code: "EMAIL_NOT_CONFIGURED",
-    });
+  // Rate limit check
+  if (!checkRateLimit()) {
+    return new Response(
+      JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
+      { status: 429, headers: { "Content-Type": "application/json" } }
+    );
   }
 
-  let body = req.body;
-  if (typeof body === "string") {
-    try {
-      body = JSON.parse(body);
-    } catch {
-      return res.status(400).json({ error: "Invalid JSON body." });
-    }
-  }
-  body = body || {};
+  // Form data validation
+  const name = formData.get("name") || "";
+  const company = formData.get("company") || "";
+  const email = formData.get("email") || "";
+  const phone = formData.get("phone") || "";
+  const service = formData.get("service") || "";
+  const message = formData.get("message") || "";
 
-  // Honeypot — bots fill hidden fields
-  if (body.website || body.hp) {
-    return res.status(200).json({ success: true, skipped: true });
-  }
-
-  const name = String(body.name || "").trim();
-  const company = String(body.company || "").trim();
-  const email = String(body.email || "").trim();
-  const phone = String(body.phone || "").trim();
-  const service = String(body.service || "").trim();
-  const message = String(body.message || "").trim();
-
-  if (!name || !email || !service) {
-    return res.status(400).json({ error: "Name, email, and service are required." });
-  }
+  // Email validation
   if (!isEmail(email)) {
-    return res.status(400).json({ error: "Please provide a valid email address." });
-  }
-  if (name.length > 120 || company.length > 160 || service.length > 160 || message.length > 5000) {
-    return res.status(400).json({ error: "One or more fields are too long." });
+    return new Response(
+      JSON.stringify({ error: "Invalid email address" }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
   }
 
+  // Increment rate counter
+  incrementSubmissionCount();
+
+  // Build the email content
+  const adminHtml = buildAdminHtml({ name, company, email, phone, service, message });
+
+  // Send via Resend
   try {
-    const { data, error } = await resend.emails.send({
+    const data = {
       from: FROM,
       to: TO,
-      replyTo: email,
-      subject: `New enquiry · ${service} · ${name}`,
-      html: buildAdminHtml({ name, company, email, phone, service, message }),
-      text: [
-        `New contact form submission`,
-        ``,
-        `Name: ${name}`,
-        company ? `Company: ${company}` : null,
-        `Email: ${email}`,
-        phone ? `Phone: ${phone}` : null,
-        `Service: ${service}`,
-        message ? `Message:\n${message}` : null,
-      ]
-        .filter(Boolean)
-        .join("\n"),
-    });
+      subject: `New contact form submission from ${name || "Unknown"}`,
+      html: adminHtml,
+      reply_to: email,
+    };
 
-    if (error) {
-      console.error("Resend error:", error);
-      return res.status(500).json({ error: error.message || "Failed to send email." });
+    // Add reply copy if configured
+    if (REPLY_COPY) {
+      data["reply_to"] = email;
     }
 
-    // Best-effort confirmation to the visitor
-    if (REPLY_COPY && isEmail(email)) {
-      try {
-        await resend.emails.send({
-          from: FROM,
-          to: [email],
-          replyTo: TO[0] || "hello@dutaintegra.my",
-          subject: "We received your message — Duta Integra Solutions",
-          html: buildAutoReplyHtml({ name, service }),
-        });
-      } catch (autoErr) {
-        console.error("Auto-reply failed:", autoErr);
-      }
+    await resend.sendEmail(data);
+
+    // Send auto-reply if configured
+    if (process.env.EMAIL_AUTOREPLY) {
+      const autoReplyHtml = `
+        <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
+          <h3 style="color: #1a1a2e;">Thank you for contacting Duta Integra</h3>
+          <p style="color: #4a4a6a;">We have received your message and will get back to you within 24 hours.</p>
+          <p style="color: #4a4a6a;">Your message: "${sanitizeHTML(message || "")}</p>
+          <p style="color: #6a6a8a;">Best regards,<br>Duta Integra Solutions Team</p>
+        </div>
+      `;
+      await resend.sendEmail({
+        from: FROM,
+        to: email,
+        subject: "Receipt of your contact form submission",
+        html: autoReplyHtml,
+      });
     }
 
-    return res.status(200).json({ success: true, id: data?.id });
-  } catch (err) {
-    console.error("Email send error:", err);
-    return res.status(500).json({ error: "An unexpected error occurred." });
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        message: "Email sent successfully" 
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Send email error:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to send email" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
 }
+
+// For Vercel Serverless Functions
+export { handler as GET, handler as POST };
+

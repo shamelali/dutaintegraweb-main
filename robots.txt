@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /Web/
+Disallow: /admin.html
+Disallow: /dutaintegra
+Disallow: /investor
+Disallow: /contacts
+Disallow: /api
+
+Sitemap: https://dutaintegra.my/sitemap.xml
