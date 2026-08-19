@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duta Integra - Pulsing Gradient Background</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { min-height: 100vh; background: #0F1822; display: flex; align-items: center; justify-content: center; overflow: hidden; font-family: 'Inter', sans-serif; position: relative; }
+    canvas { display: block; }
+    .brand { position: fixed; top: 20px; color: #C9A227; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; z-index: 10; }
+    .nav { position: fixed; bottom: 20px; display: flex; gap: 20px; z-index: 10; }
+    .nav a { color: #B8BEC8; text-decoration: none; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .nav a:hover { color: #C9A227; }
+    .badge { position: fixed; top: 80px; background: rgba(201,162,39,0.14); border: 0.5px solid #C9A227; padding: 5px 10px; border-radius: 2px; font-size: 11px; letter-spacing: 0.16em; color: #C9A227; }
+  </style>
+</head>
+<body>
+  <div class="brand">Duta Integra Solutions</div>
+  <div class="nav"><a href="#services">Services</a><a href="#about">About</a><a href="#cases">Projects</a><a href="#contact">Contact</a></div>
+  <div class="badge">AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA</div>
+  <canvas id="bg-canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    let t = 0;
+    function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+
+    const render = () => {
+      t += 0.016;
+      ctx.clearRect(0, 0, w, h);
+
+      // Pulse radial gradient background
+      const pulse = 0.5 + 0.5 * Math.sin(t * 1.5);
+      const r = 201, g = 162, b = 39;
+      const a = 0.08 * pulse;
+      
+      // Inner gradient
+      const inner = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w, h)/2);
+      inner.addColorStop(0, `rgba(${r},${g},${b},${0.15 * pulse})`);
+      inner.addColorStop(0.5, `rgba(${r},${g},${b},${0.05 * pulse})`);
+      inner.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = inner;
+      ctx.fillRect(0, 0, w, h);
+
+      // Outer subtle ring
+      ctx.strokeStyle = `rgba(${r},${g},${b},${0.02 * pulse})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      const outerRadius = Math.max(w, h) / 2;
+      ctx.arc(w/2, h/2, outerRadius * 0.9, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Gold dust particles
+      ctx.fillStyle = `rgba(${r},${g},${b},${0.3 + 0.2 * Math.sin(t)})`;
+      for (let i = 0; i < 20; i++) {
+        const x = w * 0.5 + (Math.random() - 0.5) * w * 0.3;
+        const y = h * 0.5 + (Math.random() - 0.5) * h * 0.3;
+        const size = 1 + Math.random() * 2;
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(render);
+    };
+
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duta Integra - Animated Background Preview</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      min-height: 100vh; 
+      background: #0F1822; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+    canvas { 
+      display: block; 
+      background: #0F1822; 
+    }
+    .brand {
+      position: fixed;
+      top: 20px;
+      color: #C9A227;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      z-index: 10;
+    }
+    .nav {
+      position: fixed;
+      bottom: 20px;
+      display: flex;
+      gap: 20px;
+      z-index: 10;
+    }
+    .nav a {
+      color: #B8BEC8;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .nav a:hover { color: #C9A227; }
+  </style>
+</head>
+<body>
+  <div class="brand">Duta Integra Solutions</div>
+  <div class="nav">
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#cases">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <canvas id="network-bg"></canvas>
+
+  <script>
+    // ANIMATED NETWORK BACKGROUND - GOLD ACCENTED
+    const canvas = document.getElementById('network-bg');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Settings
+    const NP = 80;        // particles
+    const BD = 300;       // max distance to draw lines
+    const GS = 0.8;       // gold softness factor
+    let t = 0;
+
+    // Create particles on a sphere
+    const particles = [];
+    for (let i = 0; i < NP; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 400 + Math.random() * 200;
+      particles.push({
+        x: r * Math.sin(phi) * Math.cos(theta),
+        y: r * Math.sin(phi) * Math.sin(theta),
+        z: r * Math.cos(phi),
+        vx: (Math.random() - 0.5) * 0.02,
+        vy: (Math.random() - 0.5) * 0.02,
+        vz: (Math.random() - 0.5) * 0.02,
+        ox: 0, oy: 0, oz: 0  // original positions
+      });
+    }
+
+    // Project 3D to 2D
+    const proj = (x, y, z) => {
+      const f = 800 / (800 + z);
+      return { x: w / 2 + x * f, y: h / 2 + y * f };
+    };
+
+    // Gradient gold colors
+    const goldAt = (t) => {
+      // Slowly cycling gold tones
+      const hue = (t * 0.5) % 360;
+      const c = {
+        r: Math.round(201 + 50 * Math.sin(hue * Math.PI / 180)),
+        g: Math.round(162 + 30 * Math.cos(hue * Math.PI / 180)),
+        b: Math.round(39 + 20 * Math.sin(hue * Math.PI / 180 + 1))
+      };
+      return `rgba(${c.r},${c.g},${c.b},${0.3 + 0.2 * Math.sin(t * 2)})`;
+    };
+
+    const render = () => {
+      t += 0.016;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#0F1822';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw connecting lines between nearby particles
+      ctx.strokeStyle = goldAt(t);
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.6;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        const p1p = proj(p1.x, p1.y, p1.z);
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dz = p1.z - p2.z;
+          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+          if (dist < BD) {
+            const p2p = proj(p2.x, p2.y, p2.z);
+            ctx.beginPath();
+            ctx.moveTo(p1p.x, p1p.y);
+            ctx.lineTo(p2p.x, p2p.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Update particle positions (orbit around center)
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
+        // Slow bounce back if too far
+        if (Math.abs(p.x) > 500) p.vx *= -0.5;
+        if (Math.abs(p.y) > 500) p.vy *= -0.5;
+        if (Math.abs(p.z) > 500) p.vz *= -0.5;
+      });
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(render);
+    };
+
+    render();
+  </script>
+</body>
+</html>
