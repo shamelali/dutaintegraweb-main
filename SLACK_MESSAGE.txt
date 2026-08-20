@@ -1,0 +1,32 @@
+@dev URGENT - Security fix needed today
+
+*Issue:* `vercel.json` with `outputDirectory: "."` is exposing entire repo:
+- https://dutaintegra.my/Duta_Integra_Solutions_Investor_Deck.pptx is public
+- Same for *.pdf, *.py, Web/, .claude/, admin.html
+
+*Fix provided:*
+- Bundle: `dutaintegra-ultimate-bundle.zip` (22 files)
+- Handoff doc: `DEVELOPER_HANDOFF.md`
+
+*Quick fix (1h):*
+```
+unzip bundle in repo root
+cp vercel.json ./vercel.json
+cp send-email.turnstile.js ./api/send-email.js
+cp .gitignore.fixed ./.gitignore
+cp robots.txt sitemap.xml ./
+mkdir -p components .well-known .github/workflows
+cp header.html footer.html components-loader.js components/
+cp security.txt .well-known/
+cp security.yml .github/workflows/
+bash cleanup.sh
+git add . && git commit -F COMMIT_MESSAGE.txt && git push origin main
+```
+
+*After push:*
+- Vercel env vars: RESEND_API_KEY, TURNSTILE_SECRET_KEY
+- Verify: *.pptx -> 404, sitemap.xml -> 200, contact form works
+- Rotate Resend key (old repo was public)
+
+Full checklist in FINAL_CHECKLIST.md
+Please prioritize today. Ping me when done.
