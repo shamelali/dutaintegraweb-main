@@ -39,7 +39,7 @@ Optional:
 | Variable | Default | Purpose |
 |----------|---------|---------|
 | `EMAIL_FROM` | `Duta Integra Website <noreply@dutaintegra.my>` | From header (must be on a verified domain) |
-| `EMAIL_TO` | `hello@dutaintegra.my` | Inbox (comma-separate for multiple) |
+| `EMAIL_TO` | `hello@dutaintegra.my` | Inbox (comma‑separate for multiple, e.g. `hello@dutaintegra.my,wasilah@dutaintegra.my`) |
 | `EMAIL_AUTOREPLY` | `true` | Set `false` to disable visitor confirmation |
 
 Redeploy after adding env vars:

@@ -98,6 +98,15 @@
 
         <form class="form" onsubmit="submitForm(event)" novalidate>
           <h3>Hantar mesej kepada kami</h3>
+
+        <!-- Turnstile widget -->
+        <div class="cf-turnstile" 
+             data-sitekey="0x4AAAAAAEWiPSuuWyfT-IU5" 
+             data-action="contact"
+             data-language="ms"
+             data-theme="light"></div>
+
+        <input type="hidden" name="lang" value="ms">
           <div class="hp-field" aria-hidden="true">
             <label for="website">Laman web</label>
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />

@@ -146,10 +146,13 @@ async function handler(request) {
 
   // Send via Resend
   try {
+    const lang = formData.get("lang") || "en";
+    const langPrefix = lang === "ms" ? "[MS] " : "";
+
     const data = {
       from: FROM,
       to: TO,
-      subject: `New contact form submission from ${name || "Unknown"}`,
+      subject: `${langPrefix}New contact form submission from ${name || "Unknown"}`,
       html: adminHtml,
       reply_to: email,
     };
