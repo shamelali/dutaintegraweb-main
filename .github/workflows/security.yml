@@ -1,0 +1,45 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run HTMLHint linter
+        uses: socialGov/HTMLHint-action@v1
+        with:
+          files: '*.html'
+
+      - name: Verify no sensitive files in git
+        run: |
+          if git ls-files *.pptx *.pdf *.py > /dev/null 2>&1; then
+            echo "::error ::Sensitive files found in git!"
+            exit 1
+          fi
+          echo "No sensitive files in git - PASS"
+
+      - name: Check robots.txt
+        run: |
+          if curl -s -o /dev/null --head https://dutaintegra.my/robots.txt | grep -q "200"; then
+            echo "robots.txt accessible - PASS"
+          else
+            echo "::error ::robots.txt not accessible"
+            exit 1
+          fi
+
+      - name: Check sitemap.xml
+        run: |
+          if curl -s -o /dev/null --head https://dutaintegra.my/sitemap.xml | grep -q "200"; then
+            echo "sitemap.xml accessible - PASS"
+          else
+            echo "::error ::sitemap.xml not accessible"
+            exit 1
+          fi
