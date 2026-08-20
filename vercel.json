@@ -4,10 +4,6 @@
       "maxDuration": 10
     }
   },
-  "redirects": [
-    { "source": "/(.pptx|.pdf|.py)$", "destination": "/", "permanent": false },
-    { "source": "/(.claude|Web|admin.html|.env)/?$", "destination": "/", "permanent": false }
-  ],
   "headers": [
     {
       "source": "/(.*)",
