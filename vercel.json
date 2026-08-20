@@ -5,7 +5,8 @@
     }
   },
   "redirects": [
-    { "source": "/(.pptx|.pdf|.py|.claude|Web|admin.html|.env)$", "destination": "/", "permanent": false }
+    { "source": "/(.pptx|.pdf|.py)$", "destination": "/", "permanent": false },
+    { "source": "/(.claude|Web|admin.html|.env)/?$", "destination": "/", "permanent": false }
   ],
   "headers": [
     {
