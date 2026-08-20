@@ -1,0 +1,38 @@
+name: Security Audit
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check for secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install
+        run: npm ci || npm install
+      
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+      
+      - name: Check for sensitive files
+        run: |
+          echo "Checking for exposed sensitive files..."
+          ! git ls-files | grep -E "\.pptx$|\.pdf$|\.env$|build-pdf.py|serve.py" || (echo "Sensitive files found in repo!" && exit 1)
+          echo "No sensitive files found"
+      
+      - name: Validate vercel.json
+        run: |
+          cat vercel.json | python3 -m json.tool > /dev/null && echo "vercel.json valid"
