@@ -6,5 +6,11 @@ Disallow: /dutaintegra
 Disallow: /investor
 Disallow: /contacts
 Disallow: /api
+Disallow: /private/
+Disallow: /build-pdf.py
+Disallow: /serve.py
+Disallow: /*.pptx$
+Disallow: /*.pdf$
+Disallow: /*.py$
 
 Sitemap: https://dutaintegra.my/sitemap.xml

@@ -1,9 +1,17 @@
+# Environment
+.env
+.env.*
+
+# Vercel
 .vercel
+
+# Dependencies
 node_modules
+npm-debug.log
+
+# Build/output
 .next
-.venv
-__pycache__
-*.pyc
+out
 
 # Working artifacts
 *.md~
@@ -12,7 +20,14 @@ build-*.py
 .opik_example.py
 financial-projection.md
 
-# Secrets
-.env
-.env.*
-!.env.example
+# Secrets and sensitive
+*.pptx
+*.pdf
+*.py
+.hta*
+Claude*
+admin*
+Web/
+
+# Duta Integra private docs
+private/docs/

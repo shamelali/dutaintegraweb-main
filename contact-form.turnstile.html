@@ -1,0 +1,158 @@
+<!-- Turnstile form -->
+<form class="form" onsubmit="handleSubmit(event)" novalidate>
+  <h3>Send us a message</h3>
+
+  <!-- Honeypot — leave empty to pass bot check -->
+  <div class="hp-field" aria-hidden="true">
+    <label for="website">Website</label>
+    <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="form-row">
+    <div class="field">
+      <label for="name">Full name *</label>
+      <input id="name" name="name" type="text" placeholder="Ahmad bin Rahman" required maxlength="120" autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for="company">Company</label>
+      <input id="company" name="company" type="text" placeholder="Your Company Sdn Bhd" maxlength="160" autocomplete="organization" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="field">
+      <label for="email">Email *</label>
+      <input id="email" name="email" type="email" placeholder="you@company.com" required maxlength="160" autocomplete="email" />
+    </div>
+    <div class="field">
+      <label for="phone">Phone / WhatsApp</label>
+      <input id="phone" name="phone" type="tel" placeholder="+60 12-345 6789" maxlength="40" autocomplete="tel" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="service">What are you interested in? *</label>
+    <select id="service" name="service" required>
+      <option value="">Select a service…</option>
+      <option value="Website Development">Website Development</option>
+      <option value="Website Care">Website Care</option>
+      <option value="Foundation retainer">Foundation retainer</option>
+      <option value="Growth retainer">Growth retainer</option>
+      <option value="AI Partner retainer">AI Partner retainer</option>
+      <option value="Sales Automation">Sales Automation</option>
+      <option value="Content Creation">Content Creation</option>
+      <option value="Ads Management">Ads Management</option>
+      <option value="Custom AI Systems">Custom AI Systems</option>
+      <option value="Managed IT">Managed IT</option>
+      <option value="Cloud migration">Cloud migration</option>
+      <option value="IT security & PDPA">IT security & PDPA</option>
+      <option value="Free IT audit">Free IT audit</option>
+      <option value="Custom / multiple">Custom / multiple</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="message">Tell us about the business</label>
+    <textarea id="message" name="message" maxlength="5000" placeholder="e.g. We're a 15-person retail company in Johor looking to automate inventory and get proper IT support…"></textarea>
+  </div>
+
+  <!-- Cloudflare Turnstile widget -->
+  <div class="turnstile-widget"></div>
+
+  <button class="btn btn-gold btn-block" type="submit">Send message →</button>
+  <p class="form-note">We reply to <b>hello@dutaintegra.my</b> within one business day. Your details stay private.</p>
+</form>
+
+<script>
+  // Turnstile site key - replace with your actual key from dash.cloudflare.com/turnstile
+  const TURNSTILE_SITE_KEY = 'YOUR_TURNSTILE_SITE_KEY';
+
+  // Render Turnstile widget
+  function renderTurnstile() {
+    if (!TURNSTILE_SITE_KEY || TURNSTILE_SITE_KEY === 'YOUR_TURNSTILE_SITE_KEY') {
+      // If no key set, render a minimal placeholder that allows submission
+      const widget = document.querySelector('.turnstile-widget');
+      if (widget) {
+        widget.innerHTML = '<span class="turnstile-placeholder">Protected by Cloudflare Turnstile</span>';
+      }
+      return;
+    }
+    window.Turnstile.render('.turnstile-widget', {
+      sitekey: TURNSTILE_SITE_KEY,
+      theme: 'light'
+    });
+  }
+
+  // Handle form submission
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    // Honeypot check - if website field is filled, it's a bot
+    const honeypot = document.querySelector('#website');
+    if (honeypot && honeypot.value.trim() !== '') {
+      showToast('Bot detection triggered. Submission blocked.', 'error');
+      return;
+    }
+
+    // Turnstile verification
+    const token = window.Turnstile?.getToken?.();
+    if (!token) {
+      showToast('Please complete the Turnstile verification.', 'error');
+      return;
+    }
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    // Add Turnstile token to form data
+    formData.append('cf-turnstile-response', token);
+
+    // Disable submit button to prevent double submission
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        showToast('Message sent successfully! We will reply within one business day.', 'success');
+        form.reset();
+        // Re-render Turnstile after reset
+        renderTurnstile();
+      } else {
+        showToast(data.error || 'Failed to send message. Please try again.', 'error');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      showToast('Network error. Please check your connection and try again.', 'error');
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  }
+
+  // Show toast notification
+  function showToast(message, type) {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = 'toast ' + type;
+    toast.style.display = 'block';
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, 5000);
+  }
+
+  // Initial render
+  renderTurnstile();
+</script>
