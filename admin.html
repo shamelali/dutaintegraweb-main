@@ -96,6 +96,10 @@
           <div class="eyebrow">Monthly Infrastructure Cost</div>
           <div class="val">RM 0</div>
         </div>
+        <div class="kpi-card">
+          <div class="eyebrow">Last Updated</div>
+          <div class="val" id="lastUpdated">--</div>
+        </div>
       </div>
 
       <!-- Feature 1 & 2: Lead Pipeline Table & CSV Export -->
@@ -103,7 +107,13 @@
         <div class="table-header">
           <div>
             <h3 style="font-size: 20px;">Inbound Leads Pipeline</h3>
-            <p style="font-size: 13px; color: var(--muted); font-weight: 300;">Feature 1 (One-Click WhatsApp) &amp; Feature 2 (CSV Exporter)</p>
+            <p style="font-size: 13px; color: var(--muted); font-weight: 300;">Feature 1 (One-Click WhatsApp) & Feature 2 (CSV Exporter)</p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <button class="btn btn-line" onclick="filterLeads('')">All</button>
+            <button class="btn btn-line" onclick="filterLeads('status-new')">New</button>
+            <button class="btn btn-line" onclick="filterLeads('status-contacted')">Contacted</button>
+            <button class="btn btn-line" onclick="filterLeads('status-closed')">Closed</button>
           </div>
           <button class="btn btn-gold" onclick="exportLeadsCSV()">📥 Export Leads to CSV</button>
         </div>
@@ -230,7 +240,7 @@
       setTimeout(() => toast.classList.remove("show"), 3000);
     }
 
-    function updateTokenCap() {
+function updateTokenCap() {
       const cap = document.getElementById("tokenCapInput").value;
       const statusEl = document.getElementById("safeguardStatus");
       statusEl.innerHTML = `✅ SAFE (14,250 / ${Number(cap).toLocaleString()})`
@@ -239,6 +249,28 @@
       toast.classList.add("show");
       setTimeout(() => toast.classList.remove("show"), 3000);
     }
-  </script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateLastUpdated();
+      setInterval(updateLastUpdated, 60000);
+    });
+
+    function updateLastUpdated() {
+      const now = mytNow();
+      document.getElementById("lastUpdated").textContent = now.toLocaleString("en-MY", { hour12: false });
+    }
+
+    function filterLeads(status) {
+      const rows = document.querySelectorAll("#leadsTable tbody tr");
+      rows.forEach((row) => {
+        const badge = row.querySelector(".status-badge");
+        if (!status || badge.classList.contains(status)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+</script>
 </body>
 </html>
