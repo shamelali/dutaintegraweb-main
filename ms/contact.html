@@ -97,7 +97,7 @@
           </div>
         </div>
 
-        <form class="form" onsubmit="submitForm(event)" novalidate>
+        <form class="form" id="contactForm" novalidate>
           <h3>Hantar mesej kepada kami</h3>
 
         <!-- Turnstile widget -->
@@ -206,5 +206,56 @@
     <span>WhatsApp</span>
   </a>
   <script src="../js/main.js?v=20260822b"></script>
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+
+      btn.disabled = true;
+      btn.textContent = "Menghantar...";
+
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        company: formData.get("company"),
+        service: formData.get("service"),
+        message: formData.get("message"),
+        source: "contact-form",
+      };
+
+      try {
+        // Send email via existing API
+        const emailRes = await fetch("/api/send-email", {
+          method: "POST",
+          body: formData,
+        });
+
+        // Store lead in Supabase via admin API
+        await fetch("/api/admin/leads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (emailRes.ok) {
+          const toast = document.getElementById("toast");
+          toast.classList.add("show");
+          form.reset();
+          setTimeout(() => toast.classList.remove("show"), 3000);
+        } else {
+          alert("Gagal menghantar mesej. Sila cuba lagi.");
+        }
+      } catch (err) {
+        alert("Ralat rangkaian. Sila cuba lagi.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+  </script>
 </body>
 </html>
