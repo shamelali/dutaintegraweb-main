@@ -133,8 +133,8 @@ async function handler(req) {
     const { data: leads, error } = await query;
 
     if (error) {
-      console.error("Supabase query error:", error);
-      return json({ ok: false, error: "Failed to fetch leads" }, 500);
+      console.error("Supabase query error:", JSON.stringify(error));
+      return json({ ok: false, error: "Failed to fetch leads: " + error.message }, 500);
     }
 
     // Get counts
