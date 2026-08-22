@@ -23,6 +23,7 @@
     t("Measuring speed", "Mengukur kelajuan"),
     t("Finding socials", "Mencari media sosial"),
     t("Building report", "Menyediakan laporan"),
+    t("Requesting email", "Meminta e-mel"),
   ];
 
   var loadingTimer = null;
