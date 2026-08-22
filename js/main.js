@@ -602,6 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
   dressMerdeka();
   syncThemeIcon();
   bindServiceCards();
+  bindPreviewLinks();
   prefillserviceFromQuery();
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeNav();
@@ -643,4 +644,114 @@ function showSourceBlocked() {
     </div>`;
   document.body.appendChild(overlay);
   setTimeout(() => overlay.remove(), 3000);
+}
+
+/* ---------- Preview registration gate ---------- */
+let pendingPreviewUrl = null;
+
+function ensurePreviewDialog() {
+  const dialog = document.getElementById("preview-register");
+  if (!dialog) return null;
+  if (!dialog.dataset.bound) {
+    dialog.dataset.bound = "1";
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) closePreviewDialog();
+    });
+    dialog.querySelectorAll("[data-preview-close]").forEach((btn) => {
+      btn.addEventListener("click", closePreviewDialog);
+    });
+    const form = document.getElementById("preview-register-form");
+    if (form) {
+      form.addEventListener("submit", handlePreviewSubmit);
+    }
+  }
+  return dialog;
+}
+
+function openPreviewDialog(url) {
+  const dialog = ensurePreviewDialog();
+  if (!dialog) {
+    window.open(url, "_blank", "noopener");
+    return;
+  }
+  pendingPreviewUrl = url;
+  if (typeof dialog.showModal === "function") dialog.showModal();
+  else dialog.setAttribute("open", "");
+}
+
+function closePreviewDialog() {
+  const dialog = document.getElementById("preview-register");
+  if (!dialog) return;
+  if (typeof dialog.close === "function") dialog.close();
+  else dialog.removeAttribute("open");
+  pendingPreviewUrl = null;
+}
+
+function handlePreviewSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = Object.fromEntries(new FormData(form).entries());
+  if (data.website || data.hp) return;
+  if (!data.name || !data.email) {
+    showToast(
+      isMsPath() ? "Sila isi nama dan e-mel." : "Please fill in name and email.",
+      true
+    );
+    return;
+  }
+  const btn = form.querySelector("[type=submit]");
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = isMsPath() ? "Menghantar…" : "Sending…";
+
+  const payload = {
+    name: String(data.name || "").trim(),
+    company: String(data.company || "").trim(),
+    email: String(data.email || "").trim(),
+    source: "work-preview",
+    previewUrl: pendingPreviewUrl || "",
+  };
+
+  fetch("/api/send-email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  })
+    .then(async (r) => {
+      let d = null;
+      try { d = await r.json(); } catch { d = null; }
+      btn.disabled = false;
+      btn.textContent = original;
+      if (r.ok && d && d.success) {
+        form.reset();
+        closePreviewDialog();
+        if (pendingPreviewUrl) window.open(pendingPreviewUrl, "_blank", "noopener");
+        return;
+      }
+      if (r.status === 503 || r.status >= 500 || !r.ok) {
+        closePreviewDialog();
+        if (pendingPreviewUrl) window.open(pendingPreviewUrl, "_blank", "noopener");
+        return;
+      }
+      showToast(
+        (d && d.error) || (isMsPath() ? "Gagal menghantar." : "Could not send. Try again."),
+        true
+      );
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = original;
+      closePreviewDialog();
+      if (pendingPreviewUrl) window.open(pendingPreviewUrl, "_blank", "noopener");
+    });
+}
+
+function bindPreviewLinks() {
+  document.querySelectorAll(".preview-link").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const url = link.getAttribute("href");
+      if (url) openPreviewDialog(url);
+    });
+  });
 }

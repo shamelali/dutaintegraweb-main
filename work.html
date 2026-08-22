@@ -47,7 +47,7 @@
             </div>
             <p>A community platform for Indonesians in Malaysia — forums, jobs, housing, events, services, and visa guidance. Treated internally as a lead-gen and case-study asset for the AI Partner tier.</p>
             <div class="case-actions">
-              <a class="btn btn-navy" href="https://duta-connect.vercel.app/" target="_blank" rel="noopener">Preview ↗</a>
+              <a class="btn btn-navy preview-link" href="https://duta-connect.vercel.app/" target="_blank" rel="noopener">Preview ↗</a>
               <a class="btn btn-line" href="/contact">Be our next build</a>
             </div>
           </div>
@@ -71,7 +71,7 @@
             </div>
             <p>We built Leish — a beauty booking marketplace with an AI-powered customer service chatbot that handles 70% of enquiries automatically, giving users instant booking assistance around the clock.</p>
             <div class="case-actions">
-              <a class="btn btn-navy" href="https://leish.my/" target="_blank" rel="noopener">Preview ↗</a>
+              <a class="btn btn-navy preview-link" href="https://leish.my/" target="_blank" rel="noopener">Preview ↗</a>
               <a class="btn btn-line" href="/contact">Discuss a similar build</a>
             </div>
           </div>
@@ -95,7 +95,7 @@
             </div>
             <p>Full-stack WiFi marketing platform with captive portal, PDPA consent logging, OTP authentication, and an affiliate commission engine — plus the cloud and managed IT underneath it.</p>
             <div class="case-actions">
-              <a class="btn btn-navy" href="https://eastelpro-vercel.vercel.app/" target="_blank" rel="noopener">Preview ↗</a>
+              <a class="btn btn-navy preview-link" href="https://eastelpro-vercel.vercel.app/" target="_blank" rel="noopener">Preview ↗</a>
               <a class="btn btn-line" href="/contact">Discuss a similar build</a>
             </div>
           </div>
@@ -119,7 +119,7 @@
             </div>
             <p>Malaysia’s first AI-powered cooperative governance operating system. End-to-end AGM management with e-voting, compliance automation against Akta Koperasi 1993, and a four-agent AI Governance Copilot.</p>
             <div class="case-actions">
-              <a class="btn btn-navy" href="https://agmx-project.vercel.app/" target="_blank" rel="noopener">Preview ↗</a>
+              <a class="btn btn-navy preview-link" href="https://agmx-project.vercel.app/" target="_blank" rel="noopener">Preview ↗</a>
               <a class="btn btn-line" href="/contact">Discuss a similar build</a>
             </div>
           </div>
@@ -182,6 +182,32 @@
   <a class="wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20discovery%20call." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
   </a>
-  <script src="js/main.js?v=20260822b"></script>
+    <script src="js/main.js?v=20260822b"></script>
+
+  <dialog id="preview-register" class="preview-register">
+    <div class="preview-register-card">
+      <button type="button" class="preview-register-close" data-preview-close aria-label="Close">×</button>
+      <div class="eyebrow">Preview access</div>
+      <h3>Register to preview this project</h3>
+      <p>Enter your details to get instant access to the live preview.</p>
+      <form id="preview-register-form" class="preview-register-form">
+        <label>
+          <span>Full name</span>
+          <input type="text" name="name" required placeholder="Your name" />
+        </label>
+        <label>
+          <span>Email address</span>
+          <input type="email" name="email" required placeholder="you@company.com" />
+        </label>
+        <label>
+          <span>Company <small>(optional)</small></span>
+          <input type="text" name="company" placeholder="Company name" />
+        </label>
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" />
+        <button type="submit" class="btn btn-gold">Get preview access</button>
+      </form>
+      <p class="preview-register-note">We'll send you the preview link. No spam, ever.</p>
+    </div>
+  </dialog>
 </body>
 </html>

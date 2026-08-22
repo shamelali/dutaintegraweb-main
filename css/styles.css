@@ -2414,6 +2414,43 @@ body.dark .drawer .nav-cta { color: var(--navy) !important; }
 .audit-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .audit-cta-actions .btn-wa { margin-top: 0; }
 
+/* Audit report actions (download + share) */
+.audit-report-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.audit-report-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.audit-report-actions .btn-navy {
+  background: var(--navy);
+  color: var(--paper);
+  border: 1px solid var(--navy);
+}
+.audit-report-actions .btn-navy:hover {
+  background: var(--navy-2);
+}
+.audit-report-actions .btn-wa {
+  background: #25D366;
+  color: #fff;
+  border: 1px solid #25D366;
+}
+.audit-report-actions .btn-wa:hover {
+  background: #1da851;
+}
+body.dark .audit-report-actions .btn-navy {
+  background: var(--paper);
+  color: var(--navy);
+  border-color: var(--paper);
+}
+body.dark .audit-report-actions .btn-navy:hover {
+  background: var(--paper-2);
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .audit-hero-grid { grid-template-columns: 1fr; gap: 28px; }
@@ -2488,3 +2525,136 @@ body.dark .audit-demo-banner { color: var(--gold); }
 .audit-feature p a:hover { color: var(--gold); border-bottom-color: var(--gold); }
 body.dark .step h3 a,
 body.dark .why-card p a { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ---------- Preview registration modal ---------- */
+.preview-register {
+  border: none;
+  background: transparent;
+  padding: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100%;
+}
+.preview-register::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+.preview-register-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 40px 36px;
+  max-width: 420px;
+  width: 90%;
+  margin: 10vh auto;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+.preview-register-card .eyebrow {
+  margin-bottom: 8px;
+}
+.preview-register-card h3 {
+  font-size: 22px;
+  margin: 0 0 8px;
+}
+.preview-register-card > p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+.preview-register-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+}
+.preview-register-close:hover {
+  color: var(--ink);
+}
+.preview-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.preview-register-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.preview-register-form label span {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.preview-register-form label small {
+  font-weight: 400;
+  color: var(--muted-2);
+}
+.preview-register-form input {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: var(--font-b);
+  background: var(--paper);
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+.preview-register-form input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold-soft);
+}
+.preview-register-form .hp {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+.preview-register-form .btn {
+  margin-top: 4px;
+}
+.preview-register-note {
+  font-size: 12px;
+  color: var(--muted-2);
+  text-align: center;
+  margin: 12px 0 0;
+}
+body.dark .preview-register-card {
+  background: var(--navy-2);
+  border-color: rgba(255,255,255,.08);
+}
+body.dark .preview-register-card h3 {
+  color: var(--paper);
+}
+body.dark .preview-register-card > p {
+  color: #B8BEC8;
+}
+body.dark .preview-register-close {
+  color: #B8BEC8;
+}
+body.dark .preview-register-close:hover {
+  color: var(--paper);
+}
+body.dark .preview-register-form label span {
+  color: var(--paper);
+}
+body.dark .preview-register-form input {
+  background: var(--navy-ink);
+  border-color: rgba(255,255,255,.12);
+  color: var(--paper);
+}
+body.dark .preview-register-form input:focus {
+  border-color: var(--gold);
+}
+body.dark .preview-register-note {
+  color: #6B7280;
+}
