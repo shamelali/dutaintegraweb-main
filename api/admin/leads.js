@@ -26,6 +26,10 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 );
 
+console.log("[DEBUG] SUPABASE_URL:", process.env.SUPABASE_URL ? "set" : "MISSING");
+console.log("[DEBUG] SUPABASE_SERVICE_ROLE_KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "set (len=" + process.env.SUPABASE_SERVICE_ROLE_KEY.length + ")" : "MISSING");
+console.log("[DEBUG] SUPABASE_ANON_KEY:", process.env.SUPABASE_ANON_KEY ? "set" : "MISSING");
+
 const JWT_SECRET = process.env.JWT_SECRET || "duta-integra-admin-secret-change-in-production";
 
 function json(data, status = 200) {
