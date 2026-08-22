@@ -8,15 +8,22 @@
 // Auth: Bearer token in Authorization header
 //
 // Storage: Supabase PostgreSQL
+//   - POST uses anon key (contact form)
+//   - GET/PATCH use service_role key (bypasses RLS for admin)
 // ============================================================================
 
 import { createClient } from "@supabase/supabase-js";
 
 export const config = { maxDuration: 10 };
 
-const supabase = createClient(
+const supabaseAnon = createClient(
   process.env.SUPABASE_URL || "",
   process.env.SUPABASE_ANON_KEY || ""
+);
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL || "",
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 );
 
 const JWT_SECRET = process.env.JWT_SECRET || "duta-integra-admin-secret-change-in-production";
@@ -37,8 +44,7 @@ function json(data, status = 200) {
 // JWT verification
 function verifyToken(token) {
   try {
-    const [, body, signature] = token.split(".");
-    // Simple base64 decode for payload check
+    const [, body] = token.split(".");
     const payload = JSON.parse(atob(body.replace(/-/g, "+").replace(/_/g, "/")));
     if (payload.exp && Date.now() > payload.exp) return null;
     return payload;
@@ -72,6 +78,7 @@ async function handler(req) {
   }
 
   // POST — create lead (no auth required, called from contact form)
+  // Uses anon key — RLS policy allows INSERT for anon
   if (req.method === "POST") {
     let body;
     try {
@@ -91,7 +98,7 @@ async function handler(req) {
       source: body.source || "contact-form",
     };
 
-    const { data, error } = await supabase.from("leads").insert(lead).select().single();
+    const { data, error } = await supabaseAnon.from("leads").insert(lead).select().single();
 
     if (error) {
       console.error("Supabase insert error:", error);
@@ -107,13 +114,13 @@ async function handler(req) {
     return json({ ok: false, error: "Unauthorized" }, 401);
   }
 
-  // GET — list leads
+  // GET — list leads (uses service_role to bypass RLS)
   if (req.method === "GET") {
     const url = new URL(req.url);
     const status = url.searchParams.get("status");
     const search = url.searchParams.get("q");
 
-    let query = supabase.from("leads").select("*").order("created_at", { ascending: false });
+    let query = supabaseAdmin.from("leads").select("*").order("created_at", { ascending: false });
 
     if (status && status !== "all") {
       query = query.eq("status", status);
@@ -131,7 +138,7 @@ async function handler(req) {
     }
 
     // Get counts
-    const { data: allLeads } = await supabase.from("leads").select("status");
+    const { data: allLeads } = await supabaseAdmin.from("leads").select("status");
 
     const counts = {
       all: allLeads?.length || 0,
@@ -143,7 +150,7 @@ async function handler(req) {
     return json({ ok: true, leads, total: leads.length, counts });
   }
 
-  // PATCH — update lead status
+  // PATCH — update lead status (uses service_role)
   if (req.method === "PATCH") {
     const url = new URL(req.url);
     const id = url.searchParams.get("id");
@@ -164,7 +171,7 @@ async function handler(req) {
     if (body.note) update.note = sanitize(body.note);
     update.updated_at = new Date().toISOString();
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("leads")
       .update(update)
       .eq("id", id)
