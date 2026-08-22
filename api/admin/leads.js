@@ -26,10 +26,6 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 );
 
-console.log("[DEBUG] SUPABASE_URL:", process.env.SUPABASE_URL ? "set" : "MISSING");
-console.log("[DEBUG] SUPABASE_SERVICE_ROLE_KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "set (len=" + process.env.SUPABASE_SERVICE_ROLE_KEY.length + ")" : "MISSING");
-console.log("[DEBUG] SUPABASE_ANON_KEY:", process.env.SUPABASE_ANON_KEY ? "set" : "MISSING");
-
 const JWT_SECRET = process.env.JWT_SECRET || "duta-integra-admin-secret-change-in-production";
 
 function json(data, status = 200) {
@@ -138,14 +134,6 @@ async function handler(req) {
 
     if (error) {
       console.error("Supabase query error:", JSON.stringify(error));
-      // Debug: try raw fetch
-      const url = process.env.SUPABASE_URL + "/rest/v1/leads?select=*";
-      const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-      const rawRes = await fetch(url, {
-        headers: { apikey: key, Authorization: "Bearer " + key }
-      });
-      const rawBody = await rawRes.text();
-      console.log("[DEBUG] Raw fetch status:", rawRes.status, "body:", rawBody);
       return json({ ok: false, error: "Failed to fetch leads: " + error.message }, 500);
     }
 
