@@ -138,6 +138,14 @@ async function handler(req) {
 
     if (error) {
       console.error("Supabase query error:", JSON.stringify(error));
+      // Debug: try raw fetch
+      const url = process.env.SUPABASE_URL + "/rest/v1/leads?select=*";
+      const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      const rawRes = await fetch(url, {
+        headers: { apikey: key, Authorization: "Bearer " + key }
+      });
+      const rawText = await rawText();
+      console.log("[DEBUG] Raw fetch status:", rawRes.status, "body:", rawText);
       return json({ ok: false, error: "Failed to fetch leads: " + error.message }, 500);
     }
 
