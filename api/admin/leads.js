@@ -144,8 +144,8 @@ async function handler(req) {
       const rawRes = await fetch(url, {
         headers: { apikey: key, Authorization: "Bearer " + key }
       });
-      const rawText = await rawText();
-      console.log("[DEBUG] Raw fetch status:", rawRes.status, "body:", rawText);
+      const rawBody = await rawRes.text();
+      console.log("[DEBUG] Raw fetch status:", rawRes.status, "body:", rawBody);
       return json({ ok: false, error: "Failed to fetch leads: " + error.message }, 500);
     }
 
