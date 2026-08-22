@@ -2,19 +2,20 @@ import { NextResponse } from "next/server";
 import { getDb, type BookingRow, type UserRow } from "@/server/db";
 import { verifySessionToken } from "@/server/session";
 import {
-  createBookingFeePayment,
+  createBookingPayment,
   getPaymentForBooking,
   activePaymentProvider,
 } from "@/server/payments";
+import { getBookingFeeSen } from "@/server/settings";
 import { getActiveQuotation } from "@/server/quotations";
 import { jsonError, statefulRoute } from "@/server/http";
 import { logger } from "@/server/logger";
 
 /**
  * POST /api/bookings/[id]/pay-fee
- * Client pays the flat, non-refundable RM 200 booking fee (Billplz bill).
- * The booking becomes confirmed when the webhook reports the payment.
- * A quotation must exist and be within its 24h window.
+ * Client pays the flat, non-refundable booking deposit (default RM 50,
+ * Billplz bill). The booking becomes confirmed when the webhook reports the
+ * payment. A quotation must exist and be within its 24h window.
  */
 export const POST = statefulRoute(
   async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -45,12 +46,13 @@ export const POST = statefulRoute(
       return jsonError("The quotation has expired — ask the artist for a new one", 410);
     }
 
-    // One active fee bill at a time.
-    const existing = await getPaymentForBooking(booking.id);
+    // One active deposit bill at a time.
+    const existing = await getPaymentForBooking(booking.id, "deposit");
     if (existing && existing.status === "required") {
       return NextResponse.json({
         payment: {
           amount: existing.amount,
+          type: existing.type,
           status: existing.status,
           provider: existing.provider,
           reference: existing.provider_ref,
@@ -59,11 +61,13 @@ export const POST = statefulRoute(
       });
     }
 
+    const bookingFeeSen = await getBookingFeeSen();
+
     // Billplz is a network call — surface gateway outages as a clear retryable
     // message instead of the generic 500 (details still go to logs/Sentry).
     let payment;
     try {
-      payment = await createBookingFeePayment(booking.id);
+      payment = await createBookingPayment(booking.id, "deposit", bookingFeeSen);
     } catch (err) {
       if (activePaymentProvider() === "billplz") {
         logger.error(
@@ -77,12 +81,13 @@ export const POST = statefulRoute(
       }
       throw err;
     }
-    logger.info({ bookingId: booking.id, amount: payment.amount }, "booking fee bill created");
+    logger.info({ bookingId: booking.id, amount: payment.amount }, "booking deposit bill created");
 
     return NextResponse.json(
       {
         payment: {
           amount: payment.amount,
+          type: payment.type,
           status: payment.status,
           provider: payment.provider,
           reference: payment.provider_ref,
