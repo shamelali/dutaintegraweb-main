@@ -15,6 +15,11 @@ export const config = { maxDuration: 30 };
 const FETCH_TIMEOUT_MS = 9000;
 const MAX_BODY = 1.8 * 1024 * 1024; // 1.8 MB HTML read ceiling
 const ALLOWED_SCHEMES = ["http:", "https:"];
+const ALLOWED_ORIGINS = [
+  "https://dutaintegra.my",
+  "https://www.dutaintegra.my",
+  "https://dutaintegraweb-main-efunpqs0m-shamelalis-projects.vercel.app",
+];
 
 // Simple per-instance rate limit (best-effort on serverless)
 const RATE_MAX = Number(process.env.AUDIT_RATE_MAX) || 20;
@@ -34,24 +39,30 @@ function rateLimitOk() {
 // Small helpers
 // ---------------------------------------------------------------------------
 
-function json(data, status = 200) {
+function getAllowedOrigin(req) {
+  const origin = req?.headers?.get?.("origin") || "";
+  if (ALLOWED_ORIGINS.includes(origin)) return origin;
+  return ALLOWED_ORIGINS[0];
+}
+
+function json(data, status = 200, req) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": getAllowedOrigin(req),
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     },
   });
 }
 
-function corsResponse() {
+function corsResponse(req) {
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": getAllowedOrigin(req),
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     },
@@ -85,6 +96,10 @@ function normalizeUrl(raw) {
 function isPrivateHost(hostname) {
   const host = String(hostname || "").toLowerCase();
   if (host === "localhost" || host.endsWith(".localhost") || host.endsWith(".local") || host.endsWith(".internal")) return true;
+  // IPv6 loopback / link-local / unspecified
+  if (host === "::1" || host === "0:0:0:0:0:0:0:1") return true;
+  if (host.startsWith("fe80:") || host.startsWith("fc:") || host.startsWith("fd:")) return true;
+  if (/^\[?::/.test(host)) return true;
   if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
     const parts = host.split(".").map(Number);
     const [a, b] = parts;
@@ -102,10 +117,6 @@ function auditError(message, code = "AUDIT_FAILED") {
   const err = new Error(message);
   err.code = code;
   return err;
-}
-
-function clamp(n, lo, hi) {
-  return Math.max(lo, Math.min(hi, n));
 }
 
 function statusCodeFor(err) {
@@ -323,8 +334,6 @@ export async function runAudit(payload = {}) {
   const desc = metaContent(html, "name", "description") || metaContent(html, "property", "og:description");
   const ogTitle = metaContent(html, "property", "og:title");
   const ogImage = metaContent(html, "property", "og:image");
-  const ogType = metaContent(html, "property", "og:type"); // deprecated but used
-  const twitterCard = metaContent(html, "name", "twitter:card") || metaContent(html, "property", "twitter:card");
   const canonical = firstMatch(html, /<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i);
   const viewport = /<meta[^>]+name=["']viewport["']/i.test(html);
   const charset = firstMatch(html, /<meta[^>]+charset=["']?([\w-]+)/i) || "UTF-8";
@@ -495,12 +504,12 @@ function recommendationFor(id) {
 // ---------------------------------------------------------------------------
 
 export async function handler(req) {
-  if (req.method === "OPTIONS") return corsResponse();
+  if (req.method === "OPTIONS") return corsResponse(req);
   if (req.method !== "POST") {
-    return json({ ok: false, error: "Method not allowed. Send a POST request." }, 405);
+    return json({ ok: false, error: "Method not allowed. Send a POST request." }, 405, req);
   }
   if (!rateLimitOk()) {
-    return json({ ok: false, error: "Too many requests. Please try again in a moment." }, 429);
+    return json({ ok: false, error: "Too many requests. Please try again in a moment." }, 429, req);
   }
   rateCount++;
   let body = {};
@@ -517,9 +526,9 @@ export async function handler(req) {
   };
   try {
     const report = await runAudit(payload);
-    return json({ ok: true, report });
+    return json({ ok: true, report }, 200, req);
   } catch (err) {
-    return json({ ok: false, error: err.message || "Audit failed.", code: err.code || "AUDIT_FAILED" }, statusCodeFor(err));
+    return json({ ok: false, error: err.message || "Audit failed.", code: err.code || "AUDIT_FAILED" }, statusCodeFor(err), req);
   }
 }
 

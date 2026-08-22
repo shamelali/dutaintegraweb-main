@@ -1,7 +1,7 @@
 /* Duta Integra — free brand audit front-end */
 
 (function () {
-  const MS = location.pathname.startsWith("/ms/");
+  var MS = location.pathname.startsWith("/ms/");
 
   function t(en, ms) {
     return MS ? ms : en;
@@ -16,7 +16,7 @@
       .replace(/'/g, "&#039;");
   }
 
-  const LOADING_STEPS = [
+  var LOADING_STEPS = [
     t("Fetching page", "Memuat halaman"),
     t("Scanning SEO", "Mengimbas SEO"),
     t("Checking content", "Menyemak kandungan"),
@@ -25,29 +25,34 @@
     t("Building report", "Menyediakan laporan"),
   ];
 
-  let loadingTimer = null;
-  let loadingIdx = 0;
+  var loadingTimer = null;
+  var loadingIdx = 0;
+  var running = false;
 
   function showLoading() {
-    const stage = document.getElementById("audit-stage");
-    const loading = document.getElementById("audit-loading");
-    const error = document.getElementById("audit-error");
-    const results = document.getElementById("audit-results");
+    var stage = document.getElementById("audit-stage");
+    var loading = document.getElementById("audit-loading");
+    var error = document.getElementById("audit-error");
+    var results = document.getElementById("audit-results");
     stage.hidden = false;
     loading.hidden = false;
     results.hidden = true;
     error.hidden = true;
     loadingIdx = 0;
-    const steps = document.getElementById("audit-loading-steps");
+    var steps = document.getElementById("audit-loading-steps");
     if (steps) {
-      Array.from(steps.children).forEach((el, i) => el.classList.toggle("is-on", i === 0));
+      Array.from(steps.children).forEach(function (el, i) {
+        el.classList.toggle("is-on", i === 0);
+      });
     }
     clearInterval(loadingTimer);
-    loadingTimer = setInterval(() => {
+    loadingTimer = setInterval(function () {
       loadingIdx = (loadingIdx + 1) % LOADING_STEPS.length;
-      const stepsEl = document.getElementById("audit-loading-steps");
+      var stepsEl = document.getElementById("audit-loading-steps");
       if (stepsEl) {
-        Array.from(stepsEl.children).forEach((el, i) => el.classList.toggle("is-on", i === loadingIdx));
+        Array.from(stepsEl.children).forEach(function (el, i) {
+          el.classList.toggle("is-on", i === loadingIdx);
+        });
       }
     }, 1100);
     document.getElementById("audit-stage").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -55,31 +60,38 @@
 
   function hideLoading() {
     clearInterval(loadingTimer);
-    const loading = document.getElementById("audit-loading");
+    var loading = document.getElementById("audit-loading");
     if (loading) loading.hidden = true;
   }
 
   function showError(message) {
     hideLoading();
-    const stage = document.getElementById("audit-stage");
-    const error = document.getElementById("audit-error");
-    const results = document.getElementById("audit-results");
+    running = false;
+    var stage = document.getElementById("audit-stage");
+    var error = document.getElementById("audit-error");
+    var results = document.getElementById("audit-results");
     stage.hidden = false;
     error.hidden = false;
     results.hidden = true;
+    var retryLabel = t("Try again", "Cuba lagi");
+    var contactLabel = t("Contact us instead", "Hubungi kami");
+    var contactHref = MS ? "/ms/contact" : "/contact";
     error.innerHTML =
       '<div class="audit-error-card">' +
-      '<h3>' + t("We couldn't complete that audit", "Kami tidak dapat melengkapkan audit tersebut") + "</h3>" +
+      "<h3>" + t("We couldn't complete that audit", "Kami tidak dapat melengkapkan audit tersebut") + "</h3>" +
       "<p>" + esc(message || t("Please try again in a moment.", "Sila cuba lagi sebentar lagi.")) + "</p>" +
-      '<a class="btn btn-ghost" href="' + (MS ? "/ms/contact" : "/contact") + '">' + t("Contact us instead", "Hubungi kami") + "</a>" +
+      '<div class="audit-error-actions">' +
+      '<button class="btn btn-gold" onclick="document.getElementById(\'audit-stage\').hidden=true;document.getElementById(\'audit-url\').focus()">' + retryLabel + "</button>" +
+      '<a class="btn btn-ghost" href="' + contactHref + '">' + contactLabel + "</a>" +
+      "</div>" +
       "</div>";
     error.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function statusIcon(status) {
-    if (status === "pass") return '<span class="audit-status is-pass">✓</span>';
+    if (status === "pass") return '<span class="audit-status is-pass">\u2713</span>';
     if (status === "warn") return '<span class="audit-status is-warn">!</span>';
-    return '<span class="audit-status is-fail">✕</span>';
+    return '<span class="audit-status is-fail">\u2715</span>';
   }
 
   function statusLabel(status) {
@@ -95,7 +107,7 @@
   }
 
   function renderCategory(result) {
-    const color = scoreColor(result.score);
+    var color = scoreColor(result.score);
     return (
       '<div class="cat-item" data-cat="' + esc(result.id) + '">' +
       '<div class="cat-top">' +
@@ -117,7 +129,7 @@
           '<div class="audit-check-body">' +
           '<div class="audit-check-label"><b>' + esc(c.label) + "</b>" +
           '<span class="audit-check-status">' + statusLabel(c.status) + "</span></div>" +
-          '<p>' + esc(c.note) + "</p>" +
+          "<p>" + esc(c.note) + "</p>" +
           "</div></li>"
         );
       })
@@ -125,7 +137,7 @@
   }
 
   function renderGroupedChecks(report) {
-    const groups = {};
+    var groups = {};
     report.categories.forEach(function (c) {
       groups[c.label] = [];
     });
@@ -135,9 +147,11 @@
     });
     return Object.keys(groups)
       .map(function (label) {
+        var count = groups[label].length;
+        var itemsLabel = count === 1 ? t("1 item", "1 item") : count + t(" items", " item");
         return (
           '<details class="audit-group">' +
-          '<summary><span>' + esc(label) + "</span><em>" + groups[label].length + t(" items", " item") + "</em></summary>" +
+          '<summary><span>' + esc(label) + "</span><em>" + itemsLabel + "</em></summary>" +
           '<ul class="audit-checks">' + renderChecks(groups[label]) + "</ul></details>"
         );
       })
@@ -146,20 +160,15 @@
 
   function renderReport(report) {
     hideLoading();
-    const stage = document.getElementById("audit-stage");
-    const results = document.getElementById("audit-results");
-    const container = document.getElementById("audit-report");
+    running = false;
+    var stage = document.getElementById("audit-stage");
+    var results = document.getElementById("audit-results");
+    var container = document.getElementById("audit-report");
     stage.hidden = false;
     results.hidden = false;
 
-    const demoBanner = report.demo
-      ? '<div class="audit-demo-banner"><b>' + t("Sample report", "Contoh laporan") + "</b> — " +
-        t("Live network is unavailable in this preview, so this shows a representative example. On the live site, your real page is scanned.", "Sambungan langsung tidak tersedia dalam pratonton ini, jadi ini contoh perwakilan. Di laman sebenar, halaman sebenar anda akan diimbas.") +
-        "</div>"
-      : "";
-
-    const catCols = report.categories.map(renderCategory).join("");
-    const social = report.social
+    var catCols = report.categories.map(renderCategory).join("");
+    var social = report.social
       .map(function (s) {
         return (
           '<div class="social-chip' + (s.found ? " is-on" : "") + '">' +
@@ -170,15 +179,15 @@
       })
       .join("");
 
-    const competitors = report.competitors
+    var competitors = report.competitors
       .map(function (c) {
-        return '<li><b>' + esc(c.name) + "</b><span>" + esc(c.note) + "</span></li>";
+        return "<li><b>" + esc(c.name) + "</b><span>" + esc(c.note) + "</span></li>";
       })
       .join("");
 
-    const recs = report.recommendations
+    var recs = report.recommendations
       .map(function (r) {
-        const p = r.priority === "high" ? t("High priority", "Keutamaan tinggi") : t("Recommended", "Disyorkan");
+        var p = r.priority === "high" ? t("High priority", "Keutamaan tinggi") : t("Recommended", "Disyorkan");
         return (
           '<li class="audit-rec" data-priority="' + esc(r.priority) + '">' +
           '<div class="audit-rec-tag">' + p + "</div>" +
@@ -188,24 +197,28 @@
       })
       .join("");
 
-    const email = report.email ? esc(report.email) : t("you@company.com", "anda@syarikat.com");
-    const bookHref = MS ? "/ms/contact" : "/contact";
-    const waText = encodeURIComponent(
-      "Hello Duta Integra — I just got my audit for " + report.domain + " (score " + report.score + "/100) and I'd like to talk through the fixes."
+    var bookHref = MS ? "/ms/contact" : "/contact";
+    var waText = encodeURIComponent(
+      "Hello Duta Integra \u2014 I just got my audit for " + report.domain + " (score " + report.score + "/100) and I'd like to talk through the fixes."
     );
-    const waHref = "https://wa.me/601154034051?text=" + waText;
+    var waHref = "https://wa.me/601154034051?text=" + waText;
+    var dateStr = "";
+    try {
+      dateStr = new Date(report.generatedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    } catch (_) {
+      dateStr = new Date(report.generatedAt).toLocaleDateString();
+    }
 
     container.innerHTML =
-      demoBanner +
       '<div class="audit-report-head">' +
       '<div class="audit-report-stamp">' +
       '<div class="score-ring" style="--pct:' + report.score + ";--scol:" + scoreColor(report.score) + '">' +
-      '<div class="score-ring-inner"><div class="score-num">' + report.score + "</div><div class=\"score-of\">/100</div></div>" +
+      '<div class="score-ring-inner"><div class="score-num">' + report.score + '</div><div class="score-of">/100</div></div>' +
       "</div>" +
       '<div class="audit-report-brand"><div class="eyebrow">' + t("Audit result", "Keputusan audit") + "</div>" +
       "<h3>" + esc(report.brandName) + "</h3>" +
       '<div class="audit-report-domain">' + esc(report.domain) + "</div>" +
-      '<div class="audit-report-grade">Grade <b style="color:' + scoreColor(report.score) + '">' + esc(report.grade) + "</b> · <span>" + esc(report.gradeLabel) + "</span></div>" +
+      '<div class="audit-report-grade">Grade <b style="color:' + scoreColor(report.score) + '">' + esc(report.grade) + "</b> \u00b7 <span>" + esc(report.gradeLabel) + "</span></div>" +
       "</div>" +
       "</div>" +
       '<p class="audit-summary">' + esc(report.summary) + "</p>" +
@@ -214,7 +227,7 @@
       "<span><b>" + report.meta.pageSizeKb + "</b> KB page</span>" +
       "<span><b>" + report.meta.wordCount + "</b> words</span>" +
       "<span><b>" + (report.meta.h1Count || 0) + "</b> H1</span>" +
-      t("<span><b>" + new Date(report.generatedAt).toLocaleDateString() + "</b> generated</span>", "") +
+      "<span><b>" + dateStr + "</b> generated</span>" +
       "</div>" +
       "</div>" +
 
@@ -226,7 +239,7 @@
       '<div class="audit-col">' +
       "<h4 class=\"audit-h4\">" + t("Social presence", "Kehadiran sosial") + "</h4>" +
       '<div class="social-grid">' + social + "</div>" +
-      "<h4 class=\"audit-h4\">" + t("Benchmarks we\'d set", "Penanda aras") + "</h4>" +
+      "<h4 class=\"audit-h4\">" + t("Benchmarks we'd set", "Penanda aras") + "</h4>" +
       '<ul class="audit-comp">' + competitors + "</ul>" +
       "</div>" +
       "</div>" +
@@ -234,7 +247,7 @@
       '<div class="audit-report-card">' +
       '<div class="audit-card-head"><h4 class="audit-h4">' + t("Priority fixes", "Pembaikan keutamaan") + "</h4>" +
       "<span>" + report.recommendations.length + " " + t("found", "dijumpai") + "</span></div>" +
-      '<ul class="audit-recs">' + (recs || '<li class="audit-empty-rec">' + t("Looks strong — no urgent fixes.", "Nampak kukuh — tiada pembaikan segera.") + "</li>") + "</ul>" +
+      '<ul class="audit-recs">' + (recs || '<li class="audit-empty-rec">' + t("Looks strong \u2014 no urgent fixes.", "Nampak kukuh \u2014 tiada pembaikan segera.") + "</li>") + "</ul>" +
       "</div>" +
 
       '<div class="audit-report-card">' +
@@ -256,19 +269,21 @@
 
   function setBtnLoading(btn, on) {
     if (!btn) return;
-    const label = MS ? "Mengaudit…" : "Auditing…";
+    var label = MS ? "Mengaudit\u2026" : "Auditing\u2026";
     if (!btn.dataset.orig) btn.dataset.orig = btn.textContent;
     btn.disabled = on;
     btn.textContent = on ? label : btn.dataset.orig;
   }
 
   function runAudit(url, name, industry, email, btn) {
+    if (running) return;
+    running = true;
     showLoading();
     setBtnLoading(btn, true);
     fetch("/api/audit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url, name, industry, email }),
+      body: JSON.stringify({ url: url, name: name, industry: industry, email: email }),
     })
       .then(function (r) {
         return r.json().catch(function () { return { ok: false, error: "Invalid server response" }; }).then(function (d) {
@@ -285,40 +300,40 @@
       })
       .catch(function () {
         setBtnLoading(btn, false);
-        showError(t("Network error — please try again.", "Ralat rangkaian — sila cuba lagi."));
+        showError(t("Network error \u2014 please try again.", "Ralat rangkaian \u2014 sila cuba lagi."));
       });
   }
 
   function init() {
-    const form = document.getElementById("audit-form");
+    var form = document.getElementById("audit-form");
     if (!form) return;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      const url = document.getElementById("audit-url").value.trim();
+      var url = document.getElementById("audit-url").value.trim();
       if (!url) {
         document.getElementById("audit-url").focus();
         return;
       }
-      const name = document.getElementById("audit-name").value.trim();
-      const industry = document.getElementById("audit-industry").value;
-      const email = document.getElementById("audit-email").value.trim();
-      const btn = document.getElementById("audit-submit");
+      var name = document.getElementById("audit-name").value.trim();
+      var industry = document.getElementById("audit-industry").value;
+      var email = document.getElementById("audit-email").value.trim();
+      var btn = document.getElementById("audit-submit");
       runAudit(url, name, industry, email, btn);
     });
 
-    // Prefill + auto-run from ?url= (e.g. shared links)
-    const params = new URLSearchParams(location.search);
-    const autoUrl = params.get("url");
+    var params = new URLSearchParams(location.search);
+    var autoUrl = params.get("url");
     if (autoUrl) {
-      const urlInput = document.getElementById("audit-url");
+      var urlInput = document.getElementById("audit-url");
       urlInput.value = autoUrl;
-      const name = params.get("name") || "";
+      var name = params.get("name") || "";
       if (name) document.getElementById("audit-name").value = name;
-      const industry = params.get("industry") || "";
+      var industry = params.get("industry") || "";
       if (industry) document.getElementById("audit-industry").value = industry;
-      const email = params.get("email") || "";
+      var email = params.get("email") || "";
       if (email) document.getElementById("audit-email").value = email;
-      const btn = document.getElementById("audit-submit");
+      var btn = document.getElementById("audit-submit");
+      btn.dataset.orig = btn.textContent;
       runAudit(autoUrl, name, industry, email, btn);
     }
   }

@@ -2188,6 +2188,9 @@ body.dark .drawer .nav-cta { color: var(--navy) !important; }
   animation: spin 0.9s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+}
 .audit-loading-title { font-size: 20px; font-weight: 600; color: var(--ink); }
 .audit-loading-steps {
   margin-top: 24px;
@@ -2221,6 +2224,7 @@ body.dark .drawer .nav-cta { color: var(--navy) !important; }
 }
 .audit-error-card h3 { font-size: 20px; margin-bottom: 6px; }
 .audit-error-card p { color: var(--muted); margin-bottom: 18px; }
+.audit-error-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
 /* Report head */
 .audit-report-head {
@@ -2234,6 +2238,7 @@ body.dark .drawer .nav-cta { color: var(--navy) !important; }
   width: 128px;
   height: 128px;
   border-radius: 50%;
+  background: var(--paper-2);
   background: conic-gradient(var(--scol) calc(var(--pct) * 1%), var(--paper-2) 0);
   display: grid;
   place-items: center;
