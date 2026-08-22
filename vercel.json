@@ -4,9 +4,6 @@
   "functions": {
     "api/*.js": {
       "maxDuration": 10
-    },
-    "api/audit.js": {
-      "maxDuration": 30
     }
   },
   "headers": [

@@ -10,6 +10,8 @@
 // returns to the caller. Origin is open by design (the audit is a public tool).
 // ============================================================================
 
+export const config = { maxDuration: 30 };
+
 const FETCH_TIMEOUT_MS = 9000;
 const MAX_BODY = 1.8 * 1024 * 1024; // 1.8 MB HTML read ceiling
 const ALLOWED_SCHEMES = ["http:", "https:"];
@@ -307,11 +309,11 @@ export async function runAudit(payload = {}) {
   const statusCode = mainRes.status;
 
   // Concurrent fetch of robots.txt + sitemap.xml (best effort)
+  const probeTimeout = 5000;
   const probe = (path) =>
     fetch(base + path, { redirect: "follow", headers, signal: AbortSignal.timeout(probeTimeout) })
       .then((r) => ({ ok: r.status >= 200 && r.status < 400 }))
       .catch(() => ({ ok: false }));
-  const probeTimeout = 5000;
   const [robotsRes, sitemapRes] = await Promise.allSettled([probe("/robots.txt"), probe("/sitemap.xml")]);
   const robots = robotsRes.status === "fulfilled" ? robotsRes.value.ok : false;
   const sitemap = sitemapRes.status === "fulfilled" ? sitemapRes.value.ok : false;
