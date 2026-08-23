@@ -165,61 +165,52 @@ em.accent,
 .btn-block { width: 100%; }
 
 /* ---------- NAV ---------- */
-.promo-bar {
+.promo-banner {
   display: none;
-  background: var(--navy-ink);
-  color: #D5D8DE;
-  font-size: 13px;
-  font-weight: 500;
-  z-index: 99;
-  border-top: 0.5px solid rgba(255,255,255,.08);
+  background: transparent;
+  padding: 16px 0 8px;
 }
-body.promo-live .promo-bar { display: block; }
-.promo-bar::before {
-  content: "";
-  display: block;
-  height: 4px;
-  background:
-    linear-gradient(#010066, #010066) left / 52px 100% no-repeat,
-    repeating-linear-gradient(
-      to bottom,
-      #CC0001 0 1px,
-      #FFFFFF 1px 2px,
-      #CC0001 2px 3px,
-      #FFFFFF 3px 4px
-    );
+body.promo-live .promo-banner { display: block; }
+.promo-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-shadow: 0 4px 24px rgba(15,23,42,0.06);
 }
-.promo-bar .wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 0;
-  flex-wrap: wrap;
-}
-.promo-copy {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-.promo-flag {
-  width: 28px;
-  height: 14px;
-  flex: 0 0 auto;
-  display: block;
-  box-shadow: 0 0 0 0.5px rgba(255,255,255,.18);
-}
-.promo-bar strong { font-weight: 600; color: var(--gold); }
-.promo-bar a {
+.promo-badge {
+  display: inline-block;
+  background: var(--navy);
   color: var(--gold);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
 }
-.promo-meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.promo-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+.promo-card p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 16px;
+  max-width: 600px;
+}
+.promo-card .btn { padding: 10px 20px; font-size: 13px; }
+
+@media (max-width: 640px) {
+  .promo-card { padding: 16px; }
+  .promo-card h3 { font-size: 16px; }
+}
   flex-wrap: wrap;
 }
 .promo-clock {
