@@ -171,10 +171,8 @@ em.accent,
   color: #D5D8DE;
   font-size: 13px;
   font-weight: 500;
-  position: sticky;
-  top: var(--nav-h);
   z-index: 99;
-  border-bottom: 0.5px solid rgba(255,255,255,.08);
+  border-top: 0.5px solid rgba(255,255,255,.08);
 }
 body.promo-live .promo-bar { display: block; }
 .promo-bar::before {

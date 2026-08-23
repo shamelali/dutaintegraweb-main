@@ -404,9 +404,9 @@ function injectPromoBar() {
       "</div>" +
       '<div class="promo-meta"><span class="promo-clock" id="promo-clock"></span><a href="' + link + '">' + cta + "</a></div>" +
     "</div>";
-  const nav = document.querySelector(".nav");
-  if (nav) nav.insertAdjacentElement("afterend", bar);
-  else document.body.prepend(bar);
+  const footer = document.querySelector(".footer");
+  if (footer) footer.insertAdjacentElement("beforebegin", bar);
+  else document.body.appendChild(bar);
   tickPromoClock();
 }
 
