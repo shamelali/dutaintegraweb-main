@@ -40,14 +40,15 @@ async function handler(req) {
     return json({ ok: true });
   }
 
-  try {
-    await getSupabase().from("events").insert({
+  const { error } = await getSupabase()
+    .from("events")
+    .insert({
       type,
       path: String(body.path || "/").slice(0, 300),
       meta: typeof body.meta === "object" && body.meta !== null ? body.meta : {},
     });
-  } catch (err) {
-    console.error("track insert:", err?.message);
+  if (error) {
+    console.error("track insert:", error.message);
     return json({ ok: false }, 500);
   }
   return json({ ok: true });

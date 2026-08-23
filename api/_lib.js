@@ -1,15 +1,20 @@
 // Shared Supabase client + small helpers for Duta Integra API routes.
 // Prefers SUPABASE_SERVICE_ROLE_KEY for server-side writes (bypasses RLS);
-// falls back to anon key so existing setups keep working.
+// falls back to the publishable/anon key so existing setups keep working.
+// A service key that doesn't look like a Supabase key (legacy "eyJ…" JWT or
+// new-style "sb_secret_…") is ignored rather than poisoning every request.
 
 import { createClient } from "@supabase/supabase-js";
 
+function plausibleSecret(key) {
+  return !!key && (key.startsWith("eyJ") || key.startsWith("sb_secret_"));
+}
+
 export function getSupabase() {
   const url = process.env.SUPABASE_URL || "";
-  const key =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.SUPABASE_ANON_KEY ||
-    "";
+  const role = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  const anon = process.env.SUPABASE_ANON_KEY || "";
+  const key = plausibleSecret(role) ? role : anon;
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
