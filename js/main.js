@@ -623,12 +623,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
   });
-
-  document.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
-    showSourceBlocked();
-    return false;
-  });
 });
 
 function showSourceBlocked() {
