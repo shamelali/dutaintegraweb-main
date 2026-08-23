@@ -91,3 +91,20 @@ CREATE POLICY "public read product images" ON storage.objects
 -- Uploads happen server-side via SUPABASE_SERVICE_ROLE_KEY (bypasses RLS),
 -- so no INSERT policy for anon is intentionally defined here.
 
+-- ---------------------------------------------------------------------------
+-- 6. RLS posture — explicit, regardless of project-level defaults.
+--
+-- Some projects enable RLS on every new table. Server-side API routes write
+-- with SUPABASE_SERVICE_ROLE_KEY (bypasses RLS), so anon gets read access
+-- ONLY where the public site needs it. No anon INSERT anywhere: that path
+-- goes through our rate-limited serverless functions, not raw PostgREST.
+-- ---------------------------------------------------------------------------
+
+ALTER TABLE audit_reports ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "anon read audit reports" ON audit_reports;
+CREATE POLICY "anon read audit reports" ON audit_reports
+  FOR SELECT USING (true);
+
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+-- No policies: writes happen only via the service key from our API routes.
+
