@@ -83,3 +83,20 @@ api/send-email.js  ── Resend ──► hello@dutaintegra.my
 - HTML is escaped before injection into email templates  
 - Field length limits on both client and server  
 - API key never ships to the browser — only on the server  
+
+## Audit + follow-up emails (added 2026)
+
+Two more email flows use the same Resend key:
+
+1. **Audit report email** — after a visitor runs the free brand audit with an
+   email address, `/api/audit` stores the report in Supabase (`audit_reports`)
+   and sends a branded score summary with a share link (`/audit?r=<slug>`).
+2. **24h follow-up** — the daily cron `GET /api/cron/followup` (see `crons`
+   in `vercel.json`) emails one nudge per audit that is ~24h old, if not
+   already sent. Vercel calls it automatically; manual runs need
+   `Authorization: Bearer $CRON_SECRET`.
+
+Required env vars for these: `RESEND_API_KEY`, `SUPABASE_URL`,
+`SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (image uploads), optional
+`CRON_SECRET`. Run `supabase/migrations.sql` once in the Supabase SQL editor
+to create the tables, policies and storage bucket.

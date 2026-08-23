@@ -35,6 +35,11 @@
         <a class="sidebar-link" data-page="audits" href="#">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           Audits
+          <span class="badge" id="auditsBadge">0</span>
+        </a>
+        <a class="sidebar-link" data-page="products" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          Products
         </a>
       </div>
       <div class="sidebar-section">
@@ -48,10 +53,10 @@
 
     <div class="sidebar-footer">
       <div class="sidebar-user" id="sidebarUser">
-        <div class="avatar">SA</div>
+        <div class="avatar" id="userAvatar">SA</div>
         <div class="user-info">
-          <div class="user-name">Shamel Ali</div>
-          <div class="user-role">Admin</div>
+          <div class="user-name" id="sidebarUserName">Shamel Ali</div>
+          <div class="user-role" id="sidebarUserRole">Admin</div>
         </div>
         <svg class="logout-icon" id="logoutBtn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </div>
@@ -71,6 +76,13 @@
     </div>
 
     <div class="content" id="contentArea">
+     <div class="admin-view" id="view-dashboard">
+      <!-- Greeting -->
+      <div class="greeting">
+        <h2 id="greetingName">Good morning</h2>
+        <p id="greetingDate"></p>
+      </div>
+
       <!-- KPI Cards -->
       <div class="kpi-grid" id="kpiGrid">
         <div class="kpi-card">
@@ -109,6 +121,28 @@
             <div class="kpi-value" id="kpiClosed">0</div>
           </div>
         </div>
+      </div>
+
+      <!-- Daily Tasks Panel -->
+      <div class="card tasks-card">
+        <div class="card-header">
+          <div>
+            <h2>Daily Tasks</h2>
+            <div class="subtitle">Your routine for today — click to check off. Resets daily.</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-sm btn-slack" id="sendSlackBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 15a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1h4v1zm2-11h1a2 2 0 0 1 2 2v1H7V5a2 2 0 0 1 1-1zm10 6a2 2 0 0 1 2 2v1h-4v-1a2 2 0 0 1 2-2zm-6-6a2 2 0 0 1 2-2h1v4h-1a2 2 0 0 1-2-2v0zM9 20a2 2 0 0 1-2-2v-1h4v1a2 2 0 0 1-2 2zm11-4h-1a2 2 0 0 1-2-2v-1h4v1a2 2 0 0 1-1 2z"/></svg>
+              Send to Slack
+            </button>
+          </div>
+        </div>
+        <div class="task-progress">
+          <div class="task-progress-bar"><div class="task-progress-fill" id="taskProgressBar"></div></div>
+          <span class="task-progress-label" id="taskProgressLabel">0/0 done</span>
+        </div>
+        <ul class="task-list" id="taskList"></ul>
+        <div class="tasks-all-done" id="tasksAllDone" style="display:none">All tasks done — great work!</div>
       </div>
 
       <!-- Leads Table -->
@@ -154,8 +188,138 @@
           </div>
         </div>
       </div>
+     </div><!-- /view-dashboard -->
+
+     <!-- ── AUDITS VIEW ─────────────────────────────────────────── -->
+     <div class="admin-view" id="view-audits" hidden>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Brand Audits</h2>
+            <div class="subtitle">Free audit runs — click View to open the shareable report</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-sm btn-gold" id="exportAuditsCsv">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="auditsTable">
+            <thead>
+              <tr><th>Website</th><th>Business</th><th>Email</th><th>Score</th><th>Grade</th><th>Date</th><th>Follow-up</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="auditsBody"></tbody>
+          </table>
+          <div class="empty-state" id="auditsEmpty" style="display:none">
+            <h3>No audits yet</h3>
+            <p>Audit runs will appear here.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <div>
+            <h2>Conversions (last 30 days)</h2>
+            <div class="subtitle">First-party analytics via /api/track</div>
+          </div>
+        </div>
+        <div class="kpi-grid" id="statsGrid"></div>
+      </div>
+     </div><!-- /view-audits -->
+
+     <!-- ── PRODUCTS VIEW ───────────────────────────────────────── -->
+     <div class="admin-view" id="view-products" hidden>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Work Page Products</h2>
+            <div class="subtitle">Shown on /work (EN) and /ms/work (BM) — published items only, ordered by sort order</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-gold btn-sm" id="addProductBtn">+ Add product</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="productsTable">
+            <thead>
+              <tr><th></th><th>Name</th><th>Category</th><th>Preview URL</th><th>Order</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="productsBody"></tbody>
+          </table>
+          <div class="empty-state" id="productsEmpty" style="display:none">
+            <h3>No products yet</h3>
+            <p>Add your first product — it appears on the Work page once published.</p>
+          </div>
+        </div>
+      </div>
+     </div><!-- /view-products -->
     </div>
-  </main>
+   </main>
+
+   <!-- Product editor modal -->
+   <div class="modal-overlay" id="productModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="productModalTitle">Add product</h3>
+        <button class="modal-close" id="productModalClose" aria-label="Close">×</button>
+      </div>
+      <form id="productForm" class="product-form">
+        <input type="hidden" id="pf-id" />
+        <div class="form-grid-2">
+          <label>Name *<input id="pf-name" required maxlength="120" placeholder="Leish" /></label>
+          <label>Category<input id="pf-category" maxlength="120" placeholder="Project · 2026 · Beauty" /></label>
+        </div>
+        <label>Tagline<input id="pf-tagline" maxlength="160" placeholder="Beauty booking marketplace" /></label>
+        <div class="form-grid-2">
+          <label>Description (EN)<textarea id="pf-desc-en" rows="3" maxlength="2000" placeholder="We built Leish — a beauty booking marketplace…"></textarea></label>
+          <label>Description (BM)<textarea id="pf-desc-ms" rows="3" maxlength="2000" placeholder="Kami membina Leish — pasaran tempahan kecantikan…"></textarea></label>
+        </div>
+        <label>Tags <small>(comma separated)</small><input id="pf-tags" placeholder="AI chatbot, Automation, E-commerce" /></label>
+
+        <fieldset class="metrics-fieldset">
+          <legend>Metrics <small>(max 4)</small></legend>
+          <div id="metricsRows"></div>
+          <button type="button" class="btn btn-sm btn-action" id="addMetricRow">+ Add metric</button>
+        </fieldset>
+
+        <div class="form-grid-2">
+          <label>Preview URL <small>(opens behind registration gate)</small><input id="pf-preview-url" type="url" placeholder="https://leish.my/" /></label>
+          <label>Contact CTA label (EN)<input id="pf-cta-en" maxlength="120" placeholder="Discuss a similar build" /></label>
+        </div>
+        <div class="form-grid-2">
+          <label>Contact CTA label (BM)<input id="pf-cta-ms" maxlength="120" placeholder="Bincangkan binaan yang serupa" /></label>
+          <div class="form-grid-2">
+            <label>Status
+              <select id="pf-status"><option value="draft">Draft</option><option value="published">Published</option></select>
+            </label>
+            <label>Sort order<input id="pf-sort" type="number" value="0" /></label>
+          </div>
+        </div>
+
+        <label>Image <small>(paste a URL or upload)</small></label>
+        <div class="image-picker">
+          <img id="pf-img-preview" alt="" hidden />
+          <input id="pf-image-url" type="url" placeholder="https://…/work-leish.jpg" />
+          <input type="file" id="pf-image-file" accept="image/jpeg,image/png,image/webp,image/svg+xml" hidden />
+          <button type="button" class="btn btn-sm btn-action" id="pf-upload-btn">Upload…</button>
+        </div>
+        <p class="upload-error" id="uploadError" hidden></p>
+
+        <div class="modal-foot">
+          <span class="delete-wrap">
+            <button type="button" class="btn btn-sm btn-danger" id="productDeleteBtn" hidden>Delete</button>
+          </span>
+          <span>
+            <button type="button" class="btn btn-sm btn-action" id="productCancelBtn">Cancel</button>
+            <button type="submit" class="btn btn-gold btn-sm" id="productSaveBtn">Save product</button>
+          </span>
+        </div>
+      </form>
+    </div>
+   </div>
 
   <div class="toast" id="toast"></div>
   <script src="../js/admin.js"></script>

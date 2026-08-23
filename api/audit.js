@@ -5,10 +5,17 @@
 // Returns a structured report. Fetches the target site and scores its
 // technical SEO, content, speed and social/brand presence.
 //
+// On success the report is persisted (shareable slug), the requester becomes
+// a scored lead, an audit_run event is logged and — when an email was given —
+// the branded report is delivered via Resend.
+//
 // This endpoint only does public, non-destructive HTTP requests to the site
 // being audited. It never sends personal data anywhere except the report it
-// returns to the caller. Origin is open by design (the audit is a public tool).
+// returns to the caller.
 // ============================================================================
+
+import { Resend } from "resend";
+import { getSupabase, makeId } from "./_lib.js";
 
 export const config = { maxDuration: 30 };
 
@@ -21,18 +28,36 @@ const ALLOWED_ORIGINS = [
   "https://dutaintegraweb-main-efunpqs0m-shamelalis-projects.vercel.app",
 ];
 
-// Simple per-instance rate limit (best-effort on serverless)
-const RATE_MAX = Number(process.env.AUDIT_RATE_MAX) || 20;
+// Per-IP rate limit (best-effort on serverless; per warm instance)
+const RATE_MAX = Number(process.env.AUDIT_RATE_MAX) || 10;
 const RATE_WINDOW = Number(process.env.AUDIT_RATE_WINDOW) || 60000;
-let rateCount = 0;
-let rateReset = Date.now();
-function rateLimitOk() {
+const ipHits = new Map(); // ip -> [timestamps]
+
+function clientIp(req) {
+  return (
+    req?.headers?.get?.("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req?.headers?.get?.("cf-connecting-ip") ||
+    "unknown"
+  );
+}
+
+function rateLimitOk(req) {
   const now = Date.now();
-  if (now - rateReset > RATE_WINDOW) {
-    rateCount = 0;
-    rateReset = now;
+  const ip = clientIp(req);
+  const hits = (ipHits.get(ip) || []).filter((t) => now - t < RATE_WINDOW);
+  if (hits.length >= RATE_MAX) {
+    ipHits.set(ip, hits);
+    return false;
   }
-  return rateCount < RATE_MAX;
+  hits.push(now);
+  ipHits.set(ip, hits);
+  // opportunistic cleanup
+  if (ipHits.size > 5000) {
+    for (const [k, v] of ipHits) {
+      if (!v.some((t) => now - t < RATE_WINDOW)) ipHits.delete(k);
+    }
+  }
+  return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -315,7 +340,7 @@ export async function runAudit(payload = {}) {
   const mainText = await mainRes.text();
   html = mainText.slice(0, MAX_BODY);
   const responseMs = Math.round(performance.now() - started);
-  const pageSizeKb = Math.round((Buffer.byteLength(html, "utf8") / 1024) * 10) / 10;
+  const pageSizeKb = Math.round((new TextEncoder().encode(html).length / 1024) * 10) / 10;
   const finalUrl = mainRes.url || parsed.href;
   const statusCode = mainRes.status;
 
@@ -500,6 +525,149 @@ function recommendationFor(id) {
 }
 
 // ---------------------------------------------------------------------------
+// Persistence: report storage, lead capture, event log, report email
+// ---------------------------------------------------------------------------
+
+function scoreColorHex(score) {
+  if (score >= 80) return "#2F6B4F";
+  if (score >= 60) return "#C9A227";
+  return "#9B3A3A";
+}
+
+function buildReportEmail(report, shareUrl) {
+  const cats = report.categories
+    .map(
+      (c) =>
+        `<div style="margin-bottom:10px"><b>${c.label}</b> — ` +
+        `<span style="color:${scoreColorHex(c.score)};font-weight:700">${c.score}/100</span><br>` +
+        `<span style="color:#666;font-size:13px">${c.verdict}</span></div>`
+    )
+    .join("");
+  const recs = report.recommendations
+    .slice(0, 4)
+    .map(
+      (r) =>
+        `<li style="margin-bottom:8px"><b>${r.title}</b><br>` +
+        `<span style="color:#555;font-size:13.5px">${r.detail}</span></li>`
+    )
+    .join("");
+  return `<!DOCTYPE html><html><body style="margin:0;background:#F8F9FB;padding:24px 12px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e9ef">
+    <div style="background:#1E2D3D;padding:22px 28px">
+      <div style="color:#C9A227;font-size:11px;font-weight:bold;letter-spacing:.16em;text-transform:uppercase">Free Brand Audit</div>
+      <h1 style="color:#fff;margin:6px 0 2px;font-size:22px">${report.brandName}</h1>
+      <div style="color:#9aa7b5;font-size:13px">${report.domain} · ${new Date(report.generatedAt).toDateString()}</div>
+    </div>
+    <div style="padding:26px 28px">
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom:18px"><tr>
+        <td style="font-size:44px;font-weight:bold;color:${scoreColorHex(report.score)};padding-right:12px">${report.score}<span style="font-size:20px;color:#888">/100</span></td>
+        <td style="font-size:15px;color:${scoreColorHex(report.score)};font-weight:bold">Grade ${report.grade}<br><span style="color:#666;font-weight:normal;font-size:13px">${report.gradeLabel}</span></td>
+      </tr></table>
+      <p style="color:#333;line-height:1.6;margin:0 0 18px">${report.summary}</p>
+      <h2 style="font-size:15px;color:#1E2D3D;border-bottom:1px solid #eee;padding-bottom:6px">Category scores</h2>
+      ${cats}
+      <h2 style="font-size:15px;color:#1E2D3D;border-bottom:1px solid #eee;padding-bottom:6px">Top fixes</h2>
+      <ul style="padding-left:18px;color:#333;line-height:1.55">${recs || "<li>Looks strong — no urgent fixes.</li>"}</ul>
+      <div style="text-align:center;margin:26px 0 8px">
+        <a href="${shareUrl}" style="display:inline-block;background:#C9A227;color:#1E2D3D;text-decoration:none;font-weight:bold;padding:12px 28px;border-radius:4px">View your full report</a>
+      </div>
+      <p style="color:#777;font-size:12.5px;text-align:center">Want us to walk you through the fixes?
+      <a href="https://wa.me/601154034051" style="color:#C9A227">WhatsApp us</a> or book a free 20-min call.</p>
+    </div>
+    <div style="background:#F8F9FB;padding:14px 28px;text-align:center;color:#98a2ad;font-size:11.5px">
+      Duta Integra Solutions · Cyberjaya, Malaysia · dutaintegra.my
+    </div>
+  </div></body></html>`;
+}
+
+async function persistAuditResult(report, req) {
+  const supabase = getSupabase();
+  const slug = makeId(10);
+  let shareSlug = null;
+
+  // 1. Store report (best-effort — audit still succeeds if DB is down)
+  try {
+    const { error } = await supabase.from("audit_reports").insert({
+      share_slug: slug,
+      url: report.url,
+      domain: report.domain,
+      brand_name: report.brandName,
+      industry: report.industry,
+      email: report.email || null,
+      score: report.score,
+      grade: report.grade,
+      report,
+    });
+    if (!error) shareSlug = slug;
+    else console.error("audit_reports insert:", error.message);
+  } catch (err) {
+    console.error("audit_reports insert failed:", err?.message);
+  }
+
+  // 2. Lead upsert by email (+ scoring)
+  if (report.email) {
+    try {
+      const { data: existing } = await supabase
+        .from("leads")
+        .select("id, lead_score")
+        .eq("email", report.email)
+        .maybeSingle();
+      if (existing) {
+        await supabase
+          .from("leads")
+          .update({
+            lead_score: (existing.lead_score || 0) + 10,
+            industry: report.industry || null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", existing.id);
+      } else {
+        await supabase.from("leads").insert({
+          name: report.brandName,
+          email: report.email,
+          company: report.brandName,
+          service: "Free brand audit",
+          message: `Audited ${report.domain} — scored ${report.score}/100 (${report.grade})`,
+          industry: report.industry || null,
+          status: "new",
+          source: "free-audit",
+          lead_score: 10,
+        });
+      }
+    } catch (err) {
+      console.error("lead upsert failed:", err?.message);
+    }
+  }
+
+  // 3. Event log
+  try {
+    await supabase.from("events").insert({
+      type: "audit_run",
+      path: "/audit",
+      meta: { domain: report.domain, score: report.score },
+    });
+  } catch { /* non-critical */ }
+
+  // 4. Report email via Resend (fire-and-forget)
+  if (report.email && process.env.RESEND_API_KEY) {
+    const origin = req?.headers?.get?.("origin") || "https://dutaintegra.my";
+    const shareUrl = `${origin}/audit?r=${slug}`;
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const from = process.env.EMAIL_FROM || "Duta Integra <noreply@dutaintegra.my>";
+    resend.emails
+      .send({
+        from,
+        to: report.email,
+        subject: `Your free brand audit for ${report.domain}: ${report.score}/100 (${report.grade})`,
+        html: buildReportEmail(report, shareUrl),
+      })
+      .catch((err) => console.error("audit report email:", err?.message));
+  }
+
+  return shareSlug;
+}
+
+// ---------------------------------------------------------------------------
 // Vercel web handler (matches the repo's named-export function style)
 // ---------------------------------------------------------------------------
 
@@ -508,15 +676,18 @@ export async function handler(req) {
   if (req.method !== "POST") {
     return json({ ok: false, error: "Method not allowed. Send a POST request." }, 405, req);
   }
-  if (!rateLimitOk()) {
-    return json({ ok: false, error: "Too many requests. Please try again in a moment." }, 429, req);
+  if (!rateLimitOk(req)) {
+    return json({ ok: false, error: "Too many requests from your network. Please try again shortly." }, 429, req);
   }
-  rateCount++;
   let body = {};
   try {
     body = await req.json();
   } catch {
     body = {};
+  }
+  // honeypot: bots fill every field they see
+  if (body.company_website) {
+    return json({ ok: true, report: null }, 200, req);
   }
   const payload = {
     url: body.url,
@@ -526,7 +697,8 @@ export async function handler(req) {
   };
   try {
     const report = await runAudit(payload);
-    return json({ ok: true, report }, 200, req);
+    const shareSlug = await persistAuditResult(report, req);
+    return json({ ok: true, report, shareSlug }, 200, req);
   } catch (err) {
     return json({ ok: false, error: err.message || "Audit failed.", code: err.code || "AUDIT_FAILED" }, statusCodeFor(err), req);
   }

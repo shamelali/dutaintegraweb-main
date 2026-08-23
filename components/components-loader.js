@@ -1,8 +1,8 @@
-import { html, render } from 'lit';
+// Duta Integra — header/footer component loader (no external deps)
 
 customElements.define('components-loader', class extends HTMLElement {
   connectedCallback() {
-    this.innerHTML = /* html */ `
+    this.innerHTML = `
       <div id="di-header"></div>
       <div id="di-footer"></div>
     `;
@@ -23,13 +23,7 @@ customElements.define('components-loader', class extends HTMLElement {
       .then(r => r.text())
       .then(html => {
         const footer = document.getElementById('di-footer');
-        if (footer) {
-          footer.innerHTML = html;
-          const script = document.createElement('script');
-          script.src = '/components/components-loader.js';
-          script.defer;
-          footer.appendChild(script);
-        }
+        if (footer) footer.innerHTML = html;
       });
   }
 });

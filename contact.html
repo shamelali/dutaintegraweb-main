@@ -125,8 +125,15 @@
       <textarea id="message" name="message" maxlength="5000" placeholder="e.g. We're a 15-person retail company in Johor looking to automate inventory and get proper IT support…"></textarea>
     </div>
 
-    <!-- Cloudflare Turnstile widget -->
-    <div class="turnstile-widget"></div>
+<!-- Cloudflare Turnstile widget -->
+    <div class="cf-turnstile" 
+         data-sitekey="0x4AAAAAAEWiPSuuWyfT-IU5" 
+         data-action="contact"
+         data-theme="light"
+         data-callback="onTurnstileSuccess"
+         data-error-callback="onTurnstileError"
+         data-expired-callback="onTurnstileExpired"></div>
+    <p id="formStatus" aria-live="polite" role="status" style="min-height: 1.5rem; margin: 0.5rem 0;"></p>
 
     <button class="btn btn-gold btn-block" type="submit">Send message →</button>
     <p class="form-note">We reply to <b>hello@dutaintegra.my</b> within one business day. Your details stay private.</p>
@@ -135,7 +142,7 @@
     </section>
   </main>
 
-  <div class="toast" id="toast">Message noted. We’ll reply within one business day.</div>
+  <div class="toast" id="toast">Message noted. We'll reply within one business day.</div>
 
   <footer class="footer">
     <div class="wrap">
@@ -147,7 +154,6 @@
         <div>
           <h5>Company</h5>
           <a href="/about">About</a>
-          <a href="/work">Work</a>
           <a href="/pricing">Pricing</a>
           <a href="/contact">Contact</a>
         </div>
@@ -228,6 +234,31 @@
         btn.textContent = originalText;
       }
     });
+  </script>
+
+  <!-- Turnstile API - load once per page -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script>
+  // Turnstile lifecycle - token is single-use, must reset after submit
+  let turnstileToken = null;
+
+  function onTurnstileSuccess(token) {
+    turnstileToken = token;
+    document.getElementById('formStatus')?.textContent = '';
+  }
+
+  function onTurnstileError() {
+    turnstileToken = null;
+    document.getElementById('formStatus')?.textContent = 'Security check failed. Please refresh.';
+  }
+
+  function onTurnstileExpired() {
+    turnstileToken = null;
+    document.getElementById('formStatus')?.textContent = 'Security check expired. Please verify again.';
+    if (window.turnstile) {
+      try { window.turnstile.reset(); } catch {}
+    }
+  }
   </script>
 </body>
 </html>

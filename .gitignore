@@ -29,4 +29,7 @@ Claude*
 Web/
 
 # Duta Integra private docs
-private/docs/dutaintegraweb-main/
+private/
+
+# Accidental nested copy of this repo
+dutaintegraweb-main/

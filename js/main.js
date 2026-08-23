@@ -3,17 +3,17 @@
 const i18n = {
   en: {
     nav_services: "Services",
-    nav_work: "Work",
     nav_about: "About",
     nav_pricing: "Pricing",
     nav_audit: "Free audit",
+    nav_blog: "Blog",
     nav_quote: "Get a quote",
     hero_badge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA",
     hero_title: 'Enterprise-grade <em class="accent">AI systems</em> and <em class="accent">managed IT</em>, built for <em class="accent">Malaysian SMEs</em>',
     hero_lead: "Custom AI apps, chatbots, automation, and secure cloud infrastructure — delivered by a Cyberjaya-based team, since 2021.",
     hero_cta_audit: "Run a free audit",
     hero_cta1: "Book a discovery call",
-    hero_cta2: "View our work",
+    hero_cta2: "Explore our products",
     stat1: "Founded",
     stat2: "Client projects",
     stat3: "Core services",
@@ -31,9 +31,9 @@ const i18n = {
     start: "Get started",
     propose: "Request a proposal",
     trust: "Trusted by Lapango, Eastelpro, AGMX and growing SME clients across Malaysia",
-    outcomes: "See client outcomes →",
-    work_eye: "Selected work",
-    work_title: "Systems we have shipped",
+    outcomes: "See our products →",
+    product_eye: "Our products",
+    product_title: "Products built by Duta Integra",
     why_eye: "Why choose us",
     why_title: 'Built for <em class="accent">Malaysian SMEs</em>',
     cta_title: 'Ready to <em class="accent">modernise</em> your business?',
@@ -47,17 +47,17 @@ const i18n = {
   },
   bm: {
     nav_services: "Perkhidmatan",
-    nav_work: "Kerja",
     nav_about: "Tentang",
     nav_pricing: "Harga",
     nav_audit: "Audit percuma",
+    nav_blog: "Blog",
     nav_quote: "Minta sebut harga",
     hero_badge: "AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA",
     hero_title: 'Sistem <em class="accent">AI</em> dan <em class="accent">IT terurus</em> peringkat perusahaan, dibina untuk <em class="accent">SME Malaysia</em>',
     hero_lead: "Aplikasi AI tersuai, chatbot, automasi, dan infrastruktur awan yang selamat — disampaikan oleh pasukan Cyberjaya, sejak 2021.",
     hero_cta_audit: "Jalankan audit percuma",
     hero_cta1: "Tempah sesi penemuan",
-    hero_cta2: "Lihat kerja kami",
+    hero_cta2: "Lihat produk kami",
     stat1: "Ditubuhkan",
     stat2: "Projek klien",
     stat3: "Perkhidmatan teras",
@@ -75,9 +75,9 @@ const i18n = {
     start: "Mula sekarang",
     propose: "Minta cadangan",
     trust: "Dipercayai oleh Lapango, Eastelpro, AGMX dan SME yang berkembang di seluruh Malaysia",
-    outcomes: "Lihat hasil klien →",
-    work_eye: "Kerja terpilih",
-    work_title: "Sistem yang telah kami hantar",
+    outcomes: "Lihat produk kami →",
+    product_eye: "Produk kami",
+    product_title: "Produk binaan Duta Integra",
     why_eye: "Mengapa pilih kami",
     why_title: 'Dibina untuk <em class="accent">SME Malaysia</em>',
     cta_title: 'Bersedia <em class="accent">memodenkan</em> perniagaan anda?',
@@ -603,6 +603,8 @@ document.addEventListener("DOMContentLoaded", () => {
   syncThemeIcon();
   bindServiceCards();
   bindPreviewLinks();
+  loadWorkProducts();
+  trackEvent("page_view");
   prefillserviceFromQuery();
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeNav();
@@ -725,11 +727,13 @@ function handlePreviewSubmit(e) {
       if (r.ok && d && d.success) {
         form.reset();
         closePreviewDialog();
+        trackEvent("preview_register", { url: pendingPreviewUrl });
         if (pendingPreviewUrl) window.open(pendingPreviewUrl, "_blank", "noopener");
         return;
       }
       if (r.status === 503 || r.status >= 500 || !r.ok) {
         closePreviewDialog();
+        trackEvent("preview_register", { url: pendingPreviewUrl });
         if (pendingPreviewUrl) window.open(pendingPreviewUrl, "_blank", "noopener");
         return;
       }
@@ -747,11 +751,98 @@ function handlePreviewSubmit(e) {
 }
 
 function bindPreviewLinks() {
-  document.querySelectorAll(".preview-link").forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      const url = link.getAttribute("href");
-      if (url) openPreviewDialog(url);
-    });
+  // Delegated so dynamically rendered Work-page cards are covered too.
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest(".preview-link");
+    if (!link) return;
+    e.preventDefault();
+    const url = link.getAttribute("href");
+    if (url) openPreviewDialog(url);
   });
+}
+
+/* ---------- First-party analytics ---------- */
+function trackEvent(type, meta) {
+  try {
+    if (location.pathname.startsWith("/admin")) return;
+    const payload = JSON.stringify({
+      type,
+      path: location.pathname,
+      meta: meta || {},
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon("/api/track", new Blob([payload], { type: "application/json" }));
+    } else {
+      fetch("/api/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+        keepalive: true,
+      }).catch(() => {});
+    }
+  } catch { /* never break the page */ }
+}
+
+/* ---------- Homepage #products: render products from Supabase ---------- */
+function escHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderWorkCard(p, large) {
+  const desc = (isMsPath() ? p.description_ms : p.description_en) || p.description_en || "";
+  const tags = Array.isArray(p.tags)
+    ? p.tags.map((t) => '<span class="tag-chip">' + escHtml(t) + "</span>").join("")
+    : "";
+  const metrics = Array.isArray(p.metrics)
+    ? p.metrics.map((m) => "<div><b>" + escHtml(m.value) + "</b><span>" + escHtml(m.label) + "</span></div>").join("")
+    : "";
+  return (
+    '<article class="card-work' + (large ? " lg" : "") + '">' +
+    (p.image_url
+      ? '<img src="' + escHtml(p.image_url) + '" alt="' + escHtml(p.name) + '" loading="lazy" />'
+      : '<img src="assets/img/work-placeholder.jpg" alt="" />') +
+    '<div class="body">' +
+    '<div class="meta">' + escHtml(p.category || "Duta Integra product") + "</div>" +
+    "<h3>" + escHtml(p.name) + "</h3>" +
+    (p.tagline && !desc ? "<p>" + escHtml(p.tagline) + "</p>" : "<p>" + escHtml(desc) + "</p>") +
+    (tags ? '<div class="tags">' + tags + "</div>" : "") +
+    (metrics ? '<div class="metrics">' + metrics + "</div>" : "") +
+    '<div class="case-actions">' +
+    (p.preview_url
+      ? '<a class="btn btn-line preview-link" href="' + escHtml(p.preview_url) + '" target="_blank" rel="noopener">Preview ↗</a>'
+      : "") +
+    '<a class="btn btn-line" href="' + (isMsPath() ? "/ms/contact" : "/contact") + '">' +
+    escHtml((isMsPath() ? p.contact_cta_ms : p.contact_cta_en) || p.contact_cta_en || "Discuss a similar build") +
+    "</a>" +
+    "</div></div></article>"
+  );
+}
+
+async function loadWorkProducts() {
+  const grid = document.querySelector("#products .work-grid");
+  if (!grid) return;
+  let d;
+  try {
+    const r = await fetch("/api/products");
+    if (!r.ok) return;
+    d = await r.json();
+  } catch {
+    return; // keep static fallback
+  }
+  if (!d || !d.ok || !Array.isArray(d.products) || !d.products.length) return;
+
+  const items = d.products;
+  if (items.length === 1) {
+    grid.innerHTML = renderWorkCard(items[0], true);
+  } else {
+    grid.innerHTML =
+      renderWorkCard(items[0], true) +
+      '<div class="work-side">' +
+      items.slice(1).map((p) => renderWorkCard(p, false)).join("") +
+      "</div>";
+  }
 }

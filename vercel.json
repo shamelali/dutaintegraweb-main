@@ -6,6 +6,12 @@
       "maxDuration": 10
     }
   },
+  "crons": [
+    {
+      "path": "/api/cron/followup",
+      "schedule": "0 9 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/admin",
@@ -46,7 +52,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.supabase.co; connect-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; frame-src https://challenges.cloudflare.com"
         },
         {
           "key": "X-Permitted-Cross-Domain-Policies",
@@ -65,6 +71,36 @@
     }
   ],
   "redirects": [
+    {
+      "source": "/work",
+      "destination": "/#products",
+      "permanent": true
+    },
+    {
+      "source": "/work.html",
+      "destination": "/#products",
+      "permanent": true
+    },
+    {
+      "source": "/cases",
+      "destination": "/#products",
+      "permanent": true
+    },
+    {
+      "source": "/ms/work",
+      "destination": "/ms/#products",
+      "permanent": true
+    },
+    {
+      "source": "/ms/work.html",
+      "destination": "/ms/#products",
+      "permanent": true
+    },
+    {
+      "source": "/ms/cases",
+      "destination": "/ms/#products",
+      "permanent": true
+    },
     {
       "source": "/build-pdf.py",
       "destination": "/404.html",
