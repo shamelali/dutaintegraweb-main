@@ -828,10 +828,10 @@ async function loadWorkProducts() {
   let d;
   try {
     const r = await fetch("/api/products");
-    if (!r.ok) return;
+    if (!r.ok) return; // section stays hidden
     d = await r.json();
   } catch {
-    return; // keep static fallback
+    return; // section stays hidden
   }
   if (!d || !d.ok || !Array.isArray(d.products) || !d.products.length) return;
 
@@ -845,4 +845,11 @@ async function loadWorkProducts() {
       items.slice(1).map((p) => renderWorkCard(p, false)).join("") +
       "</div>";
   }
+
+  // Reveal the section + any CTAs pointing at it
+  const section = document.getElementById("products");
+  if (section) section.hidden = false;
+  document.querySelectorAll('a[href$="/#products"], a[href$="#products"]').forEach((a) => {
+    a.hidden = false;
+  });
 }
