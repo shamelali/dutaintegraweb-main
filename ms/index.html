@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/styles.css?v=20260822b" />
+  <link rel="stylesheet" href="../css/styles.css?v=20260824b" />
   <link rel="alternate" hreflang="en" href="https://dutaintegra.my/" />
   <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/" />
   <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/" />
@@ -33,6 +33,7 @@
       </a>
       <nav class="nav-links" aria-label="utama">
         <a href="/ms/services" data-i18n="nav_services">Perkhidmatan</a>
+        <a href="/ms/cases" data-i18n="nav_cases">Kajian kes</a>
         <a href="/ms/about" data-i18n="nav_about">Tentang</a>
         <a href="/ms/pricing" data-i18n="nav_pricing">Harga</a>
         <a href="/ms/audit" data-i18n="nav_audit">Audit percuma</a>
@@ -48,6 +49,7 @@
     </div>
     <div class="drawer">
       <a href="/ms/services" onclick="closeNav()" data-i18n="nav_services">Perkhidmatan</a>
+        <a href="/ms/cases" data-i18n="nav_cases">Kajian kes</a>
       <a href="/ms/about" onclick="closeNav()" data-i18n="nav_about">Tentang</a>
       <a href="/ms/pricing" onclick="closeNav()" data-i18n="nav_pricing">Harga</a>
       <a class="nav-cta" href="/ms/contact" onclick="closeNav()" data-i18n="nav_quote">Dapatkan sebut harga</a>
@@ -196,6 +198,46 @@
       </div>
     </aside>
 
+    <section class="section" id="work" style="padding-top:24px">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Kerja terpilih</div>
+          <h2>Sistem sebenar untuk PKS Malaysia</h2>
+          <p>Kami syarikat baharu — ditubuhkan di Cyberjaya pada 2023 — jadi kami lebih gemar menunjukkan beberapa projek sebenar daripada dinding logo tanpa nama. Ini sistem yang sudah hidup, bukan demo.</p>
+        </div>
+        <div class="case-row">
+          <a class="case-mini" href="/cases/agmx">
+            <img src="../assets/img/work-agmx.jpg" alt="Migrasi awan AGMX" loading="lazy" />
+            <div class="body">
+              <div class="meta">Awan · IT terurus</div>
+              <h3>AGMX</h3>
+              <p>Migrasi awan dengan sandaran, pemantauan dan tindak balas insiden — di bawah retainer Foundation.</p>
+              <div class="tags"><span class="tag-chip">Awan</span><span class="tag-chip">Sandaran</span></div>
+            </div>
+          </a>
+          <a class="case-mini" href="/cases/eastelpro">
+            <img src="../assets/img/work-eastelpro.jpg" alt="Portal WiFi Eastelpro" loading="lazy" />
+            <div class="body">
+              <div class="meta">IT terurus · Portal WiFi</div>
+              <h3>Eastelpro</h3>
+              <p>Portal tawanan WiFi berjenama yang menukar pelawat di premis menjadi lead yang boleh diikuti.</p>
+              <div class="tags"><span class="tag-chip">Lead</span><span class="tag-chip">Rangkaian</span></div>
+            </div>
+          </a>
+          <a class="case-mini" href="/cases/dutaconnect">
+            <img src="../assets/img/work-dutaconnect.jpg" alt="Pembantu AI Dutaconnect" loading="lazy" />
+            <div class="body">
+              <div class="meta">AI · Chatbot</div>
+              <h3>Dutaconnect</h3>
+              <p>Pembantu AI berasaskan dokumen syarikat, dengan serahan kepada manusia untuk soalan rumit.</p>
+              <div class="tags"><span class="tag-chip">RAG</span><span class="tag-chip">Integrasi</span></div>
+            </div>
+          </a>
+        </div>
+        <p style="margin-top:22px"><a class="btn btn-line" href="/cases">Lihat semua kajian kes →</a></p>
+      </div>
+    </section>
+
     <section class="section" id="products" hidden>
       <div class="wrap">
         <div class="section-head">
@@ -268,6 +310,42 @@
       </div>
     </section>
 
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Jawapan terus</div>
+          <h2>Soalan lazim pembeli</h2>
+          <p>Tiada helah jualan. Jika anda lebih mahu bukti daripada penerangan, <a href="/ms/contact" style="color:var(--gold)">hubungi kami</a> dan kami akan tunjukkan sistem sebenar.</p>
+        </div>
+        <div class="faq">
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Bolehkah anda tunjuk sistem AI yang sudah dihantar untuk PKS Malaysia?</button>
+            <div class="faq-a"><p>Ya. Kami telah membina pembantu AI berasaskan pengetahuan (Dutaconnect) dan binaan tersuai termasuk Leish. Dalam panggilan perbincangan kami akan tunjuk sistem sebenar mengikut industri anda.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Apa yang termasuk dalam sokongan PDPA anda?</button>
+            <div class="faq-a"><p>Bukan sekadar templat. Kami bantu pemetaan data, notis privasi dan DPA, amalan persetujuan dan pengekalan, latihan kakitangan, serta pelan tindak balas insiden.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Untuk Foundation — apakah piawaian sandaran dan keselamatan?</button>
+            <div class="faq-a"><p>Kami tetapkan sasaran pemulihan semasa penyertaan — <b>RTO di bawah 4 jam</b> dengan <b>RPO setiap 4 jam</b> (lebih ketat untuk sistem kritikal, diskop awal) — dan jalankan <b>ujian pemulihan bulanan</b> supaya sandaran terbukti boleh dipulihkan. Peralatan termasuk pemantauan 24/7 dengan amaran diakui dalam 15 minit, <b>EDR pada endpoint terurus</b>, tampalan, dan pelan tindak balas insiden yang didokumenkan. Tindanan yang tepat didokumenkan untuk setiap persekitaran — tiada kotak hitam.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Anda syarikat 2023 dengan pasukan kecil — siapa sokong kami?</button>
+            <div class="faq-a"><p>Anda dapat jurutera berdedikasi yang tahu persekitaran anda, disokong pemantauan automatik 24/7 dan runbook atas panggilan di luar waktu pejabat. Butiran SSM dan rujukan pelanggan kami berikan atas permintaan.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Siapa miliki IP aplikasi AI tersuai jika kami batalkan?</button>
+            <div class="faq-a"><p>Anda. Kod dan konfigurasi tersuai yang dibina untuk anda diserahkan kepada anda, bersama dokumentasi dan akses repositori — anda tidak akan terikat. Langganan platform pihak ketiga kekal di atas nama anda.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Apa maksud “satu sistem AI” dalam retainer AI Partner?</button>
+            <div class="faq-a"><p>Satu sistem pengeluaran yang fokus — seperti chatbot RAG, aliran automasi, atau satu ciri terintegrasi — diskop dan ditandatangani setiap setengah tahun. Binaan berbilang sistem yang lebih besar dipecahkan kepada sprint berharga jelas.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="cta">
       <div class="wrap">
         <div class="eyebrow">Langkah seterusnya</div>
@@ -323,6 +401,6 @@
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
   </a>
 
-  <script src="../js/main.js?v=20260823a"></script>
+  <script src="../js/main.js?v=20260824a"></script>
 </body>
 </html>

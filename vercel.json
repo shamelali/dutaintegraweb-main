@@ -82,22 +82,12 @@
       "permanent": true
     },
     {
-      "source": "/cases",
-      "destination": "/#products",
-      "permanent": true
-    },
-    {
       "source": "/ms/work",
       "destination": "/ms/#products",
       "permanent": true
     },
     {
       "source": "/ms/work.html",
-      "destination": "/ms/#products",
-      "permanent": true
-    },
-    {
-      "source": "/ms/cases",
       "destination": "/ms/#products",
       "permanent": true
     },

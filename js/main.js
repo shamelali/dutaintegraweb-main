@@ -3,6 +3,7 @@
 const i18n = {
   en: {
     nav_services: "Services",
+    nav_cases: "Case studies",
     nav_about: "About",
     nav_pricing: "Pricing",
     nav_audit: "Free audit",
@@ -47,6 +48,7 @@ const i18n = {
   },
   bm: {
     nav_services: "Perkhidmatan",
+    nav_cases: "Kajian kes",
     nav_about: "Tentang",
     nav_pricing: "Harga",
     nav_audit: "Audit percuma",
@@ -603,6 +605,7 @@ document.addEventListener("DOMContentLoaded", () => {
   syncThemeIcon();
   bindServiceCards();
   bindPreviewLinks();
+  initFaq();
   loadWorkProducts();
   trackEvent("page_view");
   prefillserviceFromQuery();
@@ -775,6 +778,19 @@ function trackEvent(type, meta) {
       }).catch(() => {});
     }
   } catch { /* never break the page */ }
+}
+
+/* ---------- FAQ accordion ---------- */
+function initFaq() {
+  document.querySelectorAll(".faq-item").forEach((item) => {
+    const q = item.querySelector(".faq-q");
+    if (!q || q.dataset.bound) return;
+    q.dataset.bound = "1";
+    q.addEventListener("click", () => {
+      const open = item.classList.toggle("is-open");
+      q.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
 }
 
 /* ---------- Homepage #products: render products from Supabase ---------- */
