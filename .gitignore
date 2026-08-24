@@ -19,6 +19,8 @@ out
 build-*.py
 .opik_example.py
 financial-projection.md
+.~lock.*
+~$*
 
 # Secrets and sensitive
 *.pptx
