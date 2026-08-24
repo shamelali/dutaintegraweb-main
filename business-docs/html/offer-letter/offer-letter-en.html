@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offer Letter - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Offer of Employment</h1>
+        <p class="legal-doc__subtitle">CONFIDENTIAL</p>
+        <div class="legal-doc__meta">
+          <span>Document: OFF-{{DOC_NUMBER}}</span>
+          <span>Version: {{DOC_VERSION}}</span>
+          <span>Date: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <div class="offer__intro">
+          <p class="legal-doc__section-text">
+            <strong>{{CANDIDATE_NAME}}</strong><br>
+            {{CANDIDATE_ADDRESS}}<br>
+            {{CANDIDATE_EMAIL}} | {{CANDIDATE_PHONE}}
+          </p>
+          <p class="legal-doc__section-text" style="margin-top: 16px;">
+            <strong>Date:</strong> {{DOC_DATE}}<br>
+            <strong>Reference:</strong> OFF-{{DOC_NUMBER}}
+          </p>
+        </div>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Dear {{CANDIDATE_NAME}},</h2>
+          <p class="legal-doc__section-text">
+            We are pleased to offer you the position of <strong>{{POSITION_TITLE}}</strong> at Duta Integra Solutions Sdn Bhd. We were impressed by your skills, experience, and alignment with our mission to empower Malaysian SMEs through AI and managed IT solutions.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Position Details</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Position</th><td>{{POSITION_TITLE}}</td></tr>
+              <tr><th>Department</th><td>{{DEPARTMENT}}</td></tr>
+              <tr><th>Reporting To</th><td>{{REPORTING_MANAGER}}</td></tr>
+              <tr><th>Location</th><td>{{WORK_LOCATION}} (Hybrid: {{REMOTE_DAYS}} days remote/week)</td></tr>
+              <tr><th>Employment Type</th><td>{{EMPLOYMENT_TYPE}} (Full-time)</td></tr>
+              <tr><th>Start Date</th><td>{{START_DATE}}</td></tr>
+              <tr><th>Probation Period</th><td>{{PROBATION_PERIOD}} months ({{PROBATION_DAYS}} days)</td></tr>
+              <tr><th>Working Hours</th><td>{{WORK_HOURS}} (Mon-Fri, {{WORK_HOURS_DETAILS}})</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Compensation & Benefits</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Component</th><th>Details</th><th>Amount (RM)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Base Salary</td><td>Monthly, paid on {{PAY_DATE}} of each month</td><td>{{BASE_SALARY}}</td></tr>
+              <tr><td>Allowances</td><td>{{ALLOWANCE_DETAILS}}</td><td>{{ALLOWANCE_AMOUNT}}</td></tr>
+              <tr><td>Variable Bonus</td><td>{{BONUS_DETAILS}} (Performance-based)</td><td>{{BONUS_AMOUNT}}</td></tr>
+              <tr style="border-top: 2px solid var(--color-gold); font-weight: 700;"><td><strong>Total Monthly Compensation</strong></td><td></td><td><strong>{{TOTAL_MONTHLY}}</strong></td></tr>
+              <tr><td>Annual CTC</td><td>Cost to Company (approx.)</td><td>{{ANNUAL_CTC}}</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin: 16px 0 8px 0; font-family: var(--font-display); color: var(--color-navy);">Benefits:</h3>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Medical:</strong> {{MEDICAL_BENEFITS}} (Employee + {{DEPENDENTS_COUNT}} dependents)</li>
+            <li class="legal-doc__list-item"><strong>Leave:</strong> {{ANNUAL_LEAVE}} days annual leave + {{PUBLIC_HOLIDAYS}} public holidays + {{MEDICAL_LEAVE}} days medical leave</li>
+            <li class="legal-doc__list-item"><strong>Hardware:</strong> {{HARDWARE_ALLOWANCE}} laptop/equipment allowance + {{PHONE_ALLOWANCE}} phone allowance</li>
+            <li class="legal-doc__list-item"><strong>Learning:</strong> {{LEARNING_BUDGET}} annual learning budget (courses, certifications, conferences)</li>
+            <li class="legal-doc__list-item"><strong>Flexible Work:</strong> {{REMOTE_DAYS}} days remote/week, flexible hours</li>
+            <li class="legal-doc__list-item"><strong>Insurance:</strong> {{INSURANCE_DETAILS}} (Group term life, personal accident)</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Probation & Confirmation</h2>
+          <p class="legal-doc__section-text">
+            Your employment will be subject to a probation period of <strong>{{PROBATION_PERIOD}} months</strong> from your start date. During this period, either party may terminate employment with <strong>{{NOTICE_PROBATION}} days</strong> written notice. Upon successful completion, your employment will be confirmed in writing.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Termination</h2>
+          <p class="legal-doc__section-text">
+            After confirmation, either party may terminate employment with <strong>{{NOTICE_CONFIRMED}} days</strong> written notice. The Company may terminate immediately for gross misconduct, breach of confidentiality, or material breach of policies.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Confidentiality & IP Assignment</h2>
+          <p class="legal-doc__section-text">
+            You will be required to sign a Confidentiality Agreement and Intellectual Property Assignment Agreement upon joining. All work product, inventions, and innovations created during employment belong to the Company.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Background Check</h2>
+          <p class="legal-doc__section-text">
+            This offer is contingent upon successful completion of background verification (employment history, education, references) within {{BACKGROUND_CHECK_DAYS}} days of start date.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Acceptance</h2>
+          <p class="legal-doc__section-text">
+            Please sign and return this offer by <strong>{{ACCEPTANCE_DEADLINE}}</strong> to confirm your acceptance. This offer expires on that date if not accepted.
+          </p>
+
+          <div class="legal-doc__signature-block">
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CANDIDATE_NAME}}</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <p class="legal-doc__signature-detail">Signature: ___________________________</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | OFF-{{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="offer-letter-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>
