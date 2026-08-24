@@ -49,9 +49,12 @@ function b64urlToObj(part) {
   return JSON.parse(atob(part.replace(/-/g, "+").replace(/_/g, "/")));
 }
 
-export function verifyAdminToken(token) {
+export async function verifyAdminToken(token) {
   try {
-    const [, body] = token.split(".");
+    const [header, body, signature] = token.split(".");
+    if (!header || !body || !signature) return null;
+    const expected = await hmacSign(`${header}.${body}`);
+    if (signature !== expected) return null;
     const payload = b64urlToObj(body);
     if (payload.exp && Date.now() > payload.exp) return null;
     return payload;
@@ -80,7 +83,7 @@ export async function hmacSign(data, secret = JWT_SECRET) {
     .replace(/=+$/, "");
 }
 
-export function getAuthUser(req) {
+export async function getAuthUser(req) {
   const auth = req.headers.get("authorization") || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
   if (!token) return null;

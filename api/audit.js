@@ -28,6 +28,29 @@ const ALLOWED_ORIGINS = [
   "https://dutaintegraweb-main-efunpqs0m-shamelalis-projects.vercel.app",
 ];
 
+// Admin JWT verification — full checklist is only returned to authenticated admins
+const JWT_SECRET = process.env.JWT_SECRET || "duta-integra-admin-secret-change-in-production";
+
+async function verifyAdminToken(token) {
+  try {
+    const [header, body, signature] = token.split(".");
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw", encoder.encode(JWT_SECRET),
+      { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+    );
+    const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(`${header}.${body}`));
+    const expected = btoa(String.fromCharCode(...new Uint8Array(sig)))
+      .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    if (signature !== expected) return null;
+    const payload = JSON.parse(atob(body.replace(/-/g, "+").replace(/_/g, "/")));
+    if (payload.exp && Date.now() > payload.exp) return null;
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
 // Per-IP rate limit (best-effort on serverless; per warm instance)
 const RATE_MAX = Number(process.env.AUDIT_RATE_MAX) || 10;
 const RATE_WINDOW = Number(process.env.AUDIT_RATE_WINDOW) || 60000;
@@ -695,10 +718,14 @@ export async function handler(req) {
     industry: body.industry,
     email: body.email,
   };
+  // Only authenticated admins receive the full item-by-item checklist
+  const auth = req.headers.get("authorization") || "";
+  const adminToken = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  const admin = adminToken ? await verifyAdminToken(adminToken) : null;
   try {
     const report = await runAudit(payload);
-    const shareSlug = await persistAuditResult(report, req);
-    return json({ ok: true, report, shareSlug }, 200, req);
+    if (!admin) report.checks = [];
+    return json({ ok: true, report }, 200, req);
   } catch (err) {
     return json({ ok: false, error: err.message || "Audit failed.", code: err.code || "AUDIT_FAILED" }, statusCodeFor(err), req);
   }

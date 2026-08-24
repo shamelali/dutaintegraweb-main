@@ -37,7 +37,7 @@ async function buildStats(supabase) {
 
 async function handler(req) {
   if (req.method === "OPTIONS") return corsResponse();
-  if (!getAuthUser(req)) return json({ ok: false, error: "Unauthorized" }, 401);
+  if (!(await getAuthUser(req))) return json({ ok: false, error: "Unauthorized" }, 401);
 
   const supabase = getSupabase();
   const [{ data, error }, stats] = await Promise.all([

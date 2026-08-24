@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Duta Integra Solutions — Proposal</title>
+<style>
+  :root {
+    --navy: #1E2D3D; --navy-ink: #0F1822; --gold: #C9A227; --gold-2: #D4B03A;
+    --paper: #F8F9FB; --line: #D5D9E0; --muted: #5F5E5A; --danger: #9B3A3A; --ok: #2F6B4F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Inter", system-ui, -apple-system, sans-serif; color: var(--navy-ink); background: #e8ebef; line-height: 1.55; }
+  .sheet { width: 210mm; min-height: 297mm; margin: 24px auto; background: #fff; padding: 18mm 16mm; box-shadow: 0 4px 24px rgba(30,45,61,.18); position: relative; }
+  .band { background: var(--navy); color: var(--paper); margin: -18mm -16mm 10mm; padding: 12mm 16mm 9mm; }
+  .band .eyebrow { color: var(--gold-2); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+  .band h1 { font-size: 24px; font-weight: 700; }
+  .band p { color: #B8BEC8; font-size: 12px; margin-top: 4px; }
+  h2 { font-size: 15px; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); border-bottom: 2px solid var(--gold); padding-bottom: 6px; margin: 0 0 12px; }
+  h3 { font-size: 13px; margin: 14px 0 6px; }
+  p, li { font-size: 12px; }
+  .muted { color: var(--muted); }
+  .scorebox { display: flex; gap: 16px; align-items: center; border: 1px solid var(--line); border-top: 3px solid var(--gold); padding: 14px 16px; margin-bottom: 14px; }
+  .scorebox .num { font-size: 42px; font-weight: 800; color: var(--navy); font-family: "Rajdhani", "Inter", sans-serif; line-height: 1; }
+  .scorebox .num small { font-size: 16px; color: var(--muted); font-weight: 500; }
+  .scorebox .meta { font-size: 12px; }
+  .scorebox .meta b { display: block; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; }
+  th { background: var(--navy); color: var(--paper); font-size: 10.5px; text-align: left; padding: 7px 9px; letter-spacing: .05em; text-transform: uppercase; }
+  td { border: 1px solid var(--line); font-size: 11px; padding: 8px 9px; vertical-align: top; }
+  td.finding b { display: block; }
+  td.cost { color: var(--danger); font-weight: 600; width: 30%; }
+  td.fix { color: var(--ok); font-weight: 600; width: 26%; }
+  td.when { width: 12%; white-space: nowrap; }
+  .ph { background: #fdf6e3; border-bottom: 1px dotted var(--gold); padding: 0 3px; }
+  .tiers td:first-child { font-weight: 700; width: 22%; }
+  .plan li { margin: 0 0 6px 18px; list-style: disc; }
+  .close-box { border: 1px solid var(--line); border-left: 4px solid var(--gold); padding: 12px 16px; margin-top: 12px; }
+  .close-box .deadline { font-weight: 800; color: var(--danger); }
+  .sign { display: flex; gap: 32px; margin-top: 26px; }
+  .sign div { flex: 1; }
+  .sign .line { border-bottom: 1px solid var(--navy); height: 34px; margin-bottom: 5px; }
+  .sign .lbl { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .attach { margin-top: 14px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+  .attach b { color: var(--navy); }
+  .pagebreak { page-break-after: always; }
+  .foot { position: absolute; bottom: 10mm; left: 16mm; right: 16mm; font-size: 9.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 6px; display: flex; justify-content: space-between; }
+  @media print {
+    body { background: #fff; }
+    .sheet { margin: 0; box-shadow: none; width: auto; min-height: auto; padding: 14mm 14mm; }
+    .band { margin: -14mm -14mm 8mm; padding: 10mm 14mm 7mm; }
+    .ph { background: transparent; border-bottom-color: #999; }
+  }
+  @page { size: A4; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 — COVER + SCORECARD -->
+<section class="sheet">
+  <div class="band">
+    <div class="eyebrow">Proposal · Prepared for <span class="ph">{{CLIENT_COMPANY}}</span></div>
+    <h1>Your Website Audit — The Fix Plan</h1>
+    <p><span class="ph">{{DOMAIN}}</span> · Audit date <span class="ph">{{AUDIT_DATE}}</span> · Prepared by Duta Integra Solutions</p>
+  </div>
+
+  <h2>Where your site stands today</h2>
+  <div class="scorebox">
+    <div class="num"><span class="ph">{{SCORE}}</span><small>/100</small></div>
+    <div class="meta">
+      <b>Grade <span class="ph">{{GRADE}}</span> — <span class="ph">{{GRADE_LABEL}}</span></b>
+      <span class="muted"><span class="ph">{{SUMMARY_ONE_LINER}}</span></span>
+    </div>
+  </div>
+  <p>This proposal addresses the <b>three findings below</b> — the ones costing you money right now. Everything maps to a specific deliverable in our monthly retainer, with a timeline for when each is fixed.</p>
+
+  <div class="pagebreak"></div>
+</section>
+
+<!-- PAGE 2 — THE MONEY TABLE -->
+<section class="sheet">
+  <h2>The 3 findings — what they cost, what fixes them</h2>
+  <table>
+    <tr><th>Finding</th><th>What it costs you</th><th>Deliverable that fixes it</th><th>Fixed by</th></tr>
+    <tr>
+      <td class="finding"><b>1. <span class="ph">{{FINDING_1_TITLE}}</span></b><span class="ph">{{FINDING_1_DETAIL}}</span></td>
+      <td class="cost"><span class="ph">{{COST_1}}</span></td>
+      <td class="fix"><span class="ph">{{FIX_1}}</span></td>
+      <td class="when"><span class="ph">{{WEEK_1}}</span></td>
+    </tr>
+    <tr>
+      <td class="finding"><b>2. <span class="ph">{{FINDING_2_TITLE}}</span></b><span class="ph">{{FINDING_2_DETAIL}}</span></td>
+      <td class="cost"><span class="ph">{{COST_2}}</span></td>
+      <td class="fix"><span class="ph">{{FIX_2}}</span></td>
+      <td class="when"><span class="ph">{{WEEK_2}}</span></td>
+    </tr>
+    <tr>
+      <td class="finding"><b>3. <span class="ph">{{FINDING_3_TITLE}}</span></b><span class="ph">{{FINDING_3_DETAIL}}</span></td>
+      <td class="cost"><span class="ph">{{COST_3}}</span></td>
+      <td class="fix"><span class="ph">{{FIX_3}}</span></td>
+      <td class="when"><span class="ph">{{WEEK_3}}</span></td>
+    </tr>
+  </table>
+
+  <h3>Cost reference (from your audit numbers)</h3>
+  <ul style="margin-left:18px">
+    <li>PDPA breach-notification failure: fine up to <b>RM 1,000,000</b> (amended PDPA).</li>
+    <li>Each extra second of load time: ~10% of visitors lost — <span class="ph">{{AD_SPEND}}</span>/mo of ad budget partially evaporates.</li>
+    <li>Manual follow-up: ~<span class="ph">{{HOURS_MONTH}}</span> hours/month of staff time on repetitive replies.</li>
+  </ul>
+
+  <div class="pagebreak"></div>
+</section>
+
+<!-- PAGE 3 — SCOPE + CLOSE -->
+<section class="sheet">
+  <h2>Your plan: <span class="ph">{{TIER_NAME}}</span> retainer</h2>
+  <table class="tiers">
+    <tr><th>Retainer</th><th>What's included</th><th>Monthly</th></tr>
+    <tr>
+      <td>Foundation</td>
+      <td>24/7 managed IT &amp; helpdesk · cloud &amp; backups · security monitoring &amp; incident response · PDPA compliance support · monthly health reports · dedicated engineer</td>
+      <td>from RM 2,000</td>
+    </tr>
+    <tr>
+      <td>Growth</td>
+      <td>Everything in Foundation, plus: sales &amp; workflow automation (RM 1,500) · content creation (RM 1,000) · ads management (RM 800) · one account manager, one report</td>
+      <td>from RM 5,300</td>
+    </tr>
+  </table>
+
+  <h3>First 30 days</h3>
+  <ul class="plan">
+    <li><b>Week 1</b> — <span class="ph">{{WEEK1_PLAN}}</span></li>
+    <li><b>Weeks 2–3</b> — <span class="ph">{{WEEK23_PLAN}}</span></li>
+    <li><b>Week 4</b> — first health report; re-run of your audit score to show movement.</li>
+  </ul>
+
+  <div class="close-box">
+    <p><b>Your price:</b> <span class="ph">{{TIER_PRICE}}</span>/month. <b><span class="deadline">Onboarding fee waived if signed by <span class="ph">{{DEADLINE_DATE}}</span></span></b> (14 days from this proposal).</p>
+    <p class="muted" style="margin-top:4px">Month-to-month. No lock-in. One signature below starts Week 1.</p>
+  </div>
+
+  <div class="sign">
+    <div><div class="line"></div><div class="lbl">Client name · date</div></div>
+    <div><div class="line"></div><div class="lbl">Duta Integra Solutions · date</div></div>
+  </div>
+
+  <div class="attach"><b>Attached:</b> Service Agreement · Non-Disclosure Agreement. Signing either pack together with this page is the only step needed to begin.</div>
+
+  <div class="foot"><span>Duta Integra Solutions · hello@dutaintegra.my · dutaintegra.my</span><span>Valid until <span class="ph">{{DEADLINE_DATE}}</span></span></div>
+</section>
+
+<script>
+  // Quick-fill: open as proposal-template.html?company=Ali+Trading&domain=ali.my&score=62&grade=C&date=2026-08-24&deadline=2026-09-07
+  var q = new URLSearchParams(location.search);
+  var map = { company: "{{CLIENT_COMPANY}}", domain: "{{DOMAIN}}", score: "{{SCORE}}", grade: "{{GRADE}}", date: "{{AUDIT_DATE}}", deadline: "{{DEADLINE_DATE}}", adspend: "{{AD_SPEND}}", hours: "{{HOURS_MONTH}}", tier: "{{TIER_NAME}}", price: "{{TIER_PRICE}}" };
+  document.body.innerHTML = document.body.innerHTML.replace(/\{\{[A-Z_0-9]+\}\}/g, function (m) {
+    for (var k in map) if (map[k] === m && q.get(k)) return q.get(k);
+    return m;
+  });
+</script>
+</body>
+</html>

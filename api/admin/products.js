@@ -149,7 +149,7 @@ async function handler(req) {
 
   // Image upload endpoint (auth required)
   if (req.method === "POST" && new URL(req.url).searchParams.get("upload")) {
-    const user = getAuthUser(req);
+    const user = await getAuthUser(req);
     if (!user) return json({ ok: false, error: "Unauthorized" }, 401);
     return uploadImage(req);
   }
@@ -157,25 +157,25 @@ async function handler(req) {
   // Public-safe listing for the admin UI still requires auth; the public site
   // uses /api/products instead.
   if (req.method === "GET") {
-    const user = getAuthUser(req);
+    const user = await getAuthUser(req);
     if (!user) return json({ ok: false, error: "Unauthorized" }, 401);
     return listProducts(req);
   }
 
   if (req.method === "POST") {
-    const user = getAuthUser(req);
+    const user = await getAuthUser(req);
     if (!user) return json({ ok: false, error: "Unauthorized" }, 401);
     return createProduct(req);
   }
 
   if (req.method === "PATCH") {
-    const user = getAuthUser(req);
+    const user = await getAuthUser(req);
     if (!user) return json({ ok: false, error: "Unauthorized" }, 401);
     return updateProduct(req);
   }
 
   if (req.method === "DELETE") {
-    const user = getAuthUser(req);
+    const user = await getAuthUser(req);
     if (!user) return json({ ok: false, error: "Unauthorized" }, 401);
     return deleteProduct(req);
   }

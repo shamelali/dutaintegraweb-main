@@ -211,8 +211,6 @@ body.promo-live .promo-banner { display: block; }
   .promo-card { padding: 16px; }
   .promo-card h3 { font-size: 16px; }
 }
-  flex-wrap: wrap;
-}
 .promo-clock {
   font-family: var(--font-d);
   font-weight: 700;
@@ -1624,6 +1622,10 @@ body.dark {
   --navy: #1E2D3D;
   --navy-2: #16232F;
   --navy-ink: #0F1822;
+  /* Status colors brightened for contrast on dark surfaces
+     (used by audit grade text, score ring, category bars, status dots) */
+  --ok: #6FCF97;
+  --danger: #E57B7B;
   /* Fixed light ink — used wherever light mode paints var(--paper) on dark UI */
   --on-dark: #F8F9FB;
 }
@@ -2762,6 +2764,8 @@ body.dark .audit-rec h4 { color: var(--paper); }
 body.dark .audit-cta-actions .btn-gold { color: var(--navy); }
 body.dark .audit-loading-steps span { color: #B8BEC8; border-color: rgba(255,255,255,.12); }
 body.dark .audit-loading-steps span.is-on { color: var(--gold); border-color: var(--gold); }
+body.dark .audit-status.is-warn { color: var(--gold-2); }
+body.dark .audit-report-cta { color: #F8F9FB; }
 
 /* Audit demo banner (preview only — shown when live fetch unavailable) */
 .audit-demo-banner {
@@ -2922,3 +2926,20 @@ body.dark .preview-register-form input:focus {
 body.dark .preview-register-note {
   color: #6B7280;
 }
+
+/* Audit full-checklist locked state */
+.audit-locked-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #fdf6e3;
+  color: #a16207;
+  border: 1px solid rgba(212, 168, 67, 0.4);
+}
+body.dark .audit-locked-badge { background: rgba(212,168,67,0.12); color: var(--gold); }
+.audit-locked-note { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 4px 0 16px; max-width: 60ch; }
+.audit-card-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
