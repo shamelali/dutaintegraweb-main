@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Acceptance - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Project Acceptance Certificate</h1>
+        <p class="legal-doc__subtitle">FORMAL SIGN-OFF</p>
+        <div class="legal-doc__meta">
+          <span>Document: PAC-{{DOC_NUMBER}}</span>
+          <span>Version: {{DOC_VERSION}}</span>
+          <span>Date: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Project Information</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Project Name</th><td>{{PROJECT_NAME}}</td></tr>
+              <tr><th>Project Number</th><td>{{PROJECT_NUMBER}}</td></tr>
+              <tr><th>Client</th><td>{{CLIENT_NAME}}</td></tr>
+              <tr><th>Provider</th><td>Duta Integra Solutions Sdn Bhd</td></tr>
+              <tr><th>Agreement Reference</th><td>MSA-{{MSA_NUMBER}} / SOW-{{SOW_NUMBER}}</td></tr>
+              <tr><th>Acceptance Date</th><td>{{ACCEPTANCE_DATE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Scope of Acceptance</h2>
+          <p class="legal-doc__section-text">
+            This certificate confirms the formal acceptance of the following deliverables completed under the above-referenced Statement of Work:
+          </p>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Deliverable</th><th>Description</th><th>Acceptance Date</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{DELIVERABLE_1}}</td><td>{{DELIVERABLE_1_DESC}}</td><td>{{DELIVERY_1_DATE}}</td><td>✅ Accepted</td></tr>
+              <tr><td>2</td><td>{{DELIVERABLE_2}}</td><td>{{DELIVERABLE_2_DESC}}</td><td>{{DELIVERY_2_DATE}}</td><td>✅ Accepted</td></tr>
+              <tr><td>3</td><td>{{DELIVERABLE_3}}</td><td>{{DELIVERABLE_3_DESC}}</td><td>{{DELIVERY_3_DATE}}</td><td>✅ Accepted</td></tr>
+              <tr><td>4</td><td>{{DELIVERABLE_4}}</td><td>{{DELIVERABLE_4_DESC}}</td><td>{{DELIVERY_4_DATE}}</td><td>✅ Accepted</td></tr>
+              <tr><td>5</td><td>{{DELIVERABLE_5}}</td><td>{{DELIVERABLE_5_DESC}}</td><td>{{DELIVERY_5_DATE}}</td><td>✅ Accepted</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Acceptance Criteria Verification</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Criteria</th><th>Requirement</th><th>Result</th><th>Evidence/Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Functional Requirements</td><td>{{CRITERIA_1_REQ}}</td><td>✅ Met</td><td>{{CRITERIA_1_EVIDENCE}}</td></tr>
+              <tr><td>Performance</td><td>{{CRITERIA_2_REQ}}</td><td>✅ Met</td><td>{{CRITERIA_2_EVIDENCE}}</td></tr>
+              <tr><td>Security</td><td>{{CRITERIA_3_REQ}}</td><td>✅ Met</td><td>{{CRITERIA_3_EVIDENCE}}</td></tr>
+              <tr><td>Usability</td><td>{{CRITERIA_4_REQ}}</td><td>✅ Met</td><td>{{CRITERIA_4_EVIDENCE}}</td></tr>
+              <tr><td>Documentation</td><td>{{CRITERIA_5_REQ}}</td><td>✅ Met</td><td>{{CRITERIA_5_EVIDENCE}}</td></tr>
+              <tr><td>Training Completed</td><td>{{CRITERIA_6_REQ}}</td><td>✅ Met</td><td>{{CRITERIA_6_EVIDENCE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Known Issues / Exceptions</h2>
+          <p class="legal-doc__section-text">
+            {{KNOWN_ISSUES}}
+          </p>
+          <p class="legal-doc__section-text">
+            The above items are acknowledged and accepted as known limitations. Resolution timeline: {{ISSUE_RESOLUTION_TIMELINE}}.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Warranty Period</h2>
+          <p class="legal-doc__section-text">
+            Provider warrants the deliverables against defects for a period of <strong>{{WARRANTY_PERIOD}} days</strong> from the Acceptance Date. During this period, Provider shall rectify any defects at no additional cost.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Transition to Support</h2>
+          <p class="legal-doc__section-text">
+            Upon acceptance, the project transitions to the support phase per the Master Services Agreement. Support contact: hello@dutaintegra.my | +60 11-5403 4051
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Formal Acceptance</h2>
+          <p class="legal-doc__section-text">
+            By signing below, the Client formally accepts all deliverables as complete and satisfactory per the agreed acceptance criteria. This acceptance constitutes full satisfaction of Provider's obligations under the referenced Statement of Work.
+          </p>
+
+          <div class="legal-doc__signature-block">
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="project-acceptance-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>

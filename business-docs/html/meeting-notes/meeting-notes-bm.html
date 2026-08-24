@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nota Mesyuarat - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+</head>
+<body>
+  <div class="page">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="doc-header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="doc-header__logo">
+        <h1 class="doc-header__title">Nota Mesyuarat</h1>
+        <div class="doc-header__subtitle">{{MEETING_TITLE}}</div>
+      </header>
+
+      <div class="legal-doc__body">
+        <section class="section">
+          <h2 class="section__title">Butiran Mesyuarat</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Tajuk Mesyuarat</th><td>{{MEETING_TITLE}}</td></tr>
+              <tr><th>Tarikh</th><td>{{MEETING_DATE}}</td></tr>
+              <tr><th>Masa</th><td>{{MEETING_TIME}} ({{TIMEZONE}})</td></tr>
+              <tr><th>Lokasi / Pautan</th><td>{{MEETING_LOCATION}}</td></tr>
+              <tr><th>Projek</th><td>{{PROJECT_NAME}} ({{PROJECT_NUMBER}})</td></tr>
+              <tr><th>Penganjur</th><td>{{ORGANIZER_NAME}}</td></tr>
+              <tr><th>Penulis Nota</th><td>{{NOTE_TAKER}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Peserta</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Nama</th><th>Peranan</th><th>Organisasi</th><th>Hadir</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{ATTENDEE_1_NAME}}</td><td>{{ATTENDEE_1_ROLE}}</td><td>{{ATTENDEE_1_ORG}}</td><td>☐</td></tr>
+              <tr><td>{{ATTENDEE_2_NAME}}</td><td>{{ATTENDEE_2_ROLE}}</td><td>{{ATTENDEE_2_ORG}}</td><td>☐</td></tr>
+              <tr><td>{{ATTENDEE_3_NAME}}</td><td>{{ATTENDEE_3_ROLE}}</td><td>{{ATTENDEE_3_ORG}}</td><td>☐</td></tr>
+              <tr><td>{{ATTENDEE_4_NAME}}</td><td>{{ATTENDEE_4_ROLE}}</td><td>{{ATTENDEE_4_ORG}}</td><td>☐</td></tr>
+              <tr><td>{{ATTENDEE_5_NAME}}</td><td>{{ATTENDEE_5_ROLE}}</td><td>{{ATTENDEE_5_ORG}}</td><td>☐</td></tr>
+              <tr><td>{{ATTENDEE_6_NAME}}</td><td>{{ATTENDEE_6_ROLE}}</td><td>{{ATTENDEE_6_ORG}}</td><td>☐</td></tr>
+            </tbody>
+          </table>
+          <p class="section__text" style="margin-top: 12px; font-size: 9pt; color: var(--color-text-light);">☑ = Hadir  ☐ = Tidak Hadir  ◐ = Sebahagian</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Agenda</h2>
+          <ol class="legal-doc__list" style="list-style: decimal; padding-left: 24px;">
+            <li class="legal-doc__list-item">{{AGENDA_1}}</li>
+            <li class="legal-doc__list-item">{{AGENDA_2}}</li>
+            <li class="legal-doc__list-item">{{AGENDA_3}}</li>
+            <li class="legal-doc__list-item">{{AGENDA_4}}</li>
+            <li class="legal-doc__list-item">{{AGENDA_5}}</li>
+            <li class="legal-doc__list-item">{{AGENDA_6}}</li>
+          </ol>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Perkara Yang Dibincangkan</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Topik</th><th>Ringkasan Perbincangan</th><th>Pemilik</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{DISCUSSION_1_TOPIC}}</td><td>{{DISCUSSION_1_SUMMARY}}</td><td>{{DISCUSSION_1_OWNER}}</td></tr>
+              <tr><td>2</td><td>{{DISCUSSION_2_TOPIC}}</td><td>{{DISCUSSION_2_SUMMARY}}</td><td>{{DISCUSSION_2_OWNER}}</td></tr>
+              <tr><td>3</td><td>{{DISCUSSION_3_TOPIC}}</td><td>{{DISCUSSION_3_SUMMARY}}</td><td>{{DISCUSSION_3_OWNER}}</td></tr>
+              <tr><td>4</td><td>{{DISCUSSION_4_TOPIC}}</td><td>{{DISCUSSION_4_SUMMARY}}</td><td>{{DISCUSSION_4_OWNER}}</td></tr>
+              <tr><td>5</td><td>{{DISCUSSION_5_TOPIC}}</td><td>{{DISCUSSION_5_SUMMARY}}</td><td>{{DISCUSSION_5_OWNER}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Keputusan Yang Dibuat</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Keputusan</th><th>Justifikasi</th><th>Diluluskan Oleh</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{DECISION_1}}</td><td>{{DECISION_1_RATIONALE}}</td><td>{{DECISION_1_APPROVER}}</td></tr>
+              <tr><td>2</td><td>{{DECISION_2}}</td><td>{{DECISION_2_RATIONALE}}</td><td>{{DECISION_2_APPROVER}}</td></tr>
+              <tr><td>3</td><td>{{DECISION_3}}</td><td>{{DECISION_3_RATIONALE}}</td><td>{{DECISION_3_APPROVER}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Item Tindakan</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Item Tindakan</th><th>Pemilik</th><th>Tarikh Jatuh Tempo</th><th>Status</th><th>Nota</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{ACTION_1}}</td><td>{{ACTION_1_OWNER}}</td><td>{{ACTION_1_DUE}}</td><td>☐ Terbuka</td><td>{{ACTION_1_NOTES}}</td></tr>
+              <tr><td>2</td><td>{{ACTION_2}}</td><td>{{ACTION_2_OWNER}}</td><td>{{ACTION_2_DUE}}</td><td>☐ Terbuka</td><td>{{ACTION_2_NOTES}}</td></tr>
+              <tr><td>3</td><td>{{ACTION_3}}</td><td>{{ACTION_3_OWNER}}</td><td>{{ACTION_3_DUE}}</td><td>☐ Terbuka</td><td>{{ACTION_3_NOTES}}</td></tr>
+              <tr><td>4</td><td>{{ACTION_4}}</td><td>{{ACTION_4_OWNER}}</td><td>{{ACTION_4_DUE}}</td><td>☐ Terbuka</td><td>{{ACTION_4_NOTES}}</td></tr>
+              <tr><td>5</td><td>{{ACTION_5}}</td><td>{{ACTION_5_OWNER}}</td><td>{{ACTION_5_DUE}}</td><td>☐ Terbuka</td><td>{{ACTION_5_NOTES}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Risiko / Isu / Penghalang</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Isu</th><th>Kesan</th><th>Pemilik</th><th>Mitigasi</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{RISK_1}}</td><td>{{RISK_1_IMPACT}}</td><td>{{RISK_1_OWNER}}</td><td>{{RISK_1_MITIGATION}}</td><td>{{RISK_1_STATUS}}</td></tr>
+              <tr><td>2</td><td>{{RISK_2}}</td><td>{{RISK_2_IMPACT}}</td><td>{{RISK_2_OWNER}}</td><td>{{RISK_2_MITIGATION}}</td><td>{{RISK_2_STATUS}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Langkah Seterusnya</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">{{NEXT_STEP_1}}</li>
+            <li class="legal-doc__list-item">{{NEXT_STEP_2}}</li>
+            <li class="legal-doc__list-item">{{NEXT_STEP_3}}</li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Mesyuarat Seterusnya</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Tarikh</th><td>{{NEXT_MEETING_DATE}}</td></tr>
+              <tr><th>Masa</th><td>{{NEXT_MEETING_TIME}} ({{TIMEZONE}})</td></tr>
+              <tr><th>Lokasi / Pautan</th><td>{{NEXT_MEETING_LOCATION}}</td></tr>
+              <tr><th>Agenda Dicadangkan</th><td>{{NEXT_MEETING_AGENDA}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section">
+          <h2 class="section__title">Agihan</h2>
+          <p class="section__text">
+            Nota ini akan diedarkan kepada: {{DISTRIBUTION_LIST}}
+          </p>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | {{MEETING_TITLE}} | {{MEETING_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="meeting-notes-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>

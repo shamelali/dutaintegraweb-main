@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pernyataan Kerja - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+  <style>
+    @media print {
+      .legal-doc { font-size: 10pt; line-height: 1.6; }
+      .legal-doc__watermark { display: none; }
+      .legal-doc__page-break { page-break-after: always; }
+      .legal-doc__no-break { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Pernyataan Kerja</h1>
+        <p class="legal-doc__subtitle">SULIT</p>
+        <div class="legal-doc__meta">
+          <span>Dokumen: PK-{{DOC_NUMBER}}</span>
+          <span>Versi: {{DOC_VERSION}}</span>
+          <span>Tarikh: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <table class="table legal-doc__info-table">
+          <tbody>
+            <tr><th>Nama Projek</th><td>{{PROJECT_NAME}}</td></tr>
+            <tr><th>Nombor Projek</th><td>{{PROJECT_NUMBER}}</td></tr>
+            <tr><th>Perjanjian Utama</th><td>PPU-{{MSA_NUMBER}}</td></tr>
+            <tr><th>Pelanggan</th><td>{{CLIENT_NAME}}</td></tr>
+            <tr><th>Penyedia</th><td>Duta Integra Solutions Sdn Bhd</td></tr>
+            <tr><th>Tarikh Kuat Kuasa</th><td>{{EFFECTIVE_DATE}}</td></tr>
+            <tr><th>Tarikh Mula</th><td>{{PROJECT_START}}</td></tr>
+            <tr><th>Tarikh Tamat Anggaran</th><td>{{PROJECT_END}}</td></tr>
+            <tr><th>Pengurus Projek (Penyedia)</th><td>{{PM_PROVIDER}}</td></tr>
+            <tr><th>Pengurus Projek (Pelanggan)</th><td>{{PM_CLIENT}}</td></tr>
+          </tbody>
+        </table>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">1. Gambaran Keseluruhan Projek</h2>
+          <p class="legal-doc__section-text">
+            <strong>Objektif:</strong> {{PROJECT_OBJECTIVE}}<br>
+            <strong>Latar Belakang:</strong> {{PROJECT_BACKGROUND}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">2. Skop Kerja</h2>
+          <p class="legal-doc__section-text">Penyedia hendaklah melaksanakan perkhidmatan berikut:</p>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Fasa 1 - Penemuan & Perancangan:</strong> {{PHASE_1_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Fasa 2 - Reka Bentuk & Seni Bina:</strong> {{PHASE_2_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Fasa 3 - Pembangunan & Pelaksanaan:</strong> {{PHASE_3_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Fasa 4 - Ujian & Jaminan Kualiti:</strong> {{PHASE_4_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Fasa 5 - Pelaksanaan & Go-Live:</strong> {{PHASE_5_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Fasa 6 - Latihan & Penyerahan:</strong> {{PHASE_6_DESC}}</li>
+          </ul>
+          <p class="legal-doc__section-text"><strong>Luaran Skop:</strong> {{OUT_OF_SCOPE}}</p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Penghantaran</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Penghantaran</th><th>Penerangan</th><th>Tarikh Mula</th><th>Kriteria Penerimaan</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{DELIVERABLE_1_NAME}}</td><td>{{DELIVERABLE_1_DESC}}</td><td>{{DELIVERABLE_1_DATE}}</td><td>{{DELIVERABLE_1_AC}}</td></tr>
+              <tr><td>2</td><td>{{DELIVERABLE_2_NAME}}</td><td>{{DELIVERABLE_2_DESC}}</td><td>{{DELIVERABLE_2_DATE}}</td><td>{{DELIVERABLE_2_AC}}</td></tr>
+              <tr><td>3</td><td>{{DELIVERABLE_3_NAME}}</td><td>{{DELIVERABLE_3_DESC}}</td><td>{{DELIVERABLE_3_DATE}}</td><td>{{DELIVERABLE_3_AC}}</td></tr>
+              <tr><td>4</td><td>{{DELIVERABLE_4_NAME}}</td><td>{{DELIVERABLE_4_DESC}}</td><td>{{DELIVERABLE_4_DATE}}</td><td>{{DELIVERABLE_4_AC}}</td></tr>
+              <tr><td>5</td><td>{{DELIVERABLE_5_NAME}}</td><td>{{DELIVERABLE_5_DESC}}</td><td>{{DELIVERABLE_5_DATE}}</td><td>{{DELIVERABLE_5_AC}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Garis Masa & Milestone</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Milestone</th><th>Tarikh Sasaran</th><th>Kebergantungan</th><th>Pemilik</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Kickoff & Keputusan Keperluan</td><td>{{MILESTONE_1_DATE}}</td><td>—</td><td>Kedua-dua</td></tr>
+              <tr><td>Reka Bentuk & Seni Bina Diluluskan</td><td>{{MILESTONE_2_DATE}}</td><td>Keperluan diluluskan</td><td>Penyedia</td></tr>
+              <tr><td>Pembangunan Selesai (Alpha)</td><td>{{MILESTONE_3_DATE}}</td><td>Reka bentuk diluluskan</td><td>Penyedia</td></tr>
+              <tr><td>UAT Selesai</td><td>{{MILESTONE_4_DATE}}</td><td>Penghantaran Alpha</td><td>Pelanggan</td></tr>
+              <tr><td>Go-Live / Pelancaran</td><td>{{MILESTONE_5_DATE}}</td><td>UAT diluluskan</td><td>Kedua-dua</td></tr>
+              <tr><td>Penutupan Projek & Penyerahan</td><td>{{MILESTONE_6_DATE}}</td><td>Go-Live stabil</td><td>Penyedia</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">4. Anggapan & Kebergantungan</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">Pelanggan menyediakan akses tepat masa ke sistem, pihak berkepentingan, dan dokumentasi</li>
+            <li class="legal-doc__list-item">Pelanggan menunjuk Pengurus Projek tunggal dengan kuasa keputusan</li>
+            <li class="legal-doc__list-item">Pelanggan memberi maklum balas tepat masa (dalam 3 hari bekerja) ke atas penghantaran</li>
+            <li class="legal-doc__list-item">API/perkhidmatan pihak ketiga tersedia dan didokumentasikan</li>
+            <li class="legal-doc__list-item">Tiada perubahan skop tanpa Perintah Perubahan formal</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">5. Kriteria Penerimaan</h2>
+          <p class="legal-doc__section-text">
+            Penghantaran diterima apabila: (a) semua kriteria penerimaan dipenuhi; (b) Pelanggan menandatangani borang penerimaan; atau (c) 5 hari bekerja berlalu tanpa bantahan bertulis selepas penghantaran.
+          </p>
+          <p class="legal-doc__section-text">
+            Pelanggan hendaklah menguji setiap penghantaran dalam <strong>5 hari bekerja</strong>. Cacat dilaporkan secara bertulis. Penyedia memperbetulkan cacat kritikal dalam <strong>3 hari bekerja</strong>, mayor dalam <strong>5 hari bekerja</strong>, minor dalam <strong>10 hari bekerja</strong>.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">6. Yuran & Jadual Pembayaran</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Milestone / Penghantaran</th><th>Amaun (RM)</th><th>Jatuh Tempo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Deposit / Kickoff</td><td>{{PAYMENT_1_AMOUNT}}</td><td>Apabila ditandatangani</td></tr>
+              <tr><td>Reka Bentuk & Seni Bina Selesai</td><td>{{PAYMENT_2_AMOUNT}}</td><td>Milestone 2</td></tr>
+              <tr><td>Pembangunan Selesai (Alpha)</td><td>{{PAYMENT_3_AMOUNT}}</td><td>Milestone 3</td></tr>
+              <tr><td>UAT Selesai</td><td>{{PAYMENT_4_AMOUNT}}</td><td>Milestone 4</td></tr>
+              <tr><td>Go-Live / Penghantaran Akhir</td><td>{{PAYMENT_5_AMOUNT}}</td><td>Milestone 5</td></tr>
+              <tr><td><strong>Jumlah</strong></td><td><strong>{{TOTAL_AMOUNT}}</strong></td><td></td></tr>
+            </tbody>
+          </table>
+          <p class="legal-doc__section-text">Semua amaun dalam RM, tidak termasuk SST (8%). Terma pembayaran: Net 30 hari.</p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">7. Pengurusan Perubahan</h2>
+          <p class="legal-doc__section-text">
+            Sebarang perubahan kepada skop, garis masa, atau bajet memerlukan Perintah Perubahan bertulis yang ditandatangani oleh kedua-dua Pihak. Penyedia akan menilai kesan dalam 3 hari bekerja dan menyediakan garis masa/kos yang dikemaskini.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">8. Tanggungjawab Pelanggan</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">Menunjuk Pengurus Projek dengan kuasa keputusan</li>
+            <li class="legal-doc__list-item">Menyediakan akses tepat masa ke sistem, data, dan pihak berkepentingan</li>
+            <li class="legal-doc__list-item">Menyemak penghantaran dalam jangka masa yang disepakati</li>
+            <li class="legal-doc__list-item">Memberi maklum balas tepat masa ke atas reka bentuk, prototaip, dan keputusan ujian</li>
+            <li class="legal-doc__list-item">Mendapatkan kelulusan/akses pihak ketiga yang perlu</li>
+            <li class="legal-doc__list-item">Memastikan ketersediaan untuk UAT dan sesi latihan</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">9. Penerimaan & Penandatanganan</h2>
+          <div class="legal-doc__signature-block">
+            <p class="legal-doc__signature-intro">Dengan menandatangani di bawah, kedua-dua Pihak mengakui dan bersetuju dengan terma Pernyataan Kerja ini.</p>
+
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | Sulit — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="sow-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>

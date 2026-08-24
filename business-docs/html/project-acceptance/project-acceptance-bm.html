@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sijil Penerimaan Projek - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Sijil Penerimaan Projek</h1>
+        <p class="legal-doc__subtitle">PENYAHSAHAN RASMI</p>
+        <div class="legal-doc__meta">
+          <span>Dokumen: PAC-{{DOC_NUMBER}}</span>
+          <span>Versi: {{DOC_VERSION}}</span>
+          <span>Tarikh: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Maklumat Projek</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Nama Projek</th><td>{{PROJECT_NAME}}</td></tr>
+              <tr><th>Nombor Projek</th><td>{{PROJECT_NUMBER}}</td></tr>
+              <tr><th>Pelanggan</th><td>{{CLIENT_NAME}}</td></tr>
+              <tr><th>Penyedia</th><td>Duta Integra Solutions Sdn Bhd</td></tr>
+              <tr><th>Rujukan Perjanjian</th><td>PPU-{{MSA_NUMBER}} / PK-{{SOW_NUMBER}}</td></tr>
+              <tr><th>Tarikh Penerimaan</th><td>{{ACCEPTANCE_DATE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Skop Penerimaan</h2>
+          <p class="legal-doc__section-text">
+            Sijil ini mengesahkan penerimaan rasmi penghantaran berikut yang diselesaikan di bawah Pernyataan Kerja yang dirujuk di atas:
+          </p>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Penghantaran</th><th>Penerangan</th><th>Tarikh Penghantaran</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{DELIVERABLE_1}}</td><td>{{DELIVERABLE_1_DESC}}</td><td>{{DELIVERY_1_DATE}}</td><td>✅ Diterima</td></tr>
+              <tr><td>2</td><td>{{DELIVERABLE_2}}</td><td>{{DELIVERABLE_2_DESC}}</td><td>{{DELIVERY_2_DATE}}</td><td>✅ Diterima</td></tr>
+              <tr><td>3</td><td>{{DELIVERABLE_3}}</td><td>{{DELIVERABLE_3_DESC}}</td><td>{{DELIVERY_3_DATE}}</td><td>✅ Diterima</td></tr>
+              <tr><td>4</td><td>{{DELIVERABLE_4}}</td><td>{{DELIVERABLE_4_DESC}}</td><td>{{DELIVERY_4_DATE}}</td><td>✅ Diterima</td></tr>
+              <tr><td>5</td><td>{{DELIVERABLE_5}}</td><td>{{DELIVERABLE_5_DESC}}</td><td>{{DELIVERY_5_DATE}}</td><td>✅ Diterima</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Pengesahan Kriteria Penerimaan</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Kriteria</th><th>Keperluan</th><th>Keputusan</th><th>Bukti/Catatan</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Keperluan Fungsional</td><td>{{CRITERIA_1_REQ}}</td><td>✅ Dipenuhi</td><td>{{CRITERIA_1_EVIDENCE}}</td></tr>
+              <tr><td>Prestasi</td><td>{{CRITERIA_2_REQ}}</td><td>✅ Dipenuhi</td><td>{{CRITERIA_2_EVIDENCE}}</td></tr>
+              <tr><td>Keselamatan</td><td>{{CRITERIA_3_REQ}}</td><td>✅ Dipenuhi</td><td>{{CRITERIA_3_EVIDENCE}}</td></tr>
+              <tr><td>Kemudahan Penggunaan</td><td>{{CRITERIA_4_REQ}}</td><td>✅ Dipenuhi</td><td>{{CRITERIA_4_EVIDENCE}}</td></tr>
+              <tr><td>Dokumentasi</td><td>{{CRITERIA_5_REQ}}</td><td>✅ Dipenuhi</td><td>{{CRITERIA_5_EVIDENCE}}</td></tr>
+              <tr><td>Latihan Selesai</td><td>{{CRITERIA_6_REQ}}</td><td>✅ Dipenuhi</td><td>{{CRITERIA_6_EVIDENCE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Isu / Pengecualian Dikenali</h2>
+          <p class="legal-doc__section-text">
+            {{KNOWN_ISSUES}}
+          </p>
+          <p class="legal-doc__section-text">
+            Item-item di atas diketahui dan diterima sebagai had yang diketahui. Garis masa penyelesaian: {{ISSUE_RESOLUTION_TIMELINE}}.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Tempoh Waranti</h2>
+          <p class="legal-doc__section-text">
+            Penyedia menguaranti penghantaran bebas cacat untuk tempoh <strong>{{WARRANTY_PERIOD}} hari</strong> dari Tarikh Penerimaan. Selama tempoh ini, Penyedia akan memperbetulkan sebarang cacat tanpa kos tambahan.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Peralihan ke Sokongan</h2>
+          <p class="legal-doc__section-text">
+            Apabila diterima, projek beralih ke fasa sokongan mengikut Perjanjian Perkhidmatan Utama. Hubungi sokongan: hello@dutaintegra.my | +60 11-5403 4051
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Penerimaan Rasmi</h2>
+          <p class="legal-doc__section-text">
+            Dengan menandatangani di bawah, Pelanggan secara rasmi menerima semua penghantaran sebagai lengkap dan memuaskan mengikut kriteria penerimaan yang disepakati. Penerimaan ini merupakan pemenuhan penuh kewajipan Penyedia di bawah Pernyataan Kerja yang dirujuk.
+          </p>
+
+          <div class="legal-doc__signature-block">
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="project-acceptance-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>
