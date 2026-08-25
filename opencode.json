@@ -2,6 +2,19 @@
   "$schema": "https://opencode.ai/config.json",
   "username": "Duta Integra Solutions",
   "default_agent": "ai-services",
+  "mcp": {
+    "supabase": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@supabase/mcp-server-supabase-mcp@latest",
+        "--project-id=wnehfuhpaptrxxnlzmck"
+      ],
+      "enabled": true,
+      "environment": {}
+    }
+  },
   "agent": {
     "ai-services": {
       "description": "Internal AI services delivery agent for Duta Integra — chatbots, RPA, ML, AI integration, NLP, and dashboards.",
