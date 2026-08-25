@@ -141,23 +141,6 @@ Google Drive / Duta Integra / Business Documents /
 
 ---
 
-## Incident Response
-
-### Unauthorized Access Detected
-1. **Immediate**: Revoke suspicious access
-2. **Within 1 hour**: Notify Owner + Admin
-3. **Within 4 hours**: Audit access logs, identify scope
-5. **Within 24 hours**: Remediate, document, notify affected parties if needed
-
-### Data Breach (Template Content)
-1. **Immediate**: Lock affected templates (view-only)
-2. **Within 1 hour**: Assess exposure (what, who, when)
-3. **Within 4 hours**: Notify legal counsel
-4. **Within 24 hours**: Regulatory notification if required (PDPA 72hr)
-5. **Post-incident**: Root cause analysis, policy update
-
----
-
 ## Tools & Automation
 
 ### Recommended Google Workspace Settings

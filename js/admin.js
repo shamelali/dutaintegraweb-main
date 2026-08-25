@@ -216,6 +216,7 @@
     loadAudits();
     initPageSwitching();
     initProductsUI();
+    initCasesUI();
     renderGreeting();
     renderTasks();
     updateTimestamp();
@@ -306,6 +307,7 @@
     dashboard: { title: "Dashboard", sub: "Overview of leads and activity" },
     leads: { title: "Leads", sub: "Every enquiry captured by the site", view: "dashboard" },
     audits: { title: "Audits", sub: "Free brand audit runs and conversions" },
+    cases: { title: "Case Studies", sub: "Cards on the /cases page — add, edit, publish" },
     products: { title: "Products", sub: "Manage the Work section — add, edit, publish" }
   };
 
@@ -325,6 +327,7 @@
         document.getElementById("pageTitle").textContent = meta.title;
         document.getElementById("pageSub").textContent = meta.sub;
         if (page === "audits") loadAudits();
+        if (page === "cases") loadCases();
         if (page === "products") loadProducts();
       });
     });
@@ -498,9 +501,10 @@
     document.getElementById("productModal").hidden = true;
   }
 
-  function syncImagePreview() {
-    var url = document.getElementById("pf-image-url").value.trim();
-    var img = document.getElementById("pf-img-preview");
+  function syncImagePreview(prefix) {
+    prefix = prefix || "pf";
+    var url = document.getElementById(prefix + "-image-url").value.trim();
+    var img = document.getElementById(prefix + "-img-preview");
     img.hidden = !url;
     if (url) img.src = url;
   }
@@ -611,6 +615,199 @@
     document.getElementById("exportAuditsCsv").addEventListener("click", window.exportAuditsCsv);
     document.getElementById("productModal").addEventListener("click", function (e) {
       if (e.target === this) closeProductModal();
+    });
+  }
+
+  /* ── Case studies (CRUD) ─────────────────────────────────────── */
+  var allCases = [];
+
+  async function loadCases() {
+    var data = await apiFetch("/case-studies");
+    if (!data || !data.ok) return;
+    allCases = data.caseStudies || [];
+    renderCases();
+  }
+
+  function renderCases() {
+    var body = document.getElementById("casesBody");
+    var empty = document.getElementById("casesEmpty");
+    if (!body) return;
+    if (!allCases.length) {
+      body.innerHTML = "";
+      empty.style.display = "";
+      return;
+    }
+    empty.style.display = "none";
+    body.innerHTML = allCases.map(function (c) {
+      return '<tr>' +
+        '<td>' + (c.image_url ? '<img class="thumb" src="' + esc(c.image_url) + '" alt="" />' : "") + "</td>" +
+        "<td><b>" + esc(c.client_name) + "</b></td>" +
+        "<td>" + esc(c.category || "") + "</td>" +
+        '<td><a href="' + esc(c.detail_url || "#") + '" target="_blank" rel="noopener">' + esc(c.detail_url || "—") + "</a></td>" +
+        "<td>" + (c.sort_order || 0) + "</td>" +
+        '<td><span class="badge ' + (c.status === "published" ? "badge-published" : "badge-draft") + '">' + c.status + "</span></td>" +
+        "<td>" +
+          '<button class="btn btn-sm btn-action" onclick=\'openCaseModal(' + JSON.stringify(c).replace(/'/g, "&#39;") + ')\'>Edit</button> ' +
+          '<button class="btn btn-sm btn-action" onclick=\'toggleCase("' + c.id + '","' + (c.status === "published" ? "draft" : "published") + '")\'>' +
+            (c.status === "published" ? "Unpublish" : "Publish") + "</button>" +
+        "</td></tr>";
+    }).join("");
+  }
+
+  function outcomeRow(value) {
+    var div = document.createElement("div");
+    div.className = "metric-row";
+    div.innerHTML = '<input type="text" maxlength="140" placeholder="Cloud migration executed without weekend outage" />';
+    div.querySelector("input").value = value || "";
+    var del = document.createElement("button");
+    del.type = "button"; del.className = "metric-del"; del.textContent = "×";
+    del.onclick = function () { div.remove(); };
+    div.appendChild(del);
+    return div;
+  }
+
+  window.toggleCase = async function (id, status) {
+    var data = await apiFetch("/case-studies?id=" + id, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: status }),
+    });
+    if (data && data.ok) { showToast("Case study " + status); loadCases(); }
+  };
+
+  function openCaseModal(c) {
+    c = c || {};
+    document.getElementById("caseModalTitle").textContent = c.id ? "Edit case study" : "Add case study";
+    document.getElementById("cf-id").value = c.id || "";
+    document.getElementById("cf-name").value = c.client_name || "";
+    document.getElementById("cf-category").value = c.category || "";
+    document.getElementById("cf-summary-en").value = c.summary_en || "";
+    document.getElementById("cf-summary-ms").value = c.summary_ms || "";
+    document.getElementById("cf-tags").value = Array.isArray(c.tags) ? c.tags.join(", ") : "";
+    document.getElementById("cf-detail-url").value = c.detail_url || "";
+    document.getElementById("cf-status").value = c.status || "draft";
+    document.getElementById("cf-sort").value = c.sort_order || 0;
+    document.getElementById("cf-image-url").value = c.image_url || "";
+
+    var oRows = document.getElementById("outcomesRows");
+    oRows.innerHTML = "";
+    (Array.isArray(c.outcomes) && c.outcomes.length ? c.outcomes : [""].slice(0, 1)).forEach(function (o) {
+      oRows.appendChild(outcomeRow(o));
+    });
+
+    var mRows = document.getElementById("cMetricsRows");
+    mRows.innerHTML = "";
+    (Array.isArray(c.metrics) && c.metrics.length ? c.metrics : []).forEach(function (m) {
+      mRows.appendChild(metricRow(m.value, m.label));
+    });
+
+    syncImagePreview("cf");
+    document.getElementById("caseDeleteBtn").hidden = !c.id;
+    document.getElementById("caseModal").hidden = false;
+  }
+  window.openCaseModal = openCaseModal;
+
+  function closeCaseModal() {
+    document.getElementById("caseModal").hidden = true;
+  }
+
+  async function uploadCaseImage(file) {
+    var errEl = document.getElementById("uploadErrorCase");
+    errEl.hidden = true;
+    var fd = new FormData();
+    fd.append("file", file);
+    try {
+      var token = localStorage.getItem("admin_token");
+      var r = await fetch("/api/admin/products?upload=1", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + token },
+        body: fd,
+      });
+      var d = await r.json();
+      if (d && d.ok && d.url) {
+        document.getElementById("cf-image-url").value = d.url;
+        syncImagePreview("cf");
+      } else {
+        errEl.textContent = d && d.error ? d.error : "Upload failed";
+        errEl.hidden = false;
+      }
+    } catch (e) {
+      errEl.textContent = "Upload failed — network error";
+      errEl.hidden = false;
+    }
+  }
+
+  async function saveCase(e) {
+    e.preventDefault();
+    var id = document.getElementById("cf-id").value;
+    var payload = {
+      client_name: document.getElementById("cf-name").value.trim(),
+      category: document.getElementById("cf-category").value.trim(),
+      summary_en: document.getElementById("cf-summary-en").value.trim(),
+      summary_ms: document.getElementById("cf-summary-ms").value.trim(),
+      tags: document.getElementById("cf-tags").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean),
+      outcomes: Array.prototype.map.call(
+        document.querySelectorAll("#outcomesRows input"),
+        function (i) { return i.value.trim(); }
+      ).filter(Boolean),
+      metrics: Array.prototype.map.call(
+        document.querySelectorAll("#cMetricsRows .metric-row"),
+        function (row) {
+          var inputs = row.querySelectorAll("input");
+          return { value: inputs[0] ? inputs[0].value.trim() : "", label: inputs[1] ? inputs[1].value.trim() : "" };
+        }
+      ).filter(function (m) { return m.value && m.label; }),
+      detail_url: document.getElementById("cf-detail-url").value.trim(),
+      status: document.getElementById("cf-status").value,
+      sort_order: parseInt(document.getElementById("cf-sort").value, 10) || 0,
+      image_url: document.getElementById("cf-image-url").value.trim(),
+    };
+    if (!payload.client_name) { showToast("Client name is required", true); return; }
+
+    var data;
+    if (id) {
+      data = await apiFetch("/case-studies?id=" + id, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    } else {
+      data = await apiFetch("/case-studies", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    }
+    if (data && data.ok) { showToast("Case study saved"); closeCaseModal(); loadCases(); }
+  }
+
+  async function deleteCase() {
+    var id = document.getElementById("cf-id").value;
+    if (!id) return;
+    if (!confirm("Delete this case study?")) return;
+    var data = await apiFetch("/case-studies?id=" + id, { method: "DELETE" });
+    if (data && data.ok) { showToast("Case study deleted"); closeCaseModal(); loadCases(); }
+  }
+
+  function initCasesUI() {
+    var addBtn = document.getElementById("addCaseBtn");
+    if (!addBtn) return;
+    addBtn.addEventListener("click", function () { openCaseModal(null); });
+    document.getElementById("caseModalClose").addEventListener("click", closeCaseModal);
+    document.getElementById("caseCancelBtn").addEventListener("click", closeCaseModal);
+    document.getElementById("caseDeleteBtn").addEventListener("click", deleteCase);
+    document.getElementById("caseForm").addEventListener("submit", saveCase);
+    document.getElementById("cf-upload-btn").addEventListener("click", function () {
+      document.getElementById("cf-image-file").click();
+    });
+    document.getElementById("cf-image-file").addEventListener("change", function () {
+      var f = this.files && this.files[0];
+      if (f) uploadCaseImage(f);
+      this.value = "";
+    });
+    document.getElementById("cf-image-url").addEventListener("change", function () { syncImagePreview("cf"); });
+    document.getElementById("addOutcomeRow").addEventListener("click", function () {
+      var rows = document.querySelectorAll("#outcomesRows .metric-row").length;
+      if (rows < 6) document.getElementById("outcomesRows").appendChild(outcomeRow());
+    });
+    document.getElementById("addCMetricRow").addEventListener("click", function () {
+      var rows = document.querySelectorAll("#cMetricsRows .metric-row").length;
+      if (rows < 4) document.getElementById("cMetricsRows").appendChild(metricRow());
+    });
+    document.getElementById("caseModal").addEventListener("click", function (e) {
+      if (e.target === this) closeCaseModal();
     });
   }
 

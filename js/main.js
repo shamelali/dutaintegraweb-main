@@ -607,6 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bindPreviewLinks();
   initFaq();
   loadWorkProducts();
+  loadCaseStudies();
   trackEvent("page_view");
   prefillserviceFromQuery();
   document.addEventListener("keydown", (e) => {
@@ -830,6 +831,51 @@ function renderWorkCard(p, large) {
     "</a>" +
     "</div></div></article>"
   );
+}
+
+/* ---------- /cases page: render case-study cards from Supabase ---------- */
+function renderCaseCard(c) {
+  const metrics = Array.isArray(c.metrics)
+    ? c.metrics.map((m) => "<div><b>" + escHtml(m.value) + "</b><span>" + escHtml(m.label) + "</span></div>").join("")
+    : "";
+  const outcomes = Array.isArray(c.outcomes)
+    ? c.outcomes.map((o) => "<li>" + escHtml(o) + "</li>").join("")
+    : "";
+  const tags = Array.isArray(c.tags)
+    ? c.tags.map((t) => '<span class="tag-chip">' + escHtml(t) + "</span>").join("")
+    : "";
+  return (
+    '<article class="case-card">' +
+    (c.image_url
+      ? '<img src="' + escHtml(c.image_url) + '" alt="' + escHtml(c.client_name) + '" loading="lazy" />'
+      : "") +
+    '<div class="body">' +
+    (c.category ? '<div class="meta">' + escHtml(c.category) + "</div>" : "") +
+    "<h3>" + escHtml(c.client_name) + "</h3>" +
+    "<p>" + escHtml(c.summary_en || "") + "</p>" +
+    (metrics ? '<div class="metrics">' + metrics + "</div>" : "") +
+    (outcomes ? '<ul class="outcomes">' + outcomes + "</ul>" : "") +
+    (tags ? '<div class="tags">' + tags + "</div>" : "") +
+    (c.detail_url
+      ? '<a class="btn btn-line" href="' + escHtml(c.detail_url) + '" style="margin-top:18px">Read the study</a>'
+      : "") +
+    "</div></article>"
+  );
+}
+
+async function loadCaseStudies() {
+  const grid = document.querySelector(".case-grid");
+  if (!grid) return;
+  let d;
+  try {
+    const r = await fetch("/api/case-studies");
+    if (!r.ok) return;
+    d = await r.json();
+  } catch {
+    return; // keep static fallback
+  }
+  if (!d || !d.ok || !Array.isArray(d.caseStudies) || !d.caseStudies.length) return;
+  grid.innerHTML = d.caseStudies.map(renderCaseCard).join("");
 }
 
 async function loadWorkProducts() {

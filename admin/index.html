@@ -37,6 +37,10 @@
           Audits
           <span class="badge" id="auditsBadge">0</span>
         </a>
+        <a class="sidebar-link" data-page="cases" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Cases
+        </a>
         <a class="sidebar-link" data-page="products" href="#">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
           Products
@@ -231,12 +235,38 @@
      </div><!-- /view-audits -->
 
      <!-- ── PRODUCTS VIEW ───────────────────────────────────────── -->
-     <div class="admin-view" id="view-products" hidden>
+      <div class="admin-view" id="view-cases" hidden>
+       <div class="card">
+         <div class="card-header">
+           <div>
+             <h2>Case Studies</h2>
+             <div class="subtitle">Cards on the /cases page — published items only, ordered by sort order</div>
+           </div>
+           <div class="card-actions">
+             <button class="btn btn-gold btn-sm" id="addCaseBtn">+ Add case study</button>
+           </div>
+         </div>
+         <div class="table-wrap">
+           <table id="casesTable">
+             <thead>
+               <tr><th></th><th>Client</th><th>Category</th><th>Detail link</th><th>Order</th><th>Status</th><th>Actions</th></tr>
+             </thead>
+             <tbody id="casesBody"></tbody>
+           </table>
+           <div class="empty-state" id="casesEmpty" style="display:none">
+             <h3>No case studies yet</h3>
+             <p>Add your first case study — it appears on the /cases page once published.</p>
+           </div>
+         </div>
+       </div>
+      </div><!-- /view-cases -->
+
+      <div class="admin-view" id="view-products" hidden>
       <div class="card">
         <div class="card-header">
           <div>
             <h2>Work Page Products</h2>
-            <div class="subtitle">Shown on /work (EN) and /ms/work (BM) — published items only, ordered by sort order</div>
+            <div class="subtitle">Shown on the homepage Products section — published items only, ordered by sort order</div>
           </div>
           <div class="card-actions">
             <button class="btn btn-gold btn-sm" id="addProductBtn">+ Add product</button>
@@ -318,8 +348,72 @@
           </span>
         </div>
       </form>
+     </div>
     </div>
-   </div>
+
+    <!-- Case study editor modal -->
+    <div class="modal-overlay" id="caseModal" hidden>
+     <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="caseModalTitle">Add case study</h3>
+        <button class="modal-close" id="caseModalClose" aria-label="Close">×</button>
+      </div>
+      <form id="caseForm" class="product-form">
+        <input type="hidden" id="cf-id" />
+        <div class="form-grid-2">
+          <label>Client / project name *<input id="cf-name" required maxlength="80" placeholder="AGMX" /></label>
+          <label>Category<input id="cf-category" maxlength="120" placeholder="Cloud migration &amp; managed IT" /></label>
+        </div>
+        <div class="form-grid-2">
+          <label>Summary (EN)<textarea id="cf-summary-en" rows="3" maxlength="600" placeholder="Moved an established SME onto managed cloud infrastructure…"></textarea></label>
+          <label>Summary (BM)<textarea id="cf-summary-ms" rows="3" maxlength="600"></textarea></label>
+        </div>
+
+        <fieldset class="metrics-fieldset">
+          <legend>Key outcomes <small>(bullet list, max 6)</small></legend>
+          <div id="outcomesRows"></div>
+          <button type="button" class="btn btn-sm btn-action" id="addOutcomeRow">+ Add outcome</button>
+        </fieldset>
+
+        <fieldset class="metrics-fieldset">
+          <legend>Metrics <small>(max 4)</small></legend>
+          <div id="cMetricsRows"></div>
+          <button type="button" class="btn btn-sm btn-action" id="addCMetricRow">+ Add metric</button>
+        </fieldset>
+
+        <div class="form-grid-2">
+          <label>Tags <small>(comma separated)</small><input id="cf-tags" placeholder="Cloud, Backups, Managed IT" /></label>
+          <div class="form-grid-2">
+            <label>Status
+              <select id="cf-status"><option value="draft">Draft</option><option value="published">Published</option></select>
+            </label>
+            <label>Sort order<input id="cf-sort" type="number" value="0" /></label>
+          </div>
+        </div>
+
+        <label>Detail page URL <small>(static long-form study, e.g. /cases/agmx)</small><input id="cf-detail-url" type="url" placeholder="/cases/agmx" /></label>
+
+        <label>Image <small>(paste a URL or upload)</small></label>
+        <div class="image-picker">
+          <img id="cf-img-preview" alt="" hidden />
+          <input id="cf-image-url" type="url" placeholder="https://…/work-agmx.jpg" />
+          <input type="file" id="cf-image-file" accept="image/jpeg,image/png,image/webp,image/svg+xml" hidden />
+          <button type="button" class="btn btn-sm btn-action" id="cf-upload-btn">Upload…</button>
+        </div>
+        <p class="upload-error" id="uploadErrorCase" hidden></p>
+
+        <div class="modal-foot">
+          <span class="delete-wrap">
+            <button type="button" class="btn btn-sm btn-danger" id="caseDeleteBtn" hidden>Delete</button>
+          </span>
+          <span>
+            <button type="button" class="btn btn-sm btn-action" id="caseCancelBtn">Cancel</button>
+            <button type="submit" class="btn btn-gold btn-sm" id="caseSaveBtn">Save case study</button>
+          </span>
+        </div>
+      </form>
+     </div>
+    </div>
 
   <div class="toast" id="toast"></div>
   <script src="../js/admin.js"></script>

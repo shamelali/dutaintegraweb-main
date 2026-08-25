@@ -108,3 +108,34 @@ CREATE POLICY "anon read audit reports" ON audit_reports
 ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 -- No policies: writes happen only via the service key from our API routes.
 
+-- ---------------------------------------------------------------------------
+-- 7. case_studies — cards on /cases, managed from the admin dashboard.
+--    Long-form detail pages stay static (/cases/<slug>.html) and are linked
+--    via detail_url for SEO.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS case_studies (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  client_name   text NOT NULL,
+  category      text,
+  summary_en    text,
+  summary_ms    text,
+  image_url     text,
+  metrics       jsonb NOT NULL DEFAULT '[]'::jsonb,
+  outcomes      jsonb NOT NULL DEFAULT '[]'::jsonb,
+  tags          jsonb NOT NULL DEFAULT '[]'::jsonb,
+  detail_url    text,
+  status        text NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','published')),
+  sort_order    int NOT NULL DEFAULT 0,
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  updated_at    timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_case_studies_published ON case_studies (sort_order)
+  WHERE status = 'published';
+
+ALTER TABLE case_studies ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "public read published case studies" ON case_studies;
+CREATE POLICY "public read published case studies" ON case_studies
+  FOR SELECT USING (status = 'published');
+

@@ -50,7 +50,7 @@ Google Drive / Duta Integra / Business Documents / Templates/
 
 ## Template Links
 
-> **Note**: Replace `[TEMPLATE_ID]` with actual Google Docs file IDs after creating templates.
+> **Instructions**: After creating each Google Doc template, copy its file ID from the URL (`https://docs.google.com/document/d/{FILE_ID}/edit`) and paste it below.
 
 ### Core Identity
 
@@ -155,12 +155,11 @@ For each Google Docs template:
 
 - [ ] Create from HTML source (copy HTML → paste into Google Docs)
 - [ ] Replace static content with placeholder variables
-- [ ] Apply brand fonts (Inter, Rajdhani) — may need to add via Google Fonts
+- [ ] Apply brand fonts (Inter, Rajdhani) — add via Google Fonts
 - [ ] Apply brand colors (Navy #1E2D3D, Gold #C9A227)
 - [ ] Set up page size (A4, 25mm margins)
 - [ ] Add header/footer with logo and page numbers
 - [ ] Set up print margins (File → Page setup)
-- [ ] Test print preview (Ctrl+P)
 - [ ] Add to correct folder in Google Drive
 - [ ] Set sharing permissions (see PERMISSIONS.md)
 - [ ] Add to TEMPLATE_LINKS.md with file ID
