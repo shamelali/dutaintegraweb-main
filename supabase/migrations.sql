@@ -5,6 +5,9 @@
 -- Safe to re-run (IF NOT EXISTS / IF EXISTS guards).
 -- ============================================================================
 
+-- Enable pg_trgm extension for trigram search indexes
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- ---------------------------------------------------------------------------
 -- 1. audit_reports — stored free-brand-audit results, addressable by slug
 -- ---------------------------------------------------------------------------

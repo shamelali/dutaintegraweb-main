@@ -20,6 +20,11 @@
 
   <main id="main">
     <section class="page-hero">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
       <div class="wrap">
         <div class="eyebrow">Contact us</div>
         <h1>Let’s talk about your business</h1>
@@ -227,6 +232,13 @@
       try { window.turnstile.reset(); } catch {}
     }
   }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>

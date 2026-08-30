@@ -8,6 +8,8 @@
 // JWT_SECRET — secret for signing tokens
 // ============================================================================
 
+import { json, corsResponse, hmacSign, verifyAdminToken } from "../_lib.js";
+
 export const config = { maxDuration: 10 };
 
 const DEFAULT_USERS = [
@@ -22,62 +24,6 @@ try {
   }
 } catch { /* fall back to defaults */ }
 
-const JWT_SECRET = process.env.JWT_SECRET || "duta-integra-admin-secret-change-in-production";
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store",
-    },
-  });
-}
-
-// Simple HMAC-SHA256 for JWT signing (no external deps)
-async function hmacSign(data, secret) {
-  const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(data));
-  return btoa(String.fromCharCode(...new Uint8Array(signature)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
-
-function base64url(obj) {
-  return btoa(JSON.stringify(obj))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
-}
-
-async function createToken(payload) {
-  const header = base64url({ alg: "HS256", typ: "JWT" });
-  const body = base64url(payload);
-  const signature = await hmacSign(`${header}.${body}`, JWT_SECRET);
-  return `${header}.${body}.${signature}`;
-}
-
-async function verifyToken(token) {
-  try {
-    const [header, body, signature] = token.split(".");
-    const expected = await hmacSign(`${header}.${body}`, JWT_SECRET);
-    if (signature !== expected) return null;
-    const payload = JSON.parse(atob(body.replace(/-/g, "+").replace(/_/g, "/")));
-    if (payload.exp && Date.now() > payload.exp) return null;
-    return payload;
-  } catch {
-    return null;
-  }
-}
-
 // Rate limiting
 let loginAttempts = 0;
 let loginReset = Date.now();
@@ -90,24 +36,29 @@ function checkLoginRate() {
   return loginAttempts < 10;
 }
 
-async function handler(req) {
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      },
-    });
-  }
+function base64url(obj) {
+  return btoa(JSON.stringify(obj))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
 
+async function createToken(payload) {
+  const header = base64url({ alg: "HS256", typ: "JWT" });
+  const body = base64url(payload);
+  const signature = await hmacSign(`${header}.${body}`);
+  return `${header}.${body}.${signature}`;
+}
+
+async function handler(req) {
+  if (req.method === "OPTIONS") return corsResponse(req);
+  
   if (req.method !== "POST") {
-    return json({ ok: false, error: "Method not allowed" }, 405);
+    return json({ ok: false, error: "Method not allowed" }, 405, req);
   }
 
   if (!checkLoginRate()) {
-    return json({ ok: false, error: "Too many login attempts. Try again in a minute." }, 429);
+    return json({ ok: false, error: "Too many login attempts. Try again in a minute." }, 429, req);
   }
 
   let body;
@@ -120,7 +71,7 @@ async function handler(req) {
   const { email, password } = body;
 
   if (!email || !password) {
-    return json({ ok: false, error: "Email and password are required." }, 400);
+    return json({ ok: false, error: "Email and password are required." }, 400, req);
   }
 
   // Find matching user
@@ -130,7 +81,7 @@ async function handler(req) {
 
   if (!matchedUser) {
     loginAttempts++;
-    return json({ ok: false, error: "Invalid email or password." }, 401);
+    return json({ ok: false, error: "Invalid email or password." }, 401, req);
   }
 
   // Create token (expires in 24 hours)
@@ -146,7 +97,7 @@ async function handler(req) {
     ok: true,
     token,
     user: { email: matchedUser.email, name: matchedUser.name, role: matchedUser.role },
-  });
+  }, 200, req);
 }
 
 export { handler as GET, handler as POST };

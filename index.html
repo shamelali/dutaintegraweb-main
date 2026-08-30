@@ -38,6 +38,11 @@
 
   <main id="main">
     <section class="hero">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
       <div class="wrap hero-grid">
         <div>
           <div class="badge" data-i18n="hero_badge">AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA</div>
@@ -223,6 +228,11 @@
     </section>
 
     <section class="section why">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
       <div class="wrap">
         <div class="section-head">
           <div class="eyebrow" data-i18n="why_eye">Why choose us</div>
@@ -321,6 +331,11 @@
     </section>
 
     <section class="cta">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
       <div class="wrap">
         <div class="eyebrow">Next step</div>
         <h2 data-i18n="cta_title">Ready to <em class="accent">modernise</em> your business?</h2>
@@ -343,5 +358,12 @@
   </a>
 
   <script src="js/main.js?v=20260824a"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>

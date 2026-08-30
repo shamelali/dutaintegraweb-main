@@ -13,6 +13,7 @@
 // ============================================================================
 
 import { createClient } from "@supabase/supabase-js";
+import { json, corsResponse, getAuthUser, sanitize } from "../_lib.js";
 
 export const config = { maxDuration: 10 };
 
@@ -26,56 +27,9 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ""
 );
 
-const JWT_SECRET = process.env.JWT_SECRET || "duta-integra-admin-secret-change-in-production";
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    },
-  });
-}
-
-// JWT verification
-function verifyToken(token) {
-  try {
-    const [, body] = token.split(".");
-    const payload = JSON.parse(atob(body.replace(/-/g, "+").replace(/_/g, "/")));
-    if (payload.exp && Date.now() > payload.exp) return null;
-    return payload;
-  } catch {
-    return null;
-  }
-}
-
-function getAuthUser(req) {
-  const auth = req.headers.get("authorization") || "";
-  const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  if (!token) return null;
-  return verifyToken(token);
-}
-
-function sanitize(str) {
-  return String(str || "").trim().slice(0, 500);
-}
-
 async function handler(req) {
   // CORS preflight
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      },
-    });
-  }
+  if (req.method === "OPTIONS") return corsResponse(req);
 
   // POST — create lead (no auth required, called from contact form)
   // Uses anon key — RLS policy allows INSERT for anon
@@ -84,7 +38,7 @@ async function handler(req) {
     try {
       body = await req.json();
     } catch {
-      return json({ ok: false, error: "Invalid JSON" }, 400);
+      return json({ ok: false, error: "Invalid JSON" }, 400, req);
     }
 
     const lead = {
@@ -102,16 +56,16 @@ async function handler(req) {
 
     if (error) {
       console.error("Supabase insert error:", error);
-      return json({ ok: false, error: "Failed to save lead" }, 500);
+      return json({ ok: false, error: "Failed to save lead" }, 500, req);
     }
 
-    return json({ ok: true, lead: data }, 201);
+    return json({ ok: true, lead: data }, 201, req);
   }
 
   // All other methods require auth
-  const user = getAuthUser(req);
+  const user = await getAuthUser(req);
   if (!user) {
-    return json({ ok: false, error: "Unauthorized" }, 401);
+    return json({ ok: false, error: "Unauthorized" }, 401, req);
   }
 
   // GET — list leads (uses service_role to bypass RLS)
@@ -134,7 +88,7 @@ async function handler(req) {
 
     if (error) {
       console.error("Supabase query error:", JSON.stringify(error));
-      return json({ ok: false, error: "Failed to fetch leads: " + error.message }, 500);
+      return json({ ok: false, error: "Failed to fetch leads: " + error.message }, 500, req);
     }
 
     // Get counts
@@ -147,7 +101,7 @@ async function handler(req) {
       closed: allLeads?.filter((l) => l.status === "closed").length || 0,
     };
 
-    return json({ ok: true, leads, total: leads.length, counts });
+    return json({ ok: true, leads, total: leads.length, counts }, 200, req);
   }
 
   // PATCH — update lead status (uses service_role)
@@ -156,14 +110,14 @@ async function handler(req) {
     const id = url.searchParams.get("id");
 
     if (!id) {
-      return json({ ok: false, error: "Lead ID required" }, 400);
+      return json({ ok: false, error: "Lead ID required" }, 400, req);
     }
 
     let body;
     try {
       body = await req.json();
     } catch {
-      return json({ ok: false, error: "Invalid JSON" }, 400);
+      return json({ ok: false, error: "Invalid JSON" }, 400, req);
     }
 
     const update = {};
@@ -180,13 +134,13 @@ async function handler(req) {
 
     if (error) {
       console.error("Supabase update error:", error);
-      return json({ ok: false, error: "Failed to update lead" }, 500);
+      return json({ ok: false, error: "Failed to update lead" }, 500, req);
     }
 
-    return json({ ok: true, lead: data });
+    return json({ ok: true, lead: data }, 200, req);
   }
 
-  return json({ ok: false, error: "Method not allowed" }, 405);
+  return json({ ok: false, error: "Method not allowed" }, 405, req);
 }
 
 export { handler as GET, handler as POST, handler as PATCH };

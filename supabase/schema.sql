@@ -3,6 +3,9 @@
 -- Run this in the Supabase SQL Editor (Dashboard → SQL Editor → New query)
 -- ============================================================================
 
+-- Enable pg_trgm extension for trigram search indexes
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE TABLE IF NOT EXISTS leads (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL DEFAULT '',
@@ -14,6 +17,8 @@ CREATE TABLE IF NOT EXISTS leads (
   status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'contacted', 'closed')),
   source TEXT DEFAULT 'contact-form',
   note TEXT DEFAULT '',
+  lead_score INT NOT NULL DEFAULT 0,
+  industry TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ
 );
@@ -21,9 +26,11 @@ CREATE TABLE IF NOT EXISTS leads (
 -- Index for filtering by status
 CREATE INDEX IF NOT EXISTS idx_leads_status ON leads (status);
 
--- Index for searching by name/email
+-- Index for searching by name/email (requires pg_trgm)
 CREATE INDEX IF NOT EXISTS idx_leads_search ON leads USING gin (name gin_trgm_ops);
 CREATE INDEX IF NOT EXISTS idx_leads_email ON leads (email);
+CREATE INDEX IF NOT EXISTS idx_leads_score ON leads (lead_score DESC);
+CREATE INDEX IF NOT EXISTS idx_leads_source ON leads (source);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE leads ENABLE ROW LEVEL SECURITY;

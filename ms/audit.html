@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audit Jenama Percuma — Duta Integra Solutions</title>
-  <meta name="description" content="Dapatkan audit jenama digital percuma serta-merta untuk perniagaan Malaysia anda. SEO teknikal, kandungan, kelajuan dan kehadiran sosial dinilai dalam beberapa saat oleh Duta Integra Solutions." />
+  <meta name="description" content="Dapatkan audit jenama digital percuma serta-merta untuk perniagaan Malaysia anda. SEO teknikal, kandungan, kelajuan dan kehadiran sosial dinilai dalam saat oleh Duta Integra Solutions." />
   <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
   <link rel="icon" type="image/png" href="../assets/dis-favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,55 +18,26 @@
 <body>
   <a class="skip" href="#main">Langkau ke kandungan</a>
 
-  <header class="nav">
-    <div class="wrap nav-inner">
-      <a class="brand" href="/ms/" aria-label="Duta Integra Solutions rumah">
-        <img class="brand-mark" src="../assets/dis-logo-nav.webp" alt="" width="56" height="42" />
-        <div class="brand-name">DUTA INTEGRA <span>SOLUTIONS</span></div>
-      </a>
-      <nav class="nav-links" aria-label="Utama">
-        <a href="/ms/services" data-i18n="nav_services">Perkhidmatan</a>
-        <a href="/ms/about" data-i18n="nav_about">Tentang</a>
-        <a href="/ms/pricing" data-i18n="nav_pricing">Harga</a>
-        <a href="/ms/audit" data-i18n="nav_audit">Audit percuma</a>
-        <a href="/blog" data-i18n="nav_blog">Blog</a>
-        <a class="nav-cta" href="/ms/contact" data-i18n="nav_quote">Dapatkan sebut harga</a>
-      </nav>
-      <div class="nav-tools">
-        <div class="lang-switch" role="group" aria-label="Bahasa"><a class="lang-opt" href="/audit" hreflang="en">EN</a><a class="lang-opt is-active" href="/ms/audit" hreflang="ms">BM</a></div>
-        <button class="tool" type="button" onclick="toggleDark()" data-theme-icon title="Tema" aria-label="Togol tema">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
-        </button>
-      </div>
-      <button class="burger" type="button" onclick="toggleNav()" aria-label="Menu"><span></span></button>
-    </div>
-    <div class="drawer">
-      <a href="/ms/services" onclick="closeNav()" data-i18n="nav_services">Perkhidmatan</a>
-      <a href="/ms/about" onclick="closeNav()" data-i18n="nav_about">Tentang</a>
-      <a href="/ms/pricing" onclick="closeNav()" data-i18n="nav_pricing">Harga</a>
-      <a class="nav-cta" href="/ms/audit" onclick="closeNav()">Audit percuma</a>
-      <div class="lang-switch" role="group" aria-label="Bahasa"><a class="lang-opt" href="/audit" hreflang="en">EN</a><a class="lang-opt is-active" href="/ms/audit" hreflang="ms">BM</a></div>
-      <a class="nav-cta" href="/ms/contact" onclick="closeNav()">Dapatkan sebut harga</a>
-    </div>
-  </header>
+  <div id="di-header"></div>
 
   <main id="main">
     <noscript>
       <div class="wrap" style="padding:40px 0;text-align:center">
         <h2>JavaScript diperlukan</h2>
-        <p>Alat audit jenama percuma memerlukan JavaScript untuk berjalan. Sila dayakannya dalam pelayar anda dan cuba lagi.</p>
+        <p>Alat audit jenama percuma memerlukan JavaScript untuk berfungsi. Sila aktifkan di pelayar anda dan cuba lagi.</p>
       </div>
     </noscript>
+    <!-- HERO + AUDIT FORM -->
     <section class="page-hero audit-hero">
       <div class="wrap audit-hero-grid">
         <div class="audit-hero-copy">
           <div class="eyebrow">Percuma · Daftar untuk mula · 10 saat</div>
-          <h1>Lihat prestasi sebenar <em class="accent">jenama digital</em> anda</h1>
-          <p>Masukkan laman web anda dan kami akan menilai SEO teknikal, kandungan, kelajuan dan kehadiran sosial anda serta-merta — dan beritahu anda apa yang perlu diperbaiki. Tiada istilah agensi, tiada obligasi.</p>
+          <h1>Lihat prestasi <em class="accent">jenama digital</em> anda sebenarnya</h1>
+          <p>Masukkan laman web anda dan kami akan menilai SEO teknikal, kandungan, kelajuan dan kehadiran sosial secara serta-merta — dan memberitahu apa yang perlu dibaiki. Tiada omong kosong ejen, tiada obligasi.</p>
           <ul class="audit-hero-points">
-            <li>Imbasan langsung laman web anda</li>
-            <li>Pembaikan keutamaan yang disusun</li>
-            <li>Penanda aras dalam bidang anda</li>
+            <li>Imbasan langsung tapak anda</li>
+            <li>Pembaikan keutamaan disusun untuk anda</li>
+            <li>Dibandingkan dengan niche anda</li>
           </ul>
         </div>
 
@@ -77,8 +48,8 @@
           </div>
 
           <div class="field">
-            <label for="audit-url">URL laman web anda *</label>
-            <input id="audit-url" name="url" type="text" placeholder="www.syarikatanda.com" required autocomplete="url" autofocus />
+            <label for="audit-url">URL laman web anda</label>
+            <input id="audit-url" name="url" type="text" placeholder="www.syarikatanda.com" autocomplete="url" autofocus />
           </div>
 
           <div class="form-row">
@@ -91,123 +62,128 @@
               <select id="audit-industry" name="industry">
                 <option value="">Pilih…</option>
                 <option value="ecommerce">E-dagang / Runcit</option>
-                <option value="restaurant">Makanan &amp; Minuman</option>
+                <option value="restaurant">M&M / Restoran</option>
                 <option value="finance">Kewangan / Insurans</option>
-                <option value="health">Kesihatan / Keselamatan</option>
+                <option value="health">Kesihatan / Kesejahteraan</option>
                 <option value="education">Pendidikan / Latihan</option>
-                <option value="realestate">Hartanah</option>
+                <option value="realestate">Hartanah / Real Estate</option>
                 <option value="tech">Teknologi / Perisian</option>
-                <option value="agency">Agen / Perkhidmatan</option>
+                <option value="agency">Ejen / Perkhidmatan</option>
                 <option value="general">Lain-lain</option>
               </select>
             </div>
           </div>
 
           <div class="field">
-            <label for="audit-email">E-mel kerja *</label>
-            <input id="audit-email" name="email" type="email" placeholder="anda@syarikat.com" maxlength="160" autocomplete="email" required />
+            <label for="audit-email">E-mel kerja (pilihan)</label>
+            <input id="audit-email" name="email" type="email" placeholder="anda@syarikat.com" maxlength="160" autocomplete="email" />
           </div>
 
-          <button class="btn btn-gold btn-block" id="audit-submit" type="submit">Daftar & jalankan audit percuma →</button>
-          <p class="form-note">Kami akan menghantar laporan anda ke e-mel di atas. Tiada spam, sama sekali.</p>
+          <button class="btn btn-gold btn-block" id="audit-submit" type="submit">Jalankan audit percuma →</button>
+          <p class="form-note">E-mel adalah pilihan — keputusan dipaparkan serta-merta. Tambah e-mel untuk terima salinan.</p>
         </form>
       </div>
 
       <div class="wrap audit-trust">
         <span>Dibina untuk PKS Malaysia</span>
-        <span>Mematuhi PDPA</span>
-        <span>Keputusan dalam beberapa saat</span>
+        <span>Sedar PDPA</span>
+        <span>Keputusan dalam saat</span>
       </div>
     </section>
 
+    <!-- WHAT YOU GET -->
     <section class="section">
       <div class="wrap">
         <div class="section-head">
           <div class="eyebrow">Apa yang kami ukur</div>
           <h2>Empat bidang. Satu skor.</h2>
-          <p>Kami melihat perkara yang sebenarnya menggerakkan pertanyaan dan konversi untuk perniagaan macam anda.</p>
+          <p>Kami menilai perkara yang sebenarnya menggerakkan pertanyaan dan penukaran untuk perniagaan seperti anda.</p>
         </div>
         <div class="audit-features">
           <article class="audit-feature">
             <div class="audit-feature-ico">SEO</div>
-            <h3>Teknikal &amp; SEO</h3>
-            <p>Tag tajuk, meta description, persediaan mudah alih, data berstruktur dan fail ufti — perkara yang digunakan enjin carian untuk menyusun kedudukan anda.</p>
+            <h3>Teknikal & SEO</h3>
+            <p>Tag tajuk, meta description, susunan mudah alih, data berstruktur dan fail imbasan — perkara yang digunakan enjin carian untuk mengedarkan anda.</p>
           </article>
           <article class="audit-feature">
             <div class="audit-feature-ico">W</div>
-            <h3>Kandungan &amp; Struktur</h3>
-            <p>Teks, hierarki tajuk dan teks alt imej. Adakah halaman anda benar-benar memberitahu Google dan pengunjung apa yang anda lakukan?</p>
+            <h3>Kandungan & Struktur</h3>
+            <p>Kedalaman salinan, hierarki tajuk dan teks alt imej. Adakah laman anda benar-benar memberitahu Google dan pelawat apa yang anda lakukan?</p>
           </article>
           <article class="audit-feature">
             <div class="audit-feature-ico">⚡</div>
-            <h3>Kelajuan &amp; Prestasi</h3>
-            <p>Masa tindak balas dan berat halaman. Laman yang perlahan secara senyap menyebabkan anda kehilangan prospek sebelum mereka membaca tawaran.</p>
+            <h3>Kelajuan & Prestasi</h3>
+            <p>Masa respons dan berat laman. Laman perlahan diam-diam mengosongkan lead sebelum sesiapa pun membaca tawaran anda.</p>
           </article>
           <article class="audit-feature">
             <div class="audit-feature-ico">S</div>
-            <h3>Sosial &amp; Jenama</h3>
-            <p>Saluran mana yang anda gunakan (atau hilang), dan sama ada pelanggan boleh menghubungi anda — e-mel, telefon dan WhatsApp.</p>
+            <h3>Sosial & Jenama</h3>
+            <p>Saluran yang anda gunakan (atau tidak), serta sama ada pelanggan boleh menghubungi anda — e-mel, telefon dan WhatsApp.</p>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- LOADING -->
     <section class="section audit-stage" id="audit-stage" hidden>
       <div class="wrap">
         <div class="audit-loading" id="audit-loading">
           <div class="spinner" aria-hidden="true"></div>
-          <div class="audit-loading-title">Mengaudit laman ini…</div>
+          <div class="audit-loading-title">Menganalisis tapak ini…</div>
           <div class="audit-loading-steps" id="audit-loading-steps">
-            <span class="is-on">Memuat halaman</span>
+            <span class="is-on">Mengambil laman</span>
             <span>Mengimbas SEO</span>
-            <span>Menyemak kandungan</span>
+            <span>Memeriksa kandungan</span>
             <span>Mengukur kelajuan</span>
-            <span>Mencari sosial</span>
-            <span>Menyediakan laporan</span>
-            <span>Meminta e-mel</span>
+            <span>Mencari media sosial</span>
+            <span>Membina laporan</span>
+            <span>Memohon e-mel</span>
           </div>
         </div>
         <div class="audit-error" id="audit-error" hidden></div>
       </div>
     </section>
 
+    <!-- RESULTS -->
     <section class="section audit-stage" id="audit-results" hidden>
       <div class="wrap" id="audit-report"></div>
     </section>
 
+    <!-- PROCESS -->
     <section class="section why">
       <div class="wrap">
         <div class="section-head">
           <div class="eyebrow">Apa yang berlaku seterusnya</div>
-          <h2>Daripada audit ke <em class="accent">tindakan</em></h2>
+          <h2>Dari audit ke <em class="accent">tindakan</em></h2>
         </div>
         <div class="steps">
           <article class="step">
             <div class="n">1</div>
             <h3>Audit percuma</h3>
-            <p>Kami mengimbas laman anda dan menunjukkan jurangnya — teknikal, kandungan, kelajuan dan sosial.</p>
+            <p>Kami mengimbas tapak anda dan memaparkan jurang — teknikal, kandungan, kelajuan dan sosial.</p>
           </article>
           <article class="step">
             <div class="n">2</div>
             <h3>Senarai keutamaan</h3>
-            <p>Anda mendapat senarai penyelesaian yang disusun. Item berimpak tinggi muncul dahulu.</p>
+            <p>Anda mendapat senarai pembaikan berperingkat. Item berimpak tertinggi datang pertama.</p>
           </article>
           <article class="step">
             <div class="n">3</div>
             <h3>Baiki bersama kami</h3>
-            <p>Jika anda mahu kami buat, kami masukkan dalam retainer. Jika tidak, laporan itu milik anda.</p>
+            <p>Jika anda lebih suka kami yang buat, kami mengangkaskannya ke dalam retainer. Jika tidak, laporan itu milik anda.</p>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- CTA -->
     <section class="cta">
       <div class="wrap">
-        <div class="eyebrow">Lebih suka berinteraksi?</div>
-        <h2>Dapatkan audit yang <em class="accent">diterangkan</em></h2>
-        <p>Tempah panggilan 20 minit percuma dan kami akan menjalankan audit anda secara langsung, menerangkan setiap perkara dan berkongsi pelan — sama ada anda mengambil kami atau tidak.</p>
+        <div class="eyebrow">Lebih suka manusia?</div>
+        <h2>Dapatkan audit <em class="accent">dibimbing</em></h2>
+        <p>Tempah panggilan percuma 20 minit dan kami akan jalankan audit anda secara langsung, terangkan setiap punto, dan kongsi pelan — sama ada anda memajak kami atau tidak.</p>
         <div class="cta-actions">
-          <a class="btn btn-gold" href="/ms/contact">Tempah perundingan percuma</a>
+          <a class="btn btn-gold" href="/ms/contact">Tempah konsultasi percuma</a>
           <a class="btn btn-ghost" href="/ms/#products">Lihat produk kami</a>
         </div>
       </div>
@@ -219,7 +195,7 @@
       <div class="footer-top">
         <div>
           <div class="brand-name">DUTA INTEGRA <span>SOLUTIONS</span></div>
-          <p>Rakan kongsi AI dan IT anda di Malaysia. Kami membantu PKS memodenkan, mengautomasi dan berkembang melalui sistem yang bertahan.</p>
+          <p>Rakan kongsi AI dan IT anda di Malaysia. Kami membantu PKS memodenkan, mengautomasikan, dan berkembang melalui sistem yang berkekalan.</p>
         </div>
         <div>
           <h5>Syarikat</h5>
@@ -244,8 +220,8 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 Duta Integra Solutions Sdn Bhd.</span>
-        <span>Cyberjaya · Penghantaran yang mematuhi PDPA</span>
+        <span>© 2026 Duta Integra Solutions Sdn Bhd. Semua hak terpelihara.</span>
+        <span>Cyberjaya · Penghantaran sedar PDPA</span>
       </div>
     </div>
   </footer>
@@ -256,5 +232,12 @@
 
   <script src="../js/main.js?v=20260824a"></script>
   <script src="../js/audit.js?v=20260822b" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>

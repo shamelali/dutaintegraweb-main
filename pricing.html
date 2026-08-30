@@ -20,6 +20,11 @@
 
   <main id="main">
     <section class="page-hero">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
       <div class="wrap">
         <div class="eyebrow">Pricing</div>
         <h1>Transparent pricing. No surprises.</h1>
@@ -41,30 +46,77 @@
             <div data-promo-month="sep"><b>63%</b><span>September</span></div>
           </div>
         </aside>
-        <div class="section-head">
+<div class="section-head">
           <div class="eyebrow">Individual services</div>
           <h2>Pick what you need</h2>
           <p>Each line is priced on its own. Stack them, or take a bundled retainer below.</p>
         </div>
-        <div class="addons">
-          <article class="addon featured-addon" id="business-website">
-            <h3>Website Development</h3>
-            <div class="launch-pill">Priority #1 · One-Off Flat Discount</div>
-            <div class="price" data-list="500" data-from>
-              <div class="price-launch"><span class="was"><small class="price-from">From</small> RM 2,500</span><span data-promo-now><small class="price-from">From</small> RM 500</span><small class="price-period"> one-off</small></div>
-              <div class="price-list"><small class="price-from">From</small> RM 500<small class="price-period"> one-off</small></div>
-            </div>
-            <p>A conversion-ready site for Malaysian SMEs — mobile-first, WhatsApp lead capture, basic SEO, and Google Maps.</p>
-            <div class="detail-panel">
-              <p>A conversion-ready website built for Malaysian SMEs. Up to 8 custom pages, fully mobile-responsive, WhatsApp lead capture, basic SEO setup, and Google Maps integration — so visitors can find you and contact you in one tap.</p>
-              <ul>
-                <li>Up to 8 custom pages, mobile-first layout</li>
-                <li>WhatsApp lead capture and Google Maps</li>
-                <li>Basic SEO setup for local discovery</li>
-                <li>Scoped to your brand and offer</li>
-              </ul>
-            </div>
+
+        <div class="section-head" style="margin-top:40px">
+          <div class="eyebrow">Website Development</div>
+          <h2>Four tiers for every stage</h2>
+          <p>All sites are mobile-first, conversion-focused, and built for Malaysian SMEs. Pick the tier that fits your scope.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="pricing-card">
+            <h3>Basic / Template</h3>
+            <div class="price"><small class="price-from">From</small> RM 500 – 2,000<small class="price-period"> one-off</small></div>
+            <p class="tier-desc">Uses existing templates (WordPress/Wix/Shopify). Ideal for micro businesses, landing pages, or new ventures needing basic presence.</p>
+            <ul class="features">
+              <li>3–5 pages</li>
+              <li>Template-based design</li>
+              <li>Mobile responsive</li>
+              <li>Basic contact form</li>
+            </ul>
+            <a class="btn btn-navy btn-block" href="/contact?plan=basic-template">Get Started</a>
           </article>
+
+          <article class="pricing-card is-featured">
+            <div class="tier-flag">Most chosen</div>
+            <h3>Basic Custom (SME Standard)</h3>
+            <div class="price"><small class="price-from">From</small> RM 2,500 – 5,000<small class="price-period"> one-off</small></div>
+            <p class="tier-desc">Custom UI/UX, responsive design, basic SEO, WhatsApp inquiry, Google Maps. The sweet spot for growing Malaysian SMEs.</p>
+            <ul class="features">
+              <li>5–10 custom pages</li>
+              <li>Custom design & UX</li>
+              <li>Basic SEO setup</li>
+              <li>WhatsApp lead capture</li>
+              <li>Google Maps integration</li>
+            </ul>
+            <a class="btn btn-gold btn-block" href="/contact?plan=sme-standard">Get Started</a>
+          </article>
+
+          <article class="pricing-card">
+            <h3>Professional Corporate</h3>
+            <div class="price"><small class="price-from">From</small> RM 5,000 – 12,000+<small class="price-period"> one-off</small></div>
+            <p class="tier-desc">Exclusive design, interactive product/service listings, blog/news, multi-language, professional copywriting, comprehensive SEO.</p>
+            <ul class="features">
+              <li>10+ pages, custom sections</li>
+              <li>Interactive product/service catalog</li>
+              <li>Blog / news module</li>
+              <li>Multi-language support</li>
+              <li>Professional copywriting</li>
+              <li>Comprehensive SEO setup</li>
+            </ul>
+            <a class="btn btn-navy btn-block" href="/contact?plan=professional-corporate">Get Started</a>
+          </article>
+
+          <article class="pricing-card">
+            <h3>Advanced / Custom Web App</h3>
+            <div class="price"><small class="price-from">From</small> RM 12,000 – 25,000+<small class="price-period"> one-off</small></div>
+            <p class="tier-desc">Booking systems, member/client portals, CRM/database integration, custom web applications tailored to your workflow.</p>
+            <ul class="features">
+              <li>Custom booking/portal systems</li>
+              <li>Member/client dashboards</li>
+              <li>CRM / database integration</li>
+              <li>Custom web application logic</li>
+              <li>Ongoing development partnership</li>
+            </ul>
+            <a class="btn btn-navy btn-block" href="/contact?plan=advanced-webapp">Get Started</a>
+          </article>
+        </div>
+
+        <div class="addons">
           <article class="addon">
             <h3>Website Care</h3>
             <div class="launch-pill">Post-Launch Add-on</div>
@@ -350,5 +402,12 @@
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
   </a>
   <script src="js/main.js?v=20260824a"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>

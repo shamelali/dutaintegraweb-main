@@ -1,21 +1,7 @@
 import { Resend } from "resend";
+import { json, corsResponse, createRateLimiter, sanitize, getAllowedOrigin } from "./_lib.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Security: only allow emails from verified origins
-const ALLOWED_ORIGINS = [
-  "https://dutaintegra.my",
-  "https://www.dutaintegra.my",
-  "https://dutaintegraweb-main-mpjnmndfb-shamelalis-projects.vercel.app"
-];
-
-const FROM =
-  process.env.EMAIL_FROM || "Duta Integra Website <noreply@dutaintegra.my>";
-const TO = (process.env.EMAIL_TO || "hello@dutaintegra.my")
-  .split(",")
-  .map((s) => s.trim())
-  .filter(Boolean);
-const REPLY_COPY = process.env.EMAIL_AUTOREPLY !== "false";
 
 // Honeypot field - should remain empty
 const HONEYPOT = process.env.HONEYPOT_FIELD || "website-bot";
@@ -27,22 +13,16 @@ const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY;
 const MAX_SUBMISSIONS = Number(process.env.RATE_LIMIT_MAX) || 5;
 const RATE_WINDOW = Number(process.env.RATE_WINDOW) || 60000; // 1 minute
 
-// Rate tracking (in-memory for serverless; use Redis in production)
-let submissionCount = 0;
-let lastReset = Date.now();
+// Per-IP rate limiter using shared helper
+const checkRateLimit = createRateLimiter(MAX_SUBMISSIONS, RATE_WINDOW);
 
-function checkRateLimit() {
-  const now = Date.now();
-  if (now - lastReset > RATE_WINDOW) {
-    submissionCount = 0;
-    lastReset = now;
-  }
-  return submissionCount < MAX_SUBMISSIONS;
-}
-
-function incrementSubmissionCount() {
-  submissionCount++;
-}
+const FROM =
+  process.env.EMAIL_FROM || "Duta Integra Website <noreply@dutaintegra.my>";
+const TO = (process.env.EMAIL_TO || "hello@dutaintegra.my")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+const REPLY_COPY = process.env.EMAIL_AUTOREPLY !== "false";
 
 // Verify Turnstile token with Cloudflare
 async function verifyTurnstile(token, remoteip) {
@@ -73,11 +53,11 @@ async function verifyTurnstile(token, remoteip) {
 // Input validation and sanitation
 function sanitizeHTML(value) {
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
+    .replace(/&/g, "&")
+    .replace(/</g, "<")
+    .replace(/>/g, ">")
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+    .replace(/'/g, '\'');
 }
 
 function isEmail(value) {
@@ -90,14 +70,14 @@ function buildAdminHtml({ name, company, email, phone, service, message }) {
     const h = highlight ? "<strong>" : "";
     return `
       <div style="margin-bottom: 12px;">
-        <strong style="display: block; margin-bottom: 4px;">${bUILDADMINLABEL(label)}</strong>
-        <p>${bUILDADMINVALUE(value)}</p>
+        <strong style="display: block; margin-bottom: 4px;">${buildAdminLabel(label)}</strong>
+        <p>${buildAdminValue(value)}</p>
       </div>
     `;
   };
 
-  const bUILDADMINLABEL = (l) => l.replace(/\b\w/g, c => c.toUpperCase());
-  const bUILDADMINVALUE = (v) => sanitizeHTML(v);
+  const buildAdminLabel = (l) => l.replace(/\b\w/g, c => c.toUpperCase());
+  const buildAdminValue = (v) => sanitizeHTML(v);
 
   return `
     <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
@@ -115,7 +95,7 @@ function buildAdminHtml({ name, company, email, phone, service, message }) {
       <p style="color: #6a6a8a; font-size: 0.875rem;">
         This email was sent from the dutaintegra.my contact form.<br>
         Received at: ${new Date().toISOString()}<br>
-        Origin: ${typeof window !== "undefined" ? window.location.origin : "Server-side"}
+        Origin: Server-side
       </p>
     </div>
   `;
@@ -161,33 +141,31 @@ async function readFields(request) {
 }
 
 async function handler(request) {
+  // CORS preflight
+  if (request.method === "OPTIONS") return corsResponse(request);
+  
+  if (request.method !== "POST") {
+    return json({ error: "Method not allowed" }, 405, request);
+  }
+
   // Origin check
   const origin = request.headers.get("origin") || "";
-  const originAllowed = ALLOWED_ORIGINS.some(o => origin.startsWith(o));
+  const originAllowed = ["https://dutaintegra.my", "https://www.dutaintegra.my", "https://dutaintegraweb-main-mpjnmndfb-shamelalis-projects.vercel.app", "https://dutaintegraweb-main-efunpqs0m-shamelalis-projects.vercel.app"].some(o => origin.startsWith(o));
   if (!originAllowed) {
-    return new Response(
-      JSON.stringify({ error: "Forbidden: Invalid origin" }),
-      { status: 403, headers: { "Content-Type": "application/json" } }
-    );
+    return json({ error: "Forbidden: Invalid origin" }, 403, request);
   }
 
   let fields;
   try {
     fields = await readFields(request);
   } catch {
-    return new Response(
-      JSON.stringify({ error: "Invalid request body" }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
-    );
+    return json({ error: "Invalid request body" }, 400, request);
   }
 
   // Honeypot check - if honeypot is filled, it's a bot
   const honeypot = fields.get(HONEYPOT) || fields.get("website") || "";
   if (honeypot && honeypot.trim() !== "") {
-    return new Response(
-      JSON.stringify({ error: "Bot detection triggered" }),
-      { status: 403, headers: { "Content-Type": "application/json" } }
-    );
+    return json({ error: "Bot detection triggered" }, 403, request);
   }
 
   // Turnstile verification
@@ -196,38 +174,31 @@ async function handler(request) {
   const turnstileResult = await verifyTurnstile(turnstileToken, clientIp);
   if (!turnstileResult.success) {
     console.error("Turnstile verification failed:", turnstileResult["error-codes"]);
-    return new Response(
-      JSON.stringify({ error: "Security check failed. Please try again." }),
-      { status: 403, headers: { "Content-Type": "application/json" } }
-    );
+    return json({ error: "Security check failed. Please try again." }, 403, request);
   }
 
-  // Rate limit check
-  if (!checkRateLimit()) {
-    return new Response(
-      JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
-      { status: 429, headers: { "Content-Type": "application/json" } }
-    );
+  // Rate limit check (per-IP)
+  if (!checkRateLimit(request)) {
+    return json({ error: "Rate limit exceeded. Please try again later." }, 429, request);
   }
 
   // Form data validation
-  const name = fields.get("name") || "";
-  const company = fields.get("company") || "";
-  const email = fields.get("email") || "";
-  const phone = fields.get("phone") || "";
-  const service = fields.get("service") || "";
-  const message = fields.get("message") || "";
+  const name = sanitize(fields.get("name") || "");
+  const company = sanitize(fields.get("company") || "");
+  const email = sanitize(fields.get("email") || "");
+  const phone = sanitize(fields.get("phone") || "");
+  const service = sanitize(fields.get("service") || "");
+  const message = sanitize(fields.get("message") || "");
 
   // Email validation
   if (!isEmail(email)) {
-    return new Response(
-      JSON.stringify({ error: "Invalid email address" }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
-    );
+    return json({ error: "Invalid email address" }, 400, request);
   }
 
-  // Increment rate counter
-  incrementSubmissionCount();
+  // Required fields
+  if (!name || !service) {
+    return json({ error: "Name and service are required" }, 400, request);
+  }
 
   // Build the email content
   const adminHtml = buildAdminHtml({ name, company, email, phone, service, message });
@@ -244,11 +215,6 @@ async function handler(request) {
       html: adminHtml,
       reply_to: email,
     };
-
-    // Add reply copy if configured
-    if (REPLY_COPY) {
-      data["reply_to"] = email;
-    }
 
     await resend.sendEmail(data);
 
@@ -273,22 +239,14 @@ async function handler(request) {
       });
     }
 
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: "Email sent successfully" 
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return json({ 
+      success: true, 
+      message: "Email sent successfully" 
+    }, 200, request);
   } catch (error) {
     console.error("Send email error:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to send email" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return json({ error: "Failed to send email" }, 500, request);
   }
 }
 
-// For Vercel Serverless Functions
 export { handler as GET, handler as POST };
-

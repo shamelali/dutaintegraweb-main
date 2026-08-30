@@ -35,3 +35,4 @@ private/
 
 # Accidental nested copy of this repo
 dutaintegraweb-main/
+.env*

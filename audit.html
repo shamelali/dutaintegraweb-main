@@ -18,36 +18,7 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="nav">
-    <div class="wrap nav-inner">
-      <a class="brand" href="/" aria-label="Duta Integra Solutions home">
-        <img class="brand-mark" src="assets/dis-logo-nav.webp" alt="" width="56" height="42" />
-        <div class="brand-name">DUTA INTEGRA <span>SOLUTIONS</span></div>
-      </a>
-      <nav class="nav-links" aria-label="Primary">
-        <a href="/services" data-i18n="nav_services">Services</a>
-        <a href="/about" data-i18n="nav_about">About</a>
-        <a href="/pricing" data-i18n="nav_pricing">Pricing</a>
-        <a href="/blog" data-i18n="nav_blog">Blog</a>
-        <a class="nav-cta is-active" href="/audit">Free audit</a>
-      </nav>
-      <div class="nav-tools">
-        <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/audit" hreflang="en">EN</a><a class="lang-opt" href="/ms/audit" hreflang="ms">BM</a></div>
-        <button class="tool" type="button" onclick="toggleDark()" data-theme-icon aria-label="Toggle theme">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
-        </button>
-      </div>
-      <button class="burger" type="button" onclick="toggleNav()" aria-label="Menu"><span></span></button>
-    </div>
-    <div class="drawer">
-      <a href="/services" onclick="closeNav()" data-i18n="nav_services">Services</a>
-      <a href="/about" onclick="closeNav()" data-i18n="nav_about">About</a>
-      <a href="/pricing" onclick="closeNav()" data-i18n="nav_pricing">Pricing</a>
-      <a class="nav-cta" href="/audit" onclick="closeNav()">Free audit</a>
-      <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/audit" hreflang="en">EN</a><a class="lang-opt" href="/ms/audit" hreflang="ms">BM</a></div>
-      <a class="nav-cta" href="/contact" onclick="closeNav()">Get a quote</a>
-    </div>
-  </header>
+  <div id="di-header"></div>
 
   <main id="main">
     <noscript>
@@ -58,6 +29,11 @@
     </noscript>
     <!-- HERO + AUDIT FORM -->
     <section class="page-hero audit-hero">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
       <div class="wrap audit-hero-grid">
         <div class="audit-hero-copy">
           <div class="eyebrow">Free · Register to start · 10 seconds</div>
@@ -220,46 +196,22 @@
   </main>
 
   <footer class="footer">
-    <div class="wrap">
-      <div class="footer-top">
-        <div>
-          <div class="brand-name">DUTA INTEGRA <span>SOLUTIONS</span></div>
-          <p>Your AI and IT partner in Malaysia. We help SMEs modernise, automate, and grow through systems that last.</p>
-        </div>
-        <div>
-          <h5>Company</h5>
-          <a href="/about">About</a>
-          <a href="/pricing">Pricing</a>
-          <a href="/contact">Contact</a>
-        </div>
-        <div>
-          <h5>Services</h5>
-          <a href="/services">Foundation</a>
-          <a href="/services">Growth</a>
-          <a href="/services">AI Partner</a>
-          <a href="/audit">Free audit</a>
-        </div>
-        <div>
-          <h5>Contact</h5>
-          <a href="mailto:hello@dutaintegra.my">hello@dutaintegra.my</a>
-          <a class="btn-wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20free%20brand%20audit%20and%20a%20discovery%20call." target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.1-.2-.1-.2z"/><path d="M8.5 8.5h7M8.5 11.5h7"/></svg>
-            WhatsApp us
-          </a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</span>
-        <span>Cyberjaya · PDPA-aware delivery</span>
-      </div>
-    </div>
+    <div id="di-footer"></div>
   </footer>
 
   <a class="wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20free%20brand%20audit%20and%20a%20discovery%20call." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
   </a>
 
+  <script src="/components/components-loader.js" defer></script>
   <script src="js/main.js?v=20260824a"></script>
   <script src="js/audit.js?v=20260822b" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>

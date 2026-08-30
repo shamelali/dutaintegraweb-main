@@ -613,38 +613,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeNav();
   });
-
-  // View-source protection
-  document.addEventListener("keydown", (e) => {
-    if (
-      e.ctrlKey && e.key === "u" ||
-      e.ctrlKey && e.shiftKey && e.key === "I" ||
-      e.ctrlKey && e.shiftKey && e.key === "J" ||
-      e.key === "F12"
-    ) {
-      e.preventDefault();
-      showSourceBlocked();
-      return false;
-    }
-  });
 });
-
-function showSourceBlocked() {
-  if (document.getElementById("source-blocked-overlay")) return;
-  const overlay = document.createElement("div");
-  overlay.id = "source-blocked-overlay";
-  overlay.innerHTML = `
-    <div style="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;font-family:Inter,system-ui,sans-serif;">
-      <div style="background:#1a1f2e;border:1px solid #d4af37;padding:40px 48px;max-width:420px;text-align:center;border-radius:8px;">
-        <div style="font-size:48px;margin-bottom:16px;">&#128274;</div>
-        <h2 style="color:#fff;font-size:22px;margin:0 0 12px;">Source Viewing Restricted</h2>
-        <p style="color:#9ca3af;font-size:14px;line-height:1.6;margin:0 0 24px;">This website's source code is protected. If you need to report a bug or request access, please contact us.</p>
-        <a href="mailto:hello@dutaintegra.my" style="display:inline-block;background:#d4af37;color:#1a1f2e;padding:10px 24px;border-radius:4px;text-decoration:none;font-weight:600;font-size:14px;">Contact Us</a>
-      </div>
-    </div>`;
-  document.body.appendChild(overlay);
-  setTimeout(() => overlay.remove(), 3000);
-}
 
 /* ---------- Preview registration gate ---------- */
 let pendingPreviewUrl = null;
