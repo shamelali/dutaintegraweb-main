@@ -9,16 +9,16 @@
   --navy: #0f172a;
   --navy-light: #1e293b;
   --navy-lighter: #334155;
-  --gold: #d4a843;
-  --gold-hover: #c49a38;
+  --primary: #C0623A;
+  --primary-hover: #A55530;
   --text: #1e293b;
   --text-muted: #64748b;
   --text-light: #94a3b8;
-  --success: #10b981;
+  --success: #2E9B62;
   --success-bg: #ecfdf5;
-  --warning: #f59e0b;
+  --warning: #C88B2E;
   --warning-bg: #fffbeb;
-  --danger: #ef4444;
+  --danger: #C05050;
   --danger-bg: #fef2f2;
   --info: #3b82f6;
   --info-bg: #eff6ff;
@@ -57,7 +57,7 @@ body {
 }
 .sidebar-brand .logo-mark {
   width: 36px; height: 36px;
-  background: var(--gold);
+  background: var(--primary);
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
   color: var(--navy);
@@ -89,12 +89,12 @@ body {
   transition: all 0.15s; cursor: pointer;
 }
 .sidebar-link:hover { background: rgba(255,255,255,0.06); color: white; }
-.sidebar-link.active { background: rgba(212,168,67,0.15); color: var(--gold); }
+.sidebar-link.active { background: rgba(192,98,58,0.15); color: var(--primary); }
 .sidebar-link svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
 .sidebar-link.active svg { opacity: 1; }
 .sidebar-link .badge {
   margin-left: auto;
-  background: var(--gold); color: var(--navy);
+  background: var(--primary); color: var(--navy);
   font-size: 10px; font-weight: 700;
   padding: 2px 8px; border-radius: 10px;
 }
@@ -114,7 +114,7 @@ body {
   background: var(--navy-lighter);
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 600; color: var(--gold);
+  font-size: 12px; font-weight: 600; color: var(--primary);
 }
 .sidebar-user .user-info { flex: 1; min-width: 0; }
 .sidebar-user .user-name { font-size: 13px; font-weight: 500; }
@@ -142,8 +142,8 @@ body {
   cursor: pointer; transition: all 0.15s;
   display: inline-flex; align-items: center; gap: 6px;
 }
-.btn-gold { background: var(--gold); color: var(--navy); }
-.btn-gold:hover { background: var(--gold-hover); }
+.btn-gold { background: var(--primary); color: var(--navy); }
+.btn-gold:hover { background: var(--primary-hover); }
 .btn-sm { padding: 6px 12px; font-size: 12px; }
 
 .content { padding: 24px 32px; }
@@ -274,7 +274,7 @@ tr:hover td { background: #fafbfc; }
 }
 .task-progress-fill {
   height: 100%; width: 0%;
-  background: var(--gold); border-radius: 3px;
+  background: var(--primary); border-radius: 3px;
   transition: width 0.3s ease;
 }
 .task-progress-label { font-size: 12px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
@@ -355,13 +355,13 @@ tr:hover td { background: #fafbfc; }
   font-size: 12px; font-weight: 700;
 }
 .score-pill.s-good { background: rgba(34,197,94,.15); color: #16a34a; }
-.score-pill.s-mid  { background: rgba(212,168,67,.18); color: var(--gold-hover); }
+.score-pill.s-mid  { background: rgba(192,98,58,.18); color: var(--primary-hover); }
 .score-pill.s-low  { background: rgba(239,68,68,.14); color: #dc2626; }
 
 .badge-draft   { background: rgba(100,116,139,.15); color: var(--text-muted); }
 .badge-published { background: rgba(34,197,94,.15); color: #16a34a; }
 .badge-status { display:inline-block; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; text-transform:capitalize; }
-.badge-new { background: rgba(212,168,67,.18); color: var(--gold-hover); }
+.badge-new { background: rgba(192,98,58,.18); color: var(--primary-hover); }
 .badge-contacted { background: rgba(59,130,246,.15); color: #2563eb; }
 .badge-closed { background: rgba(34,197,94,.15); color: #16a34a; }
 
@@ -399,7 +399,7 @@ tr:hover td { background: #fafbfc; }
   padding: 9px 12px; background: var(--card); width: 100%;
 }
 .product-form input:focus, .product-form select:focus, .product-form textarea:focus {
-  outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,.18);
+  outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(192,98,58,.18);
 }
 .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .metrics-fieldset {

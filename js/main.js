@@ -116,12 +116,20 @@ function toggleLang() {
 }
 
 function rememberLangFromPath() {
-  localStorage.setItem("lang", isMsPath() ? "ms" : "en");
+  const pref = localStorage.getItem("lang");
+  if (!pref) {
+    localStorage.setItem("lang", isMsPath() ? "ms" : "en");
+  }
 }
 
 function enforceLangPreference() {
   const pref = localStorage.getItem("lang");
-  if (pref === "ms" && !isMsPath()) {
+  const defaultLang = pref || "ms";
+  if (defaultLang === "ms" && !isMsPath()) {
+    location.replace(counterpartPath());
+    return true;
+  }
+  if (defaultLang === "en" && isMsPath()) {
     location.replace(counterpartPath());
     return true;
   }
@@ -137,8 +145,9 @@ function bindLangSwitch() {
 }
 
 function toggleDark() {
-  const on = document.body.classList.toggle("dark");
-  localStorage.setItem("theme", on ? "dark" : "light");
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+  localStorage.setItem("theme", isDark ? "light" : "dark");
   syncThemeIcon();
 }
 
@@ -312,9 +321,9 @@ const moonIcon =
   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>';
 
 function syncThemeIcon() {
-  const on = document.body.classList.contains("dark");
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
   document.querySelectorAll("[data-theme-icon]").forEach((el) => {
-    el.innerHTML = on ? sunIcon : moonIcon;
+    el.innerHTML = isDark ? sunIcon : moonIcon;
   });
 }
 
@@ -586,9 +595,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (enforceLangPreference()) return;
   rememberLangFromPath();
   bindLangSwitch();
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
-  }
+  const savedTheme = localStorage.getItem("theme");
+  document.documentElement.setAttribute("data-theme", savedTheme || "dark");
   if (promoLive()) document.body.classList.add("promo-live");
   applyPromoPrices();
   injectPromoBar();

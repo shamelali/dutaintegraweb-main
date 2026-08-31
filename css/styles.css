@@ -1,41 +1,64 @@
 /* =========================================================
-   DUTA INTEGRA SOLUTIONS — dark theme
-   Primary #e08560 · Success #00E699 · Surface #0d0d0d
-   ========================================================= */
+    DUTA INTEGRA SOLUTIONS — refined warm dark + light mode
+    Primary #C0623A · Success #2E9B62 · Surfaces layered
+    ========================================================= */
 
 :root {
-  --primary: #d47a56;
-  --primary-hover: #e08a66;
-  --primary-soft: rgba(212, 122, 86, 0.14);
-  --success: #00c87a;
-  --success-hover: #00e699;
-  --success-soft: rgba(0, 200, 122, 0.14);
-  --warning: #f5a623;
-  --warning-soft: rgba(245, 166, 35, 0.14);
-  --danger: #e04848;
-  --danger-soft: rgba(224, 72, 72, 0.14);
-  --bg: #030303;
-  --surface: #0a0a0a;
-  --surface-2: #121212;
-  --surface-3: #1a1a1a;
-  --white: #FFFFFF;
-  --text: #F0F2F5;
-  --text-muted: #A0A4AB;
-  --text-subtle: #6B6F76;
-  --line: #252525;
-  --line-soft: #1a1a1a;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
+  --primary: #C0623A;
+  --primary-hover: #A55530;
+  --primary-soft: rgba(192, 98, 58, 0.12);
+  --success: #2E9B62;
+  --success-hover: #258050;
+  --success-soft: rgba(46, 155, 98, 0.12);
+  --warning: #C88B2E;
+  --warning-soft: rgba(200, 139, 46, 0.12);
+  --danger: #C05050;
+  --danger-soft: rgba(192, 80, 80, 0.12);
+  --bg: #0F0F0D;
+  --surface: #1A1A17;
+  --surface-2: #242420;
+  --surface-3: #2E2E28;
+  --text: #E8E6E1;
+  --text-muted: #9A9B96;
+  --text-subtle: #6B6C66;
+  --line: #2E2E28;
+  --line-soft: #242420;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
   --radius: 2px;
   --nav-h: 72px;
   --max: 1180px;
   --gutter: clamp(20px, 5vw, 56px);
   --font-d: "Rajdhani", sans-serif;
   --font-b: "Inter", sans-serif;
+  color-scheme: dark;
 }
 
+[data-theme="light"] {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --surface-2: #F3F1EE;
+  --surface-3: #EBE9E4;
+  --text: #1C1C1A;
+  --text-muted: #5C5F64;
+  --text-subtle: #8C8E94;
+  --line: #E0DED9;
+  --line-soft: #EDECE8;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --primary-soft: rgba(192, 98, 58, 0.12);
+  --success-soft: rgba(46, 155, 98, 0.12);
+  --warning-soft: rgba(200, 139, 46, 0.12);
+  --danger-soft: rgba(192, 80, 80, 0.12);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+
 body {
-  background: linear-gradient(180deg, #050505 0%, #030303 100%);
+  background: var(--bg);
 }
 
 /* GRID - animated background pattern */
@@ -656,7 +679,7 @@ body.promo-live .then { display: block; }
   background: var(--primary);
   display: inline-block;
   margin-right: 8px;
-  box-shadow: 0 0 0 3px rgba(201,162,39,.18);
+  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 .panel-foot {
   margin-top: 14px;
@@ -1357,7 +1380,7 @@ body.promo-live .page-hero + .section { padding-top: 0; }
 }
 .merdeka-rates .is-now {
   border-color: var(--primary);
-  background: rgba(201,162,39,.1);
+  background: var(--primary-soft);
 }
 .merdeka-rates .is-now b { color: var(--primary); }
 .merdeka-rates .is-now span { color: var(--primary); }
@@ -1512,7 +1535,7 @@ body.promo-live .addon .ap .was { display: block; }
   color: var(--text);
 }
 .svc-dialog::backdrop {
-  background: rgba(15, 24, 34, 0.62);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(3px);
 }
 .svc-dialog-card {
@@ -1766,23 +1789,14 @@ body.promo-live .addon .ap .was { display: block; }
   display: none;
 }
 
-/* ---------- DARK ----------
-   Font colors match light-mode dark sections exactly:
-   primary var(--text) · secondary var(--text-muted) · soft var(--text-subtle) ·
-   list var(--text) · tertiary var(--text-muted) · dim var(--text-subtle) · primary var(--primary)
+/* ---------- DARK MODE ----------
+   Mirrors light mode exactly: primary var(--primary) · text var(--text) · muted var(--text-muted) ·
+   subtle var(--text-subtle) · line var(--line) · surface layers var(--surface-2/3)
    --------------------------------------------------------- */
 body.dark {
   color-scheme: dark;
-  --paper: var(--bg);
-  --paper-2: var(--surface);
-  --white: var(--surface-2);
-  /* Same roles as text on hero / why / cta / nav / footer in light mode */
-  --ink: var(--text);
-  --muted: var(--text-muted);
-  --muted-2: var(--text-subtle);
-  --line: var(--line);
-  --line-soft: var(--line-soft);
-  --primary-soft: rgba(212, 122, 86, 0.18);
+  /* Mirrors light mode: primary var(--primary) · text var(--text) · muted var(--text-muted) · subtle var(--text-subtle) · line var(--line) · surface layers var(--surface-2/3) */
+  --primary-soft: rgba(192, 98, 58, 0.18);
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
   /* Status colors brightened for contrast on dark surfaces */
   --ok: var(--success);
@@ -1822,18 +1836,6 @@ body.dark .panel-foot strong {
 body.dark .burger span,
 body.dark .burger span::before,
 body.dark .burger span::after { background: var(--text); }
-/* Light-mode dark sections use color: var(--surface) for primary text —
-   re-bind that role to on-dark white once --paper becomes the page bg */
-body.dark .hero,
-body.dark .why,
-body.dark .cta,
-body.dark .page-hero,
-body.dark .merdeka-band,
-body.dark .tier.is-featured,
-body.dark .about-stats div,
-body.dark .toast {
-  --paper: var(--text);
-}
 body.dark .nav-links a,
 body.dark .tool,
 body.dark .lang-opt,
@@ -1973,7 +1975,7 @@ body.dark .detail .ico {
   border-color: var(--line);
 }
 body.dark .svc-ico,
-body.dark .detail .ico { background: rgba(201, 162, 39, 0.08); }
+body.dark .detail .ico { background: var(--primary-soft); }
 body.dark .step .n {
   background: var(--surface-2);
   color: var(--text);
@@ -2062,7 +2064,7 @@ body.dark .field select:focus,
 body.dark .field textarea:focus {
   border-color: var(--primary);
   background: var(--surface);
-  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.14);
+  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 body.dark .field label { color: var(--text-muted); }
 body.dark .toast {
@@ -2076,7 +2078,7 @@ body.dark .toast {
 
 /* Dialog */
 body.dark .svc-dialog::backdrop {
-  background: rgba(15, 24, 34, 0.78);
+  background: rgba(0, 0, 0, 0.6);
 }
 body.dark .svc-dialog-card {
   background: var(--surface);
@@ -2112,7 +2114,7 @@ body.dark .hero,
 body.dark .why,
 body.dark .cta,
 body.dark .page-hero {
-  background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 100%);
+  background: var(--bg);
 }
 body.dark .hero-merdeka b {
   color: var(--primary-hover);
@@ -2142,8 +2144,8 @@ body.dark .film img {
   filter: saturate(0.9) contrast(1.05);
 }
 body.dark ::selection {
-  background: rgba(201, 162, 39, 0.35);
-  color: #fff;
+  background: rgba(192, 98, 58, 0.35);
+  color: var(--text);
 }
 body.dark .drawer .nav-cta { color: var(--surface-2) !important; }
 
@@ -2478,7 +2480,7 @@ body.dark .case-mini h3,
 body.dark .scope-card h3,
 body.dark .ops-card h3,
 body.dark .diligence-card h3,
-body.dark .faq-q { color: var(--surface); }
+body.dark .faq-q { color: var(--text); }
 body.dark .case-card p,
 body.dark .case-mini p,
 body.dark .ops-card p,
@@ -2488,7 +2490,7 @@ body.dark .faq-a ul li,
 body.dark .scope-card li { color: var(--text-muted); }
 body.dark .case-card .outcomes,
 body.dark .faq-item { border-color: rgba(255,255,255,.08); }
-body.dark .case-quote { background: rgba(201,162,39,.12); color: var(--surface); }
+body.dark .case-quote { background: var(--primary-soft); color: var(--text); }
 body.dark .case-side .card { background: var(--bg); }
 body.dark .case-card .metrics b,
 body.dark .case-mini .metrics b { color: var(--primary-hover); }
@@ -2535,7 +2537,7 @@ body.dark .case-mini .metrics div { border-top-color: rgba(255,255,255,.08); }
   align-items: center;
 }
 .audit-hero-copy h1 { max-width: 15ch; }
-.audit-hero-copy p { max-width: 52ch; color: #C3C9D2; font-weight: 300; }
+.audit-hero-copy p { max-width: 52ch; color: var(--text-muted); font-weight: 300; }
 .audit-hero-points {
   margin-top: 22px;
   display: grid;
@@ -2934,18 +2936,18 @@ body.dark .cat-score,
 body.dark .audit-meta b,
 body.dark .audit-comp b,
 body.dark .audit-check-label b,
-body.dark .audit-loading-title { color: var(--surface); }
+body.dark .audit-loading-title { color: var(--text); }
 body.dark .score-ring-inner { background: var(--surface-2); }
-body.dark .score-num { color: var(--surface); }
+body.dark .score-num { color: var(--text); }
 body.dark .cat-track { background: var(--bg); border-color: rgba(255,255,255,.08); }
 body.dark .audit-check { border-bottom-color: rgba(255,255,255,.08); }
 body.dark .audit-group { border-color: rgba(255,255,255,.08); }
-body.dark .audit-group summary { background: var(--bg); color: var(--surface); }
+body.dark .audit-group summary { background: var(--bg); color: var(--text); }
 body.dark .audit-checks { border-top-color: rgba(255,255,255,.08); }
 body.dark .social-chip { background: var(--bg); border-color: rgba(255,255,255,.08); color: var(--text-muted); }
-body.dark .social-chip.is-on { background: var(--surface-2); border-color: var(--primary); color: var(--surface); }
+body.dark .social-chip.is-on { background: var(--surface-2); border-color: var(--primary); color: var(--text); }
 body.dark .audit-rec { background: var(--bg); border-color: rgba(255,255,255,.08); }
-body.dark .audit-rec h4 { color: var(--surface); }
+body.dark .audit-rec h4 { color: var(--text); }
 body.dark .audit-cta-actions .btn-gold { color: var(--surface-2); }
 body.dark .audit-loading-steps span { color: var(--text-muted); border-color: rgba(255,255,255,.12); }
 body.dark .audit-loading-steps span.is-on { color: var(--primary); border-color: var(--primary); }
@@ -3109,7 +3111,7 @@ body.dark .preview-register-form input:focus {
   border-color: var(--primary);
 }
 body.dark .preview-register-note {
-  color: #6B7280;
+  color: var(--text-subtle);
 }
 
 /* Audit full-checklist locked state */
@@ -3121,10 +3123,10 @@ body.dark .preview-register-note {
   letter-spacing: 0.08em;
   padding: 4px 10px;
   border-radius: 20px;
-  background: #fdf6e3;
-  color: #a16207;
-  border: 1px solid rgba(212, 168, 67, 0.4);
+  background: var(--warning-soft);
+  color: var(--warning);
+  border: 1px solid rgba(192, 98, 58, 0.35);
 }
-body.dark .audit-locked-badge { background: rgba(212,168,67,0.12); color: var(--primary); }
+body.dark .audit-locked-badge { background: var(--primary-soft); color: var(--primary); }
 .audit-locked-note { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 4px 0 16px; max-width: 60ch; }
 .audit-card-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
