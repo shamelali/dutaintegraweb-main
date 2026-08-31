@@ -147,6 +147,7 @@ function bindLangSwitch() {
 function toggleDark() {
   const isDark = document.documentElement.getAttribute("data-theme") === "dark";
   document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+  document.body.classList.toggle("dark", !isDark);
   localStorage.setItem("theme", isDark ? "light" : "dark");
   syncThemeIcon();
 }
@@ -596,7 +597,9 @@ document.addEventListener("DOMContentLoaded", () => {
   rememberLangFromPath();
   bindLangSwitch();
   const savedTheme = localStorage.getItem("theme");
-  document.documentElement.setAttribute("data-theme", savedTheme || "dark");
+  const isDark = savedTheme !== "light";
+  document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+  document.body.classList.toggle("dark", isDark);
   if (promoLive()) document.body.classList.add("promo-live");
   applyPromoPrices();
   injectPromoBar();
