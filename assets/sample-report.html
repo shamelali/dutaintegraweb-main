@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sample Audit Scorecard — Duta Integra Solutions</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; color: #1E2D3D; line-height: 1.6; background: #fff; padding: 40px; max-width: 800px; margin: 0 auto; }
+    .header { text-align: center; border-bottom: 3px solid #e08560; padding-bottom: 24px; margin-bottom: 32px; }
+    .header h1 { font-family: 'Rajdhani', sans-serif; font-size: 28px; color: #1E2D3D; margin-bottom: 8px; }
+    .header .subtitle { color: #5F5E5A; font-size: 14px; }
+    .header .badge { display: inline-block; background: #e08560; color: #1E2D3D; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 4px; margin-top: 12px; }
+    .score-row { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
+    .score-card { flex: 1; background: #F8F9FB; border: 1px solid #D5D9E0; border-top: 4px solid #e08560; border-radius: 8px; padding: 24px; text-align: center; }
+    .score-card.overall { border-top-color: #e08560; }
+    .score-card.security { border-top-color: #9B3A3A; }
+    .score-card.pdpa { border-top-color: #00E699; }
+    .score-card.seo { border-top-color: #C9A227; }
+    .score-card.cloud { border-top-color: #2F6B4F; }
+    .score-card.ai { border-top-color: #1E2D3D; }
+    .score-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: #5F5E5A; margin-bottom: 8px; }
+    .score-value { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; color: #1E2D3D; line-height: 1; }
+    .section { margin-bottom: 32px; }
+    .section h2 { font-family: 'Rajdhani', sans-serif; font-size: 20px; color: #1E2D3D; border-bottom: 2px solid #e08560; padding-bottom: 8px; margin-bottom: 16px; }
+    .risk-list { list-style: none; }
+    .risk-item { display: flex; gap: 12px; padding: 16px; background: #F8F9FB; border: 1px solid #D5D9E0; border-radius: 8px; margin-bottom: 12px; }
+    .risk-severity { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+    .risk-severity.critical { background: #9B3A3A; color: #fff; }
+    .risk-severity.high { background: #e08560; color: #1E2D3D; }
+    .risk-severity.medium { background: #C9A227; color: #1E2D3D; }
+    .risk-content h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .risk-content p { font-size: 13px; color: #5F5E5A; margin-bottom: 8px; }
+    .risk-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+    .risk-pill.pdpa { background: rgba(0,230,153,.15); color: #00b87a; }
+    .risk-pill.security { background: rgba(155,58,58,.15); color: #9B3A3A; }
+    .risk-pill.seo { background: rgba(201,162,39,.15); color: #A8851B; }
+    .risk-pill.cloud { background: rgba(47,107,79,.15); color: #2F6B4F; }
+    .action-plan { display: grid; gap: 12px; }
+    .action-item { display: flex; gap: 16px; padding: 16px; background: #F8F9FB; border: 1px solid #D5D9E0; border-radius: 8px; border-left: 4px solid #e08560; }
+    .action-day { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; color: #e08560; min-width: 50px; }
+    .action-text h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .action-text p { font-size: 13px; color: #5F5E5A; }
+    .footer-note { text-align: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid #D5D9E0; color: #5F5E5A; font-size: 12px; }
+    .footer-note strong { color: #1E2D3D; }
+    @media print { body { padding: 0; } .no-print { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>IT & AI Readiness Scorecard</h1>
+    <p class="subtitle">Prepared for <strong>[Client Name Redacted]</strong> · E-commerce SME · Malaysia</p>
+    <p class="subtitle">Audit Date: August 2026 · Report ID: DIS-AUD-2026-XXXX</p>
+    <span class="badge">SAMPLE — REDACTED</span>
+  </div>
+
+  <div class="score-row">
+    <div class="score-card overall">
+      <div class="score-label">Overall Score</div>
+      <div class="score-value">62/100</div>
+    </div>
+    <div class="score-card security">
+      <div class="score-label">Security</div>
+      <div class="score-value">58</div>
+    </div>
+    <div class="score-card pdpa">
+      <div class="score-label">PDPA</div>
+      <div class="score-value">45</div>
+    </div>
+    <div class="score-card seo">
+      <div class="score-label">SEO & Perf</div>
+      <div class="score-value">71</div>
+    </div>
+    <div class="score-card cloud">
+      <div class="score-label">Cloud Cost</div>
+      <div class="score-value">68</div>
+    </div>
+    <div class="score-card ai">
+      <div class="score-label">AI Ready</div>
+      < <div class="score-value">52</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Benchmark</h2>
+    <p style="color: #5F5E5A; margin-bottom: 16px;">Your score of <strong>62/100</strong> places you in the <strong>42nd percentile</strong> of Malaysian SMEs audited (n=147). The median score is 68.</p>
+    <p style="color: #5F5E5A;">Key gaps: PDPA compliance (45) and Security posture (58) are the primary drag factors. SEO & Performance (71) is your strongest pillar.</p>
+  </div>
+
+  <div class="section">
+    <h2>Top 5 Prioritized Risks</h2>
+    <ul class="risk-list">
+      <li class="risk-item">
+        <div class="risk-severity critical">C</div>
+        <div class="risk-content">
+          <h3>No privacy notice; no consent records for marketing cookies</h3>
+          <p>PDPA 2010 s.7 & s.9 breach. No data mapping document. Exposure: RM 300k–500k fine + reputational damage.</p>
+          <span class="risk-pill pdpa">PDPA</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-severity critical">C</div>
+        <div class="risk-content">
+          <h3>Admin panel exposed on public IP without MFA or IP allowlist</h3>
+          <p>Critical security misconfiguration. Automated scanning detects this in <2 hours. Immediate remediation required.</p>
+          <span class="risk-pill security">Security</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-severity high">H</div>
+        <div class="risk-content">
+          <h3>Cloud spend 38% above right-sized baseline</h3>
+          <p>Idle NAT gateways, oversized RDS, no lifecycle policies on S3. Estimated waste: RM 2,100/month.</p>
+          <span class="risk-pill cloud">Cloud</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-severity high">H</div>
+        <div class="risk-content">
+          <h3>Product pages missing structured data; LCP 4.2s on mobile</h3>
+          <p>Schema.org Product markup absent. Core Web Vitals failing. Direct impact on organic CTR and ad Quality Score.</p>
+          <span class="risk-pill seo">SEO</span>
+        </div>
+      </li>
+      <li class="risk-item">
+        <div class="risk-severity medium">M</div>
+        <div class="risk-content">
+          <h3>Support FAQ trapped in PDFs; no vector index for RAG</h3>
+          <p>AI chatbot feasibility high (800+ monthly tickets, 65% repetitive), but knowledge base not machine-readable.</p>
+          <span class="risk-pill ai">AI</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>30-Day Action Plan</h2>
+    <div class="action-plan">
+      <div class="action-item">
+        <div class="action-day">1–3</div>
+        <div class="action-text">
+          <h3>Lock down admin panel</h3>
+          <p>Enable MFA, restrict to VPN/IP allowlist, rotate credentials. Owner: DevOps Lead.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-day">1–5</div>
+        <div class="action-text">
+          <h3>Deploy privacy notice & cookie consent</h3>
+          <p>Use PDPA-compliant template. Map all data flows. Log consent. Owner: DPO / Legal.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-day">5–10</div>
+        <div class="action-text">
+          <h3>Right-size cloud resources</h3>
+          <p>Downsize RDS, remove idle NATs, enable S3 Intelligent-Tiering. Target 30% savings. Owner: Cloud Engineer.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-day">10–20</div>
+        <div class="action-text">
+          <h3>Fix Core Web Vitals + add Product schema</h3>
+          <p>Optimize images, defer JS, implement schema.org Product. Target LCP <2.5s. Owner: Frontend Lead.</p>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-day">20–30</div>
+        <div class="action-text">
+          <h3>Pilot AI chatbot on FAQ</h3>
+          <p>Convert top 50 FAQs to JSON, build RAG index, deploy to staging. Measure deflection. Owner: AI Engineer.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <p>This is a <strong>redacted sample</strong> — real reports include live screenshots, evidence links, and a 30-min Loom walkthrough.</p>
+    <p>Duta Integra Solutions Sdn Bhd · Cyberjaya, Malaysia · <a href="https://dutaintegra.my" style="color:#e08560;">dutaintegra.my</a></p>
+  </div>
+</body>
+</html>

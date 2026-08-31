@@ -5,7 +5,9 @@ Disallow: /Web/
 Disallow: /.claude/
 Disallow: /*.py
 Disallow: /*.pptx
-Disallow: /*.pdf
+
+# Allow all search engines (Googlebot, Bingbot, etc.) to crawl everything except private paths
+# AI training bots are explicitly disallowed below
 
 User-agent: GPTBot
 Disallow: /

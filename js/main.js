@@ -29,7 +29,7 @@ const i18n = {
     t3: "AI Partner",
     t3s: "Growth plus custom AI development",
     popular: "Most chosen",
-    start: "Request Audit Scorecard",
+    start: "Get started",
     propose: "Request a proposal",
     trust: "Trusted by Lapango, Eastelpro, AGMX and growing SME clients across Malaysia",
     outcomes: "See our products →",
@@ -74,7 +74,7 @@ const i18n = {
     t3: "AI Partner",
     t3s: "Growth plus pembangunan AI tersuai",
     popular: "Paling dipilih",
-    start: "Minta Skorcard Audit",
+    start: "Mula sekarang",
     propose: "Minta cadangan",
     trust: "Dipercayai oleh Lapango, Eastelpro, AGMX dan SME yang berkembang di seluruh Malaysia",
     outcomes: "Lihat produk kami →",
@@ -323,15 +323,6 @@ function mytNow() {
 }
 
 function promoState() {
-  const d = mytNow();
-  const y = d.getFullYear();
-  const m = d.getMonth() + 1;
-  if (y === 2026 && m === 8) {
-    return { live: true, pct: 69, key: "aug", end: new Date("2026-08-31T23:59:59+08:00") };
-  }
-  if (y === 2026 && m === 9) {
-    return { live: true, pct: 63, key: "sep", end: new Date("2026-09-30T23:59:59+08:00") };
-  }
   return { live: false, pct: 0, key: "", end: null };
 }
 

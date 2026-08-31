@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Free IT & AI Audit — Duta Integra Solutions</title>
-  <meta name="description" content="Get a free IT audit or AI readiness assessment for your Malaysian SME. Technical SEO, content, speed, security and PDPA gaps scored in minutes. No obligation." />
+  <meta name="description" content="Get a free, instant IT & AI readiness audit for your Malaysian business. Technical SEO, PDPA compliance, security, cloud costs, and AI opportunity scored in minutes. Includes PDPA gap report worth RM1,800." />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="icon" type="image/png" href="assets/dis-favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,8 +14,22 @@
   <link rel="alternate" hreflang="en" href="https://dutaintegra.my/free-audit" />
   <link rel="alternate" hreflang="ms" href="https://dutaintegra.my/ms/free-audit" />
   <link rel="alternate" hreflang="x-default" href="https://dutaintegra.my/free-audit" />
+  <meta property="og:title" content="Free IT & AI Audit — Duta Integra Solutions" />
+  <meta property="og:description" content="Free IT & AI readiness audit for Malaysian SMEs. Includes PDPA gap report worth RM1,800." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/img/og-share.jpg" />
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Service","name":"Free IT & AI Audit","provider":{"@type":"Organization","name":"Duta Integra Solutions"},"description":"Free digital brand audit for Malaysian SMEs covering technical SEO, content, speed, security and PDPA compliance.","areaServed":"MY","offers":{"@type":"Offer","price":"0","priceCurrency":"MYR"}}
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Free IT & AI Audit",
+    "description": "Free IT & AI readiness audit for Malaysian SMEs. Includes PDPA gap report worth RM1,800.",
+    "url": "https://dutaintegra.my/free-audit",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Duta Integra Solutions"
+    }
+  }
   </script>
 </head>
 <body>
@@ -41,27 +55,25 @@
       <div class="wrap audit-hero-grid">
         <div class="audit-hero-copy">
           <div class="eyebrow">Free · 2 minutes · No commitment</div>
-          <h1>Get your <em class="accent">IT & AI readiness scorecard</em></h1>
-          <p>We scan your website and digital presence across technical SEO, content, speed, security and PDPA compliance — then deliver a prioritized action list you can actually use.</p>
+          <h1>Get your <em class="accent">IT & AI Readiness Scorecard</em></h1>
+          <p>We scan your website, cloud setup, security posture, and PDPA compliance — then deliver a prioritized action plan. Includes a <strong>PDPA gap report worth RM 1,800</strong> at no cost.</p>
           <ul class="audit-hero-points">
-            <li>Technical SEO & crawlability</li>
-            <li>Content depth & structure</li>
-            <li>Page speed & Core Web Vitals</li>
-            <li>Security headers & SSL</li>
-            <li>PDPA compliance gaps</li>
-            <li>AI readiness signals</li>
+            <li>Live scan of your public-facing assets</li>
+            <li>Priority fixes ranked by business impact</li>
+            <li>Benchmarked against Malaysian SME peers</li>
+            <li>PDPA compliance checklist included</li>
           </ul>
         </div>
 
         <form class="audit-form" id="audit-form" novalidate>
           <div class="audit-form-head">
             <div class="audit-form-badge">FREE IT & AI AUDIT</div>
-            <h2>Start your assessment</h2>
+            <h2>Run your audit</h2>
           </div>
 
           <div class="field">
             <label for="audit-url">Your website URL *</label>
-            <input id="audit-url" name="url" type="url" placeholder="https://www.yourcompany.com" autocomplete="url" autofocus required />
+            <input id="audit-url" name="url" type="text" placeholder="www.yourcompany.com" autocomplete="url" autofocus required />
           </div>
 
           <div class="form-row">
@@ -70,8 +82,8 @@
               <input id="audit-name" name="name" type="text" placeholder="Your Company Sdn Bhd" maxlength="160" autocomplete="organization" required />
             </div>
             <div class="field">
-              <label for="audit-industry">Industry</label>
-              <select id="audit-industry" name="industry">
+              <label for="audit-industry">Industry *</label>
+              <select id="audit-industry" name="industry" required>
                 <option value="">Select…</option>
                 <option value="ecommerce">E-commerce / Retail</option>
                 <option value="restaurant">F&B / Restaurant</option>
@@ -81,32 +93,48 @@
                 <option value="realestate">Property / Real Estate</option>
                 <option value="tech">Tech / Software</option>
                 <option value="agency">Agency / Services</option>
+                <option value="manufacturing">Manufacturing / Distribution</option>
                 <option value="general">Other</option>
               </select>
             </div>
           </div>
 
-          <div class="field">
-            <label for="audit-email">Work email *</label>
-            <input id="audit-email" name="email" type="email" placeholder="you@company.com" maxlength="160" autocomplete="email" required />
+          <div class="form-row">
+            <div class="field">
+              <label for="audit-email">Work email *</label>
+              <input id="audit-email" name="email" type="email" placeholder="you@company.com" maxlength="160" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="audit-phone">Phone (WhatsApp preferred) *</label>
+              <input id="audit-phone" name="phone" type="tel" placeholder="+60 1X-XXXXXXX" maxlength="20" autocomplete="tel" required />
+            </div>
           </div>
 
-          <div class="field pdpa-consent">
-            <label class="checkbox-label">
-              <input type="checkbox" name="pdpa_consent" id="pdpa-consent" required />
-              <span>I agree to Duta Integra processing my data per <a href="/privacy" target="_blank">PDPA 2010</a> — we only use this to deliver your audit scorecard and optional follow-up.</span>
-            </label>
+          <div class="field">
+            <label for="audit-message">What are you trying to achieve? (optional)</label>
+            <textarea id="audit-message" name="message" placeholder="e.g., reduce IT costs, automate support, prepare for PDPA audit, explore AI chatbot..." maxlength="500" rows="3"></textarea>
           </div>
+
+          <fieldset class="field" style="border:0;padding:0;margin:0;">
+            <legend style="display:none;">PDPA Consent</legend>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <input type="checkbox" id="pdpa-consent" name="pdpa_consent" required style="margin-top:4px;flex-shrink:0;width:18px;height:18px;accent-color:var(--primary);" />
+              <label for="pdpa-consent" style="font-size:13px;color:var(--text-2);line-height:1.5;margin:0;cursor:pointer;">
+                I consent to Duta Integra Solutions processing my personal data per the <a href="/privacy" style="color:var(--primary);text-decoration:underline;">Privacy Notice</a> and <strong>PDPA 2010</strong>. We use your data only to deliver the audit and follow up — no spam, no third-party sharing.
+              </label>
+            </div>
+          </fieldset>
 
           <button class="btn btn-gold btn-block" id="audit-submit" type="submit">Request Audit Scorecard →</button>
-          <p class="form-note">We'll email your scorecard within minutes. No sales calls unless you ask.</p>
+          <p class="form-note">We'll email your scorecard within 1 business day. Urgent? <a href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20free%20IT%20%26%20AI%20audit." target="_blank" rel="noopener" style="color:var(--primary);font-weight:500;">WhatsApp us</a>.</p>
         </form>
       </div>
 
       <div class="wrap audit-trust">
         <span>Built for Malaysian SMEs</span>
-        <span>PDPA-compliant</span>
-        <span>Results in minutes</span>
+        <span>PDPA 2010 compliant</span>
+        <span>Results in 1 business day</span>
+        <span>No obligation</span>
       </div>
     </section>
 
@@ -114,70 +142,72 @@
     <section class="section">
       <div class="wrap">
         <div class="section-head">
-          <div class="eyebrow">What you get</div>
-          <h2>Six areas. One scorecard.</h2>
-          <p>Each area gets a score (0–100) plus specific fixes ranked by impact.</p>
+          <div class="eyebrow">What we measure</div>
+          <h2>Five pillars. One scorecard.</h2>
+          <p>We look at the things that actually move risk, cost, and growth for a Malaysian SME.</p>
         </div>
         <div class="audit-features">
           <article class="audit-feature">
-            <div class="audit-feature-ico">SEO</div>
-            <h3>Technical SEO</h3>
-            <p>Title tags, meta descriptions, heading hierarchy, structured data, robots.txt, sitemap.xml — the foundation search engines read.</p>
-          </article>
-          <article class="audit-feature">
-            <div class="audit-feature-ico">CONTENT</div>
-            <h3>Content & Structure</h3>
-            <p>Copy depth, keyword coverage, image alt text, internal linking. Does your site tell Google and visitors what you actually do?</p>
-          </article>
-          <article class="audit-feature">
-            <div class="audit-feature-ico">⚡</div>
-            <h3>Speed & Core Web Vitals</h3>
-            <p>LCP, INP, CLS, TTFB. A slow site loses leads before anyone reads your offer. We measure real-user thresholds.</p>
-          </article>
-          <article class="audit-feature">
-            <div class="audit-feature-ico">🔒</div>
-            <h3>Security Headers</h3>
-            <p>CSP, HSTS, X-Frame-Options, Referrer-Policy, SSL grade. Basic hygiene that protects visitors and trust signals.</p>
+            <div class="audit-feature-ico">SEC</div>
+            <h3>Security & Infrastructure</h3>
+            <p>SSL/TLS config, security headers, open ports, cloud misconfigurations, backup verification, and incident readiness.</p>
           </article>
           <article class="audit-feature">
             <div class="audit-feature-ico">PDPA</div>
             <h3>PDPA Compliance</h3>
-            <p>Contact form consent, privacy notice presence, data retention mentions, breach readiness. Mandatory for every Malaysian SME.</p>
+            <p>Data mapping, consent records, privacy notice gaps, retention schedules, breach readiness, and DPO obligations.</p>
+          </article>
+          <article class="audit-feature">
+            <div class="audit-feature-ico">SEO</div>
+            <h3>Technical SEO & Performance</h3>
+            <p>Core Web Vitals, crawlability, structured data, mobile usability, and content depth — the signals that drive enquiries.</p>
+          </article>
+          <article class="audit-feature">
+            <div class="audit-feature-ico">☁</div>
+            <h3>Cloud Cost & Architecture</h3>
+            <p>Right-sizing, idle resources, backup costs, egress fees, and migration readiness for Malaysian data residency.</p>
           </article>
           <article class="audit-feature">
             <div class="audit-feature-ico">AI</div>
-            <h3>AI Readiness</h3>
-            <p>Structured data quality, FAQ/schema coverage, knowledge base signals — how ready is your content for AI search and chatbots?</p>
+            <h3>AI Readiness & Opportunity</h3>
+            <p>Data quality, knowledge base maturity, automation candidates, and ROI estimation for chatbots or agent workflows.</p>
           </article>
         </div>
       </div>
     </section>
 
     <!-- SAMPLE REPORT -->
-    <section class="section" style="background: var(--surface-2);">
+    <section class="section" style="background: var(--surface);">
       <div class="wrap">
-        <div class="section-head" style="text-align: center;">
-          <div class="eyebrow">See it first</div>
-          <h2>Sample Audit Scorecard</h2>
-          <p>Download a redacted 2-page example of what you'll receive — scores, prioritized fixes, and next steps.</p>
+        <div class="section-head" style="text-align:center;">
+          <div class="eyebrow">Proof it works</div>
+          <h2>See a sample scorecard</h2>
+          <p>Redacted example from a Malaysian e-commerce SME (names & IPs changed).</p>
         </div>
-        <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 24px;">
-          <a class="btn btn-gold" href="assets/pdf/sample-audit-scorecard.pdf" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Download Sample Report (PDF)
-          </a>
-          <a class="btn btn-line" href="/audit">Run Your Own Audit →</a>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;max-width:900px;margin:0 auto;">
+          <div style="background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:24px;">
+            <h3 style="margin-bottom:16px;font-size:18px;">Sample Audit Scorecard (PDF)</h3>
+            <p style="color:var(--text-2);margin-bottom:20px;font-size:14px;">2-page executive summary showing overall score, pillar breakdown, top 5 risks, and 30-day action plan.</p>
+            <a class="btn btn-gold btn-block" href="/assets/sample-report.pdf" download>Download Sample Report (PDF)</a>
+            <p style="margin-top:12px;font-size:12px;color:var(--text-3);text-align:center;">Redacted · 2 pages · 180 KB</p>
+          </div>
+          <div style="background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:24px;">
+            <h3 style="margin-bottom:16px;font-size:18px;">What you'll receive</h3>
+            <ul style="display:grid;gap:10px;list-style:none;padding:0;">
+              <li style="display:flex;align-items:center;gap:10px;color:var(--text);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Overall readiness score (0–100)</li>
+              <li style="display:flex;align-items:center;gap:10px;color:var(--text);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 5 pillar scores with benchmarks</li>
+              <li style="display:flex;align-items:center;gap:10px;color:var(--text);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Top 5 prioritized risks</li>
+              <li style="display:flex;align-items:center;gap:10px;color:var(--text);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> PDPA gap checklist (worth RM 1,800)</li>
+              <li style="display:flex;align-items:center;gap:10px;color:var(--text);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 30-day action plan with owners</li>
+              <li style="display:flex;align-items:center;gap:10px;color:var(--text);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> AI opportunity matrix</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- PROCESS -->
     <section class="section why">
-      <div class="bg-grid" aria-hidden="true"></div>
-      <div class="glow-blob blob-1" aria-hidden="true"></div>
-      <div class="glow-blob blob-2" aria-hidden="true"></div>
-      <div class="glow-blob blob-3" aria-hidden="true"></div>
-      <div class="scan-line" aria-hidden="true"></div>
       <div class="wrap">
         <div class="section-head">
           <div class="eyebrow">What happens next</div>
@@ -186,18 +216,23 @@
         <div class="steps">
           <article class="step">
             <div class="n">1</div>
-            <h3>Free audit</h3>
-            <p>We scan your site and show you the gaps — technical, content, speed, security, PDPA and AI readiness.</p>
+            <h3>Submit request</h3>
+            <p>Fill the form above — we only need your URL, business name, and contact details.</p>
           </article>
           <article class="step">
             <div class="n">2</div>
-            <h3>Priority scorecard</h3>
-            <p>You get a ranked list of fixes with effort vs impact. The highest-ROI items come first.</p>
+            <h3>We run the scan</h3>
+            <p>Our team runs automated + manual checks across security, PDPA, SEO, cloud, and AI readiness.</p>
           </article>
           <article class="step">
             <div class="n">3</div>
-            <h3>Fix it with us (or don't)</h3>
-            <p>If you'd rather we do it, we scope it into a retainer. If not, the scorecard is yours — no obligation.</p>
+            <h3>Get your scorecard</h3>
+            <p>Receive a 2-page PDF + Loom walkthrough within 1 business day. No sales pitch.</p>
+          </article>
+          <article class="step">
+            <div class="n">4</div>
+            <h3>Decide next steps</h3>
+            <p>Fix internally, engage us for remediation, or keep the report — no obligation.</p>
           </article>
         </div>
       </div>
@@ -211,12 +246,12 @@
       <div class="glow-blob blob-3" aria-hidden="true"></div>
       <div class="scan-line" aria-hidden="true"></div>
       <div class="wrap">
-        <div class="eyebrow">Prefer a human?</div>
-        <h2>Get a <em class="accent">walked-through</em> audit</h2>
-        <p>Book a free 20-minute call and we'll run your audit live, explain every point, and share a plan — whether you hire us or not.</p>
+        <div class="eyebrow">Ready to see where you stand?</div>
+        <h2>Request your <em class="accent">Audit Scorecard</em> today</h2>
+        <p>Free. No retainer required. Includes PDPA gap report worth RM 1,800.</p>
         <div class="cta-actions">
-          <a class="btn btn-gold" href="/contact">Book free consultation</a>
-          <a class="btn btn-ghost" href="/pricing">View pricing</a>
+          <a class="btn btn-gold" href="#audit-form">Request Audit Scorecard</a>
+          <a class="btn btn-ghost" href="/contact">Book a consultation</a>
         </div>
       </div>
     </section>
@@ -226,7 +261,7 @@
     <div id="di-footer"></div>
   </footer>
 
-  <a class="wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20free%20IT%20audit%20and%20discovery%20call." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <a class="wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20free%20IT%20%26%20AI%20audit." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
   </a>
 
