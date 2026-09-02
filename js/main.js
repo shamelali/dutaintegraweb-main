@@ -93,6 +93,23 @@ const i18n = {
   }
 };
 
+function applyI18n() {
+  const lang = currentLang();
+  const dict = i18n[lang];
+  if (!dict) return;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = dict[key];
+    if (val == null) return;
+    if (key.includes('title') || key.includes('lead') || key.includes('sub') || key.includes('blurb')) {
+      el.innerHTML = val;
+    } else {
+      el.textContent = val;
+    }
+  });
+  document.documentElement.lang = lang === 'bm' ? 'ms' : 'en';
+}
+
 function isMsPath() {
   return location.pathname === "/ms" || location.pathname.startsWith("/ms/");
 }
@@ -137,10 +154,11 @@ function enforceLangPreference() {
 }
 
 function bindLangSwitch() {
-  document.querySelectorAll(".lang-switch a[hreflang]").forEach((a) => {
-    a.addEventListener("click", () => {
-      localStorage.setItem("lang", a.getAttribute("hreflang") === "ms" ? "ms" : "en");
-    });
+  document.addEventListener('click', function(e) {
+    const a = e.target.closest('.lang-switch a[hreflang]');
+    if (a) {
+      localStorage.setItem('lang', a.getAttribute('hreflang') === 'ms' ? 'ms' : 'en');
+    }
   });
 }
 
@@ -595,6 +613,7 @@ function bindServiceCards() {
 document.addEventListener("DOMContentLoaded", () => {
   if (enforceLangPreference()) return;
   rememberLangFromPath();
+  applyI18n();
   bindLangSwitch();
   const savedTheme = localStorage.getItem("theme");
   const isDark = savedTheme !== "light";
