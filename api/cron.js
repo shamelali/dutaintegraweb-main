@@ -208,4 +208,3 @@ async function handler(req) {
 }
 
 export { handler as GET };
-export default handler;

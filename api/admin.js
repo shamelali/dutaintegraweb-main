@@ -512,4 +512,3 @@ async function handler(req) {
 }
 
 export { handler as GET, handler as POST, handler as PATCH, handler as DELETE };
-export default handler;

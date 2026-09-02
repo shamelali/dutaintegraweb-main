@@ -173,8 +173,9 @@ async function handleHealth(req) {
   const base = healthCheck();
   base.version = appConfig.version;
   base.env = appConfig.nodeEnv;
-  // parallel dependency checks (non-blocking, best-effort)
-  const [db] = await Promise.allSettled([pingSupabase()]);
+  // parallel dependency checks with 3s timeout so health never hangs past 10s maxDuration
+  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
+  const [db] = await Promise.allSettled([withTimeout(pingSupabase(), 3000).catch((e) => ({ ok: false, error: e.message }))]);
   const checks = {
     db: db.status === "fulfilled" ? db.value : { ok: false, error: "ping failed" },
     resend: { ok: !!appConfig.resendApiKey },
@@ -223,4 +224,3 @@ async function handler(req) {
 }
 
 export { handler as GET, handler as POST, handler as PATCH, handler as DELETE };
-export default handler;
