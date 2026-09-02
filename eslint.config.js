@@ -26,13 +26,13 @@ export default [
     }
   },
   {
-    files: ["api/**/*.js"],
+    files: ["api/**/*.js", "lib/**/*.js"],
     languageOptions: {
       globals: {
         process: "readonly", console: "readonly", fetch: "readonly", crypto: "readonly",
         URL: "readonly", URLSearchParams: "readonly", Request: "readonly", Response: "readonly",
         AbortSignal: "readonly", TextEncoder: "readonly", btoa: "readonly", atob: "readonly",
-        setTimeout: "readonly", performance: "readonly"
+        setTimeout: "readonly", performance: "readonly", Blob: "readonly"
       }
     },
     rules: {

@@ -13,6 +13,9 @@ import { isCronAuthorized } from "../lib/auth.js";
 import { config as appConfig } from "../lib/config.js";
 import { logger } from "../lib/logger.js";
 import { DAILY_TASKS, checklistMessage } from "./_tasks.js";
+import { createFsVaultWriter, createSupabaseVaultWriter, synthesizeBatch } from "../lib/memory.js";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 export const config = { maxDuration: 60 };
 
@@ -93,6 +96,58 @@ function mytLabelDigest() {
   return new Intl.DateTimeFormat("en", { timeZone: "Asia/Kuala_Lumpur", weekday: "long", day: "numeric", month: "long" }).format(new Date());
 }
 function esc(s) { return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+async function handleMemoryFold({ supabase, newLeads }) {
+  if (!appConfig.memoryVaultEnabled) return { skipped: true };
+  try {
+    // Use git FS writer by default (memory/vault), Supabase writer if SUPABASE_SERVICE_ROLE_KEY set and vault not local
+    let writer;
+    // Prefer FS for MVP (vercel: outputDirectory="." serves memory/vault statically when committed)
+    // In production, caller can pass Supabase writer instead; here we try FS then fallback to Supabase
+    try {
+      // base is read via synthesizeBatch from config.memoryVaultPath
+      // probe FS — in Vercel serverless /tmp is writable, repo path is read-only
+      // synthesizeBatch will create dirs via fs.mkdir recursive
+      writer = createFsVaultWriter({ fs, path });
+      // slight override: if file fails, synthesizeBatch will log and continue
+    } catch {}
+    if (!writer) writer = createSupabaseVaultWriter(supabase);
+
+    // Fold yesterday's leads + last 7 days for company aggregates
+    const sevenDaysAgo = new Date(Date.now() - 7 * DAY).toISOString();
+    const { data: recentLeads, error: eFold } = await supabase
+      .from("leads")
+      .select("id,name,email,company,service,message,status,source,lead_score,assigned_role,created_at")
+      .gte("created_at", sevenDaysAgo)
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (eFold) {
+      logger.warn("memory fold query failed", { error: eFold.message });
+      return { ok: false, error: eFold.message };
+    }
+    const targets = recentLeads && recentLeads.length ? recentLeads : newLeads;
+    if (!targets || targets.length === 0) return { ok: true, written: 0, note: "no leads to fold" };
+
+    const result = await synthesizeBatch(targets, writer);
+
+    // checkpoint sync state
+    try {
+      await supabase.from("memory_sync_state").upsert({
+        id: "daily-fold",
+        cursor: new Date().toISOString(),
+        last_sync: new Date().toISOString(),
+        meta: { newLeads: newLeads?.length || 0, recentLeads: recentLeads?.length || 0, result },
+      }, { onConflict: "id" });
+    } catch (e) {
+      logger.warn("memory_sync_state upsert failed", { error: e?.message });
+    }
+    return { ok: true, ...result };
+  } catch (err) {
+    logger.error("handleMemoryFold threw", { error: err?.message });
+    return { ok: false, error: err?.message };
+  }
+}
+
 async function handleDigest(req) {
   if (!isCronAuthorized(req)) return cronJson({ ok: false, error: "Unauthorized" }, 401);
   const supabase = getSupabase();
@@ -128,6 +183,10 @@ async function handleDigest(req) {
   lines.push(warm.length ? warm.map(fmtAudit).join("\n") : "_None._", "");
   lines.push(`*➤ Stalled leads — 3d+ no movement (${stalled.length})*`);
   lines.push(stalled.length ? stalled.map((l) => `• ${l.name || "—"} — ${l.service || "no service"} · ${l.status}`).join("\n") : "_None._");
+  // Memory vault fold (best-effort, runs before Slack/email so digest and vault stay in sync)
+  let memoryFold = null;
+  try { memoryFold = await handleMemoryFold({ supabase, newLeads }); } catch (e) { memoryFold = { ok: false, error: String(e?.message) }; }
+
   const slackOk = await postToSlack(lines.join("\n"), { username: "Duta Integra Digest", icon_emoji: ":coffee:" });
   const to = appConfig.emailTo;
   let emailOk = false;
@@ -148,7 +207,7 @@ async function handleDigest(req) {
       emailOk = true;
     } catch (err) { logger.error("digest email error", { error: err?.message }); }
   }
-  return cronJson({ ok: true, newLeads: newLeads.length, warm: warm.length, stalled: stalled.length, slack: !!slackOk, email: emailOk });
+  return cronJson({ ok: true, newLeads: newLeads.length, warm: warm.length, stalled: stalled.length, slack: !!slackOk, email: emailOk, memoryFold });
 }
 
 // ---------------------------------------------------------------------------

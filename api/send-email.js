@@ -11,6 +11,7 @@ import { postToSlack } from "../lib/slack.js";
 import { sendAdminNotification, sendAutoreply } from "../lib/email.js";
 import { getSupabase } from "../lib/supabase.js";
 import { scoreLead } from "./_scoring.js";
+import { canonicalizeLead } from "../lib/memory.js";
 
 const checkRateLimit = createRateLimiter({
   maxRequests: config.contactRateMax,
@@ -144,19 +145,42 @@ async function handler(request) {
     // continue to persist lead even if email failed — lead is not lost
   }
 
-  // 4) Persist lead with scoring (autonomous routing)
+  // 4) Persist lead with scoring (autonomous routing) + vault synthesis (best-effort)
+  let scoredForVault = null;
+  let insertedId = null;
   try {
     const supabase = getSupabase();
-    const scored = scoreLead({ source, service, message, company });
-    const { error } = await supabase.from("leads").insert({
+    scoredForVault = scoreLead({ source, service, message, company });
+    const { data, error } = await supabase.from("leads").insert({
       name, email, phone, company, service, message,
       status: "new",
       source,
-      lead_score: scored.lead_score,
-      assigned_role: scored.assigned_role,
-    });
+      lead_score: scoredForVault.lead_score,
+      assigned_role: scoredForVault.assigned_role,
+    }).select("id, created_at").single();
     if (error) log.error("lead persist failed", { error: error.message });
-    else log.info("lead persisted", { email, lead_score: scored.lead_score, assigned_role: scored.assigned_role });
+    else {
+      insertedId = data?.id || null;
+      log.info("lead persisted", { email, lead_score: scoredForVault.lead_score, assigned_role: scoredForVault.assigned_role, id: insertedId });
+      // fire-and-forget vault synthesis (never throw, never block response)
+      if (config.memoryVaultEnabled && insertedId) {
+        try {
+          const md = canonicalizeLead({
+            id: insertedId, name, email, phone, company, service, message,
+            status: "new", source, lead_score: scoredForVault.lead_score,
+            assigned_role: scoredForVault.assigned_role, created_at: data?.created_at || new Date().toISOString(),
+          });
+          // events log carries canonical markdown preview for later batch fold
+          await supabase.from("events").insert({
+            type: "memory_lead_synthesized",
+            path: `/memory/vault/leads/${md.mytDate}__${String(insertedId).slice(0, 8)}`,
+            meta: { email, lead_score: scoredForVault.lead_score, assigned_role: scoredForVault.assigned_role, preview: md.markdown.slice(0, 800) },
+          }).then(() => {}, () => {});
+        } catch (vaultErr) {
+          log.warn("vault synthesize lead failed", { error: vaultErr?.message });
+        }
+      }
+    }
   } catch (dbErr) {
     log.error("lead insert threw", { error: dbErr?.message });
   }
