@@ -25,7 +25,24 @@ ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 -- Tighten: drop overly broad policies if present, re-create minimal set.
 -- ---------------------------------------------------------------------------
 DROP POLICY IF EXISTS "Allow all for service role" ON leads;
-CREATE POLICY "service_role_all_leads" ON leads FOR ALL USING (auth.role() = 'service_role') WITH CHECK (auth.role() = 'service_role');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'leads'
+      AND policyname = 'service_role_all_leads'
+  ) THEN
+    CREATE POLICY "service_role_all_leads"
+      ON public.leads
+      FOR ALL
+      TO service_role
+      USING (auth.role() = 'service_role')
+      WITH CHECK (auth.role() = 'service_role');
+  END IF;
+END
+$$;
 
 -- Ensure anon cannot read leads (PII)
 DROP POLICY IF EXISTS "Allow select for authenticated" ON leads;
