@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=22"
-  },
   "scripts": {
     "lint": "eslint api lib js",
     "lint:fix": "eslint api lib js --fix",
@@ -18,7 +15,6 @@
     "vercel:check": "python3 -m json.tool vercel.json > /dev/null && echo 'vercel.json OK'"
   },
   "dependencies": {
-    "@cline/sdk": "^0.0.82",
     "@supabase/supabase-js": "^2.112.3",
     "resend": "^4.5.2"
   },
