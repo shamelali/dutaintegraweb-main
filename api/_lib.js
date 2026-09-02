@@ -26,7 +26,7 @@ const ALLOWED_ORIGINS = [
   "https://dutaintegraweb-main-efunpqs0m-shamelalis-projects.vercel.app",
 ];
 
-function getAllowedOrigin(req) {
+export function getAllowedOrigin(req) {
   const origin = req?.headers?.get?.("origin") || "";
   if (ALLOWED_ORIGINS.includes(origin)) return origin;
   return ALLOWED_ORIGINS[0];
@@ -60,8 +60,19 @@ export function corsResponse(req) {
   });
 }
 
+// JWT_SECRET — required in production. If missing, generate an ephemeral
+// random secret so the system FAILS CLOSED (attacker cannot forge tokens with
+// a known default) instead of failing open with a hardcoded value.
 const JWT_SECRET =
-  process.env.JWT_SECRET || "duta-integra-admin-secret-change-in-production";
+  process.env.JWT_SECRET ||
+  (() => {
+    console.warn(
+      "WARNING: JWT_SECRET is not set. Using an ephemeral random secret; admin sessions will not survive function restarts. Set JWT_SECRET in production."
+    );
+    const bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  })();
 
 function b64urlToObj(part) {
   return JSON.parse(atob(part.replace(/-/g, "+").replace(/_/g, "/")));
@@ -176,4 +187,51 @@ export function isPrivateHost(hostname) {
 // Health check helper
 export function healthCheck() {
   return { status: "healthy", timestamp: new Date().toISOString(), uptime: process.uptime() };
+}
+
+// ---------------------------------------------------------------------------
+// Cron + Slack helpers (used by api/cron/*)
+// ---------------------------------------------------------------------------
+
+// Vercel sends a signed x-vercel-cron header for scheduled runs; the Bearer
+// CRON_SECRET fallback lets us trigger a run manually for testing/replay.
+export function isCronAuthorized(req) {
+  if (req?.headers?.get?.("x-vercel-cron")) return true;
+  const auth = req?.headers?.get?.("authorization") || "";
+  const secret = process.env.CRON_SECRET || "";
+  return !!secret && auth === `Bearer ${secret}`;
+}
+
+export function cronJson(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
+// Soft-fail Slack post via Incoming Webhook. Crons must never fail because
+// Slack is down, so this swallows errors and always resolves.
+export async function postToSlack(text, extra = {}) {
+  const webhook = process.env.SLACK_WEBHOOK_URL;
+  if (!webhook) {
+    console.warn("postToSlack: SLACK_WEBHOOK_URL not set — skipping");
+    return null;
+  }
+  try {
+    const res = await fetch(webhook, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: String(text || "").slice(0, 3500), ...extra }),
+    });
+    if (!res.ok) {
+      console.error("postToSlack failed:", res.status, (await res.text().catch(() => "")));
+    }
+    return res;
+  } catch (err) {
+    console.error("postToSlack error:", err?.message);
+    return null;
+  }
 }

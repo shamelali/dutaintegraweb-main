@@ -1,7 +1,9 @@
 import { Resend } from "resend";
 import { json, corsResponse, createRateLimiter, sanitize, getAllowedOrigin } from "./_lib.js";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY || "re_test_dummy");
+}
 
 // Honeypot field - should remain empty
 const HONEYPOT = process.env.HONEYPOT_FIELD || "website-bot";
@@ -216,7 +218,7 @@ async function handler(request) {
       reply_to: email,
     };
 
-    await resend.sendEmail(data);
+    await getResend().sendEmail(data);
 
     // Post the lead to Slack (does not block or fail the response)
     notifySlack({ name, company, email, phone, service, message });
@@ -231,7 +233,7 @@ async function handler(request) {
           <p style="color: #6a6a8a;">Best regards,<br>Duta Integra Solutions Team</p>
         </div>
       `;
-      await resend.sendEmail({
+      await getResend().sendEmail({
         from: FROM,
         to: email,
         subject: "Receipt of your contact form submission",

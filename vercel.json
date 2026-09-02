@@ -1,26 +1,38 @@
 {
   "cleanUrls": true,
+  "outputDirectory": ".",
   "framework": null,
   "functions": {
-    "api/*.js": {
-      "maxDuration": 10
-    }
+    "api/audit.js": { "maxDuration": 30 },
+    "api/cron.js": { "maxDuration": 60 },
+    "api/admin.js": { "maxDuration": 15 },
+    "api/public.js": { "maxDuration": 10 },
+    "api/send-email.js": { "maxDuration": 10 }
   },
   "crons": [
-    {
-      "path": "/api/cron/followup",
-      "schedule": "0 9 * * *"
-    }
+    { "path": "/api/cron/followup", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/daily-tasks", "schedule": "0 0 * * *" },
+    { "path": "/api/cron/digest", "schedule": "30 0 * * *" },
+    { "path": "/api/cron/stale-leads", "schedule": "30 1 * * 1" }
   ],
   "rewrites": [
-    {
-      "source": "/admin",
-      "destination": "/admin/index.html"
-    },
-    {
-      "source": "/admin/",
-      "destination": "/admin/index.html"
-    }
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/admin/", "destination": "/admin/index.html" },
+    { "source": "/api/products", "destination": "/api/public?resource=products" },
+    { "source": "/api/case-studies", "destination": "/api/public?resource=case-studies" },
+    { "source": "/api/report", "destination": "/api/public?resource=report" },
+    { "source": "/api/track", "destination": "/api/public?resource=track" },
+    { "source": "/api/health", "destination": "/api/public?resource=health" },
+    { "source": "/api/slack", "destination": "/api/admin?resource=slack" },
+    { "source": "/api/admin/login", "destination": "/api/admin?resource=login" },
+    { "source": "/api/admin/leads", "destination": "/api/admin?resource=leads" },
+    { "source": "/api/admin/audits", "destination": "/api/admin?resource=audits" },
+    { "source": "/api/admin/products", "destination": "/api/admin?resource=products" },
+    { "source": "/api/admin/case-studies", "destination": "/api/admin?resource=case-studies" },
+    { "source": "/api/cron/followup", "destination": "/api/cron?job=followup" },
+    { "source": "/api/cron/daily-tasks", "destination": "/api/cron?job=daily-tasks" },
+    { "source": "/api/cron/digest", "destination": "/api/cron?job=digest" },
+    { "source": "/api/cron/stale-leads", "destination": "/api/cron?job=stale-leads" }
   ],
   "headers": [
     {

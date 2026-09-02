@@ -15,7 +15,8 @@
 // ============================================================================
 
 import { Resend } from "resend";
-import { getSupabase, makeId } from "./_lib.js";
+import { getSupabase, makeId, verifyAdminToken } from "./_lib.js";
+import { scoreLead } from "./_scoring.js";
 
 export const config = { maxDuration: 30 };
 
@@ -27,29 +28,6 @@ const ALLOWED_ORIGINS = [
   "https://www.dutaintegra.my",
   "https://dutaintegraweb-main-efunpqs0m-shamelalis-projects.vercel.app",
 ];
-
-// Admin JWT verification — full checklist is only returned to authenticated admins
-const JWT_SECRET = process.env.JWT_SECRET || "duta-integra-admin-secret-change-in-production";
-
-async function verifyAdminToken(token) {
-  try {
-    const [header, body, signature] = token.split(".");
-    const encoder = new TextEncoder();
-    const key = await crypto.subtle.importKey(
-      "raw", encoder.encode(JWT_SECRET),
-      { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
-    );
-    const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(`${header}.${body}`));
-    const expected = btoa(String.fromCharCode(...new Uint8Array(sig)))
-      .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-    if (signature !== expected) return null;
-    const payload = JSON.parse(atob(body.replace(/-/g, "+").replace(/_/g, "/")));
-    if (payload.exp && Date.now() > payload.exp) return null;
-    return payload;
-  } catch {
-    return null;
-  }
-}
 
 // Per-IP rate limit (best-effort on serverless; per warm instance)
 const RATE_MAX = Number(process.env.AUDIT_RATE_MAX) || 10;
@@ -645,6 +623,7 @@ async function persistAuditResult(report, req) {
           })
           .eq("id", existing.id);
       } else {
+        const scored = scoreLead({ source: "free-audit", service: "Free brand audit" });
         await supabase.from("leads").insert({
           name: report.brandName,
           email: report.email,
@@ -654,7 +633,8 @@ async function persistAuditResult(report, req) {
           industry: report.industry || null,
           status: "new",
           source: "free-audit",
-          lead_score: 10,
+          lead_score: scored.lead_score,
+          assigned_role: scored.assigned_role,
         });
       }
     } catch (err) {

@@ -1,5 +1,4 @@
-name: Security Scan
-
+name: Security & Quality Audit
 on:
   push:
     branches: [main]
@@ -10,36 +9,90 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: Check for secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.2'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+
+      - name: Check for sensitive files
+        run: |
+          echo "Checking for exposed sensitive files..."
+          ! git ls-files | grep -E "\.pptx$|\.pdf$|\.env$|build-pdf.py|serve.py" || (echo "Sensitive files found in repo!" && exit 1)
+          echo "No sensitive files found"
+
+      - name: Validate vercel.json
+        run: |
+          cat vercel.json | python3 -m json.tool > /dev/null && echo "vercel.json valid"
+
+      - name: Validate HTML files
+        run: |
+          echo "Checking HTML files for basic validity..."
+          for f in *.html ms/*.html cases/*.html admin/*.html; do
+            if [ -f "$f" ]; then
+              # Check for basic structure
+              grep -q "<!DOCTYPE html>" "$f" || (echo "Missing DOCTYPE in $f" && exit 1)
+              grep -q "</html>" "$f" || (echo "Missing closing html tag in $f" && exit 1)
+            fi
+          done
+          echo "HTML files valid"
+
+      - name: Check CSP headers in vercel.json
+        run: |
+          echo "Checking CSP configuration..."
+          grep -q "Content-Security-Policy" vercel.json && echo "CSP header configured" || (echo "Missing CSP header" && exit 1)
+
+      - name: Verify API routes exist
+        run: |
+          echo "Checking API routes..."
+          for f in api/send-email.js api/public.js api/_lib.js api/admin.js api/cron.js; do
+            [ -f "$f" ] || (echo "Missing $f" && exit 1)
+          done
+          echo "API routes present"
+
+      - name: Check robots.txt and sitemap.xml
+        run: |
+          [ -f robots.txt ] || (echo "Missing robots.txt" && exit 1)
+          [ -f sitemap.xml ] || (echo "Missing sitemap.xml" && exit 1)
+          echo "SEO files present"
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.2'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
 
       - name: Run HTMLHint linter
         uses: socialGov/HTMLHint-action@v1
         with:
           files: '*.html'
 
-      - name: Verify no sensitive files in git
+      - name: Run custom lint checks
         run: |
-          if git ls-files *.pptx *.pdf *.py > /dev/null 2>&1; then
-            echo "::error ::Sensitive files found in git!"
-            exit 1
-          fi
-          echo "No sensitive files in git - PASS"
-
-      - name: Check robots.txt
-        run: |
-          if curl -s -o /dev/null --head https://dutaintegra.my/robots.txt | grep -q "200"; then
-            echo "robots.txt accessible - PASS"
-          else
-            echo "::error ::robots.txt not accessible"
-            exit 1
-          fi
-
-      - name: Check sitemap.xml
-        run: |
-          if curl -s -o /dev/null --head https://dutaintegra.my/sitemap.xml | grep -q "200"; then
-            echo "sitemap.xml accessible - PASS"
-          else
-            echo "::error ::sitemap.xml not accessible"
-            exit 1
-          fi
+          echo "Running custom lint checks..."
+          # Check for console.log in production JS
+          ! grep -r "console\.log" js/main.js js/admin.js 2>/dev/null || echo "Warning: console.log found in production JS"
+          # Check for hardcoded localhost URLs in client JS
+          ! grep -r "localhost" js/ 2>/dev/null || echo "Warning: localhost reference found"
+          echo "Lint checks complete"
