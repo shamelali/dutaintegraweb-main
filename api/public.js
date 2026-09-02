@@ -10,6 +10,9 @@
 // ============================================================================
 
 import { getSupabase, json, corsResponse, healthCheck } from "./_lib.js";
+import { pingSupabase } from "./lib/supabase.js";
+import { logger } from "./lib/logger.js";
+import { config as appConfig } from "./lib/config.js";
 
 export const config = { maxDuration: 10 };
 
@@ -38,7 +41,7 @@ async function handleProducts(req) {
     .order("created_at");
 
   if (error) {
-    console.error("public products:", error);
+    logger.error("public products failed", { error: error.message });
     return json({ ok: false, error: "Failed to load products" }, 500);
   }
 
@@ -70,7 +73,7 @@ async function handleCaseStudies(req) {
     .order("created_at");
 
   if (error) {
-    console.error("public case-studies:", error);
+    logger.error("public case-studies failed", { error: error.message });
     return json({ ok: false, error: "Failed to load case studies" }, 500);
   }
 
@@ -105,7 +108,7 @@ async function handleReport(req) {
     .maybeSingle();
 
   if (error) {
-    console.error("report lookup:", error.message);
+    logger.error("report lookup failed", { error: error.message });
     return json({ ok: false, error: "Could not load that report." }, 500);
   }
   if (!data) {
@@ -153,24 +156,33 @@ async function handleTrack(req) {
       meta: typeof body.meta === "object" && body.meta !== null ? body.meta : {},
     });
   if (error) {
-    console.error("track insert:", error.message);
+    logger.error("track insert failed", { error: error.message });
     return json({ ok: false }, 500);
   }
   return json({ ok: true });
 }
 
 // ---------------------------------------------------------------------------
-// Health — GET /api/health
+// Health — GET /api/health  (with DB + config checks for autonomous monitoring)
 // ---------------------------------------------------------------------------
 async function handleHealth(req) {
   if (req.method === "OPTIONS") return corsResponse(req);
   if (req.method !== "GET") {
     return json({ error: "Method not allowed" }, 405, req);
   }
-  const health = healthCheck();
-  health.version = process.env.npm_package_version || "1.0.0";
-  health.env = process.env.NODE_ENV || "production";
-  return json(health, 200, req);
+  const base = healthCheck();
+  base.version = appConfig.version;
+  base.env = appConfig.nodeEnv;
+  // parallel dependency checks (non-blocking, best-effort)
+  const [db] = await Promise.allSettled([pingSupabase()]);
+  const checks = {
+    db: db.status === "fulfilled" ? db.value : { ok: false, error: "ping failed" },
+    resend: { ok: !!appConfig.resendApiKey },
+    slack: { ok: !!appConfig.slackWebhookUrl },
+    supabase: { ok: !!appConfig.supabaseUrl },
+  };
+  const healthy = checks.db.ok;
+  return json({ ...base, status: healthy ? "healthy" : "degraded", checks }, healthy ? 200 : 503, req);
 }
 
 // ---------------------------------------------------------------------------

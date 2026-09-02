@@ -255,6 +255,8 @@
         '<td><a href="mailto:' + esc(lead.email) + '" style="color:var(--gold)">' + esc(lead.email) + '</a></td>' +
         '<td>' + esc(lead.phone) + '</td>' +
         '<td>' + esc(lead.service) + '</td>' +
+        '<td>' + leadScoreBadge(lead) + '</td>' +
+        '<td>' + roleBadge(lead) + '</td>' +
         '<td><span class="badge-status ' + statusClass + '">' + esc(lead.status) + '</span></td>' +
         '<td style="white-space:nowrap">' + date + '</td>' +
         '<td style="white-space:nowrap">' +
@@ -267,6 +269,20 @@
 
   function esc(s) { return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 
+  // Lead score chip — hotter leads get a stronger tint.
+  function leadScoreBadge(l) {
+    var s = Number(l.lead_score) || 0;
+    var cls = s >= 30 ? "score-hot" : s >= 15 ? "score-warm" : "score-cool";
+    return '<span class="badge-score ' + cls + '">' + s + '</span>';
+  }
+
+  // Ops routing hint: technical = Shamel, operations = Amar.
+  function roleBadge(l) {
+    if (!l.assigned_role) return '<span class="badge-role none" title="Not auto-assigned — no ops routing hint">—</span>';
+    var label = l.assigned_role === "technical" ? "Shamel" : "Amar";
+    return '<span class="badge-role ' + esc(l.assigned_role) + '">' + label + '</span>';
+  }
+
   window.updateStatus = async function (id, status) {
     var data = await apiFetch("/leads?id=" + id, { method: "PATCH", body: JSON.stringify({ status: status }) });
     if (data && data.ok) { showToast("Lead " + id + " marked as " + status); loadLeads(); }
@@ -275,9 +291,9 @@
   function exportCSV() {
     var data = currentFilter !== "all" ? allLeads.filter(function (l) { return l.status === currentFilter; }) : allLeads;
     if (data.length === 0) { showToast("No leads to export"); return; }
-    var headers = ["ID", "Name", "Email", "Phone", "Company", "Service", "Status", "Date", "Message"];
+    var headers = ["ID", "Name", "Email", "Phone", "Company", "Service", "Score", "Assign", "Status", "Date", "Message"];
     var rows = data.map(function (l) {
-      return [l.id, '"' + l.name + '"', l.email, l.phone, '"' + (l.company || "") + '"', '"' + (l.service || "") + '"', l.status, new Date(l.created_at || l.createdAt).toLocaleDateString("en-MY"), '"' + (l.message || "").replace(/"/g, '""') + '"'];
+      return [l.id, '"' + l.name + '"', l.email, l.phone, '"' + (l.company || "") + '"', '"' + (l.service || "") + '"', l.lead_score || 0, l.assigned_role || "", l.status, new Date(l.created_at || l.createdAt).toLocaleDateString("en-MY"), '"' + (l.message || "").replace(/"/g, '""') + '"'];
     });
     var csv = [headers.join(","), rows.map(function (r) { return r.join(","); })].join("\n");
     var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });

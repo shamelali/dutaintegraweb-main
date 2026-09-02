@@ -166,6 +166,10 @@
       btn.textContent = "Menghantar...";
 
       const formData = new FormData(form);
+      // Sertakan token Turnstile dalam data borang
+      if (turnstileToken) {
+        formData.append("cf-turnstile-response", turnstileToken);
+      }
       const data = {
         name: formData.get("name"),
         email: formData.get("email"),
@@ -177,23 +181,21 @@
       };
 
       try {
-        // Hantar e-mel melalui API sedia ada
+        // Satu panggilan transaksional: e-mel + lead + skor dikendalikan di /api/send-email
         const emailRes = await fetch("/api/send-email", {
           method: "POST",
           body: formData,
         });
+        let result = null;
+        try { result = await emailRes.clone().json(); } catch {}
 
-        // Simpan lead di Supabase melalui API admin
-        await fetch("/api/admin/leads", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        if (emailRes.ok) {
+        if (emailRes.ok && (result?.ok !== false)) {
           const toast = document.getElementById("toast");
           toast.classList.add("show");
           form.reset();
+          // Set semula Turnstile untuk penghantaran seterusnya
+          if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
+          turnstileToken = null;
           setTimeout(() => toast.classList.remove("show"), 3000);
         } else {
           alert("Gagal menghantar mesej. Sila cuba lagi.");

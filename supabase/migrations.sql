@@ -48,6 +48,13 @@ CREATE INDEX IF NOT EXISTS idx_events_type_created ON events (type, created_at D
 -- ---------------------------------------------------------------------------
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS lead_score int NOT NULL DEFAULT 0;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS industry text;
+-- P0 automation: ops-routing hint for the two admin roles
+-- ('technical' = Shamel, 'operations' = Amar). Set server-side by
+-- api/_scoring.js on insert (contact form + free audit).
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS assigned_role text;
+CREATE INDEX IF NOT EXISTS idx_leads_assigned_role ON leads (assigned_role);
+-- Surface the warmest, newest leads first in the admin dashboard.
+CREATE INDEX IF NOT EXISTS idx_leads_created ON leads (created_at DESC);
 
 -- ---------------------------------------------------------------------------
 -- 4. products — Work page items, managed from the admin dashboard

@@ -4,15 +4,9 @@
   "default_agent": "ai-services",
   "mcp": {
     "supabase": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@supabase/mcp-server-supabase-mcp@latest",
-        "--project-id=wnehfuhpaptrxxnlzmck"
-      ],
-      "enabled": true,
-      "environment": {}
+      "type": "remote",
+      "url": "https://mcp.supabase.com/mcp?project_ref=wnehfuhpaptrxxnlzmck&features=docs%2Caccount%2Cdatabase%2Cdebugging%2Cdevelopment%2Cfunctions%2Cbranching%2Cstorage",
+      "enabled": true
     }
   },
   "agent": {

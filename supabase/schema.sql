@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS leads (
   note TEXT DEFAULT '',
   lead_score INT NOT NULL DEFAULT 0,
   industry TEXT,
+  assigned_role TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ
 );

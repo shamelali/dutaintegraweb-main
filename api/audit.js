@@ -17,49 +17,25 @@
 import { Resend } from "resend";
 import { getSupabase, makeId, verifyAdminToken } from "./_lib.js";
 import { scoreLead } from "./_scoring.js";
+import { config as appConfig } from "./lib/config.js";
+import { logger } from "./lib/logger.js";
+import { isPrivateHost as _isPrivateHost } from "./lib/security.js";
+import { createRateLimiter } from "./lib/rate-limit.js";
 
 export const config = { maxDuration: 30 };
 
 const FETCH_TIMEOUT_MS = 9000;
 const MAX_BODY = 1.8 * 1024 * 1024; // 1.8 MB HTML read ceiling
 const ALLOWED_SCHEMES = ["http:", "https:"];
-const ALLOWED_ORIGINS = [
-  "https://dutaintegra.my",
-  "https://www.dutaintegra.my",
-  "https://dutaintegraweb-main-efunpqs0m-shamelalis-projects.vercel.app",
-];
+const ALLOWED_ORIGINS = appConfig.allowedOrigins;
 
-// Per-IP rate limit (best-effort on serverless; per warm instance)
-const RATE_MAX = Number(process.env.AUDIT_RATE_MAX) || 10;
-const RATE_WINDOW = Number(process.env.AUDIT_RATE_WINDOW) || 60000;
-const ipHits = new Map(); // ip -> [timestamps]
-
-function clientIp(req) {
-  return (
-    req?.headers?.get?.("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req?.headers?.get?.("cf-connecting-ip") ||
-    "unknown"
-  );
-}
-
-function rateLimitOk(req) {
-  const now = Date.now();
-  const ip = clientIp(req);
-  const hits = (ipHits.get(ip) || []).filter((t) => now - t < RATE_WINDOW);
-  if (hits.length >= RATE_MAX) {
-    ipHits.set(ip, hits);
-    return false;
-  }
-  hits.push(now);
-  ipHits.set(ip, hits);
-  // opportunistic cleanup
-  if (ipHits.size > 5000) {
-    for (const [k, v] of ipHits) {
-      if (!v.some((t) => now - t < RATE_WINDOW)) ipHits.delete(k);
-    }
-  }
-  return true;
-}
+// Enterprise rate limiter (backed by lib/rate-limit, configurable via env)
+const checkAuditRate = createRateLimiter({
+  maxRequests: appConfig.auditRateMax,
+  windowMs: appConfig.auditRateWindow,
+  keyPrefix: "audit",
+});
+function rateLimitOk(req) { return checkAuditRate(req); }
 
 // ---------------------------------------------------------------------------
 // Small helpers
@@ -118,26 +94,8 @@ function normalizeUrl(raw) {
   return parsed;
 }
 
-// Block private / internal hosts (SSRF hygiene for a fetch-by-URL tool).
-function isPrivateHost(hostname) {
-  const host = String(hostname || "").toLowerCase();
-  if (host === "localhost" || host.endsWith(".localhost") || host.endsWith(".local") || host.endsWith(".internal")) return true;
-  // IPv6 loopback / link-local / unspecified
-  if (host === "::1" || host === "0:0:0:0:0:0:0:1") return true;
-  if (host.startsWith("fe80:") || host.startsWith("fc:") || host.startsWith("fd:")) return true;
-  if (/^\[?::/.test(host)) return true;
-  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
-    const parts = host.split(".").map(Number);
-    const [a, b] = parts;
-    if (a === 127 || a === 0) return true;
-    if (a === 10) return true;
-    if (a === 192 && b === 168) return true;
-    if (a === 172 && b >= 16 && b <= 31) return true;
-    if (a === 169 && b === 254) return true;
-    if (a === 100 && b >= 64 && b <= 127) return true;
-  }
-  return false;
-}
+// SSRF guard — delegate to lib/security (keeps behavior identical)
+function isPrivateHost(hostname) { return _isPrivateHost(hostname); }
 
 function auditError(message, code = "AUDIT_FAILED") {
   const err = new Error(message);
@@ -314,7 +272,8 @@ export async function runAudit(payload = {}) {
   };
 
   const started = performance.now();
-  let mainRes, html;
+  let mainRes;
+  let html = "";
   try {
     mainRes = await fetch(parsed.href, {
       method: "GET",
@@ -442,7 +401,7 @@ export async function runAudit(payload = {}) {
 
   const recommendations = allChecks
     .filter((c) => c.status === "fail" || c.status === "warn")
-    .sort((a, b) => (a.priority === "high" ? -1 : 1))
+    .sort((a, b) => (a.priority === b.priority ? 0 : a.priority === "high" ? -1 : 1))
     .slice(0, 5)
     .map((c) => ({
       title: c.label,
@@ -600,9 +559,9 @@ async function persistAuditResult(report, req) {
       report,
     });
     if (!error) shareSlug = slug;
-    else console.error("audit_reports insert:", error.message);
+    else logger.error("audit_reports insert failed", { error: error.message });
   } catch (err) {
-    console.error("audit_reports insert failed:", err?.message);
+    logger.error("audit_reports insert threw", { error: err?.message });
   }
 
   // 2. Lead upsert by email (+ scoring)
@@ -638,7 +597,7 @@ async function persistAuditResult(report, req) {
         });
       }
     } catch (err) {
-      console.error("lead upsert failed:", err?.message);
+      logger.error("lead upsert failed", { error: err?.message });
     }
   }
 
@@ -651,12 +610,12 @@ async function persistAuditResult(report, req) {
     });
   } catch { /* non-critical */ }
 
-  // 4. Report email via Resend (fire-and-forget)
-  if (report.email && process.env.RESEND_API_KEY) {
+  // 4. Report email via Resend (fire-and-forget, non-blocking)
+  if (report.email && appConfig.resendApiKey) {
     const origin = req?.headers?.get?.("origin") || "https://dutaintegra.my";
     const shareUrl = `${origin}/audit?r=${slug}`;
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const from = process.env.EMAIL_FROM || "Duta Integra <noreply@dutaintegra.my>";
+    const resend = new Resend(appConfig.resendApiKey);
+    const from = appConfig.emailFrom;
     resend.emails
       .send({
         from,
@@ -664,7 +623,7 @@ async function persistAuditResult(report, req) {
         subject: `Your free brand audit for ${report.domain}: ${report.score}/100 (${report.grade})`,
         html: buildReportEmail(report, shareUrl),
       })
-      .catch((err) => console.error("audit report email:", err?.message));
+      .catch((err) => logger.error("audit report email failed", { error: err?.message }));
   }
 
   return shareSlug;
@@ -683,30 +642,38 @@ export async function handler(req) {
     return json({ ok: false, error: "Too many requests from your network. Please try again shortly." }, 429, req);
   }
   let body = {};
-  try {
-    body = await req.json();
-  } catch {
-    body = {};
-  }
-  // honeypot: bots fill every field they see
+  try { body = await req.json(); } catch { body = {}; }
   if (body.company_website) {
-    return json({ ok: true, report: null }, 200, req);
+    return json({ ok: true, report: null, shareSlug: null }, 200, req);
   }
   const payload = {
-    url: body.url,
-    name: body.name,
-    industry: body.industry,
-    email: body.email,
+    url: String(body.url || "").trim(),
+    name: String(body.name || "").trim(),
+    industry: String(body.industry || "").trim(),
+    email: String(body.email || "").trim().toLowerCase(),
   };
-  // Only authenticated admins receive the full item-by-item checklist
+  // Validate email if provided
+  if (payload.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+    return json({ ok: false, error: "Invalid email address.", code: "BAD_EMAIL" }, 400, req);
+  }
   const auth = req.headers.get("authorization") || "";
   const adminToken = auth.startsWith("Bearer ") ? auth.slice(7) : "";
   const admin = adminToken ? await verifyAdminToken(adminToken) : null;
   try {
     const report = await runAudit(payload);
+    // Persist asynchronously but attach slug for client share link (fire-and-wait ~200ms budget)
+    let shareSlug = null;
+    try {
+      shareSlug = await Promise.race([
+        persistAuditResult(report, req),
+        new Promise((r) => setTimeout(() => r(null), 2200)),
+      ]);
+    } catch (e) { logger.warn("persistAuditResult outer failed", { error: e?.message }); }
     if (!admin) report.checks = [];
-    return json({ ok: true, report }, 200, req);
+    logger.info("audit completed", { domain: report.domain, score: report.score, email: !!payload.email, shareSlug: !!shareSlug });
+    return json({ ok: true, report, shareSlug }, 200, req);
   } catch (err) {
+    logger.warn("audit failed", { error: err?.message, code: err?.code });
     return json({ ok: false, error: err.message || "Audit failed.", code: err.code || "AUDIT_FAILED" }, statusCodeFor(err), req);
   }
 }

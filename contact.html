@@ -166,6 +166,10 @@
       btn.textContent = "Sending...";
 
       const formData = new FormData(form);
+      // Append Turnstile token to form data
+      if (turnstileToken) {
+        formData.append("cf-turnstile-response", turnstileToken);
+      }
       const data = {
         name: formData.get("name"),
         email: formData.get("email"),
@@ -177,23 +181,21 @@
       };
 
       try {
-        // Send email via existing API
+        // Single transactional call: email + lead persist + scoring are handled server-side in /api/send-email
         const emailRes = await fetch("/api/send-email", {
           method: "POST",
           body: formData,
         });
+        let result = null;
+        try { result = await emailRes.clone().json(); } catch {}
 
-        // Store lead in Supabase via admin API
-        await fetch("/api/admin/leads", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        if (emailRes.ok) {
+        if (emailRes.ok && (result?.ok !== false)) {
           const toast = document.getElementById("toast");
           toast.classList.add("show");
           form.reset();
+          // Reset Turnstile for next submission
+          if (window.turnstile) { try { window.turnstile.reset(); } catch {} }
+          turnstileToken = null;
           setTimeout(() => toast.classList.remove("show"), 3000);
         } else {
           alert("Failed to send message. Please try again.");

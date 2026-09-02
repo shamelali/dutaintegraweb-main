@@ -1,6 +1,8 @@
-# Environment
+# Environment — keep .env.example tracked, ignore real secrets
 .env
-.env.*
+.env.local
+.env.production
+.env.*.local
 
 # Vercel
 .vercel
@@ -22,10 +24,15 @@ financial-projection.md
 .~lock.*
 ~$*
 
+# VS Code extension packages accidentally extracted into the repo root
+Microsoft.VisualStudio.Services*
+
 # Secrets and sensitive
 *.pptx
 *.pdf
 *.py
+!.github/**/*.py
+!scripts/**/*.py
 .hta*
 Claude*
 Web/
@@ -35,4 +42,3 @@ private/
 
 # Accidental nested copy of this repo
 dutaintegraweb-main/
-.env*

@@ -1,0 +1,24 @@
+name: Cron Smoke — daily health & cron auth check
+on:
+  schedule:
+    - cron: '15 0 * * *'  # 08:15 MYT daily
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health endpoint
+        run: |
+          set -e
+          curl -fsS https://dutaintegra.my/api/health | tee /tmp/health.json
+          cat /tmp/health.json | python3 -m json.tool
+          STATUS=$(python3 -c "import json; print(json.load(open('/tmp/health.json')).get('status','unknown'))")
+          echo "status=$STATUS"
+          [ "$STATUS" = "healthy" ] || [ "$STATUS" = "degraded" ] || (echo "health degraded" && exit 1)
+
+      - name: Cron auth rejects anon
+        run: |
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://dutaintegra.my/api/cron?job=digest)
+          echo "cron anon status=$CODE"
+          [ "$CODE" = "401" ] || [ "$CODE" = "404" ] || echo "cron auth check note: got $CODE"

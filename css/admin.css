@@ -6,12 +6,12 @@
   --bg: #f8fafc;
   --card: #ffffff;
   --border: #e2e8f0;
-  --navy: #0f172a;
-  --navy-light: #1e293b;
-  --navy-lighter: #334155;
-  --gold: #d4a843;
-  --gold-hover: #c49a38;
-  --text: #1e293b;
+  --navy: #1E2D3D;
+  --navy-light: #16232F;
+  --navy-lighter: #2A3D52;
+  --gold: #C9A227;
+  --gold-hover: #D4B03A;
+  --text: #16232F;
   --text-muted: #64748b;
   --text-light: #94a3b8;
   --success: #10b981;
@@ -89,7 +89,7 @@ body {
   transition: all 0.15s; cursor: pointer;
 }
 .sidebar-link:hover { background: rgba(255,255,255,0.06); color: white; }
-.sidebar-link.active { background: rgba(212,168,67,0.15); color: var(--gold); }
+.sidebar-link.active { background: rgba(201,162,39,0.15); color: var(--gold); }
 .sidebar-link svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
 .sidebar-link.active svg { opacity: 1; }
 .sidebar-link .badge {
@@ -224,6 +224,24 @@ tr:hover td { background: #fafbfc; }
 .badge-contacted { background: var(--info-bg); color: #1d4ed8; }
 .badge-closed { background: var(--success-bg); color: #047857; }
 
+/* Lead score chip — P0 automation */
+.badge-score {
+  display: inline-block; padding: 2px 9px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; min-width: 28px; text-align: center;
+}
+.badge-score.score-hot  { background: rgba(220,38,38,.14);  color: #b91c1c; }
+.badge-score.score-warm { background: rgba(201,162,39,.2);  color: #996515; }
+.badge-score.score-cool { background: rgba(100,116,139,.14); color: #475569; }
+
+/* Ops routing hint — P0 automation */
+.badge-role {
+  display: inline-block; padding: 2px 9px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; text-transform: capitalize; white-space: nowrap;
+}
+.badge-role.technical { background: rgba(59,130,246,.15); color: #1d4ed8; }
+.badge-role.operations { background: rgba(168,85,247,.15); color: #7c3aed; }
+.badge-role.none { background: rgba(100,116,139,.1); color: var(--text-muted); }
+
 .btn-wa {
   display: inline-flex; align-items: center; gap: 4px;
   background: #25D366; color: white;
@@ -355,13 +373,13 @@ tr:hover td { background: #fafbfc; }
   font-size: 12px; font-weight: 700;
 }
 .score-pill.s-good { background: rgba(34,197,94,.15); color: #16a34a; }
-.score-pill.s-mid  { background: rgba(212,168,67,.18); color: var(--gold-hover); }
+.score-pill.s-mid  { background: rgba(201,162,39,.18); color: var(--gold-hover); }
 .score-pill.s-low  { background: rgba(239,68,68,.14); color: #dc2626; }
 
 .badge-draft   { background: rgba(100,116,139,.15); color: var(--text-muted); }
 .badge-published { background: rgba(34,197,94,.15); color: #16a34a; }
 .badge-status { display:inline-block; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:600; text-transform:capitalize; }
-.badge-new { background: rgba(212,168,67,.18); color: var(--gold-hover); }
+.badge-new { background: rgba(201,162,39,.18); color: var(--gold-hover); }
 .badge-contacted { background: rgba(59,130,246,.15); color: #2563eb; }
 .badge-closed { background: rgba(34,197,94,.15); color: #16a34a; }
 
@@ -399,7 +417,7 @@ tr:hover td { background: #fafbfc; }
   padding: 9px 12px; background: var(--card); width: 100%;
 }
 .product-form input:focus, .product-form select:focus, .product-form textarea:focus {
-  outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,.18);
+  outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,162,39,.18);
 }
 .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .metrics-fieldset {

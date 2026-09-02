@@ -18,29 +18,32 @@ import {
   sanitize,
   makeId,
   verifyAdminToken,
-  hmacSign,
   getAllowedOrigin,
 } from "./_lib.js";
 import { scoreLead } from "./_scoring.js";
+import { config as appConfig } from "./lib/config.js";
+import { logger } from "./lib/logger.js";
+import { timingSafeEqual } from "./lib/security.js";
+import { createToken as libCreateToken } from "./lib/auth.js";
 
 export const config = { maxDuration: 15 };
 
 // ---------------------------------------------------------------------------
 // Login — POST /api/admin/login
 // ---------------------------------------------------------------------------
-if (!process.env.JWT_SECRET) {
-  console.error("FATAL: JWT_SECRET environment variable is required");
+if (!appConfig.jwtSecret) {
+  logger.error("FATAL: JWT_SECRET environment variable is required");
 }
 let USERS = [];
 try {
-  if (process.env.ADMIN_USERS) {
-    USERS = JSON.parse(process.env.ADMIN_USERS);
+  if (appConfig.adminUsersRaw) {
+    USERS = JSON.parse(appConfig.adminUsersRaw);
   }
 } catch (e) {
-  console.error("Failed to parse ADMIN_USERS env var:", e.message);
+  logger.error("Failed to parse ADMIN_USERS env var", { error: e.message });
 }
 if (USERS.length === 0) {
-  console.warn("WARNING: No admin users configured. Set ADMIN_USERS env var.");
+  logger.warn("No admin users configured. Set ADMIN_USERS env var.");
 }
 const loginAttempts = new Map();
 const LOGIN_MAX = 10;
@@ -72,17 +75,9 @@ function recordLoginFailure(req) {
     entry.count++;
   }
 }
-function base64url(obj) {
-  return btoa(JSON.stringify(obj))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
-}
 async function createToken(payload) {
-  const header = base64url({ alg: "HS256", typ: "JWT" });
-  const body = base64url(payload);
-  const signature = await hmacSign(`${header}.${body}`);
-  return `${header}.${body}.${signature}`;
+  // delegate to hardened lib/auth (constant-time compare, ephemeral secret fallback)
+  return libCreateToken(payload);
 }
 async function handleLogin(req) {
   if (req.method === "OPTIONS") return corsResponse(req);
@@ -98,13 +93,21 @@ async function handleLogin(req) {
   if (!email || !password) {
     return json({ ok: false, error: "Email and password are required." }, 400, req);
   }
-  const matchedUser = USERS.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-  );
+  // constant-time credential check to avoid user enumeration via timing
+  let matchedUser = null;
+  for (const u of USERS) {
+    const emailMatch = timingSafeEqual(u.email.toLowerCase(), String(email).toLowerCase());
+    const passMatch = timingSafeEqual(String(u.password), String(password));
+    if (emailMatch && passMatch) { matchedUser = u; break; }
+  }
   if (!matchedUser) {
+    // still do a dummy compare to keep timing uniform when USERS empty
+    timingSafeEqual("dummy", String(password));
     recordLoginFailure(req);
+    logger.warn("login failed", { email: String(email).toLowerCase() });
     return json({ ok: false, error: "Invalid email or password." }, 401, req);
   }
+  logger.info("login success", { email: matchedUser.email, role: matchedUser.role });
   const token = await createToken({
     sub: matchedUser.email,
     name: matchedUser.name,
@@ -123,10 +126,10 @@ async function handleLogin(req) {
 // Leads — /api/admin/leads
 // ---------------------------------------------------------------------------
 function getAnonSupabase() {
-  return createClient(process.env.SUPABASE_URL || "", process.env.SUPABASE_ANON_KEY || "");
+  return createClient(appConfig.supabaseUrl || "", appConfig.supabaseAnonKey || "", { auth: { persistSession: false } });
 }
 function getAdminSupabase() {
-  return createClient(process.env.SUPABASE_URL || "", process.env.SUPABASE_SERVICE_ROLE_KEY || "");
+  return createClient(appConfig.supabaseUrl || "", appConfig.supabaseServiceKey || appConfig.supabaseAnonKey || "", { auth: { persistSession: false } });
 }
 async function handleLeads(req) {
   if (req.method === "OPTIONS") return corsResponse(req);
@@ -134,23 +137,35 @@ async function handleLeads(req) {
     let body;
     try { body = await req.json(); } catch { return json({ ok: false, error: "Invalid JSON" }, 400, req); }
     const lead = {
-      name: sanitize(body.name),
-      email: sanitize(body.email),
-      phone: sanitize(body.phone),
-      company: sanitize(body.company),
-      service: sanitize(body.service),
-      message: sanitize(body.message),
+      name: sanitize(body.name, 120),
+      email: sanitize(body.email, 160),
+      phone: sanitize(body.phone, 40),
+      company: sanitize(body.company, 160),
+      service: sanitize(body.service, 120),
+      message: sanitize(body.message, 5000),
       status: "new",
-      source: body.source || "contact-form",
+      source: sanitize(body.source, 40) || "contact-form",
     };
+    if (!lead.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) {
+      return json({ ok: false, error: "Valid email is required" }, 400, req);
+    }
+    // dedup: if same email+service within 5 min, return existing (prevents double-insert from legacy contact form)
+    try {
+      const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+      const { data: dup } = await getAnonSupabase().from("leads").select("id").eq("email", lead.email).eq("service", lead.service).gte("created_at", since).limit(1).maybeSingle();
+      if (dup) return json({ ok: true, lead: dup, deduped: true }, 201, req);
+    } catch {}
     const scored = scoreLead(lead);
     lead.lead_score = scored.lead_score;
     lead.assigned_role = scored.assigned_role;
     const { data, error } = await getAnonSupabase().from("leads").insert(lead).select().single();
     if (error) {
-      console.error("Supabase insert error:", error);
+      logger.error("lead insert error", { error: error.message });
       return json({ ok: false, error: "Failed to save lead" }, 500, req);
     }
+    logger.info("lead created via admin API", { email: lead.email, source: lead.source, score: scored.lead_score });
+    // event log (best-effort)
+    try { await getAnonSupabase().from("events").insert({ type: "lead_created", path: "/api/admin/leads", meta: { source: lead.source, service: lead.service } }); } catch {}
     return json({ ok: true, lead: data }, 201, req);
   }
   const user = await getAuthUser(req);

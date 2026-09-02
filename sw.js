@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dutaintegra-v1';
+const CACHE_NAME = 'dutaintegra-v2';
 const STATIC_ASSETS = [
   '/',
   '/ms/',

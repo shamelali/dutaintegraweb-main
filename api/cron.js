@@ -8,7 +8,10 @@
 // ============================================================================
 
 import { Resend } from "resend";
-import { getSupabase, isCronAuthorized, cronJson, postToSlack } from "./_lib.js";
+import { getSupabase, cronJson, postToSlack } from "./_lib.js";
+import { isCronAuthorized } from "./lib/auth.js";
+import { config as appConfig } from "./lib/config.js";
+import { logger } from "./lib/logger.js";
 import { DAILY_TASKS, checklistMessage } from "./_tasks.js";
 
 export const config = { maxDuration: 60 };
@@ -18,7 +21,7 @@ export const config = { maxDuration: 60 };
 // ---------------------------------------------------------------------------
 async function handleFollowup(req) {
   if (!isCronAuthorized(req)) return cronJson({ ok: false, error: "Unauthorized" }, 401);
-  if (!process.env.RESEND_API_KEY) return cronJson({ ok: false, error: "RESEND_API_KEY not set" }, 503);
+  if (!appConfig.resendApiKey) return cronJson({ ok: false, error: "RESEND_API_KEY not set" }, 503);
   const supabase = getSupabase();
   const since = new Date(Date.now() - 36 * 3600 * 1000).toISOString();
   const cutoff = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
@@ -32,8 +35,8 @@ async function handleFollowup(req) {
     .order("created_at", { ascending: true })
     .limit(50);
   if (error) return cronJson({ ok: false, error: error.message }, 500);
-  const from = process.env.EMAIL_FROM || "Duta Integra <noreply@dutaintegra.my>";
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const from = appConfig.emailFrom;
+  const resend = new Resend(appConfig.resendApiKey);
   let sent = 0;
   const failures = [];
   for (const r of reports || []) {
@@ -126,11 +129,11 @@ async function handleDigest(req) {
   lines.push(`*➤ Stalled leads — 3d+ no movement (${stalled.length})*`);
   lines.push(stalled.length ? stalled.map((l) => `• ${l.name || "—"} — ${l.service || "no service"} · ${l.status}`).join("\n") : "_None._");
   const slackOk = await postToSlack(lines.join("\n"), { username: "Duta Integra Digest", icon_emoji: ":coffee:" });
-  const to = (process.env.EMAIL_TO || "hello@dutaintegra.my").split(",").map((s) => s.trim()).filter(Boolean);
+  const to = appConfig.emailTo;
   let emailOk = false;
-  if (process.env.RESEND_API_KEY && to.length) {
+  if (appConfig.resendApiKey && to.length) {
     try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      const resend = new Resend(appConfig.resendApiKey);
       const row = (label, value) => value ? `<tr><td style="padding:6px 8px;border-bottom:1px solid #e0e0e0;color:#4a4a6a;white-space:nowrap"><b>${esc(label)}</b></td><td style="padding:6px 8px;border-bottom:1px solid #e0e0e0">${esc(value)}</td></tr>` : "";
       const table = (rows) => rows.length ? `<table style="width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 18px">${rows.map((l) => row(l.name || l.domain, `${l.service || l.score + "/100"} · ${l.source || l.status}`)).join("")}</table>` : `<p style="color:#6a6a8a;font-size:13px">None.</p>`;
       const html = `<div style="max-width:640px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;background:#fff;padding:24px">
@@ -141,9 +144,9 @@ async function handleDigest(req) {
         <h3 style="color:#1a1a2e;margin:16px 0 0">Stalled leads (${stalled.length})</h3>${table(stalled)}
         <p style="color:#6a6a8a;font-size:12px;margin-top:22px">Manage leads at <a href="https://dutaintegra.my/admin">dutaintegra.my/admin</a></p>
       </div>`;
-      await resend.emails.send({ from: process.env.EMAIL_FROM || "Duta Integra <noreply@dutaintegra.my>", to, subject: `Morning digest ${mytLabelDigest()} — ${newLeads.length} new, ${warm.length} warm audits, ${stalled.length} stalled`, html });
+      await resend.emails.send({ from: appConfig.emailFrom, to, subject: `Morning digest ${mytLabelDigest()} — ${newLeads.length} new, ${warm.length} warm audits, ${stalled.length} stalled`, html });
       emailOk = true;
-    } catch (err) { console.error("digest email error:", err?.message); }
+    } catch (err) { logger.error("digest email error", { error: err?.message }); }
   }
   return cronJson({ ok: true, newLeads: newLeads.length, warm: warm.length, stalled: stalled.length, slack: !!slackOk, email: emailOk });
 }
