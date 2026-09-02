@@ -9,7 +9,7 @@
 // Direct path matches also work (pathname inspection fallback).
 // ============================================================================
 
-import { getSupabase, json, corsResponse, healthCheck } from "./_lib.js";
+import { getAdminSupabase, json, corsResponse, healthCheck } from "./_lib.js";
 import { pingSupabase } from "../lib/supabase.js";
 import { logger } from "../lib/logger.js";
 import { config as appConfig } from "../lib/config.js";
@@ -30,7 +30,7 @@ async function handleProducts(req) {
     return json({ ok: true, products: productsCache.data });
   }
 
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const { data, error } = await supabase
     .from("products")
     .select(
@@ -63,7 +63,7 @@ async function handleCaseStudies(req) {
     return json({ ok: true, caseStudies: caseStudiesCache.data });
   }
 
-  const { data, error } = await getSupabase()
+  const { data, error } = await getAdminSupabase()
     .from("case_studies")
     .select(
       "client_name, category, summary_en, summary_ms, image_url, metrics, outcomes, tags, detail_url, sort_order"
@@ -100,7 +100,7 @@ async function handleReport(req) {
     return json(reportCache.payload);
   }
 
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const { data, error } = await supabase
     .from("audit_reports")
     .select("report")
@@ -148,7 +148,7 @@ async function handleTrack(req) {
     return json({ ok: true });
   }
 
-  const { error } = await getSupabase()
+  const { error } = await getAdminSupabase()
     .from("events")
     .insert({
       type,

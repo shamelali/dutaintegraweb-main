@@ -9,7 +9,7 @@ import { createRateLimiter } from "../lib/rate-limit.js";
 import { sanitizeHTML, validateContactPayload } from "../lib/validate.js";
 import { postToSlack } from "../lib/slack.js";
 import { sendAdminNotification, sendAutoreply } from "../lib/email.js";
-import { getSupabase } from "../lib/supabase.js";
+import { getAdminSupabase } from "../lib/supabase.js";
 import { scoreLead } from "./_scoring.js";
 import { canonicalizeLead } from "../lib/memory.js";
 
@@ -149,7 +149,7 @@ async function handler(request) {
   let scoredForVault = null;
   let insertedId = null;
   try {
-    const supabase = getSupabase();
+    const supabase = getAdminSupabase();
     scoredForVault = scoreLead({ source, service, message, company });
     const { data, error } = await supabase.from("leads").insert({
       name, email, phone, company, service, message,
@@ -187,7 +187,7 @@ async function handler(request) {
 
   // 5) Event log (best-effort)
   try {
-    const supabase = getSupabase();
+    const supabase = getAdminSupabase();
     await supabase.from("events").insert({ type: "lead_created", path: "/contact", meta: { service, source, email } });
   } catch {}
 

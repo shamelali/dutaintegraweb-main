@@ -15,7 +15,7 @@
 // ============================================================================
 
 import { Resend } from "resend";
-import { getSupabase, makeId, verifyAdminToken } from "./_lib.js";
+import { getAdminSupabase, makeId, verifyAdminToken } from "./_lib.js";
 import { scoreLead } from "./_scoring.js";
 import { config as appConfig } from "../lib/config.js";
 import { logger } from "../lib/logger.js";
@@ -541,7 +541,7 @@ function buildReportEmail(report, shareUrl) {
 }
 
 async function persistAuditResult(report, req) {
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const slug = makeId(10);
   let shareSlug = null;
 

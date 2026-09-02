@@ -94,9 +94,12 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('product-images', 'product-images', true)
 ON CONFLICT (id) DO NOTHING;
 
-DROP POLICY IF EXISTS "public read product images" ON storage.objects;
-CREATE POLICY "public read product images" ON storage.objects
-  FOR SELECT USING (bucket_id = 'product-images');
+-- NOTE: No SELECT policy on storage.objects for product-images.
+-- The bucket is public (public: true), so object URLs work via the bucket flag
+-- without needing a broad SELECT policy. A SELECT policy would allow anon
+-- clients to list all files in the bucket (file enumeration). See lint 0025.
+-- If you need to allow listing, add a more restrictive policy, but for public
+-- object URL access, it is not needed.
 
 -- Uploads happen server-side via SUPABASE_SERVICE_ROLE_KEY (bypasses RLS),
 -- so no INSERT policy for anon is intentionally defined here.

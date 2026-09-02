@@ -8,7 +8,7 @@
 // ============================================================================
 
 import { Resend } from "resend";
-import { getSupabase, cronJson, postToSlack } from "./_lib.js";
+import { getAdminSupabase, cronJson, postToSlack } from "./_lib.js";
 import { isCronAuthorized } from "../lib/auth.js";
 import { config as appConfig } from "../lib/config.js";
 import { logger } from "../lib/logger.js";
@@ -25,7 +25,7 @@ export const config = { maxDuration: 60 };
 async function handleFollowup(req) {
   if (!isCronAuthorized(req)) return cronJson({ ok: false, error: "Unauthorized" }, 401);
   if (!appConfig.resendApiKey) return cronJson({ ok: false, error: "RESEND_API_KEY not set" }, 503);
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const since = new Date(Date.now() - 36 * 3600 * 1000).toISOString();
   const cutoff = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
   const { data: reports, error } = await supabase
@@ -150,7 +150,7 @@ async function handleMemoryFold({ supabase, newLeads }) {
 
 async function handleDigest(req) {
   if (!isCronAuthorized(req)) return cronJson({ ok: false, error: "Unauthorized" }, 401);
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const yesterdayStart = mytMidnightUtc(1);
   const threeDaysAgo = new Date(Date.now() - 3 * DAY).toISOString();
   const warmFrom = new Date(Date.now() - 14 * DAY).toISOString();
@@ -215,7 +215,7 @@ async function handleDigest(req) {
 // ---------------------------------------------------------------------------
 async function handleStaleLeads(req) {
   if (!isCronAuthorized(req)) return cronJson({ ok: false, error: "Unauthorized" }, 401);
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const weekAgo = new Date(Date.now() - 7 * DAY).toISOString();
   const [nRes, cRes] = await Promise.all([
     supabase.from("leads").select("name,email,company,service,status,source,lead_score,assigned_role,created_at").eq("status", "new").lte("created_at", weekAgo).order("created_at", { ascending: false }).limit(20),

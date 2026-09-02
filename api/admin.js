@@ -11,7 +11,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import {
-  getSupabase,
+  getAdminSupabase,
   json,
   corsResponse,
   getAuthUser,
@@ -152,20 +152,20 @@ async function handleLeads(req) {
     // dedup: if same email+service within 5 min, return existing (prevents double-insert from legacy contact form)
     try {
       const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-      const { data: dup } = await getAnonSupabase().from("leads").select("id").eq("email", lead.email).eq("service", lead.service).gte("created_at", since).limit(1).maybeSingle();
+      const { data: dup } = await getAdminSupabase().from("leads").select("id").eq("email", lead.email).eq("service", lead.service).gte("created_at", since).limit(1).maybeSingle();
       if (dup) return json({ ok: true, lead: dup, deduped: true }, 201, req);
     } catch {}
     const scored = scoreLead(lead);
     lead.lead_score = scored.lead_score;
     lead.assigned_role = scored.assigned_role;
-    const { data, error } = await getAnonSupabase().from("leads").insert(lead).select().single();
+    const { data, error } = await getAdminSupabase().from("leads").insert(lead).select().single();
     if (error) {
       logger.error("lead insert error", { error: error.message });
       return json({ ok: false, error: "Failed to save lead" }, 500, req);
     }
     logger.info("lead created via admin API", { email: lead.email, source: lead.source, score: scored.lead_score });
     // event log (best-effort)
-    try { await getAnonSupabase().from("events").insert({ type: "lead_created", path: "/api/admin/leads", meta: { source: lead.source, service: lead.service } }); } catch {}
+    try { await getAdminSupabase().from("events").insert({ type: "lead_created", path: "/api/admin/leads", meta: { source: lead.source, service: lead.service } }); } catch {}
     return json({ ok: true, lead: data }, 201, req);
   }
   const user = await getAuthUser(req);
@@ -242,7 +242,7 @@ async function buildStats(supabase) {
 async function handleAudits(req) {
   if (req.method === "OPTIONS") return corsResponse();
   if (!(await getAuthUser(req))) return json({ ok: false, error: "Unauthorized" }, 401);
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const [{ data, error }, stats] = await Promise.all([
     supabase.from("audit_reports").select("id, share_slug, domain, brand_name, industry, email, score, grade, followup_sent_at, created_at").order("created_at", { ascending: false }).limit(200),
     buildStats(supabase),
@@ -290,7 +290,7 @@ function productPayload(body) {
   return p;
 }
 async function listProducts(req) {
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const url = new URL(req.url, 'https://dutaintegra.my');
   const status = url.searchParams.get("status");
   let query = supabase.from("products").select("*").order("sort_order").order("created_at");
@@ -300,7 +300,7 @@ async function listProducts(req) {
   return json({ ok: true, products: data || [] });
 }
 async function createProduct(req) {
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   let body; try { body = await req.json(); } catch { body = {}; }
   const payload = productPayload(body);
   if (!payload.name) return json({ ok: false, error: "Product name is required." }, 400);
@@ -309,7 +309,7 @@ async function createProduct(req) {
   return json({ ok: true, product: data }, 201);
 }
 async function updateProduct(req) {
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const id = new URL(req.url, 'https://dutaintegra.my').searchParams.get("id");
   if (!id) return json({ ok: false, error: "Product id required" }, 400);
   let body; try { body = await req.json(); } catch { body = {}; }
@@ -320,7 +320,7 @@ async function updateProduct(req) {
   return json({ ok: true, product: data });
 }
 async function deleteProduct(req) {
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const id = new URL(req.url, 'https://dutaintegra.my').searchParams.get("id");
   if (!id) return json({ ok: false, error: "Product id required" }, 400);
   const { error } = await supabase.from("products").delete().eq("id", id);
@@ -328,7 +328,7 @@ async function deleteProduct(req) {
   return json({ ok: true });
 }
 async function uploadImage(req) {
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   let form; try { form = await req.formData(); } catch { return json({ ok: false, error: "Expected multipart/form-data with a `file` field" }, 400); }
   const file = form.get("file");
   if (!file || typeof file === "string") return json({ ok: false, error: "No file provided" }, 400);
@@ -397,7 +397,7 @@ async function handleCaseStudiesAdmin(req) {
   if (req.method === "OPTIONS") return corsResponse();
   const user = await getAuthUser(req);
   if (!user) return json({ ok: false, error: "Unauthorized" }, 401);
-  const supabase = getSupabase();
+  const supabase = getAdminSupabase();
   const url = new URL(req.url, 'https://dutaintegra.my');
   const id = url.searchParams.get("id");
   if (req.method === "GET") {

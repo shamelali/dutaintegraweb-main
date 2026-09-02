@@ -41,10 +41,18 @@ CREATE POLICY "Allow all for service role" ON leads
   FOR ALL
   USING (auth.role() = 'service_role');
 
--- Policy: Allow insert from anon (contact form submissions)
+-- Policy: Allow insert from anon with scoped validation (contact form submissions).
+-- Scoped WITH CHECK prevents arbitrary inserts while allowing public form submissions.
+-- See lint 0024 (permissive RLS policy).
+DROP POLICY IF EXISTS "Allow insert for service role" ON leads;
 CREATE POLICY "Allow insert for anon" ON leads
   FOR INSERT
-  WITH CHECK (true);
+  WITH CHECK (
+    length(name) > 0
+    AND email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+    AND length(service) > 0
+    AND length(message) <= 5000
+  );
 
 -- Policy: Allow select for authenticated users only (admin dashboard)
 CREATE POLICY "Allow select for authenticated" ON leads
