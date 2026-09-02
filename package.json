@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "24.x"
+    "node": ">=22"
   },
   "scripts": {
     "lint": "eslint api lib js",
@@ -23,7 +23,8 @@
     "resend": "^4.5.2"
   },
   "devDependencies": {
-    "eslint": "^9.18.0",
-    "prettier": "^3.4.2"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.9.1",
+    "prettier": "^3.9.6"
   }
 }

@@ -124,12 +124,12 @@ function rememberLangFromPath() {
 
 function enforceLangPreference() {
   const pref = localStorage.getItem("lang");
-  const defaultLang = pref || "ms";
-  if (defaultLang === "ms" && !isMsPath()) {
+  if (!pref) return false;
+  if (pref === "ms" && !isMsPath()) {
     location.replace(counterpartPath());
     return true;
   }
-  if (defaultLang === "en" && isMsPath()) {
+  if (pref === "en" && isMsPath()) {
     location.replace(counterpartPath());
     return true;
   }
