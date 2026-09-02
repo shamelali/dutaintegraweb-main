@@ -182,7 +182,7 @@ async function handleStaleLeads(req) {
 // Dispatcher
 // ---------------------------------------------------------------------------
 async function handler(req) {
-  const url = new URL(req.url);
+  const url = new URL(req.url, 'https://dutaintegra.my');
   let job = url.searchParams.get("job") || url.searchParams.get("cron") || "";
   if (!job) {
     const path = url.pathname;

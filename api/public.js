@@ -91,7 +91,7 @@ async function handleReport(req) {
   if (req.method === "OPTIONS") return corsResponse();
   if (req.method !== "GET") return json({ ok: false, error: "Method not allowed" }, 405);
 
-  const slug = String(new URL(req.url).searchParams.get("slug") || "").trim();
+  const slug = String(new URL(req.url, 'https://dutaintegra.my').searchParams.get("slug") || "").trim();
   if (!slug || !/^[a-z0-9]{6,16}$/i.test(slug)) {
     return json({ ok: false, error: "Invalid report link." }, 400);
   }
@@ -191,7 +191,7 @@ async function handleHealth(req) {
 async function handler(req) {
   if (req.method === "OPTIONS") return corsResponse(req);
 
-  const url = new URL(req.url);
+  const url = new URL(req.url, 'https://dutaintegra.my');
   // Prefer explicit ?resource= from rewrites, fallback to pathname detection
   let resource = url.searchParams.get("resource") || "";
   if (!resource) {

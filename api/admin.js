@@ -171,7 +171,7 @@ async function handleLeads(req) {
   const user = await getAuthUser(req);
   if (!user) return json({ ok: false, error: "Unauthorized" }, 401, req);
   if (req.method === "GET") {
-    const url = new URL(req.url);
+    const url = new URL(req.url, 'https://dutaintegra.my');
     const status = url.searchParams.get("status");
     const search = url.searchParams.get("q");
     let query = getAdminSupabase().from("leads").select("*").order("created_at", { ascending: false });
@@ -197,7 +197,7 @@ async function handleLeads(req) {
     return json({ ok: true, leads, total: leads.length, counts }, 200, req);
   }
   if (req.method === "PATCH") {
-    const url = new URL(req.url);
+    const url = new URL(req.url, 'https://dutaintegra.my');
     const id = url.searchParams.get("id");
     if (!id) return json({ ok: false, error: "Lead ID required" }, 400, req);
     let body;
@@ -291,7 +291,7 @@ function productPayload(body) {
 }
 async function listProducts(req) {
   const supabase = getSupabase();
-  const url = new URL(req.url);
+  const url = new URL(req.url, 'https://dutaintegra.my');
   const status = url.searchParams.get("status");
   let query = supabase.from("products").select("*").order("sort_order").order("created_at");
   if (status === "published" || status === "draft") query = query.eq("status", status);
@@ -310,7 +310,7 @@ async function createProduct(req) {
 }
 async function updateProduct(req) {
   const supabase = getSupabase();
-  const id = new URL(req.url).searchParams.get("id");
+  const id = new URL(req.url, 'https://dutaintegra.my').searchParams.get("id");
   if (!id) return json({ ok: false, error: "Product id required" }, 400);
   let body; try { body = await req.json(); } catch { body = {}; }
   const payload = productPayload(body);
@@ -321,7 +321,7 @@ async function updateProduct(req) {
 }
 async function deleteProduct(req) {
   const supabase = getSupabase();
-  const id = new URL(req.url).searchParams.get("id");
+  const id = new URL(req.url, 'https://dutaintegra.my').searchParams.get("id");
   if (!id) return json({ ok: false, error: "Product id required" }, 400);
   const { error } = await supabase.from("products").delete().eq("id", id);
   if (error) return json({ ok: false, error: "Failed to delete product" }, 500);
@@ -344,7 +344,7 @@ async function uploadImage(req) {
 }
 async function handleProductsAdmin(req) {
   if (req.method === "OPTIONS") return corsResponse();
-  if (req.method === "POST" && new URL(req.url).searchParams.get("upload")) {
+  if (req.method === "POST" && new URL(req.url, 'https://dutaintegra.my').searchParams.get("upload")) {
     const user = await getAuthUser(req);
     if (!user) return json({ ok: false, error: "Unauthorized" }, 401);
     return uploadImage(req);
@@ -398,7 +398,7 @@ async function handleCaseStudiesAdmin(req) {
   const user = await getAuthUser(req);
   if (!user) return json({ ok: false, error: "Unauthorized" }, 401);
   const supabase = getSupabase();
-  const url = new URL(req.url);
+  const url = new URL(req.url, 'https://dutaintegra.my');
   const id = url.searchParams.get("id");
   if (req.method === "GET") {
     const { data, error } = await supabase.from("case_studies").select("*").order("sort_order").order("created_at");
@@ -474,12 +474,12 @@ async function handleSlack(req) {
 async function handler(req) {
   if (req.method === "OPTIONS") {
     // Slack has custom CORS, others use generic
-    const url = new URL(req.url);
+    const url = new URL(req.url, 'https://dutaintegra.my');
     const r = url.searchParams.get("resource") || "";
     if (r === "slack") return slackCorsResponse(req);
     return corsResponse(req);
   }
-  const url = new URL(req.url);
+  const url = new URL(req.url, 'https://dutaintegra.my');
   let resource = url.searchParams.get("resource") || url.searchParams.get("via") || "";
   if (!resource) {
     const path = url.pathname;
