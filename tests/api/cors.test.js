@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { getAllowedOrigin } from "../../api/lib/cors.js";
+import { getAllowedOrigin } from "../../lib/cors.js";
 
 function reqWithOrigin(o) { return { headers: { get: (k) => k === "origin" ? o : null } }; }
 

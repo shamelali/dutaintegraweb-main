@@ -23,21 +23,21 @@ Supabase: leads, audit_reports, events, products, case_studies, storage:product-
 
 ## Module Layout
 ```
+lib/               shared enterprise lib (outside api/ so Vercel does NOT treat each file as a function)
+  config.js      env parsing & validation (ALLOWED_ORIGINS, JWT_SECRET, etc)
+  logger.js      structured JSON logger (requestId, level, ts)
+  errors.js      AppError taxonomy + http mapping
+  validate.js    sanitize, sanitizeHTML, isEmail, validateContactPayload
+  security.js    isPrivateHost (SSRF), timingSafeEqual
+  rate-limit.js  sliding window limiter (pluggable to Redis)
+  cors.js        getAllowedOrigin (exact match, no startsWith), json(), corsResponse()
+  supabase.js    getSupabase() / pingSupabase()
+  auth.js        hmacSign, verifyAdminToken (constant-time), createToken, isCronAuthorized
+  email.js       sendAdminNotification, sendAutoreply (Resend emails.send)
+  slack.js       postToSlack (retry, soft-fail)
+  events.js      trackEvent bus (events table + webhook fanout placeholder)
 api/
-  lib/
-    config.js      env parsing & validation (ALLOWED_ORIGINS, JWT_SECRET, etc)
-    logger.js      structured JSON logger (requestId, level, ts)
-    errors.js      AppError taxonomy + http mapping
-    validate.js    sanitize, sanitizeHTML, isEmail, validateContactPayload
-    security.js    isPrivateHost (SSRF), timingSafeEqual
-    rate-limit.js  sliding window limiter (pluggable to Redis)
-    cors.js        getAllowedOrigin (exact match, no startsWith), json(), corsResponse()
-    supabase.js    getSupabase() / pingSupabase()
-    auth.js        hmacSign, verifyAdminToken (constant-time), createToken, isCronAuthorized
-    email.js       sendAdminNotification, sendAutoreply (Resend emails.send)
-    slack.js       postToSlack (retry, soft-fail)
-    events.js      trackEvent bus (events table + webhook fanout placeholder)
-  _lib.js          facade — re-exports lib/* for backwards compat
+  _lib.js          facade — re-exports ../lib/* for backwards compat
   _scoring.js      lead_score + assigned_role (technical/operations)
   _tasks.js        DAILY_TASKS source of truth (Slack cron + admin UI must stay synced)
 ```

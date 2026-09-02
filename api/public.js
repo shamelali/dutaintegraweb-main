@@ -10,9 +10,9 @@
 // ============================================================================
 
 import { getSupabase, json, corsResponse, healthCheck } from "./_lib.js";
-import { pingSupabase } from "./lib/supabase.js";
-import { logger } from "./lib/logger.js";
-import { config as appConfig } from "./lib/config.js";
+import { pingSupabase } from "../lib/supabase.js";
+import { logger } from "../lib/logger.js";
+import { config as appConfig } from "../lib/config.js";
 
 export const config = { maxDuration: 10 };
 

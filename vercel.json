@@ -114,12 +114,12 @@
       "permanent": false
     },
     {
-      "source": "/:file*.pptx",
+      "source": "/(.*).pptx",
       "destination": "/404.html",
       "permanent": false
     },
     {
-      "source": "/:file*.pdf",
+      "source": "/(.*).pdf",
       "destination": "/404.html",
       "permanent": false
     },
@@ -134,7 +134,12 @@
       "permanent": false
     },
     {
-      "source": "/.env:file*",
+      "source": "/.env",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/.env/:path*",
       "destination": "/404.html",
       "permanent": false
     }

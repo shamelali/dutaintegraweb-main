@@ -17,10 +17,10 @@
 import { Resend } from "resend";
 import { getSupabase, makeId, verifyAdminToken } from "./_lib.js";
 import { scoreLead } from "./_scoring.js";
-import { config as appConfig } from "./lib/config.js";
-import { logger } from "./lib/logger.js";
-import { isPrivateHost as _isPrivateHost } from "./lib/security.js";
-import { createRateLimiter } from "./lib/rate-limit.js";
+import { config as appConfig } from "../lib/config.js";
+import { logger } from "../lib/logger.js";
+import { isPrivateHost as _isPrivateHost } from "../lib/security.js";
+import { createRateLimiter } from "../lib/rate-limit.js";
 
 export const config = { maxDuration: 30 };
 

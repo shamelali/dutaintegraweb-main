@@ -7,8 +7,8 @@
     "node": "22.x"
   },
   "scripts": {
-    "lint": "eslint api js",
-    "lint:fix": "eslint api js --fix",
+    "lint": "eslint api lib js",
+    "lint:fix": "eslint api lib js --fix",
     "format": "prettier --write \"**/*.{js,html,css,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,html,css,json,md}\"",
     "test": "node --test tests/**/*.test.js",

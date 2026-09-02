@@ -1,15 +1,15 @@
 // api/send-email.js — enterprise-hardened contact pipeline
 // Single transactional entry point: validates -> emails -> persists lead -> notifies Slack
-// Uses api/lib/* for config, validation, and observability.
+// Uses lib/* for config, validation, and observability.
 
-import { config } from "./lib/config.js";
-import { logger } from "./lib/logger.js";
-import { json, corsResponse, getAllowedOrigin } from "./lib/cors.js";
-import { createRateLimiter } from "./lib/rate-limit.js";
-import { sanitizeHTML, validateContactPayload } from "./lib/validate.js";
-import { postToSlack } from "./lib/slack.js";
-import { sendAdminNotification, sendAutoreply } from "./lib/email.js";
-import { getSupabase } from "./lib/supabase.js";
+import { config } from "../lib/config.js";
+import { logger } from "../lib/logger.js";
+import { json, corsResponse, getAllowedOrigin } from "../lib/cors.js";
+import { createRateLimiter } from "../lib/rate-limit.js";
+import { sanitizeHTML, validateContactPayload } from "../lib/validate.js";
+import { postToSlack } from "../lib/slack.js";
+import { sendAdminNotification, sendAutoreply } from "../lib/email.js";
+import { getSupabase } from "../lib/supabase.js";
 import { scoreLead } from "./_scoring.js";
 
 const checkRateLimit = createRateLimiter({

@@ -21,10 +21,10 @@ import {
   getAllowedOrigin,
 } from "./_lib.js";
 import { scoreLead } from "./_scoring.js";
-import { config as appConfig } from "./lib/config.js";
-import { logger } from "./lib/logger.js";
-import { timingSafeEqual } from "./lib/security.js";
-import { createToken as libCreateToken } from "./lib/auth.js";
+import { config as appConfig } from "../lib/config.js";
+import { logger } from "../lib/logger.js";
+import { timingSafeEqual } from "../lib/security.js";
+import { createToken as libCreateToken } from "../lib/auth.js";
 
 export const config = { maxDuration: 15 };
 

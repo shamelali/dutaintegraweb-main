@@ -2,27 +2,27 @@
 // Keeps existing import paths working while routing to the enterprise modules.
 // New code should import directly from api/lib/<module>.js
 
-export { config } from "./lib/config.js";
-export { logger } from "./lib/logger.js";
-export { AppError, toHttpError, errorBody } from "./lib/errors.js";
+export { config } from "../lib/config.js";
+export { logger } from "../lib/logger.js";
+export { AppError, toHttpError, errorBody } from "../lib/errors.js";
 
 // Supabase
-export { getSupabase, getAnonSupabase, getAdminSupabase, pingSupabase } from "./lib/supabase.js";
+export { getSupabase, getAnonSupabase, getAdminSupabase, pingSupabase } from "../lib/supabase.js";
 
 // CORS
-export { getAllowedOrigin, json, corsResponse, corsHeaders } from "./lib/cors.js";
+export { getAllowedOrigin, json, corsResponse, corsHeaders } from "../lib/cors.js";
 
 // Auth
-export { hmacSign, verifyAdminToken, getAuthUser, createToken, isCronAuthorized } from "./lib/auth.js";
+export { hmacSign, verifyAdminToken, getAuthUser, createToken, isCronAuthorized } from "../lib/auth.js";
 
 // Validation
-export { sanitize, sanitizeHTML, isEmail, validateContactPayload } from "./lib/validate.js";
+export { sanitize, sanitizeHTML, isEmail, validateContactPayload } from "../lib/validate.js";
 
 // Security
-export { isPrivateHost, timingSafeEqual } from "./lib/security.js";
+export { isPrivateHost, timingSafeEqual } from "../lib/security.js";
 
 // Rate limit — provide legacy signature createRateLimiter(max, windowMs)
-import { createRateLimiter as _newLimiter } from "./lib/rate-limit.js";
+import { createRateLimiter as _newLimiter } from "../lib/rate-limit.js";
 export function createRateLimiter(maxRequests = 10, windowMs = 60000) {
   return _newLimiter({ maxRequests, windowMs, keyPrefix: `legacy:${maxRequests}:${windowMs}` });
 }
@@ -49,4 +49,4 @@ export function cronJson(data, status = 200) {
 }
 
 // Slack — re-export from lib/slack (soft-fail, retry)
-export { postToSlack } from "./lib/slack.js";
+export { postToSlack } from "../lib/slack.js";

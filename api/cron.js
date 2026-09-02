@@ -9,9 +9,9 @@
 
 import { Resend } from "resend";
 import { getSupabase, cronJson, postToSlack } from "./_lib.js";
-import { isCronAuthorized } from "./lib/auth.js";
-import { config as appConfig } from "./lib/config.js";
-import { logger } from "./lib/logger.js";
+import { isCronAuthorized } from "../lib/auth.js";
+import { config as appConfig } from "../lib/config.js";
+import { logger } from "../lib/logger.js";
 import { DAILY_TASKS, checklistMessage } from "./_tasks.js";
 
 export const config = { maxDuration: 60 };

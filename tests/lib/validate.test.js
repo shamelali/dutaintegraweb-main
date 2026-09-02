@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { sanitizeHTML, isEmail, validateContactPayload } from "../../api/lib/validate.js";
-import { isPrivateHost } from "../../api/lib/security.js";
+import { sanitizeHTML, isEmail, validateContactPayload } from "../../lib/validate.js";
+import { isPrivateHost } from "../../lib/security.js";
 import { scoreLead } from "../../api/_scoring.js";
 
 describe("sanitizeHTML", () => {
