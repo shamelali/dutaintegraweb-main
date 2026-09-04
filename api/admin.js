@@ -9,7 +9,6 @@
 //   /api/slack             -> /api/admin?resource=slack
 // ============================================================================
 
-import { createClient } from "@supabase/supabase-js";
 import {
   getAdminSupabase,
   json,
@@ -125,12 +124,6 @@ async function handleLogin(req) {
 // ---------------------------------------------------------------------------
 // Leads — /api/admin/leads
 // ---------------------------------------------------------------------------
-function getAnonSupabase() {
-  return createClient(appConfig.supabaseUrl || "", appConfig.supabaseAnonKey || "", { auth: { persistSession: false } });
-}
-function getAdminSupabase() {
-  return createClient(appConfig.supabaseUrl || "", appConfig.supabaseServiceKey || appConfig.supabaseAnonKey || "", { auth: { persistSession: false } });
-}
 async function handleLeads(req) {
   if (req.method === "OPTIONS") return corsResponse(req);
   if (req.method === "POST") {
