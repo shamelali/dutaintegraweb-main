@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOCKUP · Homepage — services-first direction · Duta Integra Solutions</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="icon" type="image/png" href="/assets/dis-favicon.png" />
+  <link rel="stylesheet" href="/css/fonts.css" />
+  <link rel="stylesheet" href="/css/styles.css?v=20260831" />
+  <style>
+    /* ==========================================================================
+       MOCKUP-ONLY STYLES — to be lifted into styles.css on approval.
+       New block here is the "Built by DI" credibility strip (.builtby-*).
+       Wayfinding rule: services = navy/gold, products/proof = silver.
+       ========================================================================== */
+    html { scroll-behavior: smooth; }
+
+    .mockup-tag {
+      position: fixed; left: 12px; bottom: 12px; z-index: 99;
+      font-family: var(--font-d); font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted-2);
+      background: var(--paper-2); border: 1px solid var(--line);
+      padding: 4px 10px; border-radius: var(--radius); opacity: .75;
+    }
+    body.dark .mockup-tag { background: var(--navy-2); border-color: rgba(213,217,224,.2); }
+
+    /* ---- Built by DI strip : silver accent treatment, zero gold ---- */
+    .builtby { padding: 56px 0 8px; }
+    .bb-panel {
+      border: 1px solid var(--line);
+      background: var(--paper-2);
+      border-radius: var(--radius);
+      padding: clamp(24px, 4vw, 44px);
+    }
+    body.dark .bb-panel { background: var(--navy-2); border-color: rgba(213,217,224,.14); }
+    .bb-eyebrow {
+      font-family: var(--font-d); font-size: 13px; font-weight: 600;
+      letter-spacing: .16em; text-transform: uppercase; color: var(--muted-2);
+    }
+    .bb-head { max-width: 720px; margin-bottom: 26px; }
+    .bb-head h2 { margin: 8px 0 10px; }
+    .bb-head p { color: var(--muted); margin: 0; }
+    .bb-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .bb-card {
+      display: flex; gap: 16px; align-items: flex-start;
+      border: 1px solid var(--line-2); background: var(--white);
+      padding: 20px 22px; border-radius: var(--radius); text-decoration: none;
+      transition: border-color .15s ease;
+    }
+    .bb-card:hover { border-color: var(--muted-2); }
+    body.dark .bb-card { background: rgba(255,255,255,.03); border-color: rgba(213,217,224,.12); }
+    body.dark .bb-card:hover { border-color: rgba(213,217,224,.3); }
+    .bb-mono {
+      flex-shrink: 0; width: 46px; height: 46px; display: grid; place-items: center;
+      font-family: var(--font-d); font-weight: 700; font-size: 17px; letter-spacing: .04em;
+      color: var(--navy); background: linear-gradient(135deg, #EDEFF3, #C9CDD6);
+      border-radius: var(--radius);
+    }
+    body.dark .bb-mono { background: linear-gradient(135deg, #3A4756, #2A3644); color: #C9CDD6; }
+    .bb-card h3 { margin: 0 0 4px; font-size: 19px; color: var(--ink); }
+    body.dark .bb-card h3 { color: var(--paper); }
+    .bb-tag {
+      display: inline-block; font-family: var(--font-d); font-size: 11px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--muted-2);
+      border: 1px solid var(--line); padding: 2px 8px; border-radius: 999px;
+      margin-bottom: 8px;
+    }
+    body.dark .bb-tag { border-color: rgba(213,217,224,.2); }
+    .bb-card p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+    .bb-link { font-family: var(--font-d); font-size: 13.5px; font-weight: 600; letter-spacing: .05em; color: var(--muted-2); }
+    .bb-card:hover .bb-link { color: var(--ink); }
+    body.dark .bb-card:hover .bb-link { color: var(--paper); }
+    .bb-foot { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line); color: var(--muted); font-size: 15px; }
+    body.dark .bb-foot { border-top-color: rgba(213,217,224,.16); }
+    .bb-foot a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    body.dark .bb-foot a { color: var(--paper); }
+    @media (max-width: 760px) { .bb-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- MOCKUP header: one change vs live — adds a quiet "Products" link (credibility layer).
+       Services/pricing stay first; Products never gets gold treatment. -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/mockup/" aria-label="Duta Integra Solutions home">
+        <img class="brand-mark" src="/assets/dis-logo-nav.webp" alt="" width="56" height="42" />
+        <div class="brand-name">DUTA INTEGRA <span>SOLUTIONS</span></div>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/services">Services</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/cases">Case studies</a>
+        <a href="#builtby" title="Planned section: /products">Products</a>
+        <a href="/about">About</a>
+        <a href="/blog">Blog</a>
+        <a href="/audit">Free audit</a>
+        <a class="nav-cta" href="/contact">Get a quote</a>
+      </nav>
+      <div class="nav-tools">
+        <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/mockup/" hreflang="en">EN</a><a class="lang-opt" href="/mockup/ms/" hreflang="ms">BM</a></div>
+        <button class="tool" type="button" onclick="toggleDark()" data-theme-icon aria-label="Toggle theme">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
+        </button>
+      </div>
+      <button class="burger" type="button" onclick="toggleNav()" aria-label="Menu"><span></span></button>
+    </div>
+    <div class="drawer">
+      <a href="/services" onclick="closeNav()">Services</a>
+      <a href="/pricing" onclick="closeNav()">Pricing</a>
+      <a href="/cases" onclick="closeNav()">Case studies</a>
+      <a href="#builtby" onclick="closeNav()">Products</a>
+      <a href="/about" onclick="closeNav()">About</a>
+      <a href="/blog" onclick="closeNav()">Blog</a>
+      <a href="/audit" onclick="closeNav()">Free audit</a>
+      <div class="lang-switch" role="group" aria-label="Language"><a class="lang-opt is-active" href="/mockup/" hreflang="en">EN</a><a class="lang-opt" href="/mockup/ms/" hreflang="ms">BM</a></div>
+      <a class="nav-cta" href="/contact" onclick="closeNav()">Get a quote</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ 1. HERO — services promise only. No products above the fold. ============ -->
+    <section class="hero">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="badge">AI-FIRST IT PARTNER · CYBERJAYA, MALAYSIA</div>
+          <h1>Your <em class="accent">AI-First IT Partner</em> in Malaysia</h1>
+          <p class="lead">Managed IT, security, automation and custom AI systems for Malaysian SMEs — three clear monthly retainers, one accountable team.</p>
+          <div class="hero-actions">
+            <a class="btn btn-gold" href="/audit">Run a free audit</a>
+            <a class="btn btn-ghost" href="#services">See the retainers ↓</a>
+            <a class="btn btn-line" href="/contact">Book a discovery call</a>
+          </div>
+        </div>
+        <aside class="panel" aria-label="Systems status">
+          <div class="panel-head">SYSTEMS <b>CYBERJAYA</b></div>
+          <div class="row"><span class="k">Managed IT</span><span class="v"><i class="dot"></i>24/7</span></div>
+          <div class="row"><span class="k">Security &amp; PDPA</span><span class="v"><i class="dot"></i>AUDIT</span></div>
+          <div class="row"><span class="k">AI delivery</span><span class="v"><i class="dot"></i>LIVE</span></div>
+          <div class="panel-foot">
+            <span>Next proposal slot</span>
+            <strong>3 working days</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ 2. STATS ============ -->
+    <section class="stats">
+      <div class="wrap stats-grid">
+        <div class="stat"><b>2023</b><span>Founded</span></div>
+        <div class="stat"><b>5+</b><span>Client projects</span></div>
+        <div class="stat"><b>3</b><span>Core retainers</span></div>
+        <div class="stat"><b>PDPA</b><span>Compliant delivery</span></div>
+      </div>
+    </section>
+
+    <!-- ============ 3. CONVERSION PATH — Business Website entry → tier grid → one CTA ============
+         (Merdeka promo banner removed: competed with the tier grid for the same click.) -->
+    <section class="section" id="services">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What we deliver</div>
+          <h2>Three retainers. One partner.</h2>
+          <p>Buyers don’t compare eight line items — they pick a tier. Every engagement is built as monthly recurring work, not a one-off job.</p>
+        </div>
+        <div class="entry-step">
+          <div>
+            <div class="pill">New here? Start here</div>
+            <h3>Business Website</h3>
+            <p>A conversion-ready site for Malaysian SMEs — mobile-first, WhatsApp lead capture, and basic SEO. No monthly commitment.</p>
+          </div>
+          <div class="es-right">
+            <div class="es-price">RM 500<small>one-off</small></div>
+            <a class="btn btn-line" href="/pricing#business-website">Get the website →</a>
+          </div>
+        </div>
+        <div class="entry-connector">then choose an ongoing retainer</div>
+        <div class="tiers">
+          <article class="tier">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12V3M12 12l8 4.5M12 12L4 16.5"/></svg>
+            <h3>Foundation</h3>
+            <div class="tag">Managed IT, security and PDPA</div>
+            <div class="price"><div class="price-list">RM 2,000<small class="price-period">/ month</small></div></div>
+            <p class="then">Month-to-month. Cancel anytime.</p>
+            <ul>
+              <li>24/7 helpdesk and monitoring</li>
+              <li>Cloud infrastructure and backups</li>
+              <li>Security monitoring and response</li>
+              <li>PDPA compliance support</li>
+              <li>Monthly health report + dedicated engineer</li>
+            </ul>
+            <a class="btn btn-navy btn-block" href="/free-audit">Start with a free audit</a>
+          </article>
+          <article class="tier is-featured">
+            <div class="tier-flag">Most chosen</div>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>
+            <h3>Growth</h3>
+            <div class="tag">Foundation plus your growth engine</div>
+            <div class="price"><div class="price-list">RM 5,300<small class="price-period">/ month</small></div></div>
+            <p class="then">Month-to-month. Cancel anytime.</p>
+            <ul>
+              <li>Everything in Foundation</li>
+              <li>Sales and workflow automation</li>
+              <li>Content engine</li>
+              <li>Ads management and optimisation</li>
+              <li>Monthly performance reporting</li>
+            </ul>
+            <a class="btn btn-gold btn-block" href="/free-audit">Start with a free audit</a>
+          </article>
+          <article class="tier">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="5" width="16" height="14" rx="1"/><path d="M8 15h3M8 9h8M8 12h8"/></svg>
+            <h3>AI Partner</h3>
+            <div class="tag">Growth plus a dedicated AI sprint</div>
+            <div class="price"><div class="price-list"><small class="price-from">From</small> RM 8,300<small class="price-period">/ month</small></div></div>
+            <p class="then">Month-to-month. Includes one AI system per half-year.</p>
+            <ul>
+              <li>Everything in Growth</li>
+              <li>Dedicated AI development retainer</li>
+              <li>Chatbots and agent workflows</li>
+              <li>Integration into existing systems</li>
+              <li>Quarterly strategy reviews</li>
+            </ul>
+            <a class="btn btn-navy btn-block" href="/free-audit">Start with a free audit</a>
+          </article>
+        </div>
+        <div class="caps" aria-label="Capabilities inside the retainers">
+          <span class="cap">AI software</span>
+          <span class="cap">Chatbots</span>
+          <span class="cap">Process automation</span>
+          <span class="cap">Managed IT</span>
+          <span class="cap">Cloud</span>
+          <span class="cap">Helpdesk</span>
+          <span class="cap">Security</span>
+          <span class="cap">PDPA</span>
+          <span class="cap">Sales automation</span>
+          <span class="cap">Content &amp; ads</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. TRUST STRIP — AGMX removed from client list (now a DI product) ============ -->
+    <aside class="strip">
+      <div class="wrap strip-inner">
+        <span class="trust-badge">Trusted by <strong>Lapango</strong>, Eastelpro, Leish and growing SME clients across Malaysia</span>
+      </div>
+    </aside>
+
+    <!-- ============ 5. CREDIBILITY LAYER — "Built by DI" strip (silver wayfinding) ============ -->
+    <section class="builtby" id="builtby">
+      <div class="wrap">
+        <div class="bb-panel">
+          <div class="bb-head">
+            <div class="bb-eyebrow">Built by Duta Integra</div>
+            <h2>Proof we build real systems</h2>
+            <p>Not client logos — live systems we designed, built and still operate ourselves. This is what your retainer buys.</p>
+          </div>
+          <div class="bb-grid">
+            <a class="bb-card" href="/cases/dutaconnect">
+              <span class="bb-mono" aria-hidden="true">DC</span>
+              <span>
+                <h3>DutaConnect</h3>
+                <span class="bb-tag">DI product · AI assistant</span>
+                <p>Our own RAG assistant: answers grounded in company docs only, with human handoff for sensitive questions. Running in production.</p>
+                <span class="bb-link">See how it works →</span>
+              </span>
+            </a>
+            <a class="bb-card" href="/cases/agmx">
+              <span class="bb-mono" aria-hidden="true">AG</span>
+              <span>
+                <h3>AGMX Cloud</h3>
+                <span class="bb-tag">DI product · Managed cloud</span>
+                <p>The managed infrastructure stack we run every day: 4-hourly backups, 24/7 monitoring, incident response — under Foundation.</p>
+                <span class="bb-link">See the setup →</span>
+              </span>
+            </a>
+          </div>
+          <div class="bb-foot">Want something like this built for you? That is the <a href="/pricing#growth">Growth tier →</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. WHY US ============ -->
+    <section class="section why">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Why choose us</div>
+          <h2>Built for <em class="accent">Malaysian SMEs</em></h2>
+        </div>
+        <div class="why-grid">
+          <article class="why-card">
+            <div class="num">01</div>
+            <h3>Local expertise</h3>
+            <p>We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.</p>
+          </article>
+          <article class="why-card">
+            <div class="num">02</div>
+            <h3>AI + IT combined</h3>
+            <p>One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.</p>
+          </article>
+          <article class="why-card">
+            <div class="num">03</div>
+            <h3>Transparent pricing</h3>
+            <p>No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.</p>
+          </article>
+          <article class="why-card">
+            <div class="num">04</div>
+            <h3>Fast onboarding</h3>
+            <p><a href="/audit">Free initial audit</a>, a clear proposal within 3 working days, and delivery you can count on.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 7. PROCESS ============ -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">How we work</div>
+          <h2>A process with no theatre</h2>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="n">1</div>
+            <h3><a href="/audit">Free audit</a></h3>
+            <p>Assess your current IT setup or AI readiness with our instant online brand audit — no obligation, no sales pressure.</p>
+          </article>
+          <article class="step">
+            <div class="n">2</div>
+            <h3>Proposal</h3>
+            <p>Scope, timeline, and fixed pricing within 3 working days. Month-to-month after that.</p>
+          </article>
+          <article class="step">
+            <div class="n">3</div>
+            <h3>Delivery</h3>
+            <p>Weekly check-ins and full transparency while the system is built and stood up.</p>
+          </article>
+          <article class="step">
+            <div class="n">4</div>
+            <h3>Support</h3>
+            <p>We do not disappear after go-live. Ongoing support is part of the retainer.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 8. FAQ — Dutaconnect re-framed as DI's own product ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Straight answers</div>
+          <h2>Questions buyers ask us</h2>
+          <p>No sales deflection. If you would rather see evidence than read it, <a href="/contact" style="color:var(--gold)">ask us on a call</a> and we will show you live systems.</p>
+        </div>
+        <div class="faq">
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Can you show live AI systems you have shipped — not demos?</button>
+            <div class="faq-a"><p>Yes. We built and operate our own knowledge-grounded assistant, <a href="/cases/dutaconnect" style="color:var(--gold)">DutaConnect</a>, and deliver client builds such as Leish’s booking app. On a discovery call we will walk you through a live system relevant to your industry — never a slide deck.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">What does your PDPA support actually include?</button>
+            <div class="faq-a"><p>It is not just templates. We help with data mapping, privacy notices and DPAs, consent and retention practices, staff awareness, and an incident response plan. For Foundation clients this is part of the retainer; for one-off projects it is scoped up front.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">For Foundation — what are your backup and security standards?</button>
+            <div class="faq-a"><p>We define recovery targets during onboarding — a standard <b>RTO under 4 hours</b> with <b>4-hourly RPO</b> (tighter for critical systems, scoped up front) — and run <b>monthly restore tests</b> so backups are proven to recover. Included tooling covers 24/7 monitoring with alerts acknowledged within 15 minutes, <b>EDR on managed endpoints</b>, patching, and a documented incident response plan with post-incident reviews. The exact stack is documented per environment — no black boxes.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">You are a 2023 company with a small team — who supports us?</button>
+            <div class="faq-a"><p>That is fair diligence. You get a named, dedicated engineer who knows your setup, backed by 24/7 automated monitoring and an after-hours on-call runbook. We are deliberately a boutique team — you will not be routed through an anonymous queue. SSM details and client references are provided on request.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Who owns the IP for custom AI apps if we cancel?</button>
+            <div class="faq-a"><p>You do. Custom code and configurations we build for you are assigned to you, and we hand over documentation and repository access so you are never locked in. We will put this in writing in the proposal.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">What counts as “one AI system” on the AI Partner retainer?</button>
+            <div class="faq-a"><p>To prevent scope surprises we define it up front: a focused production system — such as a RAG chatbot, an automation workflow, or a single integrated feature — scoped and signed off each half-year. Larger builds are split into clearly priced sprints. <a href="/pricing#scope" style="color:var(--gold)">See how we define scope →</a></p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 9. FINAL CTA — services only ============ -->
+    <section class="cta">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="eyebrow">Next step</div>
+        <h2>Ready to <em class="accent">modernise</em> your business?</h2>
+        <p>Start with a free IT audit or AI readiness assessment — no obligation.</p>
+        <div class="cta-actions">
+          <a class="btn btn-gold" href="/contact">Book free consultation</a>
+          <a class="btn btn-ghost" href="/pricing">View pricing</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div>
+          <div class="brand-name">DUTA INTEGRA <span>SOLUTIONS</span></div>
+          <p>Your AI and IT partner in Malaysia.</p>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <a href="/about">About</a>
+          <a href="/cases">Case studies</a>
+          <a href="#builtby">Products</a>
+          <a href="/pricing">Pricing</a>
+          <a href="/blog">Blog</a>
+          <a href="/contact">Contact</a>
+        </div>
+        <div>
+          <h5>Services</h5>
+          <a href="/services">Foundation</a>
+          <a href="/services">Growth</a>
+          <a href="/services">AI Partner</a>
+          <a href="/audit">Free audit</a>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <a href="mailto:hello@dutaintegra.my">hello@dutaintegra.my</a>
+          <a class="btn-wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20discovery%20call." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
+            WhatsApp us
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Duta Integra Solutions Sdn Bhd.</span>
+        <span>Cyberjaya, Malaysia</span>
+      </div>
+    </div>
+  </footer>
+
+  <a class="wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20discovery%20call." target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
+  </a>
+
+  <div class="mockup-tag">Concept mockup — not live</div>
+  <script src="/js/main.js?v=20260824a"></script>
+</body>
+</html>

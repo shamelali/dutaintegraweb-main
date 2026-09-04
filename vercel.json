@@ -124,6 +124,51 @@
       "permanent": false
     },
     {
+      "source": "/(.*).zip",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/(.*).csv",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/(.*).docx",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/(.*).code-workspace",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/business-docs/:path*",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/supabase/:path*",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/memory/:path*",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/mockup/:path*",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
       "source": "/.claude/:path*",
       "destination": "/404.html",
       "permanent": false

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ms" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOCKUP · Laman utama — hala tuju perkhidmatan dahulu · Duta Integra Solutions</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="icon" type="image/png" href="/assets/dis-favicon.png" />
+  <link rel="stylesheet" href="/css/fonts.css" />
+  <link rel="stylesheet" href="/css/styles.css?v=20260831" />
+  <style>
+    /* ==========================================================================
+       MOCKUP SAHAJA — untuk dipindahkan ke styles.css selepas diluluskan.
+       Blok baharu: jalur kredibiliti "Dibina oleh DI" (.builtby-*).
+       Peraturan pandu arah: perkhidmatan = navy/emas, produk/bukti = perak.
+       ========================================================================== */
+    html { scroll-behavior: smooth; }
+
+    .mockup-tag {
+      position: fixed; left: 12px; bottom: 12px; z-index: 99;
+      font-family: var(--font-d); font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted-2);
+      background: var(--paper-2); border: 1px solid var(--line);
+      padding: 4px 10px; border-radius: var(--radius); opacity: .75;
+    }
+    body.dark .mockup-tag { background: var(--navy-2); border-color: rgba(213,217,224,.2); }
+
+    /* ---- Jalur "Dibina oleh DI" : rawatan aksen perak, langsung tiada emas ---- */
+    .builtby { padding: 56px 0 8px; }
+    .bb-panel {
+      border: 1px solid var(--line);
+      background: var(--paper-2);
+      border-radius: var(--radius);
+      padding: clamp(24px, 4vw, 44px);
+    }
+    body.dark .bb-panel { background: var(--navy-2); border-color: rgba(213,217,224,.14); }
+    .bb-eyebrow {
+      font-family: var(--font-d); font-size: 13px; font-weight: 600;
+      letter-spacing: .16em; text-transform: uppercase; color: var(--muted-2);
+    }
+    .bb-head { max-width: 720px; margin-bottom: 26px; }
+    .bb-head h2 { margin: 8px 0 10px; }
+    .bb-head p { color: var(--muted); margin: 0; }
+    .bb-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .bb-card {
+      display: flex; gap: 16px; align-items: flex-start;
+      border: 1px solid var(--line-2); background: var(--white);
+      padding: 20px 22px; border-radius: var(--radius); text-decoration: none;
+      transition: border-color .15s ease;
+    }
+    .bb-card:hover { border-color: var(--muted-2); }
+    body.dark .bb-card { background: rgba(255,255,255,.03); border-color: rgba(213,217,224,.12); }
+    body.dark .bb-card:hover { border-color: rgba(213,217,224,.3); }
+    .bb-mono {
+      flex-shrink: 0; width: 46px; height: 46px; display: grid; place-items: center;
+      font-family: var(--font-d); font-weight: 700; font-size: 17px; letter-spacing: .04em;
+      color: var(--navy); background: linear-gradient(135deg, #EDEFF3, #C9CDD6);
+      border-radius: var(--radius);
+    }
+    body.dark .bb-mono { background: linear-gradient(135deg, #3A4756, #2A3644); color: #C9CDD6; }
+    .bb-card h3 { margin: 0 0 4px; font-size: 19px; color: var(--ink); }
+    body.dark .bb-card h3 { color: var(--paper); }
+    .bb-tag {
+      display: inline-block; font-family: var(--font-d); font-size: 11px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--muted-2);
+      border: 1px solid var(--line); padding: 2px 8px; border-radius: 999px;
+      margin-bottom: 8px;
+    }
+    body.dark .bb-tag { border-color: rgba(213,217,224,.2); }
+    .bb-card p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+    .bb-link { font-family: var(--font-d); font-size: 13.5px; font-weight: 600; letter-spacing: .05em; color: var(--muted-2); }
+    .bb-card:hover .bb-link { color: var(--ink); }
+    body.dark .bb-card:hover .bb-link { color: var(--paper); }
+    .bb-foot { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line); color: var(--muted); font-size: 15px; }
+    body.dark .bb-foot { border-top-color: rgba(213,217,224,.16); }
+    .bb-foot a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    body.dark .bb-foot a { color: var(--paper); }
+    @media (max-width: 760px) { .bb-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Langkau ke kandungan</a>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/mockup/ms/" aria-label="Laman utama Duta Integra Solutions">
+        <img class="brand-mark" src="/assets/dis-logo-nav.webp" alt="" width="56" height="42" />
+        <div class="brand-name">DUTA INTEGRA <span>SOLUTIONS</span></div>
+      </a>
+      <nav class="nav-links" aria-label="Utama">
+        <a href="/ms/services">Perkhidmatan</a>
+        <a href="/ms/pricing">Harga</a>
+        <a href="/ms/cases">Kajian kes</a>
+        <a href="#builtby" title="Seksyen dirancang: /products">Produk</a>
+        <a href="/ms/about">Tentang kami</a>
+        <a href="/ms/blog">Blog</a>
+        <a href="/ms/audit">Audit percuma</a>
+        <a class="nav-cta" href="/ms/contact">Minta sebut harga</a>
+      </nav>
+      <div class="nav-tools">
+        <div class="lang-switch" role="group" aria-label="Bahasa"><a class="lang-opt" href="/mockup/" hreflang="en">EN</a><a class="lang-opt is-active" href="/mockup/ms/" hreflang="ms">BM</a></div>
+        <button class="tool" type="button" onclick="toggleDark()" data-theme-icon aria-label="Tukar tema">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
+        </button>
+      </div>
+      <button class="burger" type="button" onclick="toggleNav()" aria-label="Menu"><span></span></button>
+    </div>
+    <div class="drawer">
+      <a href="/ms/services" onclick="closeNav()">Perkhidmatan</a>
+      <a href="/ms/pricing" onclick="closeNav()">Harga</a>
+      <a href="/ms/cases" onclick="closeNav()">Kajian kes</a>
+      <a href="#builtby" onclick="closeNav()">Produk</a>
+      <a href="/ms/about" onclick="closeNav()">Tentang kami</a>
+      <a href="/ms/blog" onclick="closeNav()">Blog</a>
+      <a href="/ms/audit" onclick="closeNav()">Audit percuma</a>
+      <div class="lang-switch" role="group" aria-label="Bahasa"><a class="lang-opt" href="/mockup/" hreflang="en">EN</a><a class="lang-opt is-active" href="/mockup/ms/" hreflang="ms">BM</a></div>
+      <a class="nav-cta" href="/ms/contact" onclick="closeNav()">Minta sebut harga</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ 1. HERO — janji perkhidmatan sahaja. Tiada produk di atas lipatan. ============ -->
+    <section class="hero">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="badge">RAKAN IT BERASASKAN AI · CYBERJAYA, MALAYSIA</div>
+          <h1><em class="accent">Rakan IT</em> berasaskan AI anda di Malaysia</h1>
+          <p class="lead">IT terurus, keselamatan, automasi dan sistem AI tersuai untuk PKS Malaysia — tiga pakej bulanan yang jelas, satu pasukan yang bertanggungjawab.</p>
+          <div class="hero-actions">
+            <a class="btn btn-gold" href="/ms/audit">Jalankan audit percuma</a>
+            <a class="btn btn-ghost" href="#services">Lihat pakej ↓</a>
+            <a class="btn btn-line" href="/ms/contact">Tempah panggilan perbincangan</a>
+          </div>
+        </div>
+        <aside class="panel" aria-label="Status sistem">
+          <div class="panel-head">SISTEM <b>CYBERJAYA</b></div>
+          <div class="row"><span class="k">IT terurus</span><span class="v"><i class="dot"></i>24/7</span></div>
+          <div class="row"><span class="k">Keselamatan &amp; PDPA</span><span class="v"><i class="dot"></i>AUDIT</span></div>
+          <div class="row"><span class="k">Penyampaian AI</span><span class="v"><i class="dot"></i>LANGSUNG</span></div>
+          <div class="panel-foot">
+            <span>Slot cadangan seterusnya</span>
+            <strong>3 hari bekerja</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ 2. STATISTIK ============ -->
+    <section class="stats">
+      <div class="wrap stats-grid">
+        <div class="stat"><b>2023</b><span>Ditubuhkan</span></div>
+        <div class="stat"><b>5+</b><span>Projek pelanggan</span></div>
+        <div class="stat"><b>3</b><span>Pakej teras</span></div>
+        <div class="stat"><b>PDPA</b><span>Penyampaian patuh</span></div>
+      </div>
+    </section>
+
+    <!-- ============ 3. LALUAN KONVERSI — Laman Web Perniagaan → grid pakej → satu CTA ============ -->
+    <section class="section" id="services">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Apa yang kami sediakan</div>
+          <h2>Tiga pakej. Satu rakan.</h2>
+          <p>Pelanggan tidak membandingkan lapan baris item — mereka memilih pakej. Setiap kerja kami dibina sebagai langganan bulanan, bukan projek sekali sahaja.</p>
+        </div>
+        <div class="entry-step">
+          <div>
+            <div class="pill">Baru di sini? Mula di sini</div>
+            <h3>Laman Web Perniagaan</h3>
+            <p>Laman web bersedia konversi untuk PKS Malaysia — mesra mudah alih, penangkapan lead WhatsApp dan SEO asas. Tiada komitmen bulanan.</p>
+          </div>
+          <div class="es-right">
+            <div class="es-price">RM 500<small>sekali sahaja</small></div>
+            <a class="btn btn-line" href="/ms/pricing#business-website">Dapatkan laman web →</a>
+          </div>
+        </div>
+        <div class="entry-connector">kemudian pilih pakej berterusan</div>
+        <div class="tiers">
+          <article class="tier">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12V3M12 12l8 4.5M12 12L4 16.5"/></svg>
+            <h3>Foundation</h3>
+            <div class="tag">IT terurus, keselamatan dan PDPA</div>
+            <div class="price"><div class="price-list">RM 2,000<small class="price-period">/ bulan</small></div></div>
+            <p class="then">Bulan ke bulan. Batal bila-bila masa.</p>
+            <ul>
+              <li>Talian bantuan dan pemantauan 24/7</li>
+              <li>Infrastruktur awan dan sandaran</li>
+              <li>Pemantauan dan tindak balas keselamatan</li>
+              <li>Sokongan pematuhan PDPA</li>
+              <li>Laporan kesihatan bulanan + jurutera khusus</li>
+            </ul>
+            <a class="btn btn-navy btn-block" href="/ms/free-audit">Mula dengan audit percuma</a>
+          </article>
+          <article class="tier is-featured">
+            <div class="tier-flag">Paling popular</div>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>
+            <h3>Growth</h3>
+            <div class="tag">Foundation + enjin pertumbuhan anda</div>
+            <div class="price"><div class="price-list">RM 5,300<small class="price-period">/ bulan</small></div></div>
+            <p class="then">Bulan ke bulan. Batal bila-bila masa.</p>
+            <ul>
+              <li>Semua dalam Foundation</li>
+              <li>Automasi jualan dan aliran kerja</li>
+              <li>Enjin kandungan</li>
+              <li>Pengurusan dan pengoptimuman iklan</li>
+              <li>Laporan prestasi bulanan</li>
+            </ul>
+            <a class="btn btn-gold btn-block" href="/ms/free-audit">Mula dengan audit percuma</a>
+          </article>
+          <article class="tier">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="5" width="16" height="14" rx="1"/><path d="M8 15h3M8 9h8M8 12h8"/></svg>
+            <h3>AI Partner</h3>
+            <div class="tag">Growth + sprint AI khusus</div>
+            <div class="price"><div class="price-list"><small class="price-from">Dari</small> RM 8,300<small class="price-period">/ bulan</small></div></div>
+            <p class="then">Bulan ke bulan. Termasuk satu sistem AI setiap setengah tahun.</p>
+            <ul>
+              <li>Semua dalam Growth</li>
+              <li>Langganan pembangunan AI khusus</li>
+              <li>Chatbot dan aliran kerja ejen</li>
+              <li>Integrasi dengan sistem sedia ada</li>
+              <li>Semakan strategi suku tahunan</li>
+            </ul>
+            <a class="btn btn-navy btn-block" href="/ms/free-audit">Mula dengan audit percuma</a>
+          </article>
+        </div>
+        <div class="caps" aria-label="Keupayaan dalam pakej">
+          <span class="cap">Perisian AI</span>
+          <span class="cap">Chatbot</span>
+          <span class="cap">Automasi proses</span>
+          <span class="cap">IT terurus</span>
+          <span class="cap">Awan</span>
+          <span class="cap">Talian bantuan</span>
+          <span class="cap">Keselamatan</span>
+          <span class="cap">PDPA</span>
+          <span class="cap">Automasi jualan</span>
+          <span class="cap">Kandungan &amp; iklan</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. JALUR KEPERCAYAAN — AGMX dikeluarkan (kini produk DI) ============ -->
+    <aside class="strip">
+      <div class="wrap strip-inner">
+        <span class="trust-badge">Dipercayai oleh <strong>Lapango</strong>, Eastelpro, Leish dan pelanggan PKS yang semakin berkembang di seluruh Malaysia</span>
+      </div>
+    </aside>
+
+    <!-- ============ 5. LAPISAN KREDIBILITI — jalur "Dibina oleh DI" (pandu arah perak) ============ -->
+    <section class="builtby" id="builtby">
+      <div class="wrap">
+        <div class="bb-panel">
+          <div class="bb-head">
+            <div class="bb-eyebrow">Dibina oleh Duta Integra</div>
+            <h2>Bukti kami membina sistem sebenar</h2>
+            <p>Bukan logo pelanggan — sistem langsung yang kami reka, bina dan masih kendalikan sendiri. Inilah yang dibeli oleh pakej anda.</p>
+          </div>
+          <div class="bb-grid">
+            <a class="bb-card" href="/cases/dutaconnect">
+              <span class="bb-mono" aria-hidden="true">DC</span>
+              <span>
+                <h3>DutaConnect</h3>
+                <span class="bb-tag">Produk DI · Pembantu AI</span>
+                <p>Pembantu RAG kami sendiri: jawapan berasaskan dokumen syarikat sahaja, dengan serahan kepada manusia untuk soalan sensitif. Beroperasi dalam produksi.</p>
+                <span class="bb-link">Lihat cara ia berfungsi →</span>
+              </span>
+            </a>
+            <a class="bb-card" href="/cases/agmx">
+              <span class="bb-mono" aria-hidden="true">AG</span>
+              <span>
+                <h3>AGMX Cloud</h3>
+                <span class="bb-tag">Produk DI · Awan terurus</span>
+                <p>Tindanan infrastruktur terurus yang kami kendalikan setiap hari: sandaran setiap 4 jam, pemantauan 24/7 dan tindak balas insiden — di bawah Foundation.</p>
+                <span class="bb-link">Lihat persediaan →</span>
+              </span>
+            </a>
+          </div>
+          <div class="bb-foot">Mahu sesuatu seperti ini dibina untuk anda? Itulah pakej <a href="/ms/pricing#growth">Growth →</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. KENAPA KAMI ============ -->
+    <section class="section why">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Kenapa pilih kami</div>
+          <h2>Dibina untuk <em class="accent">PKS Malaysia</em></h2>
+        </div>
+        <div class="why-grid">
+          <article class="why-card">
+            <div class="num">01</div>
+            <h3>Kepakaran tempatan</h3>
+            <p>Kami memahami PDPA, SST, ePerolehan dan landskap PKS. Tidak perlu menerangkan konteks Malaysia kepada kami.</p>
+          </article>
+          <article class="why-card">
+            <div class="num">02</div>
+            <h3>AI + IT digabungkan</h3>
+            <p>Satu vendor untuk cita-cita AI dan IT harian anda — lebih ringkas, lebih jimat dan lebih terselaras.</p>
+          </article>
+          <article class="why-card">
+            <div class="num">03</div>
+            <h3>Harga telus</h3>
+            <p>Tiada yuran tersembunyi. Langganan bulanan dan skop projek yang jelas untuk perniagaan yang berkembang.</p>
+          </article>
+          <article class="why-card">
+            <div class="num">04</div>
+            <h3>Onboarding pantas</h3>
+            <p><a href="/ms/audit">Audit awal percuma</a>, cadangan jelas dalam 3 hari bekerja, dan penyampaian yang boleh diharapkan.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 7. PROSES ============ -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Cara kami bekerja</div>
+          <h2>Proses tanpa lakonan</h2>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="n">1</div>
+            <h3><a href="/ms/audit">Audit percuma</a></h3>
+            <p>Nilai persediaan IT atau kesediaan AI anda melalui audit atas talian kami — tanpa obligasi, tanpa tekanan jualan.</p>
+          </article>
+          <article class="step">
+            <div class="n">2</div>
+            <h3>Cadangan</h3>
+            <p>Skop, garis masa dan harga tetap dalam 3 hari bekerja. Bulan ke bulan selepas itu.</p>
+          </article>
+          <article class="step">
+            <div class="n">3</div>
+            <h3>Penyampaian</h3>
+            <p>Perbincangan mingguan dan ketelusan penuh semasa sistem dibina dan dilancarkan.</p>
+          </article>
+          <article class="step">
+            <div class="n">4</div>
+            <h3>Sokongan</h3>
+            <p>Kami tidak hilang selepas pelancaran. Sokongan berterusan adalah sebahagian daripada pakej.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 8. FAQ ============ -->
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Jawapan terus terang</div>
+          <h2>Soalan yang pelanggan tanya kami</h2>
+          <p>Tiada dolak-dalik jualan. Jika anda mahu bukti berbanding janji, <a href="/ms/contact" style="color:var(--gold)">tanya kami dalam panggilan</a> dan kami akan tunjukkan sistem langsung.</p>
+        </div>
+        <div class="faq">
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Bolehkah anda tunjukkan sistem AI langsung yang telah dibina — bukan demo?</button>
+            <div class="faq-a"><p>Ya. Kami membina dan mengendalikan pembantu kami sendiri, <a href="/cases/dutaconnect" style="color:var(--gold)">DutaConnect</a>, serta binaan pelanggan seperti aplikasi tempahan Leish. Dalam panggilan perbincangan, kami akan tunjuk sistem langsung yang relevan dengan industri anda — bukan set slaid.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Apakah yang sebenarnya termasuk dalam sokongan PDPA anda?</button>
+            <div class="faq-a"><p>Bukan sekadar templat. Kami membantu pemetaan data, notis privasi dan DPA, amalan persetujuan dan penyimpanan, kesedaran kakitangan serta pelan tindak balas insiden. Untuk pelanggan Foundation, ini sebahagian daripada pakej; untuk projek sekali sahaja, ia diskop terlebih dahulu.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Untuk Foundation — apakah standard sandaran dan keselamatan anda?</button>
+            <div class="faq-a"><p>Kami menetapkan sasaran pemulihan semasa onboarding — <b>RTO di bawah 4 jam</b> dengan <b>RPO setiap 4 jam</b> (lebih ketat untuk sistem kritikal, diskop terlebih dahulu) — dan menjalankan <b>ujian pemulihan bulanan</b> supaya sandaran terbukti berfungsi. Peralatan termasuk pemantauan 24/7 dengan makluman diakui dalam masa 15 minit, <b>EDR pada titik akhir terurus</b>, tampalan (patching), dan pelan tindak balas insiden yang didokumentasikan.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Anda syarikat 2023 dengan pasukan kecil — siapa yang menyokong kami?</button>
+            <div class="faq-a"><p>Soalan yang munasabah. Anda mendapat jurutera khusus bernama yang memahami persediaan anda, disokong pemantauan automatik 24/7 dan runbook on-call selepas waktu bekerja. Kami sengaja kekal sebagai pasukan butik — anda tidak akan disalurkan melalui giliran tanpa nama. Butiran SSM dan rujukan pelanggan disediakan atas permintaan.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Siapa memiliki IP aplikasi AI tersuai jika kami berhenti?</button>
+            <div class="faq-a"><p>Anda. Kod tersuai dan konfigurasi yang kami bina untuk anda menjadi milik anda, dan kami serahkan dokumentasi serta akses repositori supaya anda tidak pernah terkunci. Kami akan nyatakan ini secara bertulis dalam cadangan.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button" aria-expanded="false">Apakah maksud "satu sistem AI" dalam pakej AI Partner?</button>
+            <div class="faq-a"><p>Untuk mengelakkan kejutan skop, kami menentukannya terlebih dahulu: satu sistem produksi berfokus — seperti chatbot RAG, aliran kerja automasi, atau satu ciri bersepadu — diskop dan ditandatangani setiap setengah tahun. Binaan lebih besar dipecahkan kepada sprint berharga jelas. <a href="/ms/pricing#scope" style="color:var(--gold)">Lihat cara kami mentakrif skop →</a></p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 9. CTA AKHIR — perkhidmatan sahaja ============ -->
+    <section class="cta">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <div class="glow-blob blob-1" aria-hidden="true"></div>
+      <div class="glow-blob blob-2" aria-hidden="true"></div>
+      <div class="glow-blob blob-3" aria-hidden="true"></div>
+      <div class="scan-line" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="eyebrow">Langkah seterusnya</div>
+        <h2>Bersedia untuk <em class="accent">memodenkan</em> perniagaan anda?</h2>
+        <p>Mulakan dengan audit IT percuma atau penilaian kesediaan AI — tanpa obligasi.</p>
+        <div class="cta-actions">
+          <a class="btn btn-gold" href="/ms/contact">Tempah konsultasi percuma</a>
+          <a class="btn btn-ghost" href="/ms/pricing">Lihat harga</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div>
+          <div class="brand-name">DUTA INTEGRA <span>SOLUTIONS</span></div>
+          <p>Rakan AI dan IT anda di Malaysia.</p>
+        </div>
+        <div>
+          <h5>Syarikat</h5>
+          <a href="/ms/about">Tentang kami</a>
+          <a href="/ms/cases">Kajian kes</a>
+          <a href="#builtby">Produk</a>
+          <a href="/ms/pricing">Harga</a>
+          <a href="/ms/blog">Blog</a>
+          <a href="/ms/contact">Hubungi kami</a>
+        </div>
+        <div>
+          <h5>Perkhidmatan</h5>
+          <a href="/ms/services">Foundation</a>
+          <a href="/ms/services">Growth</a>
+          <a href="/ms/services">AI Partner</a>
+          <a href="/ms/audit">Audit percuma</a>
+        </div>
+        <div>
+          <h5>Hubungi</h5>
+          <a href="mailto:hello@dutaintegra.my">hello@dutaintegra.my</a>
+          <a class="btn-wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20discovery%20call." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
+            WhatsApp kami
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Duta Integra Solutions Sdn Bhd.</span>
+        <span>Cyberjaya, Malaysia</span>
+      </div>
+    </div>
+  </footer>
+
+  <a class="wa" href="https://wa.me/601154034051?text=Hello%20Duta%20Integra%20%E2%80%94%20I%27d%20like%20a%20discovery%20call." target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11.5A8.5 8.5 0 0 1 7.4 18.7L4 20l1.4-3.3A8.5 8.5 0 1 1 20 11.5zm-8.5 7A7 7 0 1 0 6.2 16l.2.3-.8 1.9 2-.7.3.2A7 7 0 0 0 11.5 18.5zm4-4.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1s-.5.7-.7.8-.2.1-.4 0a5.7 5.7 0 0 1-1.7-1 6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.4.1-.2c0-.1 0-.2 0-.3l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.7-.8 1.8s.8 2.1.9 2.2c.1.2 1.6 2.5 3.8 3.4 1.4.6 1.7.5 2.3.4.4 0 1.2-.5 1.3-1 .2-.5.2-.9.1-1 0-.1-.2-.1-.4-.2z"/></svg>
+  </a>
+
+  <div class="mockup-tag">Mockup konsep — belum langsung</div>
+  <script src="/js/main.js?v=20260824a"></script>
+</body>
+</html>
