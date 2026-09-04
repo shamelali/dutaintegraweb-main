@@ -39,5 +39,5 @@ export default [
       "no-empty": "off"
     }
   },
-  { ignores: ["node_modules/**", ".vercel/**", "dutaintegra-ultimate-bundle/**", "DUTA-INTEGRA-COMPLETE-HANDOVER/**"] }
+  { ignores: ["node_modules/**", ".vercel/**"] }
 ];
