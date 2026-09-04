@@ -164,6 +164,11 @@
       "permanent": false
     },
     {
+      "source": "/mockup/:path*",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
       "source": "/.claude/:path*",
       "destination": "/404.html",
       "permanent": false
