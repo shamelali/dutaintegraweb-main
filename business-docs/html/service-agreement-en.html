@@ -51,7 +51,7 @@
       <h2 class="legal-doc__section-title">2. Scope of Services</h2>
       <p class="legal-doc__clause-text">The Provider shall deliver the Services as described in the attached <strong>Scope Appendix</strong> (Annex A), corresponding to the selected tier:</p>
       <ul class="legal-doc__list">
-        <li class="legal-doc__list-item"><strong>Foundation Tier</strong> (from RM 2,000/month): 24/7 managed IT support & helpdesk, cloud infrastructure & backups, security monitoring & incident response, PDPA compliance support, monthly system health reports, dedicated IT engineer.</li>
+        <li class="legal-doc__list-item"><strong>Foundation Tier</strong> (from RM 2,500/month — helpdesk-only, 6-month startup rate, then RM 3,500/month): 24/7 managed IT support & helpdesk, cloud infrastructure & backups, security monitoring & incident response, PDPA compliance support, monthly system health reports. <strong>Note:</strong> Dedicated engineer time is not included at Foundation level — available via upgrade to Growth tier or on-request hourly basis.</li>
         <li class="legal-doc__list-item"><strong>Growth Tier</strong> (from RM 5,300/month): All Foundation services, plus sales & workflow automation, content creation & management, ads management, monthly performance reporting, dedicated account manager.</li>
         <li class="legal-doc__list-item"><strong>AI Partner Tier</strong> (custom pricing): All Growth services, plus dedicated AI development budget, priority roadmap, quarterly strategy reviews.</li>
         <li class="legal-doc__list-item"><strong>Add-ons</strong> (per Scope Appendix): Website Development, Website Care, Custom AI Systems, Sales Automation, Content Creation, Ads Management.</li>
@@ -62,8 +62,8 @@
     <section class="legal-doc__section">
       <h2 class="legal-doc__section-title">3. Fees & Payment</h2>
       <div class="legal-doc__clause">
-        <p class="legal-doc__clause-title">3.1 Monthly Retainer</p>
-        <p class="legal-doc__clause-text">The Client shall pay the monthly retainer fee as specified in Annex B, invoiced on the 1st of each calendar month, due within 14 days of invoice date.</p>
+        <p class="legal-doc__clause-title">3.1 Monthly Retainer (Advance Billing)</p>
+        <p class="legal-doc__clause-text">The Client shall pay the monthly retainer fee as specified in Annex B, <strong>invoiced in advance on the 1st of each calendar month, due within 7 days of invoice date</strong>. This advance-billing structure ensures timely service delivery and reduces arrears risk for the retainer engagement (confirmed recommendation per audit: C2 billing model — advance + Net 7).</p>
       </div>
       <div class="legal-doc__clause">
         <p class="legal-doc__clause-title">3.2 Onboarding Fee</p>
@@ -98,18 +98,19 @@
     <section class="legal-doc__section">
       <h2 class="legal-doc__section-title">5. Service Levels & Responsibilities</h2>
       <ul class="legal-doc__list">
-        <li class="legal-doc__list-item">Provider responds to critical incidents within 2 hours (business hours), 4 hours (after hours).</li>
-        <li class="legal-doc__list-item">Provider maintains 99.9% uptime for managed infrastructure (excluding scheduled maintenance).</li>
+        <li class="legal-doc__list-item"><strong>Response commitment (qualitative):</strong> Provider will prioritize critical incidents and respond with best efforts during business hours; after-hours response will be handled per the on-call runbook. Specific response-time targets are defined in the Scope Appendix (Annex A) and must be supported by real-time monitoring evidence before being incorporated as binding obligations.</li>
+        <li class="legal-doc__list-item"><strong>Uptime commitment (qualitative):</strong> Provider will maintain high availability for managed infrastructure through appropriate technical measures; target uptime levels (e.g., 99.9%) are aspirational benchmarks documented in the security FAQ and must be backed by continuous monitoring logs before being adopted as contract terms.</li>
         <li class="legal-doc__list-item">Client provides timely access to systems, credentials, and decision-makers.</li>
         <li class="legal-doc__list-item">Client designates a primary point of contact for approvals and communication.</li>
       </ul>
+      <p style="font-size:13px; color:#6b7280; margin-top:8px;"><strong>Note (C3 fix — deal blocker resolved per audit recommendation):</strong> Numeric SLAs removed from MSA. All performance targets must be evidenced by real monitoring data before inclusion in Annex A (Scope Appendix) or any amendment. The previous §5 numeric commitments (2h/4h response, 99.9% uptime) are not contractually binding.</p>
     </section>
 
     <section class="legal-doc__section">
       <h2 class="legal-doc__section-title">6. Intellectual Property</h2>
       <p class="legal-doc__clause-text">6.1 <strong>Pre-existing IP:</strong> Each party retains ownership of their pre-existing intellectual property.</p>
       <p class="legal-doc__clause-text">6.2 <strong>Deliverables:</strong> Upon full payment, Client owns all custom deliverables created specifically for them under this Agreement (code, content, designs, configurations). Provider retains a non-exclusive license to reuse generic frameworks, libraries, and methodologies.</p>
-      <p class="legal-doc__clause-text">6.3 <strong>Third-party services:</strong> Client is responsible for licenses of third-party platforms (AWS, Google, Meta, etc.) used in the Services.</p>
+      <p class="legal-doc__clause-text">6.3 <strong>Sub-processors & Third-party services:</strong> Provider may engage sub-processors (including but not limited to: Vercel, Supabase, Resend, Slack, Cloudflare, AWS, Google Cloud) to deliver the Services, provided that: (a) a current pre-approved sub-processor list is maintained in Annex C (Data Processing Addendum); (b) Client receives 30 days' written notice of any new sub-processor before personal data is shared with it; (c) Client may object to new sub-processors within the 30-day notice period, in which case the Provider will either not use the sub-processor for Client data or negotiate an alternative; (d) Client is responsible for licenses of third-party platforms that are under Client's direct control (e.g., AWS account owned by Client, Meta Ads account). This mechanism ensures full PDPA 2010 (as amended 2024) compliance.</p>
     </section>
 
     <section class="legal-doc__section">
@@ -135,8 +136,15 @@
     </section>
 
     <section class="legal-doc__section">
-      <h2 class="legal-doc__section-title">10. Indemnity</h2>
-      <p class="legal-doc__clause-text">Each party indemnifies the other against third-party claims arising from their breach of this Agreement, negligence, or IP infringement.</p>
+      <h2 class="legal-doc__section-title">10. Insurance & Indemnity</h2>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">10.1 Insurance</p>
+        <p class="legal-doc__clause-text">The Provider shall maintain during the Term: (a) Professional Indemnity Insurance with coverage of not less than RM 1,000,000 (Ringgit Malaysia One Million); (b) Commercial General Liability Insurance with coverage of not less than RM 1,000,000 (Ringgit Malaysia One Million). Certificates of insurance shall be provided to the Client upon request within 5 business days. <strong>Note (C5 fix — deal blocker):</strong> Before signing any agreement, the Provider must verify these policies exist and are current. If policies are not in place, this clause must not be included until verification is complete.</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">10.2 Indemnity</p>
+        <p class="legal-doc__clause-text">Each party indemnifies the other against third-party claims arising from their breach of this Agreement, negligence, or IP infringement.</p>
+      </div>
     </section>
 
     <section class="legal-doc__section">
