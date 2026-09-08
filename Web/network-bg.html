@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Background</title>
+<style>
+*{margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#050a14}
+canvas{display:block;position:fixed;top:0;left:0}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<script>
+const canvas=document.getElementById('bg'),ctx=canvas.getContext('2d')
+let W,H
+function resize(){
+W=canvas.width=window.innerWidth
+H=canvas.height=window.innerHeight
+}
+resize()
+window.addEventListener('resize',resize)
+
+const DPR=Math.min(window.devicePixelRatio||1,2)
+canvas.width=W*DPR
+canvas.height=H*DPR
+ctx.scale(DPR,DPR)
+
+const NODES=100,EDGE_DIST=280,FOCAL=950
+let time=0,frame=0
+const rand=(a,b)=>Math.random()*(b-a)+a
+const lerp=(a,b,t)=>a+(b-a)*t
+const clamp=(v,m,M)=>Math.max(m,Math.min(M,v))
+
+// 3D nodes on a spherical shell
+const nodes=[]
+for(let i=0;i<NODES;i++){
+const theta=rand(0,Math.PI*2),phi=rand(-Math.PI/2,Math.PI/2),r=rand(250,750)
+nodes.push({
+bx:r*Math.cos(theta)*Math.cos(phi),by:r*Math.sin(phi),bz:r*Math.sin(theta)*Math.cos(phi),
+dx:0,dy:0,dz:0,
+vx:rand(-0.06,0.06),vy:rand(-0.06,0.06),vz:rand(-0.06,0.06),
+pulse:rand(0,Math.PI*2),
+})
+}
+for(const n of nodes){n.dx=n.bx;n.dy=n.by;n.dz=n.bz}
+
+let edges=[]
+function buildEdges(){
+const e=[]
+for(let i=0;i<nodes.length;i++)
+for(let j=i+1;j<nodes.length;j++){
+const d=Math.hypot(nodes[i].dx-nodes[j].dx,nodes[i].dy-nodes[j].dy,nodes[i].dz-nodes[j].dz)
+if(d<EDGE_DIST)e.push({a:i,b:j})
+}
+edges=e
+}
+buildEdges()
+
+const signals=[]
+for(let i=0;i<Math.floor(edges.length*0.6);i++)
+signals.push({ei:i%edges.length,progress:rand(-0.3,1),speed:rand(0.004,0.018),size:rand(1.5,3.5)})
+
+const flares=[]
+for(let i=0;i<30;i++)
+flares.push({x:rand(0,W),y:rand(0,H),vx:rand(-0.5,0.5),vy:rand(-0.5,0.5),life:rand(0,1),maxLife:rand(80,220),size:rand(1,2.5)})
+
+const bursts=[]
+function addBurst(x,y,size){bursts.push({x,y,life:0,maxLife:28,size})}
+
+function rotateY(x,z,a){const c=Math.cos(a),s=Math.sin(a);return{x:x*c+z*s,z:-x*s+z*c}}
+
+function project(x,y,z){
+const s=FOCAL/(FOCAL+z)
+return{x:x*s+W/2,y:y*s+H/2,s,z}
+}
+
+function glow(x,y,r,g,b,rad,alpha){
+alpha=clamp(alpha,0,1)
+const gd=ctx.createRadialGradient(x,y,0,x,y,rad)
+gd.addColorStop(0,`rgba(${r},${g},${b},${alpha})`)
+gd.addColorStop(0.25,`rgba(${r},${g},${b},${alpha*0.5})`)
+gd.addColorStop(1,`rgba(${r},${g},${b},0)`)
+ctx.fillStyle=gd
+ctx.beginPath();ctx.arc(x,y,rad,0,Math.PI*2);ctx.fill()
+}
+
+function depthFade(z){return clamp((z+700)/2400,0,1)}
+
+function loop(){
+frame++
+time+=0.016
+const rotA=time*0.10
+
+// update
+for(const n of nodes){
+n.dx+=n.vx;n.dy+=n.vy;n.dz+=n.vz;n.pulse+=0.025
+if(Math.abs(n.dx-n.bx)>350){n.vx*=-1;n.dx=n.bx+Math.sign(n.dx-n.bx)*350}
+if(Math.abs(n.dy-n.by)>250){n.vy*=-1;n.dy=n.by+Math.sign(n.dy-n.by)*250}
+if(Math.abs(n.dz-n.bz)>350){n.vz*=-1;n.dz=n.bz+Math.sign(n.dz-n.bz)*350}
+}
+if(frame%60===0)buildEdges()
+
+for(const s of signals){
+s.progress+=s.speed
+if(s.progress>1.2){
+if(edges[s.ei]){
+const nb=nodes[edges[s.ei].b]
+const r=rotateY(nb.dx,nb.dz,rotA)
+const p=project(r.x,nb.dy,r.z)
+addBurst(p.x,p.y,s.size*2.5)
+}
+s.progress=rand(-0.4,-0.05);s.speed=rand(0.004,0.018)
+s.ei=Math.floor(Math.random()*edges.length)
+}
+}
+
+for(const f of flares){
+f.x+=f.vx;f.y+=f.vy;f.life++
+if(f.life>f.maxLife||f.x<-80||f.x>W+80||f.y<-80||f.y>H+80){
+f.x=rand(-30,W+30);f.y=rand(-30,H+30)
+f.vx=rand(-0.7,0.7);f.vy=rand(-0.7,0.7);f.life=0;f.maxLife=rand(80,220)
+}
+}
+
+for(let i=bursts.length-1;i>=0;i--){bursts[i].life++;if(bursts[i].life>bursts[i].maxLife)bursts.splice(i,1)}
+
+// --- render ---
+ctx.clearRect(0,0,W,H)
+
+// vignette
+const vg=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.9)
+vg.addColorStop(0,'rgba(5,10,20,0)')
+vg.addColorStop(1,'rgba(5,10,20,0.6)')
+ctx.fillStyle=vg
+ctx.fillRect(0,0,W,H)
+
+// top soft glow
+const tg=ctx.createRadialGradient(W/2,0,0,W/2,0,H*0.6)
+tg.addColorStop(0,'rgba(0,100,200,0.03)')
+tg.addColorStop(1,'rgba(0,100,200,0)')
+ctx.fillStyle=tg
+ctx.fillRect(0,0,W,H)
+
+const projCache=new Map()
+function getProj(i){
+if(projCache.has(i))return projCache.get(i)
+const n=nodes[i],r=rotateY(n.dx,n.dz,rotA),p=project(r.x,n.dy,r.z)
+projCache.set(i,p);return p
+}
+
+ctx.lineCap='round'
+for(const e of edges){
+const p1=getProj(e.a),p2=getProj(e.b)
+const da=depthFade((p1.z+p2.z)/2),dd=Math.hypot(p2.x-p1.x,p2.y-p1.y)
+if(dd<8||da<0.02)continue
+const a=da*0.14
+ctx.strokeStyle=`rgba(0,160,255,${a*0.5})`;ctx.lineWidth=3
+ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke()
+ctx.strokeStyle=`rgba(60,195,255,${a*0.6})`;ctx.lineWidth=0.7
+ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke()
+}
+
+for(const s of signals){
+const e=edges[s.ei]
+if(!e)continue
+const p1=getProj(e.a),p2=getProj(e.b),dd=Math.hypot(p2.x-p1.x,p2.y-p1.y)
+if(dd<8)continue
+const t=clamp(s.progress,0,1)
+const x=lerp(p1.x,p2.x,t),y=lerp(p1.y,p2.y,t)
+const az=(p1.z+p2.z)/2,da=depthFade(az)
+if(da<0.02)continue
+const ang=Math.atan2(p2.y-p1.y,p2.x-p1.x),tl=Math.min(dd*0.1,32)
+for(let i=1;i<=7;i++){
+const ft=i/7
+glow(x-Math.cos(ang)*tl*ft,y-Math.sin(ang)*tl*ft,0,180,255,12-ft*7,da*0.3*(1-ft))
+}
+glow(x,y,0,180,255,22*s.size,da*0.35)
+glow(x,y,100,225,255,9*s.size,da*0.55)
+ctx.shadowColor=`rgba(0,180,255,${da*0.25})`;ctx.shadowBlur=15
+ctx.fillStyle=`rgba(200,240,255,${da*0.9})`
+ctx.beginPath();ctx.arc(x,y,2*s.size,0,Math.PI*2);ctx.fill()
+ctx.shadowBlur=0
+}
+
+for(const b of bursts){
+const t=b.life/b.maxLife,a=(1-t)*0.7
+glow(b.x,b.y,0,180,255,5+t*35,a)
+glow(b.x,b.y,100,220,255,2+t*10,a*0.5)
+}
+
+for(const f of flares){
+const a=0.5*(1-f.life/f.maxLife)
+glow(f.x,f.y,0,180,255,14,a*0.12)
+glow(f.x,f.y,100,212,255,5,a*0.18)
+ctx.fillStyle=`rgba(200,240,255,${a*0.45})`
+ctx.beginPath();ctx.arc(f.x,f.y,f.size,0,Math.PI*2);ctx.fill()
+}
+
+const order=nodes.map((n,i)=>i).sort((a,b)=>getProj(a).z-getProj(b).z)
+for(const i of order){
+const n=nodes[i],p=getProj(i),da=depthFade(p.z)
+if(da<0.02)continue
+const pulse=0.6+0.4*Math.sin(n.pulse+time*0.5),r=2.2*p.s*pulse
+glow(p.x,p.y,0,180,255,18*p.s,da*0.10)
+ctx.shadowColor=`rgba(0,180,255,${da*0.12})`;ctx.shadowBlur=12
+ctx.fillStyle=`rgba(0,180,255,${da*0.4})`
+ctx.beginPath();ctx.arc(p.x,p.y,r*0.45,0,Math.PI*2);ctx.fill()
+ctx.shadowBlur=0
+ctx.fillStyle=`rgba(180,235,255,${da*0.6})`
+ctx.beginPath();ctx.arc(p.x,p.y,r*0.12,0,Math.PI*2);ctx.fill()
+}
+
+requestAnimationFrame(loop)
+}
+loop()
+</script>
+</body>
+</html>

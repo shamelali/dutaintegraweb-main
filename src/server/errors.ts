@@ -103,6 +103,25 @@ export async function reportError(err: unknown, context: Partial<ErrorReport> = 
     "error reported",
   );
 
+  // Try official Sentry SDK first (initialized in instrumentation.ts).
+  try {
+    const Sentry = await import("@sentry/node");
+    const client = Sentry.getClient();
+    if (client) {
+      Sentry.withScope((scope) => {
+        if (report.route) scope.setTag("route", report.route);
+        if (report.userId) scope.setUser({ id: report.userId });
+        if (report.bookingId) scope.setExtra("bookingId", report.bookingId);
+        if (report.metadata) scope.setExtras(report.metadata);
+        Sentry.captureException(err);
+      });
+      return;
+    }
+  } catch {
+    // SDK not available — fall through to manual envelope sender.
+  }
+
+  // Fallback: manual Sentry envelope (no SDK).
   const sentryDsn = process.env.SENTRY_DSN;
   if (sentryDsn) {
     await sendToSentry(sentryDsn, report);
