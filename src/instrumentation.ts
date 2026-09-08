@@ -3,6 +3,16 @@ export async function register() {
     const { validateEnv } = await import("@/env");
     validateEnv();
 
+    // Initialize Sentry with feature flags integration.
+    const sentryDsn = process.env.SENTRY_DSN;
+    if (sentryDsn) {
+      const Sentry = await import("@sentry/node");
+      Sentry.init({
+        dsn: sentryDsn,
+        integrations: [Sentry.featureFlagsIntegration()],
+      });
+    }
+
     // Initialize Agnost analytics.
     const { initAgnost, shutdownAgnost } = await import("@/server/agnost");
     initAgnost();
