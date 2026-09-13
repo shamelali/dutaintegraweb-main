@@ -1,5 +1,8 @@
 {
+  "framework": null,
+  "buildCommand": "",
   "outputDirectory": "Web",
+  "installCommand": "",
   "redirects": [
     { "source": "/ms/:path*", "destination": "/:path*" },
     { "source": "/ms", "destination": "/" }
