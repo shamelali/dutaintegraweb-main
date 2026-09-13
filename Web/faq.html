@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — Common Questions Answered | Duta Integra Solutions</title>
+<meta name="description" content="Got questions? We have answers. Data ownership, contract terms, AI reliability, pricing, and more — no corporate jargon, just straight answers.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" href="../assets/dis-favicon.png">
+<link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:rgba(0,0,0,.3);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;cursor:pointer;display:flex;align-items:center;gap:12px}
+.logo a{color:white;text-decoration:none}
+.logo span{color:var(--electric)}
+.logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;background:linear-gradient(180deg,#e8eaf0 0%,#b0b8c8 40%,#8a94a8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.logo img{height:100px;width:auto}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--electric)}
+.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
+.section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;line-height:1.1;margin-bottom:.9rem}
+.section-sub{color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 3rem;line-height:1.75;font-size:.95rem}
+/* HERO */
+.faq-hero{padding:6rem 6% 2rem;text-align:center;position:relative;overflow:hidden}
+.faq-hero::before{content:'';position:absolute;top:-30%;right:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,180,255,.08) 0%,transparent 65%);pointer-events:none}
+/* FAQ ITEMS */
+.faq-list{max-width:720px;margin:0 auto 4rem;padding:0 6%}
+.faq-category{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--electric);letter-spacing:.1em;text-transform:uppercase;margin:2rem 0 .8rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.faq-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;margin-bottom:.8rem;overflow:hidden;transition:border-color .2s}
+.faq-item:hover{border-color:rgba(255,255,255,.15)}
+.faq-q{width:100%;background:none;border:none;color:white;font-size:.95rem;font-weight:600;padding:1.1rem 1.3rem;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'DM Sans',sans-serif;gap:1rem}
+.faq-q span{flex:1}
+.faq-q i{color:var(--electric);font-size:1.1rem;transition:transform .25s;flex-shrink:0}
+.faq-item.open .faq-q i{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 1.3rem}
+.faq-item.open .faq-a{max-height:400px;padding:0 1.3rem 1.2rem}
+.faq-a p{color:rgba(255,255,255,.6);font-size:.88rem;line-height:1.75}
+.faq-a strong{color:var(--white)}
+/* BADGES */
+.badges{padding:3rem 6%;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+.badge-row{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:1.5rem}
+.badge-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem 2.4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:180px}
+/* CTA */
+.cta{text-align:center;padding:3rem 6%;border-top:1px solid rgba(255,255,255,.06)}
+.cta a{display:inline-block;padding:.8rem 2rem;background:var(--electric);color:var(--navy);text-decoration:none;border-radius:8px;font-weight:700;transition:all .2s;margin:.3rem}
+.cta a:hover{background:#0090cc;color:white}
+/* FOOTER */
+footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
+.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;cursor:pointer;transition:color .2s}
+.footer-col a:hover{color:var(--electric)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
+@media(max-width:768px){.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <a href="/"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra</span></a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/services.html">Services</a></li>
+    <li><a href="/cases.html">Case Studies</a></li>
+    <li><a href="/pricing.html">Pricing</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="/portal/login.html" class="nav-cta">Client Portal</a></li>
+  </ul>
+</nav>
+
+<section class="faq-hero">
+  <div class="section-eyebrow">FAQ</div>
+  <h1 class="section-title">No Jargon.<br>Just Answers.</h1>
+  <p class="section-sub">SME owners ask us the same handful of questions. Here they are, with straight answers — no sales pitch, no corporate fluff.</p>
+</section>
+
+<div class="faq-list" id="faqList">
+  <div class="faq-category">Data Ownership & Security</div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Who owns my data?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>You do. Always.</strong> We never sell, share, or access your data beyond what's needed to run your IT systems. Your data lives in infrastructure you control — your cloud account, your servers. When you leave DI, you take everything with zero friction.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Is my data stored in Malaysia?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>Yes, by default.</strong> We deploy on AWS Asia Pacific (Singapore) or Azure Malaysia where available. If your compliance requires on-premises, we can do that too. We never store your data in jurisdictions you haven't approved.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>What happens to my data if I cancel?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>You export, we delete.</strong> We give you 30 days to export everything — files, databases, configs, logs. After that we securely wipe our copies within 7 days. No lock-in. No hostage situations. Your data is yours.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Are you PDPA-compliant?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>Yes — and we help you be too.</strong> Every DI service includes a free PDPA readiness assessment. We sign a Data Processing Agreement with every client. We've built PDPA compliance tools that our own clients use. Practice what we preach.</p></div>
+  </div>
+
+  <div class="faq-category">Contracts & Pricing</div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Do I need a long-term contract?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>No. Month-to-month on all tiers.</strong> We earn your business every month. Foundation and Growth plans are billed monthly with no lock-in. AI Partner is quarterly (3-month minimum) because the AI training and integration work needs runway — but you can cancel after that.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>What's included in the price?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>Everything listed — no hidden fees.</strong> Each tier includes all the services described on our pricing page. No per-ticket charges, no "premium support" upsells, no surprise invoices. The only add-on is hardware if you need it (servers, firewalls), and we'll quote that separately before you approve.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Can I upgrade or downgrade anytime?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>Yes.</strong> Upgrades take effect immediately, downgrades at your next billing cycle. No penalties, no fees. Most clients start on Foundation, prove the value, then move to Growth within 3 months.</p></div>
+  </div>
+
+  <div class="faq-category">AI & Reliability</div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Can I really trust AI with my business?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>We don't ask you to trust blindly.</strong> Every AI system we deploy is supervised — human-in-the-loop for critical decisions, full audit logs, and a manual override for every automated process. The AI recommends, you approve. Over time, as confidence builds, we increase automation with your explicit go-ahead.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>What if the AI makes a mistake?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>We catch it before it matters.</strong> Every automated action is logged and monitored. If something goes wrong, we roll back instantly and fix the root cause. Our SLA guarantees 4-hour response on critical issues. We also review AI performance monthly and tune it based on your actual outcomes — not assumptions.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Will AI replace my IT staff?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>No — it frees them up.</strong> AI handles the repetitive stuff (password resets, patch installs, report generation) so your IT team can focus on strategic work. Most of our clients keep the same team but get 3x the output. Your people become more valuable, not less.</p></div>
+  </div>
+
+  <div class="faq-category">Getting Started</div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>How long does onboarding take?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>1–2 weeks for Foundation, 3–4 weeks for Growth, 4–6 weeks for AI Partner.</strong> We handle the heavy lifting — data migration, tool setup, staff training. You get a dedicated onboarding manager who handles everything so you can keep running your business.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Do I need to be technical?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>No. That's our job.</strong> We explain everything in plain language. If you can send an email, you can work with DI. Our client portal shows you what's happening without requiring any tech knowledge, and our team is always a WhatsApp message away.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)"><span>Can I try before I commit?</span><i class="ti ti-chevron-down"></i></button>
+    <div class="faq-a"><p><strong>Yes — 14-day free trial.</strong> We'll set up the Foundation tier for you, fully configured, for 14 days. No credit card required. If it's not a fit, we'll hand over everything we set up and walk away. No pressure, no hard sell.</p></div>
+  </div>
+</div>
+
+<section class="cta">
+  <p class="section-sub" style="margin:0 auto 1.5rem">Still have questions? We'll answer them in plain language.</p>
+  <a href="/contact.html">Talk to Us</a>
+  <a href="/calculator.html">Calculate Your Savings</a>
+</section>
+
+<section class="badges">
+  <div class="section-eyebrow">Trusted & Accredited</div>
+  <div class="badge-row">
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem 2.4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:180px">
+      <div style="font-size:1.8rem;color:var(--electric)"><i class="ti ti-building"></i></div>
+      <div style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600">Member</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:white">MDEC</div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.4)">Malaysia Digital Economy Corp</div>
+    </div>
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem 2.4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:180px">
+      <div style="font-size:1.8rem;color:var(--electric)"><i class="ti ti-server"></i></div>
+      <div style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600">Member</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:white">PIKOM</div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.4)">Persatuan Industri Komputer Malaysia</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo"><picture><source srcset="../assets/dis-logo-footer.webp" type="image/webp"><img src="../assets/dis-logo-footer.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div>
+      <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow with smart technology.</p>
+    </div>
+    <div class="footer-col"><h5>Company</h5><a href="/about.html">About Us</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a><a href="/stats.html">Live Stats</a><a href="/calculator.html">Calculator</a><a href="/faq.html">FAQ</a></div>
+    <div class="footer-col"><h5>Services</h5><a href="/services.html">AI Development</a><a href="/services.html">Managed IT</a><a href="/services.html">Cloud Migration</a><a href="/services.html">IT Security</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p>
+    <p>info@dutaintegra.my</p>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>

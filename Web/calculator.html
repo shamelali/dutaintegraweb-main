@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automation Savings Calculator | Duta Integra Solutions</title>
+<meta name="description" content="Calculate how much time and money your SME can save with Duta Integra's managed IT and AI automation services.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" href="../assets/dis-favicon.png">
+<link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:rgba(0,0,0,.3);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;cursor:pointer;display:flex;align-items:center;gap:12px}
+.logo a{color:white;text-decoration:none}
+.logo span{color:var(--electric)}
+.logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;background:linear-gradient(180deg,#e8eaf0 0%,#b0b8c8 40%,#8a94a8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.logo img{height:100px;width:auto}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--electric)}
+.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
+.section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;line-height:1.1;margin-bottom:.9rem}
+.section-sub{color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 3rem;line-height:1.75;font-size:.95rem}
+/* HERO */
+.calc-hero{padding:6rem 6% 2rem;text-align:center;position:relative;overflow:hidden}
+.calc-hero::before{content:'';position:absolute;top:-30%;right:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,180,255,.08) 0%,transparent 65%);pointer-events:none}
+/* FORM */
+.calc-form{max-width:600px;margin:0 auto 4rem;padding:0 6%}
+.form-group{margin-bottom:1.5rem}
+.form-group label{display:block;color:rgba(255,255,255,.7);font-size:.85rem;margin-bottom:.4rem;font-weight:600}
+.form-group input[type=number]{width:100%;padding:.85rem 1rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:white;font-size:1rem;font-family:'DM Sans',sans-serif;transition:border-color .2s}
+.form-group input:focus{outline:none;border-color:var(--electric)}
+.pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-top:.5rem}
+.pain-chip{padding:.6rem 1rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;text-align:center;font-size:.85rem;color:rgba(255,255,255,.7);transition:all .2s;user-select:none}
+.pain-chip:hover{border-color:var(--electric);color:var(--electric)}
+.pain-chip.active{background:rgba(0,180,255,.15);border-color:var(--electric);color:var(--electric);font-weight:600}
+.calc-btn{width:100%;padding:1rem;background:var(--electric);color:var(--navy);border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.calc-btn:hover{background:#0090cc;color:white}
+.calc-btn:disabled{opacity:.5;cursor:not-allowed}
+/* RESULTS */
+.results{display:none;padding:0 6% 4rem}
+.results.show{display:block}
+.results-header{text-align:center;margin-bottom:3rem}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:1000px;margin:0 auto}
+.tier-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:2rem;transition:all .3s;position:relative}
+.tier-card:hover{border-color:var(--electric);background:rgba(0,180,255,.04);transform:translateY(-3px)}
+.tier-card.recommended{border-color:var(--electric);background:rgba(0,180,255,.08)}
+.tier-badge{position:absolute;top:-10px;right:16px;background:var(--electric);color:var(--navy);font-size:.7rem;font-weight:700;padding:.3rem .8rem;border-radius:12px;letter-spacing:.05em}
+.tier-name{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:white;margin-bottom:.3rem}
+.tier-price{color:var(--electric);font-size:.9rem;font-weight:600;margin-bottom:1rem}
+.tier-desc{color:rgba(255,255,255,.5);font-size:.85rem;margin-bottom:1.2rem;line-height:1.6}
+.tier-stats{display:flex;flex-direction:column;gap:.8rem}
+.tier-stat{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.tier-stat:last-child{border-bottom:none}
+.tier-stat-label{color:rgba(255,255,255,.5);font-size:.82rem}
+.tier-stat-value{font-weight:700;color:var(--electric);font-size:1rem}
+.tier-stat-value.positive{color:#4caf50}
+.tier-stat-value.negative{color:#ff5252}
+.cta-row{text-align:center;margin-top:3rem}
+.cta-row a{display:inline-block;padding:.8rem 2rem;background:var(--electric);color:var(--navy);text-decoration:none;border-radius:8px;font-weight:700;transition:all .2s}
+.cta-row a:hover{background:#0090cc;color:white}
+/* BADGES */
+.badges{padding:3rem 6%;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+.badge-row{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:1.5rem}
+.badge-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem 2.4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:180px}
+/* FOOTER */
+footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
+.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;cursor:pointer;transition:color .2s}
+.footer-col a:hover{color:var(--electric)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
+@media(max-width:768px){.tier-grid{grid-template-columns:1fr}.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <a href="/"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra</span></a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/services.html">Services</a></li>
+    <li><a href="/cases.html">Case Studies</a></li>
+    <li><a href="/pricing.html">Pricing</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="/portal/login.html" class="nav-cta">Client Portal</a></li>
+  </ul>
+</nav>
+
+<section class="calc-hero">
+  <div class="section-eyebrow">Savings Calculator</div>
+  <h1 class="section-title">How Much Can<br>You Save?</h1>
+  <p class="section-sub">Enter your team's manual workload and see the real hours and ringgit saved by each DI tier. No fluff — just the numbers.</p>
+</section>
+
+<form class="calc-form" id="calcForm" onsubmit="return false">
+  <div class="form-group">
+    <label>Team size</label>
+    <input type="number" id="staff" min="1" max="500" value="10" required>
+  </div>
+  <div class="form-group">
+    <label>Manual IT/admin hours per week (total across team)</label>
+    <input type="number" id="manualHours" min="1" max="2000" value="20" required>
+  </div>
+  <div class="form-group">
+    <label>Your biggest pain points (optional — amplifies savings)</label>
+    <div class="pain-grid">
+      <div class="pain-chip" data-value="compliance">PDPA / Compliance</div>
+      <div class="pain-chip" data-value="reporting">Manual Reporting</div>
+      <div class="pain-chip" data-value="ticketing">Ticketing / Support</div>
+      <div class="pain-chip" data-value="backup">Backup / DR</div>
+      <div class="pain-chip" data-value="security">Security Gaps</div>
+      <div class="pain-chip" data-value="onboarding">Staff Onboarding</div>
+    </div>
+  </div>
+  <button class="calc-btn" type="button" id="calcBtn" onclick="runCalc()">Calculate Savings</button>
+</form>
+
+<section class="results" id="results">
+  <div class="results-header">
+    <div class="section-eyebrow">Your Results</div>
+    <h2 class="section-title" style="font-size:2rem">Estimated Savings</h2>
+  </div>
+  <div class="tier-grid" id="tierGrid"></div>
+  <div class="cta-row">
+    <a href="/contact.html">Get a Proposal — It's Free</a>
+  </div>
+</section>
+
+<section class="badges">
+  <div class="section-eyebrow">Trusted & Accredited</div>
+  <div class="badge-row">
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem 2.4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:180px">
+      <div style="font-size:1.8rem;color:var(--electric)"><i class="ti ti-building"></i></div>
+      <div style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600">Member</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:white">MDEC</div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.4)">Malaysia Digital Economy Corp</div>
+    </div>
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem 2.4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:180px">
+      <div style="font-size:1.8rem;color:var(--electric)"><i class="ti ti-server"></i></div>
+      <div style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600">Member</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:white">PIKOM</div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.4)">Persatuan Industri Komputer Malaysia</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo"><picture><source srcset="../assets/dis-logo-footer.webp" type="image/webp"><img src="../assets/dis-logo-footer.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div>
+      <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow with smart technology.</p>
+    </div>
+    <div class="footer-col"><h5>Company</h5><a href="/about.html">About Us</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a><a href="/stats.html">Live Stats</a><a href="/calculator.html">Calculator</a><a href="/faq.html">FAQ</a></div>
+    <div class="footer-col"><h5>Services</h5><a href="/services.html">AI Development</a><a href="/services.html">Managed IT</a><a href="/services.html">Cloud Migration</a><a href="/services.html">IT Security</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p>
+    <p>info@dutaintegra.my</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.pain-chip').forEach(el => {
+  el.addEventListener('click', () => el.classList.toggle('active'));
+});
+
+async function runCalc() {
+  const btn = document.getElementById('calcBtn');
+  btn.disabled = true;
+  btn.textContent = 'Calculating…';
+
+  const staff = parseInt(document.getElementById('staff').value, 10);
+  const manualHours = parseInt(document.getElementById('manualHours').value, 10);
+  const painPoints = [...document.querySelectorAll('.pain-chip.active')].map(el => el.dataset.value);
+
+  try {
+    const res = await fetch('/api/calculator', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ staff, manualHours, painPoints }),
+    });
+    const data = await res.json();
+
+    const grid = document.getElementById('tierGrid');
+    grid.innerHTML = data.tiers.map(t => `
+      <div class="tier-card${t.name === data.recommendedTier ? ' recommended' : ''}">
+        ${t.name === data.recommendedTier ? '<div class="tier-badge">Recommended</div>' : ''}
+        <div class="tier-name">${t.name}</div>
+        <div class="tier-price">RM ${t.monthlyPrice.toLocaleString()}/mo</div>
+        <div class="tier-desc">${t.description}</div>
+        <div class="tier-stats">
+          <div class="tier-stat"><span class="tier-stat-label">Hours saved / week</span><span class="tier-stat-value">${t.hoursSaved}</span></div>
+          <div class="tier-stat"><span class="tier-stat-label">Monthly cost saved</span><span class="tier-stat-value positive">RM ${t.monthlyCostSaved.toLocaleString()}</span></div>
+          <div class="tier-stat"><span class="tier-stat-label">Annual cost saved</span><span class="tier-stat-value positive">RM ${t.annualCostSaved.toLocaleString()}</span></div>
+          <div class="tier-stat"><span class="tier-stat-label">ROI</span><span class="tier-stat-value ${t.roi >= 0 ? 'positive' : 'negative'}">${t.roi >= 0 ? '+' : ''}${t.roi}%</span></div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('results').classList.add('show');
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    console.error(err);
+    btn.textContent = 'Try Again';
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
