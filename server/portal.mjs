@@ -1,4 +1,7 @@
-import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
+import { randomBytes, scrypt, createHash, timingSafeEqual } from "node:crypto";
+import { promisify } from "node:util";
+
+const scryptAsync = promisify(scrypt);
 
 /**
  * Client portal auth + API endpoints.
@@ -27,21 +30,49 @@ import { buildDigestForClient, sendDigestEmail } from "./digest.mjs";
 
 // ── password hashing ─────────────────────────────────────────────────────────
 
-const ALGO = "sha256";
+const SCRYPT_KEYLEN = 64;
+const SCRYPT_COST = 16384;
+const SCRYPT_BLOCK_SIZE = 8;
+const SCRYPT_PARALLELIZATION = 1;
 
-export function hashPassword(password) {
+export async function hashPassword(password) {
   const salt = randomBytes(16).toString("hex");
-  const hash = createHash(ALGO).update(`${salt}:${password}`).digest("hex");
-  return `${salt}:${hash}`;
+  const hash = await scryptAsync(password, salt, SCRYPT_KEYLEN, {
+    cost: SCRYPT_COST,
+    blockSize: SCRYPT_BLOCK_SIZE,
+    parallelization: SCRYPT_PARALLELIZATION,
+  });
+  return `scrypt:${SCRYPT_KEYLEN}:${SCRYPT_COST}:${SCRYPT_BLOCK_SIZE}:${SCRYPT_PARALLELIZATION}:${salt}:${hash.toString("hex")}`;
 }
 
-export function verifyPassword(password, stored) {
-  if (typeof stored !== "string" || !stored.includes(":")) return false;
-  const [salt, expectedHash] = stored.split(":");
-  const hash = createHash(ALGO).update(`${salt}:${password}`).digest("hex");
-  const a = Buffer.from(expectedHash, "hex");
-  const b = Buffer.from(hash, "hex");
-  return a.length === b.length && timingSafeEqual(a, b);
+export async function verifyPassword(password, stored) {
+  if (typeof stored !== "string") return false;
+
+  // Support scrypt format
+  if (stored.startsWith("scrypt:")) {
+    const parts = stored.split(":");
+    if (parts.length !== 7) return false;
+    const [, keylen, cost, blockSize, parallelization, salt, expectedHash] = parts;
+    const hash = await scryptAsync(password, salt, Number(keylen), {
+      cost: Number(cost),
+      blockSize: Number(blockSize),
+      parallelization: Number(parallelization),
+    });
+    const a = Buffer.from(expectedHash, "hex");
+    const b = hash;
+    return a.length === b.length && timingSafeEqual(a, b);
+  }
+
+  // Legacy sha256 format (for migration)
+  if (stored.includes(":")) {
+    const [salt, expectedHash] = stored.split(":");
+    const hash = createHash("sha256").update(`${salt}:${password}`).digest("hex");
+    const a = Buffer.from(expectedHash, "hex");
+    const b = Buffer.from(hash, "hex");
+    return a.length === b.length && timingSafeEqual(a, b);
+  }
+
+  return false;
 }
 
 // ── session management ───────────────────────────────────────────────────────
@@ -144,7 +175,7 @@ export async function handleLogin(req, res) {
   const client = await findClientByEmail(email.toLowerCase().trim());
   if (!client) return send(res, 401, { error: "Invalid email or password" });
   if (client.status !== "active") return send(res, 403, { error: "Account is not active" });
-  if (!verifyPassword(password, client.passwordHash)) {
+  if (!(await verifyPassword(password, client.passwordHash))) {
     return send(res, 401, { error: "Invalid email or password" });
   }
 
@@ -264,7 +295,7 @@ export async function handleAdminClients(req, res) {
     const client = await createClient({
       name: name.trim(),
       email,
-      passwordHash: hashPassword(password),
+      passwordHash: await hashPassword(password),
       company: company?.trim() || null,
       tier,
     });
