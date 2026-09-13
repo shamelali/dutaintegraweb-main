@@ -343,6 +343,64 @@ async function handleAdminEnquiries(req, res) {
   send(res, 200, { count: rows.length, enquiries: rows });
 }
 
+
+// ── tier-recommendation quiz ────────────────────────────────────────────
+// Score-based tier recommendation (Foundation / Growth / AI Partner)
+// Adapted from the Explee 7-step lead-gen playbook.
+
+function scoreQuiz(body) {
+  let score = 0;
+  const teamSize = Number(body.teamSize) || 0;
+  const itSpend = Number(body.itSpend) || 0;
+  const painPoints = Array.isArray(body.painPoints) ? body.painPoints : [];
+
+  if (teamSize <= 5) score += 10;
+  else if (teamSize <= 20) score += 20;
+  else score += 30;
+
+  if (itSpend < 5000) score += 10;
+  else if (itSpend < 20000) score += 20;
+  else score += 30;
+
+  if (painPoints.includes("manual_work")) score += 15;
+  if (painPoints.includes("scaling")) score += 15;
+  if (painPoints.includes("security")) score += 15;
+  if (painPoints.includes("ai_automation")) score += 20;
+  return score;
+}
+
+async function handleQuiz(req, res) {
+  try {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
+    const body = parsed.data;
+
+    if (!body.teamSize || !body.itSpend || !Array.isArray(body.painPoints))
+      return send(res, 400, { error: "Missing teamSize, itSpend, or painPoints" });
+
+    const score = scoreQuiz(body);
+    let tier, description, nextStep;
+
+    if (score < 35) {
+      tier = "Foundation";
+      description = "Managed IT support for established operations — proactive monitoring, fast response, predictable billing.";
+      nextStep = "Book a 30-minute audit call to see what Foundation covers for your team.";
+    } else if (score < 60) {
+      tier = "Growth";
+      description = "Scaled managed IT plus dedicated account management — SLAs, priority response, monthly health reports.";
+      nextStep = "Schedule a Growth assessment — we map your current stack and recommend the exact tier.";
+    } else {
+      tier = "AI Partner";
+      description = "Full AI-first partnership — custom automation, workflow design, and strategic AI roadmapping.";
+      nextStep = "Let us build a custom AI roadmap for your team — we start with a discovery workshop.";
+    }
+    return send(res, 200, { tier, score, description, nextStep });
+  } catch (err) {
+    console.error("[server] quiz error:", err);
+    return send(res, 500, { error: "Quiz scoring failed. Please try again." });
+  }
+}
+
 export async function handle(req, res) {
   const urlPath = req.url ?? "/";
   // Route on the pathname so query strings (e.g. ?token=) still reach handlers.
@@ -350,6 +408,7 @@ export async function handle(req, res) {
   try {
     if (pathname === "/api/send-email") return await handleSendEmail(req, res);
     if (pathname === "/admin/enquiries") return await handleAdminEnquiries(req, res);
+    if (pathname === "/api/quiz") return await handleQuiz(req, res);
     if (pathname === "/api/health") {
       return send(res, 200, { ok: true, inboxConfigured: Boolean(resolveInboxEmail()) });
     }
