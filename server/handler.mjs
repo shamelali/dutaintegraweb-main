@@ -401,6 +401,72 @@ async function handleQuiz(req, res) {
   }
 }
 
+
+// ── case studies ──────────────────────────────────────────────────
+// Static case study data. In production this could come from Supabase
+// or a CMS. For now, these are the three active retainer clients.
+
+const CASE_STUDIES = [
+  {
+    id: 'lapango',
+    client: 'Lapango',
+    tier: 'Growth',
+    title: 'Scaling Support Operations with Managed IT',
+    desc: 'Lapango needed to scale their support team without the overhead of building an internal IT department. We deployed a managed IT stack with proactive monitoring and SLA-backed response times.',
+    tags: ['Managed IT', 'SLA Support', 'Team Scaling'],
+    result: '30% reduction in downtime, 2x support capacity within 90 days.'
+  },
+  {
+    id: 'eastelpro',
+    client: 'Eastelpro',
+    tier: 'Foundation',
+    title: 'Predictable IT Budgeting for Growing SME',
+    desc: 'Eastelpro was spending unpredictably on IT emergencies. We moved them to a predictable monthly retainer with proactive maintenance and fast response guarantees.',
+    tags: ['Foundation', 'Predictable Billing', 'Proactive Maintenance'],
+    result: '40% lower IT costs year-over-year, zero emergency incidents.'
+  },
+  {
+    id: 'agmx',
+    client: 'AGMX',
+    tier: 'AI Partner',
+    title: 'Automating Compliance with AI-First Workflows',
+    desc: 'AGMX needed to automate their regulatory compliance tracking. We built custom AI workflows that monitor, flag, and report compliance status in real time.',
+    tags: ['AI Automation', 'Compliance', 'Custom Workflows'],
+    result: '60% faster compliance reporting, full audit trail automated.'
+  }
+];
+
+async function handleCaseStudies(req, res) {
+  return send(res, 200, { cases: CASE_STUDIES });
+}
+
+
+// ── testimonial capture ─────────────────────────────────────
+// Standing ask built into the offboarding/monthly-review process.
+// Records a submitted testimonial for a client.
+
+async function handleTestimonial(req, res) {
+  try {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
+    const body = parsed.data;
+
+    const { client, tier, quote, author } = body;
+    if (!client || !quote || !author)
+      return send(res, 400, { error: "Missing client, quote, or author" });
+    if (typeof quote !== 'string' || quote.length > 500)
+      return send(res, 400, { error: "Quote must be 1-500 characters" });
+
+    // TODO: Persist to Supabase or JSONL store
+    console.log("[testimonial] received:", { client, tier, author, quote: quote.slice(0, 60) + '...' });
+
+    return send(res, 201, { ok: true, message: "Testimonial recorded. Thank you!" });
+  } catch (err) {
+    console.error("[server] testimonial error:", err);
+    return send(res, 500, { error: "Failed to record testimonial. Please try again." });
+  }
+}
+
 export async function handle(req, res) {
   const urlPath = req.url ?? "/";
   // Route on the pathname so query strings (e.g. ?token=) still reach handlers.
@@ -408,6 +474,8 @@ export async function handle(req, res) {
   try {
     if (pathname === "/api/send-email") return await handleSendEmail(req, res);
     if (pathname === "/admin/enquiries") return await handleAdminEnquiries(req, res);
+    if (pathname === "/api/testimonial") return await handleTestimonial(req, res);
+    if (pathname === "/api/case-studies") return await handleCaseStudies(req, res);
     if (pathname === "/api/quiz") return await handleQuiz(req, res);
     if (pathname === "/api/health") {
       return send(res, 200, { ok: true, inboxConfigured: Boolean(resolveInboxEmail()) });
