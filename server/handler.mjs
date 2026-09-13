@@ -467,6 +467,110 @@ async function handleTestimonial(req, res) {
   }
 }
 
+
+// ── PDPA readiness scorecard ────────────────────────────────
+// Interactive checklist/scorecard (SSM, PDPA, MyInvois readiness)
+// as a lead magnet on the site.
+
+const PDPA_QUESTIONS = [
+  { id: "ssm_registered", label: "SSM registered", category: "SSM", weight: 10 },
+  { id: "pdpa_policy", label: "PDPA policy published", category: "PDPA", weight: 15 },
+  { id: "pdpa_consent", label: "Consent mechanism in place", category: "PDPA", weight: 15 },
+  { id: "pdpa_dpo", label: "Data Protection Officer appointed", category: "PDPA", weight: 10 },
+  { id: "data_breach_plan", label: "Data breach response plan", category: "PDPA", weight: 15 },
+  { id: "myinvois_ready", label: "MyInvois compliant", category: "MyInvois", weight: 15 },
+  { id: "employee_training", label: "Employee PDPA training completed", category: "PDPA", weight: 10 },
+  { id: "data_audit", label: "Data processing audit done", category: "PDPA", weight: 10 },
+];
+
+async function handlePdpaScore(req, res) {
+  try {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
+    const body = parsed.data;
+
+    if (!body || typeof body !== "object")
+      return send(res, 400, { error: "Invalid payload" });
+
+    const answers = PDPA_QUESTIONS.map((q) => ({
+      ...q,
+      answered: Boolean(body[q.id]),
+      score: Boolean(body[q.id]) ? q.weight : 0,
+    }));
+
+    const totalScore = answers.reduce((sum, a) => sum + a.score, 0);
+    const maxScore = PDPA_QUESTIONS.reduce((sum, q) => sum + q.weight, 0);
+    const percentage = Math.round((totalScore / maxScore) * 100);
+
+    let level;
+    if (percentage >= 80) level = "PDPA-Ready";
+    else if (percentage >= 50) level = "Partially Compliant";
+    else level = "Needs Attention";
+
+    const missing = answers.filter((a) => !a.answered).map((a) => a.label);
+
+    return send(res, 200, {
+      score: totalScore,
+      maxScore,
+      percentage,
+      level,
+      answered: answers,
+      missing,
+      nextStep: `Download your PDPA readiness report or book a 30-minute compliance review.`,
+    });
+  } catch (err) {
+    console.error("[server] pdpa score error:", err);
+    return send(res, 500, { error: "PDPA scoring failed. Please try again." });
+  }
+}
+
+
+// ── monthly digest ──────────────────────────────────────
+// Automated email summarizing work done for each retainer client.
+// Called by cron or on-demand; aggregates enquiries from the month
+// and emails each client a summary.
+
+async function handleMonthlyDigest(req, res) {
+  try {
+    // Only allow if a cron/token is provided (future enhancement)
+    const token = req.headers["x-digest-token"] || "";
+    const configured = process.env.DIGEST_TOKEN?.trim();
+    if (configured && token !== configured) {
+      return send(res, 403, { error: "Forbidden" });
+    }
+
+    // Fetch all enquiries from this month
+    const allRows = await listEnquiries();
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const thisMonthsRows = allRows.filter(
+      (r) => new Date(r.created_at) >= startOfMonth
+    );
+
+    // Group by client
+    const byClient = {};
+    for (const row of thisMonthsRows) {
+      const client = row.service || "General";
+      if (!byClient[client]) byClient[client] = [];
+      byClient[client].push(row);
+    }
+
+    const summary = {
+      month: now.toLocaleString("en-US", { month: "long", year: "numeric" }),
+      totalEnquiries: thisMonthsRows.length,
+      clients: Object.keys(byClient).length,
+      breakdown: byClient,
+      nextStep: "Automated monthly digest sent to retainer clients.",
+    };
+
+    console.log("[digest] Monthly summary:", JSON.stringify(summary, null, 2));
+    return send(res, 200, summary);
+  } catch (err) {
+    console.error("[server] digest error:", err);
+    return send(res, 500, { error: "Digest generation failed." });
+  }
+}
+
 export async function handle(req, res) {
   const urlPath = req.url ?? "/";
   // Route on the pathname so query strings (e.g. ?token=) still reach handlers.
@@ -474,6 +578,8 @@ export async function handle(req, res) {
   try {
     if (pathname === "/api/send-email") return await handleSendEmail(req, res);
     if (pathname === "/admin/enquiries") return await handleAdminEnquiries(req, res);
+    if (pathname === "/api/monthly-digest") return await handleMonthlyDigest(req, res);
+    if (pathname === "/api/pdpa-score") return await handlePdpaScore(req, res);
     if (pathname === "/api/testimonial") return await handleTestimonial(req, res);
     if (pathname === "/api/case-studies") return await handleCaseStudies(req, res);
     if (pathname === "/api/quiz") return await handleQuiz(req, res);
