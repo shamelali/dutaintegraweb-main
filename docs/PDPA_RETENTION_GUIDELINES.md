@@ -54,8 +54,8 @@ node scripts/retain-purge.js --mode=purge --weeks=365*7 --confirm
 
 ### Bucket Configuration
 
-- **Bucket name**: `leish-files`
-- **Encryption**: SSE-KMS with alias `leish/s3-key`
+- **Bucket name**: `[PROJECT]-files`
+- **Encryption**: SSE-KMS with alias `[PROJECT]/s3-key`
 - **Folder structure**:
   - `invoices/YYYY/MM/`
   - `receipts/YYYY/MM/`

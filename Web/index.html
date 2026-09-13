@@ -860,16 +860,16 @@ body.dark-mode .page{background:#0a0f1d}
     <div class="contact-form">
       <h3>Send Us a Message</h3>
       <div class="form-row">
-        <div class="form-group"><label>Full Name *</label><input type="text" placeholder="Ahmad bin Rahman"></div>
-        <div class="form-group"><label>Company Name</label><input type="text" placeholder="Your Company Sdn Bhd"></div>
+        <div class="form-group"><label>Full Name *</label><input type="text" id="contact-name" placeholder="Ahmad bin Rahman"></div>
+        <div class="form-group"><label>Company Name</label><input type="text" id="contact-company" placeholder="Your Company Sdn Bhd"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Email Address *</label><input type="email" placeholder="you@company.com"></div>
-        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" placeholder="+60 12-345 6789"></div>
+        <div class="form-group"><label>Email Address *</label><input type="email" id="contact-email" placeholder="you@company.com"></div>
+        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="contact-phone" placeholder="+60 12-345 6789"></div>
       </div>
       <div class="form-group">
         <label>What are you interested in? *</label>
-        <select>
+        <select id="contact-service">
           <option value="">Select a service...</option>
           <option>AI Software Development</option>
           <option>Managed IT Services</option>
@@ -882,9 +882,9 @@ body.dark-mode .page{background:#0a0f1d}
       </div>
       <div class="form-group">
         <label>Tell us about your business &amp; needs</label>
-        <textarea placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support..."></textarea>
+        <textarea id="contact-message" placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support..."></textarea>
       </div>
-      <button class="form-submit" onclick="submitForm()">Send Message →</button>
+      <button class="form-submit" id="contact-submit" onclick="submitForm()">Send Message →</button>
     </div>
   </section>
 
@@ -1046,10 +1046,47 @@ function goPage(id) {
   document.getElementById('page-' + id).classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
-function submitForm() {
+async function submitForm() {
+  const name = document.getElementById('contact-name').value.trim();
+  const company = document.getElementById('contact-company').value.trim();
+  const email = document.getElementById('contact-email').value.trim();
+  const phone = document.getElementById('contact-phone').value.trim();
+  const service = document.getElementById('contact-service').value;
+  const message = document.getElementById('contact-message').value.trim();
+  const submitBtn = document.getElementById('contact-submit');
   const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4000);
+
+  if (!name || !email || !service) {
+    alert('Please fill in all required fields (Name, Email, Service).');
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+
+  try {
+    const res = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, company, email, phone, service, message })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error || 'Send failed');
+
+    toast.textContent = "\u2705 Message sent! We'll get back to you within 24 hours.";
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+    ['contact-name','contact-company','contact-email','contact-phone','contact-message']
+      .forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('contact-service').selectedIndex = 0;
+  } catch (err) {
+    console.error('contact form error', err);
+    alert("Sorry, your message didn't go through. Please WhatsApp us on +60 11-5403 4051 or email info@dutaintegrasolutions.com.");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send Message \u2192';
+  }
 }
 </script>
 </body>
