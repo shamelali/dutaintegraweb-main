@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insights — Duta Integra Solutions</title>
+<meta name="description" content="IT strategy, AI automation, and compliance insights for Malaysian SMEs. Practical guidance from the Duta Integra team.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" href="../assets/dis-favicon.png">
+<link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:rgba(0,0,0,.3);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;cursor:pointer;display:flex;align-items:center;gap:12px}
+.logo a{color:white;text-decoration:none}
+.logo span{color:var(--electric)}
+.logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;background:linear-gradient(180deg,#e8eaf0 0%,#b0b8c8 40%,#8a94a8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.logo img{height:100px;width:auto}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--electric)}
+.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
+.insights-hero{padding:6rem 6% 3rem;text-align:center;position:relative;overflow:hidden}
+.insights-hero::before{content:'';position:absolute;top:-30%;right:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,180,255,.08) 0%,transparent 65%);pointer-events:none}
+.section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;line-height:1.1;margin-bottom:.9rem}
+.section-sub{color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 3rem;line-height:1.75;font-size:.95rem}
+/* ARTICLES */
+.articles{padding:2rem 6% 4rem;max-width:1100px;margin:0 auto}
+.article-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:2.2rem 2.4rem;margin-bottom:1.5rem;transition:all .3s;cursor:default}
+.article-card:hover{border-color:var(--electric);background:rgba(0,180,255,.06);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.article-tag{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--electric);background:rgba(0,180,255,.12);padding:.25rem .8rem;border-radius:12px;margin-bottom:.8rem;font-weight:600}
+.article-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:white;margin-bottom:.55rem;line-height:1.3}
+.article-excerpt{color:rgba(255,255,255,.5);font-size:.9rem;line-height:1.7;margin-bottom:1rem}
+.article-meta{color:rgba(255,255,255,.35);font-size:.78rem;display:flex;gap:1.5rem;align-items:center}
+.article-meta i{margin-right:.3rem;color:var(--electric)}
+.article-empty{color:rgba(255,255,255,.4);text-align:center;padding:4rem 2rem;font-size:1rem}
+.article-empty i{display:block;font-size:2.5rem;color:rgba(255,255,255,.15);margin-bottom:1rem}
+/* FOOTER */
+footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
+.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;cursor:pointer;transition:color .2s}
+.footer-col a:hover{color:var(--electric)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
+@media(max-width:768px){.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <a href="/"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra</span></a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/services.html">Services</a></li>
+    <li><a href="/cases.html">Case Studies</a></li>
+    <li><a href="/pricing.html">Pricing</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="/portal/login.html" class="nav-cta">Client Portal</a></li>
+  </ul>
+</nav>
+
+<section class="insights-hero">
+  <div class="section-eyebrow">Insights</div>
+  <h1 class="section-title">From the Trenches</h1>
+  <p class="section-sub">Practical IT strategy, AI automation tips, and compliance guidance — learned from real work with Malaysian SMEs.</p>
+</section>
+
+<section class="articles" id="articles">
+  <div class="article-empty">
+    <i class="ti ti-pencil"></i>
+    First articles are being drafted from client learnings.<br>
+    Check back soon — or subscribe below to get notified.
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo"><picture><source srcset="../assets/dis-logo-footer.webp" type="image/webp"><img src="../assets/dis-logo-footer.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div>
+      <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow with smart technology.</p>
+    </div>
+    <div class="footer-col"><h5>Company</h5><a href="/about.html">About Us</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a><a href="/stats.html">Live Stats</a></div>
+    <div class="footer-col"><h5>Services</h5><a href="/services.html">AI Development</a><a href="/services.html">Managed IT</a><a href="/services.html">Cloud Migration</a><a href="/services.html">IT Security</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p>
+    <p>info@dutaintegra.my</p>
+  </div>
+</footer>
+</body>
+</html>

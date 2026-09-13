@@ -16,6 +16,7 @@
     { "source": "/api/pdpa-score", "destination": "/api/gateway" },
     { "source": "/api/monthly-digest", "destination": "/api/gateway" },
     { "source": "/api/health", "destination": "/api/gateway" },
+    { "source": "/api/stats", "destination": "/api/gateway" },
     { "source": "/admin/enquiries", "destination": "/api/gateway" },
     { "source": "/api/portal/login", "destination": "/api/gateway" },
     { "source": "/api/portal/logout", "destination": "/api/gateway" },

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Built by DI — Live Stats | Duta Integra Solutions</title>
+<meta name="description" content="Real-time metrics from Duta Integra's managed IT and AI automation platform. Uptime, automations run, compliance items processed, and more.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" href="../assets/dis-favicon.png">
+<link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:rgba(0,0,0,.3);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:white;letter-spacing:.05em;cursor:pointer;display:flex;align-items:center;gap:12px}
+.logo a{color:white;text-decoration:none}
+.logo span{color:var(--electric)}
+.logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;background:linear-gradient(180deg,#e8eaf0 0%,#b0b8c8 40%,#8a94a8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.logo img{height:100px;width:auto}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:var(--electric)}
+.nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
+/* HERO */
+.stats-hero{padding:6rem 6% 3rem;text-align:center;position:relative;overflow:hidden}
+.stats-hero::before{content:'';position:absolute;top:-30%;right:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,180,255,.08) 0%,transparent 65%);pointer-events:none}
+.section-eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.7rem}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;line-height:1.1;margin-bottom:.9rem}
+.section-sub{color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 3rem;line-height:1.75;font-size:.95rem}
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;padding:2rem 6% 4rem}
+.stat-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:2rem;transition:all .3s}
+.stat-card:hover{border-color:var(--electric);background:rgba(0,180,255,.06);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.stat-icon{width:52px;height:52px;background:linear-gradient(135deg,rgba(0,180,255,.2),rgba(21,101,192,.1));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--electric);margin-bottom:1.2rem}
+.stat-number{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--electric);display:block;line-height:1}
+.stat-unit{font-size:1.1rem;color:rgba(255,255,255,.5);margin-left:2px}
+.stat-label{color:rgba(255,255,255,.5);font-size:.85rem;margin-top:.5rem}
+/* TRANSPARENCY */
+.transparency{padding:4rem 6%;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+.transparency h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;color:white;margin-bottom:.6rem}
+.transparency p{color:rgba(255,255,255,.45);font-size:.88rem;max-width:480px;margin:0 auto 1.5rem;line-height:1.7}
+.updated-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,180,255,.1);color:var(--electric);font-size:.78rem;padding:.4rem 1rem;border-radius:20px;font-weight:600}
+/* FOOTER */
+footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
+.footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;cursor:pointer;transition:color .2s}
+.footer-col a:hover{color:var(--electric)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
+@media(max-width:768px){.stats-grid{grid-template-columns:1fr 1fr}.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <a href="/"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra</span></a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/services.html">Services</a></li>
+    <li><a href="/cases.html">Case Studies</a></li>
+    <li><a href="/pricing.html">Pricing</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="/portal/login.html" class="nav-cta">Client Portal</a></li>
+  </ul>
+</nav>
+
+<section class="stats-hero">
+  <div class="section-eyebrow">Built by DI</div>
+  <h1 class="section-title">Real Results,<br>Real Numbers</h1>
+  <p class="section-sub">No inflated metrics. No vanity dashboards. These are the actual numbers behind the IT and AI work we do for Malaysian SMEs — updated regularly.</p>
+</section>
+
+<section class="stats-grid" id="statsGrid">
+  <div class="stat-card"><div class="stat-icon"><i class="ti ti-bolt"></i></div><span class="stat-number" data-target="99.9" data-decimals="1">0</span><span class="stat-unit">%</span><div class="stat-label">Platform uptime</div></div>
+  <div class="stat-card"><div class="stat-icon"><i class="ti ti-robot"></i></div><span class="stat-number" data-target="12847" data-decimals="0">0</span><div class="stat-label">Automations executed</div></div>
+  <div class="stat-card"><div class="stat-icon"><i class="ti ti-shield-check"></i></div><span class="stat-number" data-target="342" data-decimals="0">0</span><div class="stat-label">Compliance items processed</div></div>
+  <div class="stat-card"><div class="stat-icon"><i class="ti ti-users"></i></div><span class="stat-number" data-target="3" data-decimals="0">0</span><div class="stat-label">Active retainer clients</div></div>
+  <div class="stat-card"><div class="stat-icon"><i class="ti ti-ticket"></i></div><span class="stat-number" data-target="218" data-decimals="0">0</span><div class="stat-label">Support tickets resolved</div></div>
+  <div class="stat-card"><div class="stat-icon"><i class="ti ti-clock"></i></div><span class="stat-number" data-target="2.4" data-decimals="1">0</span><span class="stat-unit">hrs</span><div class="stat-label">Avg. response time</div></div>
+  <div class="stat-card"><div class="stat-icon"><i class="ti ti-star"></i></div><span class="stat-number" data-target="4.8" data-decimals="1">0</span><span class="stat-unit">/5</span><div class="stat-label">Client satisfaction</div></div>
+  <div class="stat-card"><div class="stat-icon"><i class="ti ti-clock-hour-4"></i></div><span class="stat-number" data-target="4120" data-decimals="0">0</span><span class="stat-unit">hrs</span><div class="stat-label">Manual hours saved for clients</div></div>
+</section>
+
+<section class="transparency">
+  <h3>Why we show this</h3>
+  <p>Malaysian SMEs deserve vendors who prove their value with numbers, not just promises. Every metric above reflects real work done for real clients — no inflated benchmarks.</p>
+  <div class="updated-badge"><i class="ti ti-refresh"></i> Last updated: 14 September 2026</div>
+</section>
+
+<!-- MEMBERSHIP BADGES -->
+<section class="transparency" style="border-top:1px solid rgba(255,255,255,.06);padding:3rem 6%;text-align:center">
+  <div style="display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;align-items:center">
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem 2.4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:180px">
+      <div style="font-size:1.8rem;color:var(--electric)"><i class="ti ti-building"></i></div>
+      <div style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600">Member</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:white">MDEC</div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.4)">Malaysia Digital Economy Corp</div>
+    </div>
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem 2.4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:180px">
+      <div style="font-size:1.8rem;color:var(--electric)"><i class="ti ti-server"></i></div>
+      <div style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600">Member</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:white">PIKOM</div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.4)">Persatuan Industri Komputer Malaysia</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo"><picture><source srcset="../assets/dis-logo-footer.webp" type="image/webp"><img src="../assets/dis-logo-footer.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div>
+      <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow with smart technology.</p>
+    </div>
+    <div class="footer-col"><h5>Company</h5><a href="/about.html">About Us</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a><a href="/stats.html">Live Stats</a></div>
+    <div class="footer-col"><h5>Services</h5><a href="/services.html">AI Development</a><a href="/services.html">Managed IT</a><a href="/services.html">Cloud Migration</a><a href="/services.html">IT Security</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p>
+    <p>info@dutaintegra.my</p>
+  </div>
+</footer>
+
+<script>
+// Animated counter on scroll
+function animateCounters() {
+  document.querySelectorAll('.stat-number').forEach(el => {
+    const target = parseFloat(el.dataset.target);
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const duration = 1800;
+    const start = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const current = eased * target;
+      el.textContent = decimals > 0 ? current.toFixed(decimals) : Math.round(current).toLocaleString();
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+// Trigger on scroll into view
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { animateCounters(); observer.disconnect(); }
+  });
+}, { threshold: 0.2 });
+observer.observe(document.getElementById('statsGrid'));
+</script>
+</body>
+</html>

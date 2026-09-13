@@ -4,6 +4,7 @@ import { extname, join, normalize, resolve, sep } from "node:path";
 
 import { listEnquiries, notifyEnquiry, recordEnquiry, resolveInboxEmail } from "./enquiries.mjs";
 import { timingSafeEqual } from "node:crypto";
+import { handleStats } from "./stats.mjs";
 
 import {
   handleLogin,
@@ -620,6 +621,7 @@ export async function handle(req, res) {
     if (pathname === "/api/health") {
       return send(res, 200, { ok: true, inboxConfigured: Boolean(resolveInboxEmail()) });
     }
+    if (pathname === "/api/stats") return await handleStats(req, res);
     if (pathname.startsWith("/api/")) return send(res, 404, { error: "Not found" });
     return await serveStatic(req, res, urlPath);
   } catch (err) {
