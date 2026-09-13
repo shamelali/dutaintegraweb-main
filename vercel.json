@@ -1,5 +1,5 @@
 {
-  "buildCommand": false,
+  "buildCommand": "",
   "outputDirectory": "Web",
   "rewrites": [
     { "source": "/api/send-email", "destination": "/api/gateway" },
