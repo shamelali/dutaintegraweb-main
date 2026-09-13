@@ -543,4 +543,35 @@ describe("client portal — auth and tickets", () => {
       assert.ok(typeof data.tickets.total === "number");
     });
   });
+
+  describe("Phase C — stats and insights", () => {
+    test("GET /api/stats returns JSON with updated date and stats array", async () => {
+      const res = await fetch(`${base}/api/stats`);
+      assert.equal(res.status, 200);
+      const data = await res.json();
+      assert.ok(data.updated);
+      assert.ok(Array.isArray(data.stats));
+      assert.ok(data.stats.length > 0);
+      const first = data.stats[0];
+      assert.ok(typeof first.value === "number");
+      assert.ok(typeof first.label === "string");
+      assert.ok(typeof first.icon === "string");
+    });
+
+    test("serves /stats.html as a static page", async () => {
+      const res = await fetch(`${base}/stats.html`);
+      assert.equal(res.status, 200);
+      const html = await res.text();
+      assert.ok(html.includes("Built by DI"));
+      assert.ok(html.includes("MDEC"));
+      assert.ok(html.includes("PIKOM"));
+    });
+
+    test("serves /insights.html as a static page", async () => {
+      const res = await fetch(`${base}/insights.html`);
+      assert.equal(res.status, 200);
+      const html = await res.text();
+      assert.ok(html.includes("Insights") || html.includes("insights"));
+    });
+  });
 });
