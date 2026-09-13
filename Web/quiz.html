@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Your Tier — Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    :root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
+    body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 6%;background:var(--navy);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.07)}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+    .nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
+    .nav-links a:hover{color:var(--electric)}
+    .nav-cta{background:var(--electric)!important;color:var(--navy)!important;padding:.45rem 1.2rem;border-radius:5px;font-weight:700!important}
+    .logo span{color:var(--electric)}
+    .logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.04em;background:linear-gradient(180deg,#e8eaf0 0%,#b0b8c8 40%,#8a94a8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+    .hero{background:var(--navy);padding:7rem 6% 5rem;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-30%;right:-5%;width:700px;height:700px;background:radial-gradient(circle,rgba(0,180,255,.1) 0%,transparent 65%);pointer-events:none}
+    .section-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.75rem}
+    .section-sub{color:var(--gray);font-size:.95rem;line-height:1.7;max-width:600px;margin:0 auto 3rem}
+    .container{max-width:900px;margin:0 auto;padding:0 1.5rem}
+    .quiz-steps{display:flex;gap:1rem;margin-bottom:2.5rem;justify-content:center}
+    .step-dot{width:12px;height:12px;border-radius:50%;background:var(--gray);opacity:.3;transition:all .3s}
+    .step-dot.active{background:var(--electric);opacity:1;transform:scale(1.3)}
+    .step-dot.done{background:var(--electric);opacity:.5}
+    .card{background:white;border:1px solid #E0E7EF;border-radius:16px;padding:2.5rem;margin-bottom:1.5rem}
+    .card h3{font-family:'Syne',sans-serif;font-size:1.3rem;margin-bottom:.5rem;color:var(--navy)}
+    .card p{color:var(--gray);font-size:.9rem;line-height:1.6;margin-bottom:1.5rem}
+    .option-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+    .option{background:var(--white);border:2px solid #E0E7EF;border-radius:12px;padding:1.2rem 1.5rem;cursor:pointer;transition:all .2s;text-align:center}
+    .option:hover{border-color:var(--electric);background:rgba(0,180,255,.04)}
+    .option.selected{border-color:var(--electric);background:rgba(0,180,255,.08);color:var(--blue)}
+    .option .icon{font-size:1.5rem;margin-bottom:.5rem;color:var(--electric)}
+    .option .label{font-weight:600;font-size:.9rem}
+    .option .desc{font-size:.78rem;color:var(--gray);margin-top:.3rem}
+    .slider-container{margin:1.5rem 0}
+    .slider-container label{display:block;font-weight:600;margin-bottom:.5rem;font-size:.9rem}
+    .slider-container input[type=range]{width:100%;accent-color:var(--electric);height:6px}
+    .slider-value{text-align:center;font-size:1.1rem;font-weight:700;color:var(--electric);margin-top:.3rem}
+    .checkbox-group{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.5rem}
+    .checkbox-item{display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;border:2px solid #E0E7EF;border-radius:8px;cursor:pointer;transition:all .2s;font-size:.85rem}
+    .checkbox-item:hover{border-color:var(--electric)}
+    .checkbox-item.selected{border-color:var(--electric);background:rgba(0,180,255,.08)}
+    .checkbox-item input[type=checkbox]{display:none}
+    .btn-primary{background:var(--electric);color:var(--navy);padding:.85rem 2rem;border-radius:5px;font-weight:700;text-decoration:none;font-size:.92rem;cursor:pointer;border:none;display:inline-block;transition:opacity .2s}
+    .btn-primary:hover{opacity:.85}
+    .btn-secondary{background:transparent;color:var(--navy);padding:.85rem 2rem;border-radius:5px;font-weight:700;text-decoration:none;font-size:.92rem;cursor:pointer;border:2px solid var(--navy);display:inline-block;transition:all .2s;margin-left:1rem}
+    .btn-secondary:hover{background:var(--navy);color:white}
+    .result-card{text-align:center;padding:3rem 2rem}
+    .result-card .tier{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--electric);margin-bottom:.5rem}
+    .result-card .score{font-size:1rem;color:var(--gray);margin-bottom:2rem}
+    .result-card .description{color:var(--gray);line-height:1.7;margin-bottom:1.5rem}
+    .result-card .next-step{background:var(--navy);color:white;padding:1.2rem 1.5rem;border-radius:12px;margin-bottom:2rem;font-size:.9rem}
+    .hidden{display:none}
+    .footer{padding:2rem 6%;text-align:center;color:var(--gray);font-size:.8rem;border-top:1px solid #E0E7EF;margin-top:3rem}
+    @media(max-width:600px){.option-grid{grid-template-columns:1fr}.quiz-steps{gap:.3rem}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo-text">Duta Integra Solutions</a>
+  <ul class="nav-links">
+    <li><a href="services.html">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="cases.html">Projects</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+    <li><button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
+  </ul>
+</nav>
+
+<section class="hero" style="padding-top:5rem;padding-bottom:5rem">
+  <div class="container" style="text-align:center">
+    <div class="section-eyebrow">Find Your Fit</div>
+    <h1 class="section-title" style="margin-bottom:1rem">Which Duta Integra tier is right for you?</h1>
+    <p class="section-sub" style="max-width:600px;margin:0 auto 2rem">Answer a few quick questions and we'll recommend the best plan — no pressure, no sales pitch.</p>
+    <div class="quiz-steps" id="stepIndicators">
+      <div class="step-dot active" title="Step 1"></div>
+      <div class="step-dot" title="Step 2"></div>
+      <div class="step-dot" title="Step 3"></div>
+      <div class="step-dot" title="Step 4"></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:2rem 6% 4rem">
+  <div class="container">
+    <!-- Step 1: Team Size -->
+    <div class="card" id="step1">
+      <h3>How large is your team?</h3>
+      <p>We size our recommendations around your actual team — not job titles.</p>
+      <div class="option-grid">
+        <div class="option" data-value="1" onclick="selectOption(this, 'teamSize', 1)"><div class="icon">&#128101;</div><div class="label">1–5 people</div><div class="desc">Small team, tight budget</div></div>
+        <div class="option" data-value="2" onclick="selectOption(this, 'teamSize', 2)"><div class="icon">&#128101;&#128101;</div><div class="label">6–20 people</div><div class="desc">Growing, scaling fast</div></div>
+        <div class="option" data-value="3" onclick="selectOption(this, 'teamSize', 3)"><div class="icon">&#128101;&#128101;&#128101;</div><div class="label">20+ people</div><div class="desc">Larger organisation</div></div>
+      </div>
+    </div>
+
+    <!-- Step 2: IT Spend -->
+    <div class="card hidden" id="step2">
+      <h3>What's your current annual IT spend?</h3>
+      <p>This helps us calibrate the level of service you need.</p>
+      <div class="slider-container">
+        <label id="spendLabel">My spend: <strong id="spendValue">RM 10,000</strong></label>
+        <input type="range" min="0" max="50000" value="10000" step="1000" id="itSpend" oninput="updateSpend()">
+      </div>
+      <div style="display:flex;justify-content:space-between;color:var(--gray);font-size:.75rem;margin-top:.3rem">
+        <span>RM 0</span><span>RM 10K</span><span>RM 20K</span><span>RM 30K</span><span>RM 40K+</span>
+      </div>
+    </div>
+
+    <!-- Step 3: Pain Points -->
+    <div class="card hidden" id="step3">
+      <h3>What are your biggest pain points?</h3>
+      <p>Select all that apply — this is how we match you to the right tier.</p>
+      <div class="checkbox-group" id="painPoints">
+        <label class="checkbox-item"><input type="checkbox" value="manual_work" onclick="toggleCheckbox(this)"><span>&#9881;</span> Manual, repetitive work</label>
+        <label class="checkbox-item"><input type="checkbox" value="scaling" onclick="toggleCheckbox(this)"><span>&#9889;</span> Scaling challenges</label>
+        <label class="checkbox-item"><input type="checkbox" value="security" onclick="toggleCheckbox(this)"><span>&#128274;</span> Security / compliance concerns</label>
+        <label class="checkbox-item"><input type="checkbox" value="ai_automation" onclick="toggleCheckbox(this)"><span>&#129309;</span> AI automation needs</label>
+      </div>
+    </div>
+
+    <!-- Step 4: Result -->
+    <div class="card hidden" id="step4">
+      <div class="result-card" id="resultArea"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div style="display:flex;justify-content:space-between;margin-top:1.5rem" id="quizNav">
+      <button class="btn-secondary hidden" id="prevBtn" onclick="prevStep()">← Back</button>
+      <button class="btn-primary" id="nextBtn" onclick="nextStep()">Next →</button>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  © 2026 Duta Integra Solutions Sdn Bhd · <a href="privacy.html" style="color:var(--gray)">Privacy</a> · <a href="terms.html" style="color:var(--gray)">Terms</a>
+</div>
+
+<script>
+let step = 1;
+let teamSize = 0;
+let itSpend = 10000;
+let painPoints = [];
+const steps = ['step1','step2','step3','step4'];
+
+function showStep(n) {
+  steps.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden', i !== n - 1);
+  });
+  document.querySelectorAll('.step-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === n - 1);
+    dot.classList.toggle('done', i < n - 1);
+  });
+  document.getElementById('prevBtn').classList.toggle('hidden', n === 1);
+  document.getElementById('nextBtn').textContent = n === 3 ? 'Get My Tier →' : 'Next →';
+}
+function selectOption(el, field, val) {
+  el.parentElement.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  if (field === 'teamSize') teamSize = val;
+  if (n === 1) nextStep();
+}
+function updateSpend() {
+  itSpend = parseInt(document.getElementById('itSpend').value);
+  document.getElementById('spendValue').textContent = 'RM ' + itSpend.toLocaleString();
+  document.getElementById('spendLabel').innerHTML = 'My spend: <strong id="spendValue">RM ' + itSpend.toLocaleString() + '</strong>';
+}
+function toggleCheckbox(cb) { cb.closest('.checkbox-item').classList.toggle('selected'); }
+function getSelectedPainPoints() {
+  return [...document.querySelectorAll('#painPoints input:checked')].map(c => c.value);
+}
+function nextStep() {
+  if (step === 1) {
+    if (!teamSize) { alert('Please select your team size.'); return; }
+    step = 2; showStep(2);
+  } else if (step === 2) { step = 3; showStep(3); }
+  else if (step === 3) {
+    painPoints = getSelectedPainPoints();
+    fetchResult();
+  }
+}
+function prevStep() { if (step > 1) { step--; showStep(step); } }
+
+async function fetchResult() {
+  const btn = document.getElementById('nextBtn');
+  btn.disabled = true; btn.textContent = 'Scoring...';
+  try {
+    const res = await fetch('/api/quiz', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({teamSize, itSpend, painPoints})
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    showResult(data);
+  } catch(e) {
+    document.getElementById('resultArea').innerHTML = '<p style="color:red">Something went wrong. Please try again.</p><br><button class="btn-primary" onclick="location.reload()">Try Again</button>';
+    btn.disabled = false; btn.textContent = 'Next →';
+  }
+}
+function showResult(data) {
+  step = 4; showStep(4);
+  const emoji = {Foundation:'🏢',Growth:'📈','AI Partner':'🤖'};
+  document.getElementById('resultArea').innerHTML = `
+    <div class="tier">${emoji[data.tier] || '✅'} ${data.tier}</div>
+    <div class="score">Your compatibility score: ${data.score}/95</div>
+    <div class="description">${data.description}</div>
+    <div class="next-step">${data.nextStep}</div>
+    <a href="contact.html" class="btn-primary">Book a Free Audit Call</a>
+    <button class="btn-secondary" onclick="location.reload()">Retake Quiz</button>
+  `;
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('prevBtn').style.display = 'none';
+}
+showStep(1);
+</script>
+</body>
+</html>
