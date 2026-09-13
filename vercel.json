@@ -4,8 +4,9 @@
   "outputDirectory": "Web",
   "installCommand": "",
   "redirects": [
-    { "source": "/ms/:path*", "destination": "/:path*" },
-    { "source": "/ms", "destination": "/" }
+    { "source": "/ms", "destination": "/" },
+    { "source": "/ms/", "destination": "/" },
+    { "source": "/ms/:path+", "destination": "/:path+" }
   ],
   "rewrites": [
     { "source": "/api/send-email", "destination": "/api/gateway" },
