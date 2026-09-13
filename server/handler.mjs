@@ -5,6 +5,17 @@ import { extname, join, normalize, resolve, sep } from "node:path";
 import { listEnquiries, notifyEnquiry, recordEnquiry, resolveInboxEmail } from "./enquiries.mjs";
 import { timingSafeEqual } from "node:crypto";
 
+import {
+  handleLogin,
+  handleLogout,
+  handleMe,
+  handlePortalTickets,
+  handlePortalTicketById,
+  handlePortalHealth,
+  handleAdminClients,
+  handleAdminClientDigest,
+} from "./portal.mjs";
+
 /**
  * Request handler for dutaintegra.my.
  *
@@ -583,6 +594,29 @@ export async function handle(req, res) {
     if (pathname === "/api/testimonial") return await handleTestimonial(req, res);
     if (pathname === "/api/case-studies") return await handleCaseStudies(req, res);
     if (pathname === "/api/quiz") return await handleQuiz(req, res);
+
+    // ── client portal routes ──────────────────────────────────────────
+    if (pathname === "/api/portal/login") return await handleLogin(req, res);
+    if (pathname === "/api/portal/logout") return await handleLogout(req, res);
+    if (pathname === "/api/portal/me") return await handleMe(req, res);
+    if (pathname === "/api/portal/health") return await handlePortalHealth(req, res);
+    if (pathname === "/api/portal/tickets") return await handlePortalTickets(req, res, pathname);
+
+    // PATCH /api/portal/tickets/:id
+    const ticketMatch = pathname.match(/^\/api\/portal\/tickets\/([a-f0-9-]+)$/);
+    if (ticketMatch && req.method === "PATCH") {
+      return await handlePortalTicketById(req, res, ticketMatch[1]);
+    }
+
+    // ── admin: client management ──────────────────────────────────────
+    if (pathname === "/admin/clients") return await handleAdminClients(req, res);
+
+    // POST /admin/clients/:id/send-digest
+    const digestMatch = pathname.match(/^\/admin\/clients\/([a-f0-9-]+)\/send-digest$/);
+    if (digestMatch && req.method === "POST") {
+      return await handleAdminClientDigest(req, res, digestMatch[1]);
+    }
+
     if (pathname === "/api/health") {
       return send(res, 200, { ok: true, inboxConfigured: Boolean(resolveInboxEmail()) });
     }
