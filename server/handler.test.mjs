@@ -574,4 +574,53 @@ describe("client portal — auth and tickets", () => {
       assert.ok(html.includes("Insights") || html.includes("insights"));
     });
   });
+
+  describe("Phase D — Calculator", () => {
+    test("POST /api/calculator returns estimated savings", async () => {
+      const res = await fetch(`${base}/api/calculator`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ staff: 10, manualHours: 20, painPoints: ["compliance"] }),
+      });
+      assert.equal(res.status, 200);
+      const data = await res.json();
+      assert.ok(Array.isArray(data.tiers));
+      assert.equal(data.tiers.length, 3);
+      assert.ok(data.tiers.every((t) => t.hoursSaved >= 0));
+      assert.ok(data.tiers.every((t) => t.monthlyCostSaved >= 0));
+      assert.ok(data.tiers.every((t) => typeof t.roi === "number"));
+      assert.ok(typeof data.recommendedTier === "string");
+    });
+
+    test("POST /api/calculator rejects missing staff", async () => {
+      const res = await fetch(`${base}/api/calculator`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ manualHours: 20 }),
+      });
+      assert.equal(res.status, 400);
+    });
+
+    test("POST /api/calculator rejects GET", async () => {
+      const res = await fetch(`${base}/api/calculator`);
+      assert.equal(res.status, 405);
+    });
+
+    test("serves /calculator.html as a static page", async () => {
+      const res = await fetch(`${base}/calculator.html`);
+      assert.equal(res.status, 200);
+      const html = await res.text();
+      assert.ok(html.includes("Savings Calculator"));
+      assert.ok(html.includes("api/calculator"));
+    });
+
+    test("serves /faq.html as a static page", async () => {
+      const res = await fetch(`${base}/faq.html`);
+      assert.equal(res.status, 200);
+      const html = await res.text();
+      assert.ok(html.includes("No Jargon"));
+      assert.ok(html.includes("Data Ownership"));
+      assert.ok(html.includes("AI"));
+    });
+  });
 });

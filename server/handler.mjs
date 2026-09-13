@@ -5,6 +5,7 @@ import { extname, join, normalize, resolve, sep } from "node:path";
 import { listEnquiries, notifyEnquiry, recordEnquiry, resolveInboxEmail } from "./enquiries.mjs";
 import { timingSafeEqual } from "node:crypto";
 import { handleStats } from "./stats.mjs";
+import { calculateSavings } from "./calculator.mjs";
 
 import {
   handleLogin,
@@ -583,6 +584,36 @@ async function handleMonthlyDigest(req, res) {
   }
 }
 
+// ── automation savings calculator ──────────────────────────
+// POST /api/calculator — returns estimated hours/cost saved per tier.
+
+async function handleCalculator(req, res) {
+  if (req.method !== "POST") return send(res, 405, { error: "Method not allowed" });
+  try {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
+    const body = parsed.data;
+
+    if (!body || typeof body !== "object")
+      return send(res, 400, { error: "Invalid payload" });
+
+    const staff = Number(body.staff);
+    const manualHours = Number(body.manualHours);
+    const painPoints = Array.isArray(body.painPoints) ? body.painPoints : [];
+
+    if (!staff || staff < 1)
+      return send(res, 400, { error: "Staff count must be at least 1" });
+    if (manualHours === undefined || manualHours === null || manualHours < 0)
+      return send(res, 400, { error: "Manual hours per week is required" });
+
+    const result = calculateSavings({ staff, manualHours, painPoints });
+    return send(res, 200, result);
+  } catch (err) {
+    console.error("[server] calculator error:", err);
+    return send(res, 500, { error: "Calculator failed. Please try again." });
+  }
+}
+
 export async function handle(req, res) {
   const urlPath = req.url ?? "/";
   // Route on the pathname so query strings (e.g. ?token=) still reach handlers.
@@ -622,6 +653,7 @@ export async function handle(req, res) {
       return send(res, 200, { ok: true, inboxConfigured: Boolean(resolveInboxEmail()) });
     }
     if (pathname === "/api/stats") return await handleStats(req, res);
+    if (pathname === "/api/calculator") return await handleCalculator(req, res);
     if (pathname.startsWith("/api/")) return send(res, 404, { error: "Not found" });
     return await serveStatic(req, res, urlPath);
   } catch (err) {
