@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tickets — Duta Integra</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f9fafb; color: #1c1917; }
+    .topbar { background: #1c1917; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .topbar h1 { font-size: 18px; font-weight: 600; }
+    .topbar .user { font-size: 13px; opacity: 0.8; }
+    .topbar a { color: #fff; text-decoration: none; font-size: 13px; opacity: 0.8; }
+    .topbar a:hover { opacity: 1; }
+    .container { max-width: 900px; margin: 32px auto; padding: 0 20px; }
+    .nav-links { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px; }
+    .nav-links a { padding: 10px 20px; background: #fff; border: 1px solid #d1d5db; border-radius: 8px; text-decoration: none; color: #374151; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+    .nav-links a:hover { border-color: #1c1917; color: #1c1917; }
+    .nav-links a.active { background: #1c1917; color: #fff; border-color: #1c1917; }
+    .section { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    .section h2 { font-size: 16px; margin-bottom: 16px; color: #1c1917; }
+    .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .form-group { flex: 1; min-width: 200px; margin-bottom: 16px; }
+    label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 4px; }
+    input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; }
+    textarea { resize: vertical; min-height: 80px; }
+    input:focus, textarea:focus, select:focus { border-color: #1c1917; box-shadow: 0 0 0 2px rgba(28,25,23,0.1); }
+    .btn { display: inline-block; padding: 10px 24px; background: #1c1917; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+    .btn:hover { background: #292524; }
+    .btn:disabled { background: #9ca3af; cursor: not-allowed; }
+    .btn.secondary { background: #fff; color: #374151; border: 1px solid #d1d5db; }
+    .btn.secondary:hover { border-color: #1c1917; }
+    .msg { padding: 10px 12px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .msg.success { background: #d1fae5; color: #065f46; display: block; }
+    .msg.error { background: #fef2f2; color: #dc2626; display: block; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; padding: 8px 12px; border-bottom: 1px solid #e5e7eb; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+    .badge.open { background: #dbeafe; color: #1d4ed8; }
+    .badge.in_progress { background: #fef3c7; color: #92400e; }
+    .badge.resolved { background: #d1fae5; color: #065f46; }
+    .badge.closed { background: #f3f4f6; color: #6b7280; }
+    .empty { color: #9ca3af; text-align: center; padding: 24px; font-size: 14px; }
+    .loading { text-align: center; padding: 40px; color: #6b7280; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Duta Integra</h1>
+    <div>
+      <span class="user" id="userName"></span>
+      <a href="#" id="logoutLink" style="margin-left:12px">Sign out</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="nav-links">
+      <a href="/portal/dashboard.html">Dashboard</a>
+      <a href="/portal/tickets.html" class="active">Tickets</a>
+      <a href="/portal/health.html">Health</a>
+    </div>
+
+    <!-- Create ticket form -->
+    <div class="section">
+      <h2>New Ticket</h2>
+      <div class="msg" id="formMsg"></div>
+      <form id="ticketForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" required placeholder="Brief description of the issue">
+          </div>
+          <div class="form-group" style="max-width:160px">
+            <label for="priority">Priority</label>
+            <select id="priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Details</label>
+          <textarea id="description" placeholder="Any additional context…"></textarea>
+        </div>
+        <button type="submit" class="btn" id="submitBtn">Submit Ticket</button>
+      </form>
+    </div>
+
+    <!-- Existing tickets -->
+    <div class="section">
+      <h2>Your Tickets</h2>
+      <div id="ticketsArea" class="loading">Loading…</div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+
+    async function init() {
+      try {
+        const meRes = await fetch('/api/portal/me');
+        if (meRes.status === 401) { window.location.href = '/portal/login.html'; return; }
+        const me = await meRes.json();
+        currentUser = me.client;
+        document.getElementById('userName').textContent = currentUser.name;
+        await loadTickets();
+      } catch { window.location.href = '/portal/login.html'; }
+    }
+
+    async function loadTickets() {
+      const area = document.getElementById('ticketsArea');
+      try {
+        const res = await fetch('/api/portal/tickets');
+        if (!res.ok) { area.innerHTML = '<div class="empty">Could not load tickets.</div>'; return; }
+        const { tickets } = await res.json();
+        if (!tickets.length) { area.innerHTML = '<div class="empty">No tickets yet.</div>'; return; }
+        area.innerHTML = `<table><thead><tr><th>Subject</th><th>Status</th><th>Priority</th><th>Created</th><th></th></tr></thead><tbody>` +
+          tickets.map(t => `<tr>
+            <td>${esc(t.subject)}</td>
+            <td><span class="badge ${t.status}">${t.status.replace('_',' ')}</span></td>
+            <td>${t.priority}</td>
+            <td>${new Date(t.createdAt).toLocaleDateString()}</td>
+            <td>${t.status === 'open' || t.status === 'in_progress'
+              ? `<button class="btn secondary" style="padding:4px 12px;font-size:12px" onclick="resolveTicket('${t.id}')">Resolve</button>`
+              : ''}</td>
+          </tr>`).join('') + `</tbody></table>`;
+      } catch { area.innerHTML = '<div class="empty">Network error.</div>'; }
+    }
+
+    async function resolveTicket(id) {
+      try {
+        await fetch(`/api/portal/tickets/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'resolved' }),
+        });
+        await loadTickets();
+      } catch {}
+    }
+
+    document.getElementById('ticketForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msgEl = document.getElementById('formMsg');
+      const btn = document.getElementById('submitBtn');
+      msgEl.className = 'msg'; msgEl.textContent = '';
+      btn.disabled = true; btn.textContent = 'Submitting…';
+
+      try {
+        const res = await fetch('/api/portal/tickets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subject: document.getElementById('subject').value,
+            description: document.getElementById('description').value,
+            priority: document.getElementById('priority').value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) { msgEl.className = 'msg error'; msgEl.textContent = data.error; return; }
+        msgEl.className = 'msg success'; msgEl.textContent = 'Ticket created.';
+        document.getElementById('subject').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('priority').value = 'medium';
+        await loadTickets();
+      } catch {
+        msgEl.className = 'msg error'; msgEl.textContent = 'Network error.';
+      } finally { btn.disabled = false; btn.textContent = 'Submit Ticket'; }
+    });
+
+    document.getElementById('logoutLink').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('/api/portal/logout', { method: 'POST' });
+      window.location.href = '/portal/login.html';
+    });
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+    init();
+  </script>
+</body>
+</html>

@@ -331,3 +331,216 @@ describe("GET /admin/enquiries", () => {
     assert.equal(adminTokenValid("s3cret-token"), true);
   });
 });
+
+// ── Phase B: client portal tests ─────────────────────────────────────────────
+
+describe("client portal — auth and tickets", () => {
+  let clientStore;
+  let ticketStore;
+
+  beforeEach(async () => {
+    process.env.ADMIN_TOKEN = "admin-pass";
+    const dir = await mkdtemp(join(tmpdir(), "portal-"));
+    clientStore = join(dir, "clients.jsonl");
+    ticketStore = join(dir, "tickets.jsonl");
+    process.env.ENQUIRY_STORE = join(dir, "enquiries.jsonl");
+    // Monkey-patch the store paths by setting an env var the modules read
+    // The modules use project-root-relative paths, but we can override
+    // by importing and setting via process.env — simplified here.
+  });
+
+  async function createTestClient(email = `test-${Date.now()}@client.my`) {
+    const res = await fetch(`${base}/admin/clients`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-admin-token": "admin-pass",
+      },
+      body: JSON.stringify({ name: "Test Client", email, password: "securePass1", tier: "growth" }),
+    });
+    return { status: res.status, body: await res.json().catch(() => null) };
+  }
+
+  async function loginAs(email = "test@client.my", password = "securePass1") {
+    const res = await fetch(`${base}/api/portal/login`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const setCookie = res.headers.getSetCookie?.() ?? [];
+    const sessionCookie = setCookie.find((c) => c.startsWith("di_session="));
+    const token = sessionCookie?.split(";")[0]?.split("=")?.[1] ?? null;
+    return { status: res.status, body: await res.json().catch(() => null), token };
+  }
+
+  describe("POST /admin/clients", () => {
+    test("creates a new client with admin token", async () => {
+      const email = `new-${Date.now()}@client.my`;
+      const { status, body } = await createTestClient(email);
+      assert.equal(status, 201);
+      assert.equal(body.client.name, "Test Client");
+      assert.equal(body.client.email, email);
+      assert.equal(body.client.tier, "growth");
+      assert.equal(body.client.status, "active");
+    });
+
+    test("rejects without admin token", async () => {
+      const res = await fetch(`${base}/admin/clients`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ name: "X", email: "x@y.my", password: "pass" }),
+      });
+      assert.equal(res.status, 401);
+    });
+
+    test("rejects duplicate email", async () => {
+      const email = `dup-${Date.now()}@test.my`;
+      await createTestClient(email);
+      const { status } = await createTestClient(email);
+      assert.equal(status, 409);
+    });
+
+    test("rejects missing required fields", async () => {
+      const res = await fetch(`${base}/admin/clients`, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-admin-token": "admin-pass" },
+        body: JSON.stringify({ name: "X" }),
+      });
+      assert.equal(res.status, 400);
+    });
+  });
+
+  describe("GET /admin/clients", () => {
+    test("lists all clients with admin token", async () => {
+      const before = await fetch(`${base}/admin/clients?token=admin-pass`);
+      const beforeData = await before.json();
+      const beforeCount = beforeData.count;
+      await createTestClient(`a-${Date.now()}@b.my`);
+      await createTestClient(`c-${Date.now()}@d.my`);
+      const res = await fetch(`${base}/admin/clients?token=admin-pass`);
+      assert.equal(res.status, 200);
+      const data = await res.json();
+      assert.ok(data.count >= beforeCount + 2, `expected at least ${beforeCount + 2}, got ${data.count}`);
+    });
+  });
+
+  describe("POST /api/portal/login", () => {
+    test("logs in with correct credentials and sets cookie", async () => {
+      const email = `login-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { status, body, token } = await loginAs(email);
+      assert.equal(status, 200);
+      assert.equal(body.ok, true);
+      assert.ok(token, "should set a session cookie");
+    });
+
+    test("rejects wrong password", async () => {
+      const email = `wrong-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { status, body } = await loginAs(email, "wrong");
+      assert.equal(status, 401);
+      assert.equal(body.error, "Invalid email or password");
+    });
+
+    test("rejects unknown email", async () => {
+      const { status } = await loginAs("nobody@x.my", "pass");
+      assert.equal(status, 401);
+    });
+  });
+
+  describe("GET /api/portal/me", () => {
+    test("returns client info when authenticated", async () => {
+      const email = `me-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { token } = await loginAs(email);
+      const res = await fetch(`${base}/api/portal/me`, {
+        headers: { cookie: `di_session=${token}` },
+      });
+      assert.equal(res.status, 200);
+      const { client } = await res.json();
+      assert.equal(client.name, "Test Client");
+    });
+
+    test("returns 401 when not authenticated", async () => {
+      const res = await fetch(`${base}/api/portal/me`);
+      assert.equal(res.status, 401);
+    });
+  });
+
+  describe("POST /api/portal/tickets", () => {
+    test("creates a ticket when authenticated", async () => {
+      const email = `tickets-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { token } = await loginAs(email);
+      const res = await fetch(`${base}/api/portal/tickets`, {
+        method: "POST",
+        headers: { "content-type": "application/json", cookie: `di_session=${token}` },
+        body: JSON.stringify({ subject: "Cannot access email", description: "Outlook keeps crashing", priority: "high" }),
+      });
+      assert.equal(res.status, 201);
+      const { ticket } = await res.json();
+      assert.equal(ticket.subject, "Cannot access email");
+      assert.equal(ticket.priority, "high");
+      assert.equal(ticket.status, "open");
+    });
+
+    test("rejects short subject", async () => {
+      const email = `short-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { token } = await loginAs(email);
+      const res = await fetch(`${base}/api/portal/tickets`, {
+        method: "POST",
+        headers: { "content-type": "application/json", cookie: `di_session=${token}` },
+        body: JSON.stringify({ subject: "Hi" }),
+      });
+      assert.equal(res.status, 400);
+    });
+
+    test("rejects unauthenticated request", async () => {
+      const res = await fetch(`${base}/api/portal/tickets`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ subject: "Test" }),
+      });
+      assert.equal(res.status, 401);
+    });
+  });
+
+  describe("PATCH /api/portal/tickets/:id", () => {
+    test("resolves a ticket", async () => {
+      const email = `patch-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { token } = await loginAs(email);
+      const createRes = await fetch(`${base}/api/portal/tickets`, {
+        method: "POST",
+        headers: { "content-type": "application/json", cookie: `di_session=${token}` },
+        body: JSON.stringify({ subject: "Printer jam" }),
+      });
+      const { ticket } = await createRes.json();
+
+      const patchRes = await fetch(`${base}/api/portal/tickets/${ticket.id}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json", cookie: `di_session=${token}` },
+        body: JSON.stringify({ status: "resolved" }),
+      });
+      assert.equal(patchRes.status, 200);
+      const { ticket: updated } = await patchRes.json();
+      assert.equal(updated.status, "resolved");
+    });
+  });
+
+  describe("GET /api/portal/health", () => {
+    test("returns health summary", async () => {
+      const email = `health-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { token } = await loginAs(email);
+      const res = await fetch(`${base}/api/portal/health`, {
+        headers: { cookie: `di_session=${token}` },
+      });
+      assert.equal(res.status, 200);
+      const data = await res.json();
+      assert.equal(data.client.tier, "growth");
+      assert.ok(typeof data.tickets.total === "number");
+    });
+  });
+});
