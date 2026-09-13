@@ -3,6 +3,11 @@
   "outputDirectory": "Web",
   "rewrites": [
     { "source": "/api/send-email", "destination": "/api/gateway" },
+    { "source": "/api/quiz", "destination": "/api/gateway" },
+    { "source": "/api/case-studies", "destination": "/api/gateway" },
+    { "source": "/api/testimonial", "destination": "/api/gateway" },
+    { "source": "/api/pdpa-score", "destination": "/api/gateway" },
+    { "source": "/api/monthly-digest", "destination": "/api/gateway" },
     { "source": "/api/health", "destination": "/api/gateway" },
     { "source": "/admin/enquiries", "destination": "/api/gateway" }
   ]
