@@ -120,7 +120,7 @@ Duta Integra's product ambitions (see §6.1).
 | **Business Intelligence**                     | **"Launching Next"** |
 
 Positioning: _"Malaysia's AI-First IT Partner"_, _"Two Pillars. One Partner."_, local expertise in
-**PDPA, SST, ePerolehan**, 100% Malaysian-owned, Cyberjaya. Portfolio: Leish, EastelPro, AGMX,
+**PDPA, SST, ePerolehan**, 100% Malaysian-owned, Cyberjaya. Portfolio: EastelPro, AGMX,
 DutaConnect. Team: 3 (Founder & CEO — Strategy/Business Development; Tech Lead — AI/Architecture;
 IT Support Specialist). Free initial IT audit "worth RM2,000"; proposal in 3 working days.
 
@@ -283,10 +283,9 @@ SME enquiry splits skew roughly **58% WhatsApp / 18% phone / 11% web form / 9% s
 and ~63% of business conversations are bilingual English/BM. AutoGTM is email-native.
 
 So: **use Explee for discovery, research and personalisation; hand off to a WhatsApp Business API
-journey (BM + English) for the conversation.** Duta Integra already builds exactly this kind of
-system — the Leish chatbot on `Web/cases.html` is credited with handling **70% of enquiries**. That is
-the same engineering, pointed at outbound instead of inbound. _This hybrid is the product nobody in
-the Malaysian MSP market has._
+journey (BM + English) for the conversation.** Duta Integra already builds this class of
+AI-driven conversational automation for clients — the same engineering, pointed at outbound
+instead of inbound. _This hybrid is the product nobody in the Malaysian MSP market has._
 
 ### 6.3 Vertical wedges, not "SMEs"
 

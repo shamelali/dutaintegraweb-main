@@ -6,12 +6,27 @@ import { fileURLToPath } from "node:url";
 /**
  * Enquiry persistence and notification.
  *
- * Storage is a newline-delimited JSON file (default ./data/enquiries.jsonl).
- * Deliberately dependency-free and append-only: a lead must survive a restart,
- * a crash mid-request, or a mail-provider outage.
+ * Storage backend is chosen at call time, not at import time, so tests can
+ * toggle env vars between cases without re-importing the module:
  *
- * The row is ALWAYS written before the notification is attempted.
+ *   - SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY set  -> Supabase Postgres
+ *     (production / Vercel — serverless functions have no durable local
+ *     filesystem, so a JSONL file would silently lose every lead on the
+ *     next cold start. This is exactly the bug this whole rebuild exists
+ *     to fix, so it must not be reintroduced here.)
+ *   - otherwise                                     -> local JSONL file
+ *     (local dev and the existing test suite; zero setup required)
+ *
+ * In both modes the row is ALWAYS written before the notification is
+ * attempted — a lead must survive a restart, a crash mid-request, or a
+ * mail-provider outage.
  */
+
+function supabaseConfigured() {
+  return Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+}
+
+// ── JSONL backend (local dev / tests) ───────────────────────────────────────
 
 // Resolved relative to this file, NOT process.cwd() — enquiries must land in
 // the project's data/ directory however the server is launched.
@@ -21,6 +36,135 @@ const DEFAULT_STORE = join(PROJECT_ROOT, "data", "enquiries.jsonl");
 export function storePath() {
   return process.env.ENQUIRY_STORE || DEFAULT_STORE;
 }
+
+async function jsonlRecord(record) {
+  const path = storePath();
+  await mkdir(dirname(path), { recursive: true });
+  await appendFile(path, `${JSON.stringify(record)}\n`, "utf8");
+  return record;
+}
+
+async function jsonlList(limit) {
+  let raw;
+  try {
+    raw = await readFile(storePath(), "utf8");
+  } catch {
+    return []; // no store yet
+  }
+  const rows = raw
+    .split("\n")
+    .filter((line) => line.trim())
+    .map((line) => {
+      try {
+        return JSON.parse(line);
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean)
+    .reverse();
+  return Number.isFinite(limit) ? rows.slice(0, limit) : rows;
+}
+
+async function jsonlMarkEmailed(id, at) {
+  const path = storePath();
+  const rows = await jsonlList(Infinity);
+  const updated = rows.map((row) => (row.id === id ? { ...row, emailed_at: at } : row));
+  await writeFile(
+    path,
+    updated.map((row) => JSON.stringify(row)).join("\n") + (updated.length ? "\n" : ""),
+    "utf8",
+  );
+  return at;
+}
+
+// ── Supabase backend (production) ───────────────────────────────────────────
+
+function supabaseHeaders(extra = {}) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return {
+    apikey: key,
+    authorization: `Bearer ${key}`,
+    "content-type": "application/json",
+    ...extra,
+  };
+}
+
+// Writes go to the pre-existing `leads` table (status/lead_score/source
+// workflow, added 2026-09-02) rather than a bespoke enquiries table, so the
+// contact form feeds the same pipeline any future lead-scoring/CRM work
+// already assumes. `source` is fixed to "contact-form" so leads originating
+// elsewhere (e.g. an Explee-driven outbound flow) stay distinguishable.
+const LEADS_TABLE = "leads";
+
+async function supabaseRecord(record) {
+  const url = `${process.env.SUPABASE_URL.replace(/\/$/, "")}/rest/v1/${LEADS_TABLE}`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: supabaseHeaders({ prefer: "return=representation" }),
+    body: JSON.stringify({
+      id: record.id,
+      name: record.name,
+      company: record.company ?? "",
+      email: record.email,
+      phone: record.phone ?? "",
+      service: record.service ?? "",
+      message: record.message ?? "",
+      ip: record.ip,
+      user_agent: record.userAgent,
+      status: "new",
+      source: "contact-form",
+      created_at: record.created_at,
+      emailed_at: record.emailed_at,
+    }),
+  });
+  if (!res.ok) throw new Error(`Supabase insert failed: ${res.status} ${await res.text()}`);
+  return record;
+}
+
+function fromSupabaseRow(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    company: row.company,
+    email: row.email,
+    phone: row.phone,
+    service: row.service,
+    message: row.message,
+    ip: row.ip,
+    userAgent: row.user_agent,
+    created_at: row.created_at,
+    emailed_at: row.emailed_at,
+    status: row.status,
+    leadScore: row.lead_score,
+  };
+}
+
+async function supabaseList(limit) {
+  const base = process.env.SUPABASE_URL.replace(/\/$/, "");
+  const cap = Number.isFinite(limit) ? limit : 1000;
+  const url =
+    `${base}/rest/v1/${LEADS_TABLE}?select=*&source=eq.contact-form` +
+    `&order=created_at.desc&limit=${cap}`;
+  const res = await fetch(url, { headers: supabaseHeaders() });
+  if (!res.ok) throw new Error(`Supabase read failed: ${res.status} ${await res.text()}`);
+  const rows = await res.json();
+  return rows.map(fromSupabaseRow);
+}
+
+async function supabaseMarkEmailed(id, at) {
+  const base = process.env.SUPABASE_URL.replace(/\/$/, "");
+  const url = `${base}/rest/v1/${LEADS_TABLE}?id=eq.${encodeURIComponent(id)}`;
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: supabaseHeaders(),
+    body: JSON.stringify({ emailed_at: at }),
+  });
+  if (!res.ok) throw new Error(`Supabase update failed: ${res.status} ${await res.text()}`);
+  return at;
+}
+
+// ── public API (backend-agnostic) ───────────────────────────────────────────
 
 /**
  * Where enquiry notifications are delivered. `CONTACT_INBOX_EMAIL` is the
@@ -52,46 +196,17 @@ export async function recordEnquiry(input) {
     created_at: new Date().toISOString(),
     emailed_at: null,
   };
-  const path = storePath();
-  await mkdir(dirname(path), { recursive: true });
-  await appendFile(path, `${JSON.stringify(record)}\n`, "utf8");
-  return record;
+  return supabaseConfigured() ? supabaseRecord(record) : jsonlRecord(record);
 }
 
-/** Mark a stored enquiry as notified (rewrites the JSONL in place). */
+/** Mark a stored enquiry as notified. */
 export async function markEnquiryEmailed(id, at = new Date().toISOString()) {
-  const path = storePath();
-  const rows = await listEnquiries(Infinity);
-  const updated = rows.map((row) => (row.id === id ? { ...row, emailed_at: at } : row));
-  await writeFile(
-    path,
-    updated.map((row) => JSON.stringify(row)).join("\n") + (updated.length ? "\n" : ""),
-    "utf8",
-  );
-  return at;
+  return supabaseConfigured() ? supabaseMarkEmailed(id, at) : jsonlMarkEmailed(id, at);
 }
 
 /** Read stored enquiries, newest first. `limit` defaults to 50. */
 export async function listEnquiries(limit = 50) {
-  let raw;
-  try {
-    raw = await readFile(storePath(), "utf8");
-  } catch {
-    return []; // no store yet
-  }
-  const rows = raw
-    .split("\n")
-    .filter((line) => line.trim())
-    .map((line) => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        return null;
-      }
-    })
-    .filter(Boolean)
-    .reverse();
-  return Number.isFinite(limit) ? rows.slice(0, limit) : rows;
+  return supabaseConfigured() ? supabaseList(limit) : jsonlList(limit);
 }
 
 export function enquirySubject(enquiry) {

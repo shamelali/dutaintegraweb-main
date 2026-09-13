@@ -1,0 +1,9 @@
+{
+  "buildCommand": false,
+  "outputDirectory": "Web",
+  "rewrites": [
+    { "source": "/api/send-email", "destination": "/api/gateway" },
+    { "source": "/api/health", "destination": "/api/gateway" },
+    { "source": "/admin/enquiries", "destination": "/api/gateway" }
+  ]
+}
