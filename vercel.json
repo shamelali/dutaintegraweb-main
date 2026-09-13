@@ -1,6 +1,10 @@
 {
   "buildCommand": "",
   "outputDirectory": "Web",
+  "redirects": [
+    { "source": "/ms/:path*", "destination": "/:path*" },
+    { "source": "/ms", "destination": "/" }
+  ],
   "rewrites": [
     { "source": "/api/send-email", "destination": "/api/gateway" },
     { "source": "/api/quiz", "destination": "/api/gateway" },
