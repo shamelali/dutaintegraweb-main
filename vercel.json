@@ -1,5 +1,4 @@
 {
-  "buildCommand": "",
   "outputDirectory": "Web",
   "redirects": [
     { "source": "/ms/:path*", "destination": "/:path*" },
