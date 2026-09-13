@@ -131,24 +131,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 .team-card h4{font-family:'Syne',sans-serif;font-weight:700;margin-bottom:.25rem;color:var(--navy)}
 .team-card .role{color:var(--electric);font-size:.8rem;font-weight:600;margin-bottom:.6rem}
 .team-card p{color:var(--gray);font-size:.83rem;line-height:1.6}
-/* CASE STUDIES */
-.cases-grid{padding:5rem 6%;background:white}
-.cases-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem;margin-top:3rem}
-.case-card{border:1.5px solid #E5EBF5;border-radius:12px;overflow:hidden;transition:all .25s;cursor:pointer}
-.case-card:hover{border-color:var(--electric);box-shadow:0 10px 40px rgba(21,101,192,.1);transform:translateY(-3px)}
-.case-header{padding:2rem;background:var(--navy);position:relative}
-.case-header .client-tag{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--electric);font-weight:600;margin-bottom:.6rem}
-.case-header h3{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;color:white;margin-bottom:.5rem}
-.case-header p{color:rgba(255,255,255,.5);font-size:.84rem}
-.case-body{padding:2rem}
-.case-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
-.case-tag{background:#EBF4FF;color:var(--blue);font-size:.72rem;font-weight:600;padding:.25rem .6rem;border-radius:4px}
-.case-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.4rem}
-.metric{text-align:center}
-.metric .val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--navy);display:block}
-.metric .lbl{color:var(--gray);font-size:.74rem;margin-top:.15rem}
-.case-body p{color:var(--gray);font-size:.87rem;line-height:1.7;margin-bottom:1.2rem}
-.case-btns{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+/* (case-studies styles removed with the Projects section) */
 .btn-outline-sm{background:transparent;color:var(--blue);border:1.5px solid var(--blue);padding:.5rem 1rem;border-radius:5px;font-weight:600;text-decoration:none;font-size:.85rem;display:inline-block;transition:all .2s;cursor:pointer}
 .btn-outline-sm:hover{background:var(--blue);color:white}
 /* PRICING */
@@ -248,10 +231,6 @@ body.dark-mode .contact-form{background:#1a2744;border-color:#2d3f5e}
 body.dark-mode .contact-form h3{color:#e2e8f0}
 body.dark-mode .form-group label{color:#e2e8f0}
 body.dark-mode .form-group input,.form-group select,.form-group textarea{background:#0f1629;border-color:#2d3f5e;color:#e2e8f0}
-body.dark-mode .cases-grid{background:#0f1629}
-body.dark-mode .case-card{background:#1a2744;border-color:#2d3f5e}
-body.dark-mode .case-card .case-header{background:#050a14}
-body.dark-mode .case-metrics .metric .val{color:#e2e8f0}
 body.dark-mode .pricing-grid .price-card{background:#1a2744;border-color:#2d3f5e}
 body.dark-mode .pricing-grid .price-card:nth-child(1) h3{color:#5EEAD4}
 body.dark-mode .pricing-grid .price-card:nth-child(2) h3{color:#00B4FF}
@@ -280,9 +259,7 @@ body.dark-mode .page{background:#0a0f1d}
   <div class="logo"><a href="index.html"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></a></div>
   <ul class="nav-links">
     <li><a href="services.html">Services</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="cases.html">Projects</a></li>
-    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="about.html">About</a></li>    <li><a href="pricing.html">Pricing</a></li>
     <li><a href="quiz.html" style="color:var(--electric)">Find Your Tier</a></li>
     <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
     <li><a href="pdpa.html" style="color:var(--electric)">PDPA Check</a></li>
@@ -394,9 +371,7 @@ body.dark-mode .page{background:#0a0f1d}
       </div>
       <div class="footer-col">
         <h5>Company</h5>
-        <a href="about.html">About Us</a>
-        <a href="cases.html">Projects</a>
-        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About Us</a>        <a href="pricing.html">Pricing</a>
         <a href="contact.html">Contact</a>
       </div>
       <div class="footer-col">
@@ -523,7 +498,7 @@ body.dark-mode .page{background:#0a0f1d}
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
@@ -596,107 +571,14 @@ body.dark-mode .page{background:#0a0f1d}
     <p>We'd love to meet you — whether over a call, a coffee, or a WhatsApp message.</p>
     <div class="cta-btns">
       <button class="btn-navy" onclick="goPage('contact')">Get in Touch</button>
-      <button class="btn-primary" onclick="goPage('cases')">See Our Work →</button>
+      <button class="btn-primary" onclick="goPage('services')">Explore Services →</button>
     </div>
   </section>
 
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
-      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
-    </div>
-    <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
-  </footer>
-</div>
-
-<!-- ===================== CASE STUDIES ===================== -->
-<div class="page" id="page-cases">
-  <div class="page-hero">
-    <div class="page-hero-label">Projects</div>
-    <h1>Projects We've Delivered</h1>
-    <p>Real products we've built. Click through to preview them live.</p>
-  </div>
-
-  <section class="cases-grid">
-    <div class="section-eyebrow">Our Portfolio</div>
-    <h2 class="section-title">Our Projects</h2>
-    <p class="section-sub">Every project we take on is built from the ground up by our team. Here are some of the products we've developed.</p>
-
-    <div class="cases-list">
-      <div class="case-card">
-        <div class="case-header">
-          <div class="client-tag">Project · 2026</div>
-          <h3>Eastelpro</h3>
-          <p>WiFi Marketing & SIM Platform</p>
-        </div>
-        <div class="case-body">
-          <div class="case-tags">
-            <span class="case-tag">Cloud</span>
-            <span class="case-tag">Managed IT</span>
-            <span class="case-tag">Web Platform</span>
-          </div>
-          <div class="case-metrics">
-            <div class="metric"><span class="val">99.9%</span><span class="lbl">Uptime</span></div>
-            <div class="metric"><span class="val">50%</span><span class="lbl">Cost Save</span></div>
-            <div class="metric"><span class="val">0</span><span class="lbl">Downtime</span></div>
-          </div>
-          <p>We built EastelPro — a full-stack WiFi marketing platform with captive portal, PDPA consent logging, OTP authentication, and an affiliate commission engine. Complete with cloud infrastructure and managed IT.</p>
-          <div class="case-btns">
-            <a href="https://eastelpro-vercel.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-outline-sm">Preview ↗</a>
-            <button class="btn-primary" style="padding:.6rem 1.2rem;font-size:.85rem" onclick="goPage('contact')">View Details</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="case-card">
-        <div class="case-header">
-          <div class="client-tag">Project · 2026</div>
-          <h3>AGMX</h3>
-          <p>AGM Operating System (Updating)</p>
-        </div>
-        <div class="case-body">
-          <div class="case-tags">
-            <span class="case-tag">AI/ML</span>
-            <span class="case-tag">Web Application</span>
-            <span class="case-tag">Compliance</span>
-          </div>
-          <div class="case-metrics">
-            <div class="metric"><span class="val">98%</span><span class="lbl">Compliance</span></div>
-            <div class="metric"><span class="val">16</span><span class="lbl">AGMs Run</span></div>
-            <div class="metric"><span class="val">4</span><span class="lbl">AI Agents</span></div>
-          </div>
-          <p>We built AGMX — Malaysia's first AI-powered cooperative governance operating system. End-to-end AGM management with e-voting, compliance automation (Akta Koperasi 1993), and a 4-agent AI Governance Copilot.</p>
-          <div class="case-btns">
-            <a href="https://agmx-project.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-outline-sm">Preview ↗</a>
-            <button class="btn-primary" style="padding:.6rem 1.2rem;font-size:.85rem" onclick="goPage('contact')">View Details</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="case-card">
-        <div class="case-header">
-          <div class="client-tag" style="color:var(--electric);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:.6rem">Launching Soon</div>
-          <h3>DutaConnect</h3>
-          <p>Community Platform</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="cta-band">
-    <h2>Ready to Get Similar Results?</h2>
-    <p>Let's discuss how we can help your business achieve its goals with smart technology.</p>
-    <div class="cta-btns">
-      <button class="btn-navy" onclick="goPage('contact')">Book Free Consultation</button>
-      <button class="btn-primary" onclick="goPage('pricing')">View Pricing →</button>
-    </div>
-  </section>
-
-  <footer>
-    <div class="footer-top">
-      <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
@@ -796,7 +678,7 @@ body.dark-mode .page{background:#0a0f1d}
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
@@ -867,7 +749,7 @@ body.dark-mode .page{background:#0a0f1d}
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('cases')">Projects</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
+      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a></div>
       <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegrasolutions.com</p></div>
@@ -878,7 +760,7 @@ body.dark-mode .page{background:#0a0f1d}
 // Language Translations
 const translations = {
   en: {
-    navServices: 'Services', navAbout: 'About', navCases: 'Projects', navPricing: 'Pricing', navContact: 'Contact Us',
+    navServices: 'Services', navAbout: 'About', navPricing: 'Pricing', navContact: 'Contact Us',
     heroBadge: "🇲🇾 Malaysia's AI-First IT Partner", heroTitle1: 'Smart Technology.', heroTitle2: 'Integrated Solutions.',
     heroDesc: "We help Malaysian businesses grow with custom AI software and reliable managed IT — from intelligent chatbots to cloud infrastructure, all under one roof.",
     heroBtn1: 'Get a Free IT Audit', heroBtn2: 'Explore Services →',
@@ -901,7 +783,7 @@ const translations = {
     footerCompany: 'Company', footerServices: 'Services'
   },
   bm: {
-    navServices: 'Perkhidmatan', navAbout: 'Tentang', navCases: 'Kajian Kes', navPricing: 'Harga', navContact: 'Hubungi Kami',
+    navServices: 'Perkhidmatan', navAbout: 'Tentang', navPricing: 'Harga', navContact: 'Hubungi Kami',
     heroBadge: '🇲🇾 Partner IT Pertama Berasaskan AI Malaysia', heroTitle1: 'Teknologi Cerdik.', heroTitle2: 'Penyelesaian Terintegrasi.',
     heroDesc: 'Kami membantu perniagaan Malaysia berkembang dengan perisian AI tersuai dan IT yang diurus dengan dipercayai — dari chatbot pintar hingga infrastruktur云计算, semua dalam satu perlindungan.',
     heroBtn1: 'Dapatkan Audit IT Percuma', heroBtn2: 'Terokai Perkhidmatan →',
@@ -939,9 +821,8 @@ function applyTranslations() {
   // Nav
   document.querySelectorAll('.nav-links a')[0].textContent = t.navServices;
   document.querySelectorAll('.nav-links a')[1].textContent = t.navAbout;
-  document.querySelectorAll('.nav-links a')[2].textContent = t.navCases;
-  document.querySelectorAll('.nav-links a')[3].textContent = t.navPricing;
-  document.querySelectorAll('.nav-links a')[4].textContent = t.navContact;
+  document.querySelectorAll('.nav-links a')[2].textContent = t.navPricing;
+  document.querySelectorAll('.nav-links a')[3].textContent = t.navContact;
   // Hero
   document.querySelector('.hero-badge').textContent = t.heroBadge;
   document.querySelector('.hero h1').innerHTML = t.heroTitle1 + '<br><span>' + t.heroTitle2 + '</span>';
