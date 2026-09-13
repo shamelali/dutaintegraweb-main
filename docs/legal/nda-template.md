@@ -8,13 +8,13 @@
 **This Mutual Non-Disclosure Agreement** ("Agreement") is made on
 `[EFFECTIVE DATE]` between:
 
-1. `[LEISH OPERATING COMPANY SDN BHD]`, company no. `[NUMBER]`, of `[ADDRESS]`
+1. `[DUTA INTEGRA SOLUTIONS SDN BHD]`, company no. `[NUMBER]`, of `[ADDRESS]`
    ("**Party A**"); and
 2. `[COUNTERPARTY NAME]`, `[ID/COMPANY NO.]`, of `[ADDRESS]`
    ("**Party B**").
 
 Each a "Party", together the "Parties". Parties A and B wish to explore
-`[DESCRIBE PURPOSE — e.g., listing on the Leish! marketplace, a partnership,
+`[DESCRIBE PURPOSE — e.g., a managed IT engagement, an AI development project,
 integration, investment discussions]` (the "**Purpose**") and, in doing so,
 may disclose confidential information to each other.
 
@@ -30,7 +30,7 @@ its nature and the circumstances of disclosure. It includes:
 - business plans, pricing, commission and fee structures;
 - platform metrics, user statistics and financial data;
 - software, source code, system architecture and security practices;
-- supplier, client, artist and studio lists;
+- supplier, client and prospect lists;
 - personal data of platform users;
 - marketing strategies and unpublished materials.
 
