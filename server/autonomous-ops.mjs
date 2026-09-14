@@ -141,10 +141,10 @@ export async function ingestEvent(event) {
   // keep max 500 events
   if (events.length > 500) events.length = 500;
   await writeEvents(events);
+  // purge events older than 30 days
+  await rotateEvents();
   return record;
 }
-
-// ── public API ───────────────────────────────────────────────────────────────
 
 /**
  * Get the latest feed events. Only returns events where consent=true.
@@ -195,6 +195,27 @@ export async function recordEvent(event) {
   if (events.length > 500) events.length = 500;
   await writeEvents(events);
   return record;
+}
+
+// ── event rotation ───────────────────────────────────────────────────────────
+
+const MAX_EVENT_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+/**
+ * Purge events older than 30 days.
+ * Called automatically during ingestEvent to keep the store lean.
+ * Returns the number of events removed.
+ */
+export async function rotateEvents() {
+  const events = await readEvents();
+  const cutoff = Date.now() - MAX_EVENT_AGE_MS;
+  const before = events.length;
+  const kept = events.filter((e) => {
+    try { return new Date(e.ts).getTime() > cutoff; } catch { return true; }
+  });
+  const removed = before - kept.length;
+  if (removed > 0) await writeEvents(kept);
+  return removed;
 }
 
 // ── PDPA consent management ──────────────────────────────────────────────────
