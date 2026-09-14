@@ -88,6 +88,7 @@ function minutesAgo(min) {
 /**
  * Seed the event store with realistic demo data if empty.
  * Each event is anonymized — no client names, only region + industry.
+ * In production this is disabled; real events come from /api/ops/events.
  */
 export async function seedDemoEvents() {
   const existing = await readEvents();
@@ -112,6 +113,35 @@ export async function seedDemoEvents() {
   events.sort((a, b) => new Date(b.ts) - new Date(a.ts));
   await writeEvents(events);
   return events;
+}
+
+/**
+ * Ingest real events from monitoring agents.
+ * Validates required fields, anonymizes client info, appends to JSONL.
+ * Returns the recorded event.
+ */
+export async function ingestEvent(event) {
+  if (!event.cat) throw new Error("cat is required");
+  if (!event.action) throw new Error("action is required");
+
+  const record = {
+    id: randomUUID(),
+    cat: event.cat,         // disk, backup, security, patch, uptime, scale, ssl, memory, access, firewall, database, cost, ticket
+    action: event.action,
+    detail: event.detail || "",
+    severity: event.severity || "info",   // info | warning | error
+    auto: event.auto !== false,           // true = system-resolved, false = human action
+    client_region: event.client_region || "KL",
+    client_industry: event.client_industry || "SME",
+    ts: event.ts || new Date().toISOString(),
+    consented: true, // ingested events have implied consent (client opted in via their contract)
+  };
+  const events = await readEvents();
+  events.unshift(record);
+  // keep max 500 events
+  if (events.length > 500) events.length = 500;
+  await writeEvents(events);
+  return record;
 }
 
 // ── public API ───────────────────────────────────────────────────────────────
@@ -229,12 +259,6 @@ export async function handleFeed(req, res) {
   const url = new URL(req.url ?? "/", "http://localhost");
   const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") || "20", 10), 1), 50);
 
-  // Seed demo events on first request if store is empty
-  const existing = await readEvents();
-  if (existing.length === 0) {
-    await seedDemoEvents();
-  }
-
   const data = await getFeed(limit);
 
   res.writeHead(200, {
@@ -303,4 +327,75 @@ export async function handleConsent(req, res) {
 
   res.writeHead(200, { "content-type": "application/json" });
   res.end(JSON.stringify({ ok: true, consent: result }));
+}
+
+/**
+ * POST /api/ops/events — ingest events from monitoring agents.
+ * Requires x-admin-token header matching ADMIN_TOKEN env var.
+ * Body: { cat, action, detail?, severity?, auto?, client_region?, client_industry? }
+ */
+export async function handleIngestEvent(req, res) {
+  if (req.method !== "POST") {
+    res.writeHead(405, { "content-type": "application/json" });
+    res.end(JSON.stringify({ error: "Method not allowed" }));
+    return;
+  }
+
+  const token = req.headers["x-admin-token"];
+  if (!token || token !== process.env.ADMIN_TOKEN) {
+    res.writeHead(401, { "content-type": "application/json" });
+    res.end(JSON.stringify({ error: "Unauthorized" }));
+    return;
+  }
+
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > 8192) {
+      res.writeHead(413, { "content-type": "application/json" });
+      res.end(JSON.stringify({ error: "Payload too large" }));
+      return;
+    }
+    chunks.push(chunk);
+  }
+
+  let body;
+  try {
+    body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+  } catch {
+    res.writeHead(400, { "content-type": "application/json" });
+    res.end(JSON.stringify({ error: "Invalid JSON" }));
+    return;
+  }
+
+  if (!body.cat || !body.action) {
+    res.writeHead(400, { "content-type": "application/json" });
+    res.end(JSON.stringify({ error: "cat and action are required" }));
+    return;
+  }
+
+  const VALID_CATS = ["disk", "backup", "security", "patch", "uptime", "scale", "ssl", "memory", "access", "firewall", "database", "cost", "ticket"];
+  if (!VALID_CATS.includes(body.cat)) {
+    res.writeHead(400, { "content-type": "application/json" });
+    res.end(JSON.stringify({ error: `Invalid cat. Must be one of: ${VALID_CATS.join(", ")}` }));
+    return;
+  }
+
+  const VALID_SEVERITIES = ["info", "warning", "error"];
+  if (body.severity && !VALID_SEVERITIES.includes(body.severity)) {
+    res.writeHead(400, { "content-type": "application/json" });
+    res.end(JSON.stringify({ error: `Invalid severity. Must be one of: ${VALID_SEVERITIES.join(", ")}` }));
+    return;
+  }
+
+  try {
+    const record = await ingestEvent(body);
+    console.log(`[ops-ingest] ${record.cat}: ${record.action}`);
+    res.writeHead(201, { "content-type": "application/json" });
+    res.end(JSON.stringify({ ok: true, event: record }));
+  } catch (err) {
+    res.writeHead(400, { "content-type": "application/json" });
+    res.end(JSON.stringify({ error: err.message }));
+  }
 }

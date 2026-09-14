@@ -621,4 +621,96 @@ describe("client portal — auth and tickets", () => {
       assert.ok(html.includes("AI"));
     });
   });
+
+  describe("Autonomous Ops — event ingestion", () => {
+    test("POST /api/ops/events creates an event with valid token", async () => {
+      const res = await fetch(`${base}/api/ops/events`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-admin-token": process.env.ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ cat: "security", action: "Threat blocked", detail: "Test event" }),
+      });
+      assert.equal(res.status, 201);
+      const data = await res.json();
+      assert.equal(data.ok, true);
+      assert.equal(data.event.cat, "security");
+      assert.equal(data.event.action, "Threat blocked");
+      assert.equal(data.event.severity, "info");
+      assert.equal(data.event.auto, true);
+    });
+
+    test("POST /api/ops/events rejects missing token", async () => {
+      const res = await fetch(`${base}/api/ops/events`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ cat: "disk", action: "Cleanup" }),
+      });
+      assert.equal(res.status, 401);
+    });
+
+    test("POST /api/ops/events rejects wrong token", async () => {
+      const res = await fetch(`${base}/api/ops/events`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-admin-token": "wrong-token",
+        },
+        body: JSON.stringify({ cat: "disk", action: "Cleanup" }),
+      });
+      assert.equal(res.status, 401);
+    });
+
+    test("POST /api/ops/events rejects missing cat", async () => {
+      const res = await fetch(`${base}/api/ops/events`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-admin-token": process.env.ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ action: "Cleanup" }),
+      });
+      assert.equal(res.status, 400);
+    });
+
+    test("POST /api/ops/events rejects invalid cat", async () => {
+      const res = await fetch(`${base}/api/ops/events`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-admin-token": process.env.ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ cat: "invalid-cat", action: "Cleanup" }),
+      });
+      assert.equal(res.status, 400);
+    });
+
+    test("POST /api/ops/events rejects GET", async () => {
+      const res = await fetch(`${base}/api/ops/events`);
+      assert.equal(res.status, 405);
+    });
+
+    test("POST /api/ops/events rejects missing action", async () => {
+      const res = await fetch(`${base}/api/ops/events`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-admin-token": process.env.ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ cat: "backup" }),
+      });
+      assert.equal(res.status, 400);
+    });
+
+    test("GET /api/ops/feed returns events including recently ingested", async () => {
+      const res = await fetch(`${base}/api/ops/feed?limit=5`);
+      assert.equal(res.status, 200);
+      const data = await res.json();
+      assert.ok(Array.isArray(data.events));
+      assert.ok(data.events.length > 0);
+      assert.ok(typeof data.stats === "object");
+      assert.ok(typeof data.stats.total === "number");
+    });
+  });
 });
