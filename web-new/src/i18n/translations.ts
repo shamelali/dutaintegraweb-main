@@ -20,8 +20,8 @@ export const translations = {
     bm: "Hubungi Kami",
   },
   navQuiz: {
-    en: "Find Your Tier",
-    bm: "Cari Pelan Anda",
+    en: "Free IT Audit",
+    bm: "Audit IT Percuma",
   },
   navAutonomousOps: {
     en: "Autonomous Ops",
@@ -1131,5 +1131,169 @@ export const translations = {
   convStickyCta: {
     en: "Take the Quiz",
     bm: "Ambil Kuiz",
+  },
+  quizTitle: {
+    en: "Run Your Free IT Audit",
+    bm: "Jalankan Audit IT Percuma Anda",
+  },
+  quizDesc: {
+    en: "3 quick questions to uncover where your IT is leaking money — and exactly how much you could save.",
+    bm: "3 soalan pantas untuk dedahkan di mana IT anda bocor wang — dan berapa banyak anda boleh jimat.",
+  },
+  quizStart: {
+    en: "Run Audit →",
+    bm: "Jalankan Audit →",
+  },
+  quizContactInstead: {
+    en: "Talk to a human instead",
+    bm: "Bercakap dengan manusia",
+  },
+  quizStep: {
+    en: "Step",
+    bm: "Langkah",
+  },
+  quizBack: {
+    en: "Back",
+    bm: "Kembali",
+  },
+  quizQ1: {
+    en: "How many people are on your team?",
+    bm: "Berapa orang dalam pasukan anda?",
+  },
+  quizQ1A1: { en: "1–5", bm: "1–5" },
+  quizQ1A2: { en: "6–20", bm: "6–20" },
+  quizQ1A3: { en: "21–50", bm: "21–50" },
+  quizQ1A4: { en: "50+", bm: "50+" },
+  quizQ2: {
+    en: "How do you currently handle IT?",
+    bm: "Bagaimana anda uruskan IT sekarang?",
+  },
+  quizQ2A1: { en: "No dedicated IT", bm: "Tiada IT khusus" },
+  quizQ2A2: { en: "Part-time / founder handles it", bm: "Separuh masa / pengasas uruskan" },
+  quizQ2A3: { en: "Outsourced to vendor", bm: "Diserahkan kepada vendor" },
+  quizQ2A4: { en: "In-house IT team", bm: "Pasukan IT sendiri" },
+  quizQ3: {
+    en: "What's your biggest IT pain point right now?",
+    bm: "Apakah masalah IT terbesar anda sekarang?",
+  },
+  quizQ3A1: { en: "Spending too much / no ROI", bm: "Belanja terlalu / tiada pulangan" },
+  quizQ3A2: { en: "Losing time to manual work", bm: "Masa hilang kerja manual" },
+  quizQ3A3: { en: "Security / compliance gaps", bm: "Jurang keselamatan / pematuhan" },
+  quizQ3A4: { en: "Can't scale fast enough", bm: "Tidak boleh berkembang cukup cepat" },
+  quizAuditComplete: {
+    en: "Audit Complete",
+    bm: "Audit Selesai",
+  },
+  quizResStarterTitle: {
+    en: "Foundation Tier",
+    bm: "Peringkat Asas",
+  },
+  quizResStarterDesc: {
+    en: "You're leaving money on the table. Your IT setup is fragile, undocumented, and creating hidden drag on growth — but the fix is straightforward.",
+    bm: "Anda tinggalkan wang di atas meja. Persediaan IT anda rapuh, tidak didokumentasi, dan menjejaskan pertumbuhan — tetapi pembaikannya mudah.",
+  },
+  quizResStarterF1: {
+    en: "Audit reveals exact cost of current IT gaps",
+    bm: "Audit mendedahkan kos sebenar jurang IT semasa",
+  },
+  quizResStarterF2: {
+    en: "Basic cloud migration saves 20–30% on infrastructure",
+    bm: "Migrasi awan asas jimat 20–30% pada infrastruktur",
+  },
+  quizResStarterF3: {
+    en: "PDPA compliance checklist — avoid RM 250k fines",
+    bm: "Senarai semak pematuhan PDPA — elak denda RM 250k",
+  },
+  quizResGrowthTitle: {
+    en: "Growth Tier",
+    bm: "Peringkat Pertumbuhan",
+  },
+  quizResGrowthDesc: {
+    en: "You're scaling fast but your IT hasn't kept up. Security gaps, undocumented processes, and tool sprawl are your biggest risks right now.",
+    bm: "Anda berkembang pesat tetapi IT tidak mengikut. Jurang keselamatan, proses tidak didokumentasi, dan penggunaan alat berlebihan adalah risiko terbesar anda.",
+  },
+  quizResGrowthF1: {
+    en: "Managed security — 24/7 monitoring for RM 2–5k/mo",
+    bm: "Keselamatan terurus — pemantauan 24/7 untuk RM 2–5k/bln",
+  },
+  quizResGrowthF2: {
+    en: "Cloud migration eliminates server downtime risk",
+    bm: "Migrasi awan hapuskan risiko server down",
+  },
+  quizResGrowthF3: {
+    en: "Process automation saves 15–25 hrs/week across team",
+    bm: "Automasi proses jimat 15–25 jam/minggu untuk pasukan",
+  },
+  quizResGrowthF4: {
+    en: "Vendor consolidation cuts tool costs 20–40%",
+    bm: "Pengukuhan vendor potong kos alat 20–40%",
+  },
+  quizResEntTitle: {
+    en: "AI Partner Tier",
+    bm: "Peringkat Rakan AI",
+  },
+  quizResEntDesc: {
+    en: "You're ready for AI-first operations. Your team has the scale and the pain points that AI automation solves fastest — this is where the biggest ROI lives.",
+    bm: "Anda bersedia untuk operasi AI-utama. Pasukan anda mempunyai skala dan masalah yang AI selesaikan paling cepat — di sinilah ROI terbesar.",
+  },
+  quizResEntF1: {
+    en: "AI automation saves 40–60% on repetitive tasks",
+    bm: "Automasi AI jimat 40–60% pada tugas berulang",
+  },
+  quizResEntF2: {
+    en: "Dedicated AI engineering — ROI positive in 3 months",
+    bm: "Kejuruteraan AI khusus — ROI positif dalam 3 bulan",
+  },
+  quizResEntF3: {
+    en: "Unified PDPA-compliant automation stack",
+    bm: "Stack automasi pematuhan PDPA bersatu",
+  },
+  quizResEntF4: {
+    en: "Custom dashboards + real-time ops visibility",
+    bm: "Papan pemuka tersuai + keterlihatan operasi masa nyata",
+  },
+  quizResEntF5: {
+    en: "Priority support with 4-hour SLA",
+    bm: "Sokongan keutamaan dengan SLA 4 jam",
+  },
+  quizLeadTitle: {
+    en: "Get your full audit report",
+    bm: "Dapatkan laporan audit penuh anda",
+  },
+  quizLeadDesc: {
+    en: "We'll email you the detailed findings, savings estimate, and recommended next steps.",
+    bm: "Kami akan hantar e-mel penemuan terperinci, anggaran jimat, dan langkah seterusnya.",
+  },
+  quizLeadName: {
+    en: "Name",
+    bm: "Nama",
+  },
+  quizLeadPhone: {
+    en: "Phone",
+    bm: "Telefon",
+  },
+  quizLeadCta: {
+    en: "Send Audit Report",
+    bm: "Hantar Laporan Audit",
+  },
+  quizSkip: {
+    en: "Skip for now",
+    bm: "Langkau sekarang",
+  },
+  quizLeadThanks: {
+    en: "Your audit report is on its way! Check your WhatsApp.",
+    bm: "Laporan audit anda sedang dalam perjalanan! Semak WhatsApp anda.",
+  },
+  quizLeadWa: {
+    en: "Chat with us on WhatsApp →",
+    bm: "Bual dengan kami di WhatsApp →",
+  },
+  quizRetake: {
+    en: "Retake Audit",
+    bm: "Ambil Semula Audit",
+  },
+  quizContactUs: {
+    en: "Book Free Audit Call",
+    bm: "Tempah Panggilan Audit Percuma",
   },
 } as const
