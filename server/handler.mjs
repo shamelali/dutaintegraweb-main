@@ -6,6 +6,7 @@ import { listEnquiries, notifyEnquiry, recordEnquiry, resolveInboxEmail } from "
 import { timingSafeEqual } from "node:crypto";
 import { handleStats } from "./stats.mjs";
 import { calculateSavings } from "./calculator.mjs";
+import { handleFeed, handleConsent, seedDemoEvents } from "./autonomous-ops.mjs";
 
 import {
   handleLogin,
@@ -653,6 +654,8 @@ export async function handle(req, res) {
     }
     if (pathname === "/api/stats") return await handleStats(req, res);
     if (pathname === "/api/calculator") return await handleCalculator(req, res);
+    if (pathname === "/api/ops/feed") return await handleFeed(req, res);
+    if (pathname === "/api/ops/consent") return await handleConsent(req, res);
     if (pathname.startsWith("/api/")) return send(res, 404, { error: "Not found" });
     return await serveStatic(req, res, urlPath);
   } catch (err) {
