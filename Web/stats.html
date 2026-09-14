@@ -67,6 +67,7 @@ footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
 @media(max-width:768px){.stats-grid{grid-template-columns:1fr 1fr}.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
 @media(max-width:480px){.stats-grid{grid-template-columns:1fr}}
 </style>
+<link rel="stylesheet" href="css/dark.css">
 <!-- Google Analytics — replace YOUR_GA4_ID with your measurement ID from analytics.google.com -->
 <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA4_ID"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','YOUR_GA4_ID')</script> -->
@@ -87,6 +88,8 @@ footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
     <li><a href="/autonomous-ops.html" style="color:var(--electric)">Autonomous Ops</a></li>
     <li><a href="/contact.html">Contact</a></li>
     <li><a href="/portal/login.html" class="nav-cta">Client Portal</a></li>
+      <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
+    <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
 </nav>
 
@@ -158,5 +161,6 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.2 });
 observer.observe(document.getElementById('statsGrid'));
 </script>
+<script src="js/site.js"></script>
 </body>
 </html>
