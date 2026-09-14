@@ -191,10 +191,10 @@ export function QuizPage() {
         {step === 4 && results && (
           <Card className="p-10">
             <div className="text-center mb-8">
+              <Badge variant="electric" className="mb-3">{t("quizAuditComplete")}</Badge>
               <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mx-auto mb-4">
                 {results.icon}
               </div>
-              <Badge variant="electric" className="mb-3">{t("quizYourResult")}</Badge>
               <h1 className="text-3xl font-heading font-bold mb-2">{t(results.title as TranslationKey)}</h1>
               <p className="text-muted-foreground max-w-md mx-auto">{t(results.desc as TranslationKey)}</p>
             </div>
@@ -208,7 +208,7 @@ export function QuizPage() {
               ))}
             </div>
 
-            {/* Lead capture */}
+            {/* Optional lead capture — shown after results */}
             {!submitted ? (
               <div className="bg-muted/50 rounded-xl p-6 mb-8">
                 <h3 className="font-heading font-semibold mb-1">{t("quizLeadTitle")}</h3>
@@ -233,23 +233,28 @@ export function QuizPage() {
                     />
                   </div>
                 </div>
-                <Button
-                  variant="electric"
-                  className="w-full"
-                  onClick={handleLeadSubmit}
-                  disabled={!name || !phone}
-                >
-                  <span className="flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4" />
-                    {t("quizLeadCta")}
-                  </span>
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    variant="electric"
+                    className="flex-1"
+                    onClick={handleLeadSubmit}
+                    disabled={!name || !phone}
+                  >
+                    <span className="flex items-center gap-2">
+                      <MessageCircle className="w-4 h-4" />
+                      {t("quizLeadCta")}
+                    </span>
+                  </Button>
+                  <Button variant="ghost" className="flex-1" onClick={() => setSubmitted(true)}>
+                    {t("quizSkip")}
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="bg-electric/10 rounded-xl p-6 mb-8 text-center">
                 <p className="font-medium mb-2">{t("quizLeadThanks")}</p>
                 <a
-                  href="https://wa.me/601154034051?text=Hi%20Duta%20Integra!%20I%20completed%20the%20quiz%20and%20got%20the%20Starter%20tier."
+                  href="https://wa.me/601154034051?text=Hi%20Duta%20Integra!%20I%20completed%20the%20free%20IT%20audit."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-electric font-semibold text-sm hover:underline"

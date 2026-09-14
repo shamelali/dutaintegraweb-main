@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IT Readiness Quiz — Is Your Business Ready for AI? | Duta Integra</title>
+  <title>Free IT Audit — Assess Your Business IT in 2 Minutes | Duta Integra</title>
     <meta name="google-site-verification" content="m2PLSMszP1wPhT4dWDXXdIYqG8Kdrtn6Vcx2_9SFjMw">
     <meta name="google-site-verification" content="Jw9gXTmsZJY7DFvXiL23u5Vl7XwcrjYtBEGM0LapJ84">
-  <meta name="description" content="Take our free 2-minute IT readiness quiz. Find out where your business stands on automation, security, and cloud — get a personalized roadmap.">
+  <meta name="description" content="Run a free IT audit on your business in 2 minutes. Find out where you're losing money on IT — no signup required, instant results.">
   <link rel="canonical" href="https://dutaintegra.my/quiz.html">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="IT Readiness Quiz — Is Your Business Ready for AI?">
-  <meta property="og:description" content="Free 2-minute quiz. Get a personalized IT roadmap for your Malaysian SME.">
+  <meta property="og:title" content="Free IT Audit — Assess Your Business IT">
+  <meta property="og:description" content="Free 2-minute IT audit for Malaysian SMEs. Find hidden costs and get a custom roadmap.">
   <meta property="og:url" content="https://dutaintegra.my/quiz.html">
   <meta property="og:site_name" content="Duta Integra Solutions">
   <meta property="og:locale" content="en_MY">
   <meta property="og:image" content="https://dutaintegra.my/assets/og-image.svg">
   <meta name="twitter:image" content="https://dutaintegra.my/assets/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="IT Readiness Quiz | Duta Integra">
-  <meta name="twitter:description" content="Free 2-minute IT readiness quiz for Malaysian SMEs.">
+  <meta name="twitter:title" content="Free IT Audit | Duta Integra">
+  <meta name="twitter:description" content="Run a free IT audit on your Malaysian SME in 2 minutes.">
   <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
   <link rel="icon" type="image/png" href="../assets/dis-favicon.png">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
@@ -90,11 +90,23 @@ tailwind.config = {
     .btn-primary:hover{opacity:.85}
     .btn-secondary{background:transparent;color:var(--navy);padding:.85rem 2rem;border-radius:5px;font-weight:700;text-decoration:none;font-size:.92rem;cursor:pointer;border:2px solid var(--navy);display:inline-block;transition:all .2s;margin-left:1rem}
     .btn-secondary:hover{background:var(--navy);color:white}
-    .result-card{text-align:center;padding:3rem 2rem}
-    .result-card .tier{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--electric);margin-bottom:.5rem}
-    .result-card .score{font-size:1rem;color:var(--gray);margin-bottom:2rem}
-    .result-card .description{color:var(--gray);line-height:1.7;margin-bottom:1.5rem}
-    .result-card .next-step{background:var(--navy);color:white;padding:1.2rem 1.5rem;border-radius:12px;margin-bottom:2rem;font-size:.9rem}
+    .result-card{text-align:left;padding:2rem 0}
+    .result-card .tier-badge{display:inline-block;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:white;background:var(--electric);padding:.4rem 1.2rem;border-radius:20px;margin-bottom:1rem}
+    .result-card .tier{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--navy);margin-bottom:.5rem}
+    .result-card .score{font-size:.85rem;color:var(--gray);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #E0E7EF}
+    .result-card .description{color:var(--gray);line-height:1.7;margin-bottom:2rem;font-size:.93rem}
+    .findings{margin-bottom:2rem}
+    .findings h4{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:1rem}
+    .finding-item{display:flex;gap:.8rem;margin-bottom:1rem;padding:1rem;background:rgba(0,180,255,.04);border-radius:10px;border-left:3px solid var(--electric)}
+    .finding-item .icon{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
+    .finding-item .text{font-size:.88rem;color:var(--navy);line-height:1.6}
+    .savings-box{background:var(--navy);color:white;padding:1.5rem;border-radius:12px;margin-bottom:2rem;text-align:center}
+    .savings-box .label{font-size:.8rem;opacity:.7;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+    .savings-box .amount{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--electric)}
+    .savings-box .note{font-size:.8rem;opacity:.6;margin-top:.3rem}
+    .next-step{background:#F8FAFF;border:1.5px solid #E5EBF5;padding:1.5rem;border-radius:12px;margin-bottom:2rem}
+    .next-step h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+    .next-step p{color:var(--gray);font-size:.88rem;line-height:1.6;margin-bottom:1rem}
     .hidden{display:none}
     .footer{padding:2rem 6%;text-align:center;color:var(--gray);font-size:.8rem;border-top:1px solid #E0E7EF;margin-top:3rem}
     @media(max-width:600px){.option-grid{grid-template-columns:1fr}.quiz-steps{gap:.3rem}}
@@ -122,9 +134,9 @@ tailwind.config = {
 
 <section class="hero" style="padding-top:5rem;padding-bottom:5rem">
   <div class="container" style="text-align:center">
-    <div class="section-eyebrow">Find Your Fit</div>
-    <h1 class="section-title" style="margin-bottom:1rem">Which Duta Integra tier is right for you?</h1>
-    <p class="section-sub" style="max-width:600px;margin:0 auto 2rem">Answer a few quick questions and we'll recommend the best plan — no pressure, no sales pitch.</p>
+    <div class="section-eyebrow">Free · No Signup · 2 Minutes</div>
+    <h1 class="section-title" style="margin-bottom:1rem">Run Your Free IT Audit</h1>
+    <p class="section-sub" style="max-width:600px;margin:0 auto 2rem">Answer 3 quick questions and get an instant assessment of where your IT is costing you money — with specific recommendations and estimated savings.</p>
     <div class="quiz-steps" id="stepIndicators">
       <div class="step-dot active" title="Step 1"></div>
       <div class="step-dot" title="Step 2"></div>
@@ -163,7 +175,7 @@ tailwind.config = {
     <!-- Step 3: Pain Points -->
     <div class="card hidden" id="step3">
       <h3>What are your biggest pain points?</h3>
-      <p>Select all that apply — this is how we match you to the right tier.</p>
+      <p>Select all that apply — this is how we identify where you're losing money.</p>
       <div class="checkbox-group" id="painPoints">
         <label class="checkbox-item"><input type="checkbox" value="manual_work" onclick="toggleCheckbox(this)"><span>&#9881;</span> Manual, repetitive work</label>
         <label class="checkbox-item"><input type="checkbox" value="scaling" onclick="toggleCheckbox(this)"><span>&#9889;</span> Scaling challenges</label>
@@ -172,21 +184,21 @@ tailwind.config = {
       </div>
     </div>
 
-    <!-- Step 4: Result -->
+    <!-- Step 4: Audit Result -->
     <div class="card hidden" id="step4">
       <div class="result-card" id="resultArea"></div>
     </div>
 
     <!-- Navigation -->
     <div style="display:flex;justify-content:space-between;margin-top:1.5rem" id="quizNav">
-      <button class="btn-secondary hidden" id="prevBtn" onclick="prevStep()">← Back</button>
-      <button class="btn-primary" id="nextBtn" onclick="nextStep()">Next →</button>
+      <button class="btn-secondary hidden" id="prevBtn" onclick="prevStep()">&#8592; Back</button>
+      <button class="btn-primary" id="nextBtn" onclick="nextStep()">Next &#8594;</button>
     </div>
   </div>
 </section>
 
 <div class="footer">
-  © 2026 Duta Integra Solutions Sdn Bhd · <a href="privacy.html" style="color:var(--gray)">Privacy</a> · <a href="terms.html" style="color:var(--gray)">Terms</a>
+  &#169; 2026 Duta Integra Solutions Sdn Bhd · <a href="privacy.html" style="color:var(--gray)">Privacy</a> · <a href="terms.html" style="color:var(--gray)">Terms</a>
 </div>
 
 <script>
@@ -206,13 +218,13 @@ function showStep(n) {
     dot.classList.toggle('done', i < n - 1);
   });
   document.getElementById('prevBtn').classList.toggle('hidden', n === 1);
-  document.getElementById('nextBtn').textContent = n === 3 ? 'Get My Tier →' : 'Next →';
+  document.getElementById('nextBtn').textContent = n === 3 ? 'Run Audit \u2192' : 'Next \u2192';
 }
 function selectOption(el, field, val) {
   el.parentElement.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
   if (field === 'teamSize') teamSize = val;
-  if (n === 1) nextStep();
+  if (step === 1) nextStep();
 }
 function updateSpend() {
   itSpend = parseInt(document.getElementById('itSpend').value);
@@ -237,7 +249,7 @@ function prevStep() { if (step > 1) { step--; showStep(step); } }
 
 async function fetchResult() {
   const btn = document.getElementById('nextBtn');
-  btn.disabled = true; btn.textContent = 'Scoring...';
+  btn.disabled = true; btn.textContent = 'Analyzing...';
   try {
     const res = await fetch('/api/quiz', {
       method: 'POST',
@@ -249,20 +261,27 @@ async function fetchResult() {
     showResult(data);
   } catch(e) {
     document.getElementById('resultArea').innerHTML = '<p style="color:red">Something went wrong. Please try again.</p><br><button class="btn-primary" onclick="location.reload()">Try Again</button>';
-    btn.disabled = false; btn.textContent = 'Next →';
+    btn.disabled = false; btn.textContent = 'Next \u2192';
   }
 }
 function showResult(data) {
   step = 4; showStep(4);
-  const emoji = {Foundation:'🏢',Growth:'📈','AI Partner':'🤖'};
-  document.getElementById('resultArea').innerHTML = `
-    <div class="tier">${emoji[data.tier] || '✅'} ${data.tier}</div>
-    <div class="score">Your compatibility score: ${data.score}/95</div>
-    <div class="description">${data.description}</div>
-    <div class="next-step">${data.nextStep}</div>
-    <a href="contact.html" class="btn-primary">Book a Free Audit Call</a>
-    <button class="btn-secondary" onclick="location.reload()">Retake Quiz</button>
-  `;
+  const emoji = {Foundation:'\u{1F3E2}',Growth:'\u{1F4C8}','AI Partner':'\u{1F916}'};
+  const findingsHtml = data.findings.map(f =>
+    '<div class="finding-item"><div class="icon">\u26A0\uFE0F</div><div class="text">' + f + '</div></div>'
+  ).join('');
+  document.getElementById('resultArea').innerHTML =
+    '<div class="tier-badge">Audit Complete</div>' +
+    '<div class="tier">' + (emoji[data.tier] || '\u2705') + ' ' + data.tier + ' Tier</div>' +
+    '<div class="score">IT Readiness Score: ' + data.score + '/95 &middot; ' + data.auditDate + '</div>' +
+    '<div class="description">' + data.description + '</div>' +
+    '<div class="findings"><h4>Key Findings</h4>' + findingsHtml + '</div>' +
+    '<div class="savings-box"><div class="label">Estimated Annual Savings</div><div class="amount">' + data.estimatedSavings + '</div><div class="note">Based on similar Malaysian SMEs we work with</div></div>' +
+    '<div class="next-step"><h4>Recommended Next Step</h4><p>' + data.nextStep + '</p></div>' +
+    '<div style="text-align:center">' +
+      '<a href="contact.html" class="btn-primary">Book Free Audit Call</a>' +
+      '<button class="btn-secondary" onclick="location.reload()">Run Again</button>' +
+    '</div>';
   document.getElementById('nextBtn').style.display = 'none';
   document.getElementById('prevBtn').style.display = 'none';
 }

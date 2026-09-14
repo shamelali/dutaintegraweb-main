@@ -392,22 +392,44 @@ async function handleQuiz(req, res) {
       return send(res, 400, { error: "Missing teamSize, itSpend, or painPoints" });
 
     const score = scoreQuiz(body);
-    let tier, description, nextStep;
+    let tier, description, nextStep, findings, estimatedSavings;
 
     if (score < 35) {
       tier = "Foundation";
-      description = "Managed IT support for established operations — proactive monitoring, fast response, predictable billing.";
-      nextStep = "Book a 30-minute audit call to see what Foundation covers for your team.";
+      description = "Your IT setup is basic but functional. You're likely paying for reactive fixes instead of proactive management — a common pattern for teams under 20 staff.";
+      nextStep = "Book a free 30-minute audit call and we'll show you exactly where you're leaving money on the table.";
+      findings = [
+        "Team size suggests you may be overpaying for enterprise-tier tools you don't use",
+        "Low IT spend often means reactive break-fix — each unplanned outage costs 5–10× more than prevention",
+        "Manual work pain points indicate automation ROI of 3–6 months"
+      ];
+      estimatedSavings = "RM 18,000–36,000/year by shifting from reactive to managed IT";
     } else if (score < 60) {
       tier = "Growth";
-      description = "Scaled managed IT plus dedicated account management — SLAs, priority response, monthly health reports.";
-      nextStep = "Schedule a Growth assessment — we map your current stack and recommend the exact tier.";
+      description = "You're scaling fast but your IT hasn't kept up. Security gaps, undocumented processes, and tool sprawl are your biggest risks right now.";
+      nextStep = "Schedule a Growth assessment — we map your current stack and show you the exact migration path.";
+      findings = [
+        "Scaling pain points mean your infrastructure is a bottleneck — every new hire amplifies the problem",
+        "Security/compliance gaps expose you to PDPA fines up to RM 1,000,000",
+        "Your IT spend is likely 30–50% below what companies your size typically need"
+      ];
+      estimatedSavings = "RM 48,000–96,000/year with proper cloud migration and managed security";
     } else {
       tier = "AI Partner";
-      description = "Full AI-first partnership — custom automation, workflow design, and strategic AI roadmapping.";
-      nextStep = "Let us build a custom AI roadmap for your team — we start with a discovery workshop.";
+      description = "You're ready for AI-first operations. Your team has the scale and the pain points that AI automation solves fastest — this is where the biggest ROI lives.";
+      nextStep = "Let us build a custom AI roadmap for your team — we start with a 1-hour discovery workshop.";
+      findings = [
+        "AI automation needs combined with manual work = 40–60% time savings on repetitive tasks",
+        "Your team size justifies dedicated AI engineering — the ROI crosses positive within 3 months",
+        "Security/compliance concerns + AI = opportunity for a unified PDPA-compliant automation stack"
+      ];
+      estimatedSavings = "RM 120,000–240,000/year in recovered productivity and reduced headcount needs";
     }
-    return send(res, 200, { tier, score, description, nextStep });
+
+    return send(res, 200, {
+      tier, score, description, nextStep, findings, estimatedSavings,
+      auditDate: new Date().toISOString().split('T')[0]
+    });
   } catch (err) {
     console.error("[server] quiz error:", err);
     return send(res, 500, { error: "Quiz scoring failed. Please try again." });
