@@ -24,8 +24,7 @@ import {
  * Serves the static marketing site from Web/ and implements the lead-capture
  * endpoint POST /api/send-email that Web/index.html and Web/contact.html call.
  *
- * Dependency-free on purpose: this replaces a Next.js API route that used to
- * live in the (removed) Leish application. Node >= 22 only.
+ * Dependency-free on purpose: no framework, no build step. Node >= 22 only.
  */
 
 const CONTENT_TYPES = {
