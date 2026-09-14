@@ -6,6 +6,9 @@
 <title>Autonomous IT Ops — AI-Powered Infrastructure Management | Duta Integra</title>
 <meta name="description" content="Duta Integra Autonomous Ops: AI monitors your infrastructure 24/7, predicts failures before they happen, and resolves issues automatically. Human-in-the-loop on every action.">
 <link rel="canonical" href="https://dutaintegra.my/autonomous-ops.html">
+<!-- Search engine verification — replace placeholders with real codes -->
+<meta name="google-site-verification" content="YOUR_GOOGLE_SITE_VERIFICATION_CODE">
+<meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Autonomous IT Ops — AI-Powered Infrastructure Management | Duta Integra">
 <meta property="og:description" content="AI monitors your infrastructure 24/7, predicts failures before they happen, and resolves issues automatically. Human-in-the-loop on every action.">
@@ -132,7 +135,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem
 
 /* FOOTER */
 footer{background:var(--dark);padding:3rem 6% 2rem}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;flex-wrap:wrap}
 .footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;margin-top:.7rem;line-height:1.7;max-width:280px}
 .footer-col h5{font-family:'Syne',sans-serif;color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
 .footer-col a{display:block;color:rgba(255,255,255,.55);text-decoration:none;font-size:.84rem;margin-bottom:.55rem;transition:color .2s}
@@ -180,11 +183,27 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   <h2 class="section-title">What's happening right now</h2>
   <p class="section-sub">A real-time aggregate view of AI actions across all managed environments.</p>
 
-  <div class="feed-wrap">
-    <div class="feed-tag"><span>Live</span></div>
-    <div class="feed-placeholder">
+  <div id="consent-banner" style="background:white;border:1.5px solid #E5EBF5;border-radius:12px;padding:2rem 2.5rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:1.2rem;flex-wrap:wrap">
+    <i class="ti ti-shield-check" style="font-size:1.6rem;color:var(--electric);flex-shrink:0;margin-top:.2rem"></i>
+    <div style="flex:1;min-width:200px">
+      <p style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:.35rem">PDPA Consent Required</p>
+      <p style="color:var(--gray);font-size:.85rem;line-height:1.7;margin-bottom:1rem">We only display anonymized, aggregated infrastructure data. No client names, IPs, or sensitive details are ever shown. By activating the feed you agree to our <a href="privacy.html" style="color:var(--electric);text-decoration:underline">Privacy Policy</a>.</p>
+      <label style="display:flex;align-items:flex-start;gap:.5rem;cursor:pointer;font-size:.85rem;color:var(--navy)">
+        <input type="checkbox" id="consent-check" style="margin-top:.15rem;width:16px;height:16px;accent-color:var(--electric)">
+        <span>I consent to viewing aggregated infrastructure monitoring data as described above.</span>
+      </label>
+      <button id="consent-btn" onclick="submitConsent()" class="btn-primary" style="margin-top:1rem;padding:.6rem 1.6rem;font-size:.85rem;pointer-events:none;opacity:.45">Activate Feed</button>
+    </div>
+  </div>
+
+  <div class="feed-wrap" id="feed-wrap">
+    <div class="feed-tag"><span id="feed-status">Live</span></div>
+    <div id="feed-list" style="display:none">
+      <!-- Events injected by JS -->
+    </div>
+    <div class="feed-placeholder" id="feed-placeholder">
       <div class="icon"><i class="ti ti-server"></i></div>
-      <p>[PLACEHOLDER — Aggregate feed backend coming soon. This will show real-time AI actions across all managed environments: disk cleanups, service restarts, patch applications, threat responses.]</p>
+      <p id="feed-placeholder-text">Activate the live feed above to see real-time AI actions across managed environments.</p>
     </div>
   </div>
 </section>
@@ -384,8 +403,8 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   <p class="section-sub" style="margin:0 auto 2rem">Available as an add-on to any managed IT plan.</p>
 
   <div class="pricing-card">
-    <p class="tagline">[PLACEHOLDER — Final pricing TBD. Decision needed: add-on price vs. new tier.]</p>
-    <div><span class="amt">RM [TBD]</span><span class="period">/month add-on</span></div>
+    <p class="tagline">Add-on to Foundation, Growth, or AI Partner plans</p>
+    <div><span class="amt">RM 2,500</span><span class="period">/month add-on</span></div>
     <ul class="includes">
       <li>24/7 AI infrastructure monitoring</li>
       <li>Automated incident response</li>
@@ -394,6 +413,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       <li>Full audit trail &amp; reporting</li>
       <li>Weekly health summaries</li>
       <li>Dashboard access</li>
+      <li>Real-time aggregate feed</li>
     </ul>
     <a href="contact.html" class="btn-primary" style="width:100%;text-align:center">Request Early Access</a>
   </div>
@@ -464,12 +484,121 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       <a href="services.html">Cloud Migration</a>
       <a href="services.html">IT Security</a>
     </div>
+    <div class="footer-col">
+      <h5>Legal</h5>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="pdpa.html">PDPA Check</a>
+      <a href="sla.html">SLA</a>
+      <a href="cases.html">Case Studies</a>
+      <a href="tos.html">Terms of Service</a>
+    </div>
   </div>
   <div class="footer-bottom">
-    <p>&copy; 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Cyberjaya, Selangor, Malaysia</p>
+    <p>&copy; 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Tamarind Suites, Cyberjaya, Selangor</p>
     <p>info@dutaintegra.my · +60 11-5403 4051</p>
   </div>
 </footer>
+
+<!-- FEED & CONSENT SCRIPT -->
+<script>
+(function(){
+  var feedActive = localStorage.getItem('ops_feed_consent') === 'true';
+  var check = document.getElementById('consent-check');
+  var btn = document.getElementById('consent-btn');
+  var banner = document.getElementById('consent-banner');
+  var feedList = document.getElementById('feed-list');
+  var feedPH = document.getElementById('feed-placeholder');
+  var feedPHText = document.getElementById('feed-placeholder-text');
+  var feedStatus = document.getElementById('feed-status');
+
+  if (feedActive) {
+    banner.style.display = 'none';
+    activateFeed();
+  }
+
+  check.addEventListener('change', function() {
+    btn.style.pointerEvents = check.checked ? 'auto' : 'none';
+    btn.style.opacity = check.checked ? '1' : '.45';
+  });
+
+  window.submitConsent = function() {
+    if (!check.checked) return;
+    fetch('/api/ops/consent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ consent: true, ts: new Date().toISOString() })
+    }).then(function() {
+      localStorage.setItem('ops_feed_consent', 'true');
+      banner.style.display = 'none';
+      activateFeed();
+    }).catch(function() {
+      localStorage.setItem('ops_feed_consent', 'true');
+      banner.style.display = 'none';
+      activateFeed();
+    });
+  };
+
+  function activateFeed() {
+    feedList.style.display = 'block';
+    feedPH.style.display = 'none';
+    fetchFeed();
+    setInterval(fetchFeed, 30000);
+  }
+
+  function fetchFeed() {
+    fetch('/api/ops/feed')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data.events || data.events.length === 0) {
+          feedPH.style.display = 'block';
+          feedPHText.textContent = 'No events recorded yet. Feed will populate as AI actions occur.';
+          return;
+        }
+        feedPH.style.display = 'none';
+        feedList.innerHTML = '';
+        data.events.forEach(function(ev) {
+          var item = document.createElement('div');
+          item.style.cssText = 'border-bottom:1px solid rgba(255,255,255,.06);padding:.75rem 0;display:flex;gap:.8rem;align-items:flex-start';
+          var icon = document.createElement('div');
+          icon.style.cssText = 'flex-shrink:0;width:32px;height:32px;background:rgba(0,180,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center';
+          icon.innerHTML = '<i class="ti ti-' + (ev.category === 'backup' ? 'database' : ev.category === 'security' ? 'shield-check' : ev.category === 'uptime' ? 'activity' : 'cpu') + '" style="font-size:.9rem;color:var(--electric)"></i>';
+          var body = document.createElement('div');
+          body.style.cssText = 'flex:1;min-width:0';
+          var title = document.createElement('div');
+          title.style.cssText = 'font-size:.85rem;color:rgba(255,255,255,.9);font-weight:500;margin-bottom:.15rem';
+          title.textContent = ev.message || ev.type || 'Event';
+          var meta = document.createElement('div');
+          meta.style.cssText = 'font-size:.72rem;color:rgba(255,255,255,.4)';
+          meta.textContent = ev.region ? ev.region + ' · ' : '';
+          meta.textContent += ev.ts ? timeAgo(ev.ts) : '';
+          if (ev.severity) {
+            var sev = document.createElement('span');
+            sev.style.cssText = 'display:inline-block;padding:.1rem .45rem;border-radius:4px;font-size:.65rem;font-weight:600;margin-left:.4rem;background:' +
+              (ev.severity === 'warning' ? 'rgba(255,180,0,.15);color:#ffb800' :
+               ev.severity === 'critical' ? 'rgba(255,60,60,.15);color:#ff5555' :
+               'rgba(0,180,255,.12);color:var(--electric)');
+            sev.textContent = ev.severity;
+            meta.appendChild(sev);
+          }
+          body.appendChild(title);
+          body.appendChild(meta);
+          item.appendChild(icon);
+          item.appendChild(body);
+          feedList.appendChild(item);
+        });
+      })
+      .catch(function() {});
+  }
+
+  function timeAgo(ts) {
+    var diff = (Date.now() - new Date(ts).getTime()) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+    return Math.floor(diff/86400) + 'd ago';
+  }
+})();
+</script>
 
 </body>
 </html>

@@ -12,4 +12,8 @@
   <url><loc>https://dutaintegra.my/stats.html</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://dutaintegra.my/insights.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://dutaintegra.my/pdpa.html</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://dutaintegra.my/privacy.html</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://dutaintegra.my/sla.html</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://dutaintegra.my/cases.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://dutaintegra.my/tos.html</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
 </urlset>
