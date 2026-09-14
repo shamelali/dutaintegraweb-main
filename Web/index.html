@@ -337,11 +337,12 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <nav>
   <div class="logo"><a href="index.html"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></a></div>
   <ul class="nav-links">
-    <li><a href="services.html" data-i18n="idxFooterServices">Services</a></li>
-    <li><a href="about.html" data-i18n="navAbout">About</a></li>    <li><a href="pricing.html" data-i18n="navPricing">Pricing</a></li>
-    <li><a href="quiz.html" style="color:var(--electric)" data-i18n="navQuiz">Find Your Tier</a></li>
-    <li><a href="contact.html" class="nav-cta" data-i18n="navContact">Contact Us</a></li>
-    <li><a href="autonomous-ops.html" style="color:var(--electric)" data-i18n="navAutonomousOps">Autonomous Ops</a></li>
+    <li><a href="#" onclick="goPage('services');return false" data-i18n="navServices">Services</a></li>
+    <li><a href="#" onclick="goPage('about');return false" data-i18n="navAbout">About</a></li>
+    <li><a href="#" onclick="goPage('pricing');return false" data-i18n="navPricing">Pricing</a></li>
+    <li><a href="#" onclick="goPage('quiz');return false" style="color:var(--electric)" data-i18n="navQuiz">Find Your Tier</a></li>
+    <li><a href="#" onclick="goPage('contact');return false" class="nav-cta" data-i18n="navContact">Contact Us</a></li>
+    <li><a href="#" onclick="goPage('autonomous-ops');return false" style="color:var(--electric)" data-i18n="navAutonomousOps">Autonomous Ops</a></li>
     <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
     <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
@@ -357,11 +358,11 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       <a href="contact.html" class="btn-primary" data-i18n="idxHeroBtn1">Get a Free IT Audit</a>
       <a href="services.html" class="btn-outline" data-i18n="idxHeroBtn2">Explore Services →</a>
     </div>
-    <div class="hero-stats">
-      <div><span class="stat-val">3</span><span class="stat-label">Days to First Proposal</span></div>
-      <div><span class="stat-val">24/7</span><span class="stat-label">Managed IT Support</span></div>
-      <div><span class="stat-val">0</span><span class="stat-label">Lock-In Contracts</span></div>
-      <div><span class="stat-val">100%</span><span class="stat-label">Malaysian-owned</span></div>
+    <div class="hero-stats reveal">
+      <div><span class="stat-val">3</span><span class="stat-label" data-i18n="idxStat1Label">Days to First Proposal</span></div>
+      <div><span class="stat-val">24/7</span><span class="stat-label" data-i18n="idxStat2Label">Managed IT Support</span></div>
+      <div><span class="stat-val">0</span><span class="stat-label" data-i18n="idxStat3Label">Lock-In Contracts</span></div>
+      <div><span class="stat-val">100%</span><span class="stat-label" data-i18n="idxStat4Label">Malaysian-owned</span></div>
     </div>
   </section>
 
@@ -370,42 +371,42 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <h2 class="section-title" data-i18n="idxSvcTitle">Two Pillars. One Partner.</h2>
     <p class="section-sub" data-i18n="idxSvcSub">We combine cutting-edge AI development with rock-solid managed IT — so you never need to juggle multiple vendors again.</p>
     <div class="svc-grid">
-      <div class="svc-card">
+      <div class="svc-card reveal">
         <a href="services.html" style="text-decoration:none">
         <div class="svc-icon"><i class="ti ti-robot"></i></div>
-        <h3 data-i18n="idxSvc1Title">AI Software Development</h3>
-        <p>Custom AI applications, intelligent chatbots, and process automation built specifically for your business workflows.</p>
+        <h3 data-i18n="svc1Title">AI Software Development</h3>
+        <p data-i18n="idxSvc1Desc">Custom AI applications, intelligent chatbots, and process automation built specifically for your business workflows.</p>
         <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
-      <div class="svc-card">
+      <div class="svc-card reveal reveal-delay-1">
         <a href="services.html" style="text-decoration:none">
         <div class="svc-icon"><i class="ti ti-device-desktop"></i></div>
-        <h3 data-i18n="idxSvc2Title">Managed IT Services</h3>
+        <h3 data-i18n="svc2Title">Managed IT Services</h3>
         <p data-i18n="idxSvc2Desc">End-to-end IT management — cloud infrastructure, helpdesk, network security, and hardware maintenance.</p>
         <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
-      <div class="svc-card">
+      <div class="svc-card reveal reveal-delay-2">
         <a href="services.html" style="text-decoration:none">
         <div class="svc-icon"><i class="ti ti-cloud"></i></div>
-        <h3>Cloud Migration & Setup</h3>
-        <p>Move your business to the cloud seamlessly with planning, migration, and ongoing cloud management.</p>
+        <h3 data-i18n="svc3Title">Cloud Migration & Setup</h3>
+        <p data-i18n="idxSvc3Desc">Move your business to the cloud seamlessly with planning, migration, and ongoing cloud management.</p>
         <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
-      <div class="svc-card">
+      <div class="svc-card reveal reveal-delay-3">
         <a href="services.html" style="text-decoration:none">
         <div class="svc-icon"><i class="ti ti-shield-lock"></i></div>
-        <h3 data-i18n="idxSvc4Title">IT Security & Compliance</h3>
+        <h3 data-i18n="svc4Title">IT Security & Compliance</h3>
         <p data-i18n="idxSvc4Desc">PDPA compliance audits, cybersecurity monitoring, and data protection policies for your peace of mind.</p>
         <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
-      <div class="svc-card">
+      <div class="svc-card reveal reveal-delay-4">
         <a href="services.html" style="text-decoration:none">
         <div class="svc-icon"><i class="ti ti-chart-bar"></i></div>
-        <h3>Business Intelligence (Launching Next)</h3>
+        <h3 data-i18n="svc5Title">Business Intelligence (Launching Next)</h3>
         <p>Data-driven insights, predictive BI analytics, and intelligent dashboards to help you make smarter business decisions.</p>
         <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
@@ -425,24 +426,24 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   <section class="why">
     <div class="section-eyebrow" data-i18n="idxWhyEyebrow">Why Choose Us</div>
     <h2 class="section-title" data-i18n="idxWhyTitle">Built for Malaysian SMEs</h2>
-    <div class="why-grid" data-i18n="idxWhy1Desc">
-      <div class="why-card"><div class="why-num">01</div><h4 data-i18n="idxWhy1Title">Local Expertise</h4><p>We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.</p></div>
-      <div class="why-card"><div class="why-num">02</div><h4 data-i18n="idxWhy2Title">AI + IT Combined</h4><p>One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.</p></div>
-      <div class="why-card"><div class="why-num">03</div><h4 data-i18n="idxWhy3Title">Transparent Pricing</h4><p>No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.</p></div>
-      <div class="why-card"><div class="why-num">04</div><h4 data-i18n="idxWhy4Title">Fast Onboarding</h4><p>Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.</p></div>
+    <div class="why-grid">
+      <div class="why-card reveal"><div class="why-num">01</div><h4 data-i18n="idxWhy1Title">Local Expertise</h4><p data-i18n="idxWhy1Desc">We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.</p></div>
+      <div class="why-card reveal reveal-delay-1"><div class="why-num">02</div><h4 data-i18n="idxWhy2Title">AI + IT Combined</h4><p data-i18n="idxWhy2Desc">One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.</p></div>
+      <div class="why-card reveal reveal-delay-2"><div class="why-num">03</div><h4 data-i18n="idxWhy3Title">Transparent Pricing</h4><p data-i18n="idxWhy3Desc">No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.</p></div>
+      <div class="why-card reveal reveal-delay-3"><div class="why-num">04</div><h4 data-i18n="idxWhy4Title">Fast Onboarding</h4><p data-i18n="idxWhy4Desc">Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.</p></div>
     </div>
   </section>
 
-  <section class="cta-band">
-    <h2>Ready to Modernize Your Business?</h2>
+  <section class="cta-band reveal">
+    <h2 data-i18n="idxCtaTitle">Ready to Modernize Your Business?</h2>
     <p data-i18n="idxCtaDesc">Start with a free IT audit or AI readiness assessment — no obligation, no strings attached.</p>
     <div class="cta-btns">
       <a href="contact.html" class="btn-navy" data-i18n="idxCtaBtn1">Book Free Consultation</a>
-      <a href="pricing.html" class="btn-primary">View Pricing</a>
+      <a href="pricing.html" class="btn-primary" data-i18n="idxCtaBtn2">View Pricing</a>
     </div>
   </section>
 
-  <footer>
+  <footer class="reveal">
     <div class="footer-top">
       <div class="footer-brand">
         <div class="logo"><picture><source srcset="../assets/dis-logo-footer.webp" type="image/webp"><img src="../assets/dis-logo-footer.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div>
@@ -450,21 +451,22 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       </div>
       <div class="footer-col">
         <h5 data-i18n="idxFooterCompany">Company</h5>
-        <a href="about.html">About Us</a>        <a href="pricing.html" data-i18n="navPricing">Pricing</a>
-        <a href="contact.html">Contact</a>
-        <a href="stats.html">Live Stats</a>
-        <a href="insights.html">Insights</a>
+        <a href="#" onclick="goPage('about');return false" data-i18n="navAbout">About Us</a>
+        <a href="#" onclick="goPage('pricing');return false" data-i18n="navPricing">Pricing</a>
+        <a href="#" onclick="goPage('contact');return false" data-i18n="navContact">Contact</a>
+        <a href="stats.html" data-i18n="idxFooterStats">Live Stats</a>
+        <a href="insights.html" data-i18n="idxFooterInsights">Insights</a>
       </div>
       <div class="footer-col">
         <h5 data-i18n="idxFooterServices">Services</h5>
-        <a href="services.html">AI Development</a>
-        <a href="services.html">Managed IT</a>
-        <a href="services.html">Cloud Migration</a>
-        <a href="services.html">IT Security</a>
+        <a href="#" onclick="goPage('services');return false" data-i18n="idxFooterAiDev">AI Development</a>
+        <a href="#" onclick="goPage('services');return false" data-i18n="idxFooterManagedIt">Managed IT</a>
+        <a href="#" onclick="goPage('services');return false" data-i18n="idxFooterCloudMig">Cloud Migration</a>
+        <a href="#" onclick="goPage('services');return false" data-i18n="idxFooterItSec">IT Security</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Tamarind Suites, Cyberjaya, Selangor</p>
+      <p data-i18n="idxFooterCopy">© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Tamarind Suites, Cyberjaya, Selangor</p>
       <p>info@dutaintegra.my · +60 11-5403 4051</p>
     </div>
   </footer>
@@ -473,106 +475,106 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   <!-- ===================== SERVICES ===================== -->
 <div class="page" id="page-services">
   <div class="page-hero">
-    <div class="page-hero-label">Our Services</div>
-    <h1>Everything Your Business Needs to Thrive Digitally</h1>
-    <p>From AI-powered automation to round-the-clock IT support — we're your complete technology partner so you can focus on growing your business.</p>
+    <div class="page-hero-label" data-i18n="svcHeroLabel">Our Services</div>
+    <h1 data-i18n="svcHeroTitle">Everything Your Business Needs to Thrive Digitally</h1>
+    <p data-i18n="svcHeroDesc">From AI-powered automation to round-the-clock IT support — we're your complete technology partner so you can focus on growing your business.</p>
   </div>
 
   <section class="svc-page-section">
-    <div class="section-eyebrow">Core Offerings</div>
-    <h2 class="section-title" style="color:var(--electric)">What We Deliver</h2>
+    <div class="section-eyebrow" data-i18n="svcCoreEyebrow">Core Offerings</div>
+    <h2 class="section-title reveal" style="color:var(--electric)" data-i18n="svcCoreTitle">What We Deliver</h2>
     <div class="svc-full-grid">
-      <div class="svc-full-card">
+      <div class="svc-full-card reveal">
       <div class="icon"><i class="ti ti-robot"></i></div>
-      <h3 data-i18n="idxSvc1Title">AI Software Development</h3>
-      <p data-i18n="idxSvc1Desc">We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
+      <h3 data-i18n="svc1Title">AI Software Development</h3>
+      <p data-i18n="svc1Desc">We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
         <ul class="svc-features">
-          <li>Custom AI chatbots & virtual assistants</li>
-          <li>Business process automation (RPA)</li>
-          <li>Machine learning models & data pipelines</li>
-          <li>AI integration into existing systems</li>
-          <li>Natural language processing (NLP) tools</li>
-          <li>AI-powered dashboards & reporting</li>
+          <li data-i18n="svc1Feat1">Custom AI chatbots & virtual assistants</li>
+          <li data-i18n="svc1Feat2">Business process automation (RPA)</li>
+          <li data-i18n="svc1Feat3">Machine learning models & data pipelines</li>
+          <li data-i18n="svc1Feat4">AI integration into existing systems</li>
+          <li data-i18n="svc1Feat5">Natural language processing (NLP) tools</li>
+          <li data-i18n="svc1Feat6">AI-powered dashboards & reporting</li>
         </ul>
-        <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+        <button class="btn-primary" onclick="goPage('contact')" data-i18n="svcGetQuote">Get a Quote</button>
       </div>
-      <div class="svc-full-card">
+      <div class="svc-full-card reveal">
       <div class="icon"><i class="ti ti-device-desktop"></i></div>
-      <h3 data-i18n="idxSvc2Title">Managed IT Services</h3>
-      <p>We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
+      <h3 data-i18n="svc2Title">Managed IT Services</h3>
+      <p data-i18n="svc2Desc">We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
         <ul class="svc-features">
-          <li>24/7 remote IT helpdesk support</li>
-          <li>Network setup, monitoring & management</li>
-          <li>Hardware procurement & maintenance</li>
-          <li>Server management & backups</li>
-          <li>Software licensing & updates</li>
-          <li>Monthly IT health reports</li>
+          <li data-i18n="svc2Feat1">24/7 remote IT helpdesk support</li>
+          <li data-i18n="svc2Feat2">Network setup, monitoring & management</li>
+          <li data-i18n="svc2Feat3">Hardware procurement & maintenance</li>
+          <li data-i18n="svc2Feat4">Server management & backups</li>
+          <li data-i18n="svc2Feat5">Software licensing & updates</li>
+          <li data-i18n="svc2Feat6">Monthly IT health reports</li>
         </ul>
-        <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+        <button class="btn-primary" onclick="goPage('contact')" data-i18n="svcGetQuote">Get a Quote</button>
       </div>
-      <div class="svc-full-card">
+      <div class="svc-full-card reveal">
       <div class="icon"><i class="ti ti-cloud"></i></div>
-      <h3 data-i18n="idxSvc3Title">Cloud Migration & Management</h3>
-      <p>Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
+      <h3 data-i18n="svc3Title">Cloud Migration & Management</h3>
+      <p data-i18n="svc3Desc">Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
         <ul class="svc-features">
-          <li>Cloud readiness assessment</li>
-          <li>Migration planning & execution</li>
-          <li>AWS, Azure & Google Cloud setup</li>
-          <li>Hybrid cloud architecture</li>
-          <li>Cloud cost optimisation</li>
-          <li>Ongoing cloud management</li>
+          <li data-i18n="svc3Feat1">Cloud readiness assessment</li>
+          <li data-i18n="svc3Feat2">Migration planning & execution</li>
+          <li data-i18n="svc3Feat3">AWS, Azure & Google Cloud setup</li>
+          <li data-i18n="svc3Feat4">Hybrid cloud architecture</li>
+          <li data-i18n="svc3Feat5">Cloud cost optimisation</li>
+          <li data-i18n="svc3Feat6">Ongoing cloud management</li>
         </ul>
-        <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+        <button class="btn-primary" onclick="goPage('contact')" data-i18n="svcGetQuote">Get a Quote</button>
       </div>
-      <div class="svc-full-card">
+      <div class="svc-full-card reveal">
       <div class="icon"><i class="ti ti-shield-lock"></i></div>
-      <h3>IT Security & PDPA Compliance</h3>
-      <p>Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
+      <h3 data-i18n="svc4Title">IT Security & PDPA Compliance</h3>
+      <p data-i18n="svc4Desc">Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
         <ul class="svc-features">
-          <li>PDPA compliance audit & policy drafting</li>
-          <li>Cybersecurity risk assessment</li>
-          <li>Firewall & endpoint protection</li>
-          <li>Employee security awareness training</li>
-          <li>Incident response planning</li>
-          <li>Ongoing security monitoring</li>
+          <li data-i18n="svc4Feat1">PDPA compliance audit & policy drafting</li>
+          <li data-i18n="svc4Feat2">Cybersecurity risk assessment</li>
+          <li data-i18n="svc4Feat3">Firewall & endpoint protection</li>
+          <li data-i18n="svc4Feat4">Employee security awareness training</li>
+          <li data-i18n="svc4Feat5">Incident response planning</li>
+          <li data-i18n="svc4Feat6">Ongoing security monitoring</li>
         </ul>
-        <button class="btn-primary" onclick="goPage('contact')">Get a Quote</button>
+        <button class="btn-primary" onclick="goPage('contact')" data-i18n="svcGetQuote">Get a Quote</button>
       </div>
-      <div class="svc-full-card">
+      <div class="svc-full-card reveal">
         <div class="icon"><i class="ti ti-chart-bar"></i></div>
-        <h3>Business Intelligence (Launching Next)</h3>
-        <p>Transform raw data into actionable insights with our upcoming Business Intelligence solutions — interactive dashboards, predictive analytics, and automated reporting.</p>
+        <h3 data-i18n="svc5Title">Business Intelligence (Launching Next)</h3>
+        <p data-i18n="svc5Desc">Transform raw data into actionable insights with our upcoming Business Intelligence solutions — interactive dashboards, predictive analytics, and automated reporting.</p>
         <ul class="svc-features">
-          <li>Sales intelligence & revenue tracking</li>
-          <li>Marketing campaign performance analytics</li>
-          <li>Inventory & fulfillment monitoring</li>
-          <li>Retail & branch performance benchmarking</li>
-          <li>AI-powered insights & recommendations</li>
-          <li>Real-time operational dashboards</li>
+          <li data-i18n="svc5Feat1">Sales intelligence & revenue tracking</li>
+          <li data-i18n="svc5Feat2">Marketing campaign performance analytics</li>
+          <li data-i18n="svc5Feat3">Inventory & fulfillment monitoring</li>
+          <li data-i18n="svc5Feat4">Retail & branch performance benchmarking</li>
+          <li data-i18n="svc5Feat5">AI-powered insights & recommendations</li>
+          <li data-i18n="svc5Feat6">Real-time operational dashboards</li>
         </ul>
-        <button class="btn-primary" onclick="goPage('contact')">Get Notified</button>
+        <button class="btn-primary" onclick="goPage('contact')" data-i18n="svcGetNotified">Get Notified</button>
       </div>
     </div>
   </section>
 
   <section class="process-section">
-    <div class="section-eyebrow">How We Work</div>
-    <h2 class="section-title">Our Process</h2>
-    <p class="section-sub">Simple, transparent, and built around your needs.</p>
+    <div class="section-eyebrow" data-i18n="svcProcessEyebrow">How We Work</div>
+    <h2 class="section-title reveal" data-i18n="svcProcessTitle">Our Process</h2>
+    <p class="section-sub reveal" data-i18n="svcProcessSub">Simple, transparent, and built around your needs.</p>
     <div class="process-steps">
-      <div class="process-step"><div class="step-num">1</div><h4>Free Audit</h4><p>We assess your current IT setup or AI readiness — no obligation, no sales pressure.</p></div>
-      <div class="process-step"><div class="step-num">2</div><h4>Proposal</h4><p>You get a clear, detailed proposal with scope, timeline, and fixed pricing within 3 working days.</p></div>
-      <div class="process-step"><div class="step-num">3</div><h4>Delivery</h4><p>Our team executes the project with weekly check-ins and full transparency throughout.</p></div>
-      <div class="process-step"><div class="step-num">4</div><h4>Support</h4><p>We don't disappear after delivery — ongoing support and optimisation is part of the package.</p></div>
+      <div class="process-step reveal"><div class="step-num">1</div><h4 data-i18n="svcStep1Title">Free Audit</h4><p data-i18n="svcStep1Desc">We assess your current IT setup or AI readiness — no obligation, no sales pressure.</p></div>
+      <div class="process-step reveal reveal-delay-1"><div class="step-num">2</div><h4 data-i18n="svcStep2Title">Proposal</h4><p data-i18n="svcStep2Desc">You get a clear, detailed proposal with scope, timeline, and fixed pricing within 3 working days.</p></div>
+      <div class="process-step reveal reveal-delay-2"><div class="step-num">3</div><h4 data-i18n="svcStep3Title">Delivery</h4><p data-i18n="svcStep3Desc">Our team executes the project with weekly check-ins and full transparency throughout.</p></div>
+      <div class="process-step reveal reveal-delay-3"><div class="step-num">4</div><h4 data-i18n="svcStep4Title">Support</h4><p data-i18n="svcStep4Desc">We don't disappear after delivery — ongoing support and optimisation is part of the package.</p></div>
     </div>
   </section>
 
-  <section class="cta-band">
-    <h2>Not Sure Which Service You Need?</h2>
-    <p>Book a free 30-minute consultation and we'll recommend the right solution for your business.</p>
+  <section class="cta-band reveal">
+    <h2 data-i18n="svcCtaTitle">Not Sure Which Service You Need?</h2>
+    <p data-i18n="svcCtaDesc">Book a free 30-minute consultation and we'll recommend the right solution for your business.</p>
     <div class="cta-btns">
-      <button class="btn-navy" onclick="goPage('contact')" data-i18n="idxCtaBtn1">Book Free Consultation</button>
-      <button class="btn-primary" onclick="goPage('pricing')">See Pricing →</button>
+      <button class="btn-navy" onclick="goPage('contact')" data-i18n="svcCtaBtn1">Book Free Consultation</button>
+      <button class="btn-primary" onclick="goPage('pricing')" data-i18n="svcCtaBtn2">See Pricing →</button>
     </div>
   </section>
   <footer>
@@ -588,59 +590,59 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <!-- ===================== ABOUT ===================== -->
 <div class="page" id="page-about">
   <div class="page-hero">
-    <div class="page-hero-label">About Us</div>
-    <h1>Technology With a Malaysian Heart</h1>
-    <p>We started Duta Integra Solutions because Malaysian SMEs deserve world-class technology without the big-city price tag or the runaround.</p>
+    <div class="page-hero-label" data-i18n="aboutHeroLabel">About Us</div>
+    <h1 data-i18n="aboutHeroTitle">Technology With a Malaysian Heart</h1>
+    <p data-i18n="aboutHeroDesc">We started Duta Integra Solutions because Malaysian SMEs deserve world-class technology without the big-city price tag or the runaround.</p>
   </div>
 
   <section class="about-story">
     <div class="about-story-text">
-      <h2>Our Story</h2>
-      <p>Duta Integra Solutions was born in Cyberjaya, Selangor in 2026 with a simple mission: make AI and enterprise-grade IT accessible to every Malaysian business — not just the large corporations in KL.</p>
-      <p>We noticed that SMEs across Malaysia were falling behind because they couldn't find reliable local technology partners who understood both the business context and the technical depth needed to make real change.</p>
-      <p>So we built that partner. One that speaks your language, understands PDPA and local compliance, moves fast, and stands behind its work long after the project is delivered.</p>
-      <p>Today, we serve clients across multiple industries and are proud to be 100% Malaysian-owned and operated.</p>
-      <button class="btn-primary" style="margin-top:1rem" onclick="goPage('contact')">Work With Us</button>
+      <h2 class="reveal" data-i18n="aboutStoryTitle">Our Story</h2>
+      <p class="reveal" data-i18n="aboutStory1">Duta Integra Solutions was born in Cyberjaya, Selangor in 2026 with a simple mission: make AI and enterprise-grade IT accessible to every Malaysian business — not just the large corporations in KL.</p>
+      <p class="reveal" data-i18n="aboutStory2">We noticed that SMEs across Malaysia were falling behind because they couldn't find reliable local technology partners who understood both the business context and the technical depth needed to make real change.</p>
+      <p class="reveal" data-i18n="aboutStory3">So we built that partner. One that speaks your language, understands PDPA and local compliance, moves fast, and stands behind its work long after the project is delivered.</p>
+      <p class="reveal" data-i18n="aboutStory4">Today, we serve clients across multiple industries and are proud to be 100% Malaysian-owned and operated.</p>
+      <button class="btn-primary reveal" style="margin-top:1rem" onclick="goPage('contact')" data-i18n="aboutWorkBtn">Work With Us</button>
     </div>
-    <div class="about-visual">
-      <div class="about-stat-card"><div class="val">2026</div><div class="lbl">Founded in Cyberjaya</div></div>
-      <div class="about-stat-card"><div class="val">2+</div><div class="lbl">Clients Served</div></div>
-      <div class="about-stat-card"><div class="val">100%</div><div class="lbl">Malaysian-Owned</div></div>
-      <div class="about-stat-card"><div class="val">AI + IT</div><div class="lbl">Dual Expertise Under One Roof</div></div>
+    <div class="about-visual reveal">
+      <div class="about-stat-card"><div class="val">2026</div><div class="lbl" data-i18n="aboutFounded">Founded in Cyberjaya</div></div>
+      <div class="about-stat-card"><div class="val">2+</div><div class="lbl" data-i18n="aboutClients">Clients Served</div></div>
+      <div class="about-stat-card"><div class="val">100%</div><div class="lbl" data-i18n="aboutOwned">Malaysian-Owned</div></div>
+      <div class="about-stat-card"><div class="val">AI + IT</div><div class="lbl" data-i18n="aboutDual">Dual Expertise Under One Roof</div></div>
     </div>
   </section>
 
   <section class="values-section">
-    <div class="section-eyebrow">What We Stand For</div>
-    <h2 class="section-title">Our Values</h2>
+    <div class="section-eyebrow" data-i18n="aboutValuesEyebrow">What We Stand For</div>
+    <h2 class="section-title reveal" data-i18n="aboutValuesTitle">Our Values</h2>
     <div class="values-grid">
-      <div class="value-card"><div class="vi"><i class="ti ti-target"></i></div><h4>Clarity Over Jargon</h4><p>We explain everything in plain language. No tech-speak, no confusion — just clear communication at every step.</p></div>
-      <div class="value-card"><div class="vi"><i class="ti ti-handshake"></i></div><h4>Partnership, Not Transaction</h4><p>We're not here for one-off jobs. We aim to be your long-term technology partner as your business grows.</p></div>
-      <div class="value-card"><div class="vi"><i class="ti ti-bolt"></i></div><h4>Speed With Substance</h4><p>We move fast, but never at the expense of quality. Our proposals are ready in 3 days and our work is built to last.</p></div>
-      <div class="value-card"><div class="vi"><i class="ti ti-flag"></i></div><h4>Proudly Local</h4><p>We understand the Malaysian business landscape — the regulations, the culture, and the unique opportunities here.</p></div>
+      <div class="value-card reveal"><div class="vi"><i class="ti ti-target"></i></div><h4 data-i18n="aboutVal1Title">Clarity Over Jargon</h4><p data-i18n="aboutVal1Desc">We explain everything in plain language. No tech-speak, no confusion — just clear communication at every step.</p></div>
+      <div class="value-card reveal reveal-delay-1"><div class="vi"><i class="ti ti-handshake"></i></div><h4 data-i18n="aboutVal2Title">Partnership, Not Transaction</h4><p data-i18n="aboutVal2Desc">We're not here for one-off jobs. We aim to be your long-term technology partner as your business grows.</p></div>
+      <div class="value-card reveal reveal-delay-2"><div class="vi"><i class="ti ti-bolt"></i></div><h4 data-i18n="aboutVal3Title">Speed With Substance</h4><p data-i18n="aboutVal3Desc">We move fast, but never at the expense of quality. Our proposals are ready in 3 days and our work is built to last.</p></div>
+      <div class="value-card reveal reveal-delay-3"><div class="vi"><i class="ti ti-flag"></i></div><h4 data-i18n="aboutVal4Title">Proudly Local</h4><p data-i18n="aboutVal4Desc">We understand the Malaysian business landscape — the regulations, the culture, and the unique opportunities here.</p></div>
     </div>
   </section>
 
   <section class="founder-section">
-    <div class="section-eyebrow">The Founder</div>
-    <h2 class="section-title">Why I Started Duta Integra</h2>
-    <div class="founder-card">
+    <div class="section-eyebrow" data-i18n="aboutFounderEyebrow">The Founder</div>
+    <h2 class="section-title reveal" data-i18n="aboutFounderTitle">Why I Started Duta Integra</h2>
+    <div class="founder-card reveal">
       <div class="founder-avatar">S</div>
       <div class="founder-content">
         <h3>Shamel</h3>
-        <div class="role">Founder &amp; CEO</div>
-        <p>I'm self-taught — developer, entrepreneur, product manager, and business analyst, roughly in that order, since I first got into this world in 2021. Duta Integra exists because I kept running into the same problem: Malaysian SMEs stuck choosing between IT vendors who don't really understand AI, or AI vendors who've never had to keep a helpdesk running at 2am.</p>
-        <p>We're a new company, and I'd rather say that outright than dress it up. What that actually gets you: a current tech stack instead of legacy systems another vendor is stuck maintaining, pricing without years of overhead baked in, and a founder who's still on every account — not handed off to whoever's free.</p>
+        <div class="role" data-i18n="aboutFounderRole">Founder &amp; CEO</div>
+        <p data-i18n="aboutFounderP1">I'm self-taught — developer, entrepreneur, product manager, and business analyst, roughly in that order, since I first got into this world in 2021. Duta Integra exists because I kept running into the same problem: Malaysian SMEs stuck choosing between IT vendors who don't really understand AI, or AI vendors who've never had to keep a helpdesk running at 2am.</p>
+        <p data-i18n="aboutFounderP2">We're a new company, and I'd rather say that outright than dress it up. What that actually gets you: a current tech stack instead of legacy systems another vendor is stuck maintaining, pricing without years of overhead baked in, and a founder who's still on every account — not handed off to whoever's free.</p>
       </div>
     </div>
   </section>
 
-  <section class="cta-band">
-    <h2>Want to Know More?</h2>
-    <p>We'd love to meet you — whether over a call, a coffee, or a WhatsApp message.</p>
+  <section class="cta-band reveal">
+    <h2 data-i18n="aboutCtaTitle">Want to Know More?</h2>
+    <p data-i18n="aboutCtaDesc">We'd love to meet you — whether over a call, a coffee, or a WhatsApp message.</p>
     <div class="cta-btns">
-      <button class="btn-navy" onclick="goPage('contact')">Get in Touch</button>
-      <button class="btn-primary" onclick="goPage('services')" data-i18n="idxHeroBtn2">Explore Services →</button>
+      <button class="btn-navy" onclick="goPage('contact')" data-i18n="aboutCtaBtn1">Get in Touch</button>
+      <button class="btn-primary" onclick="goPage('services')" data-i18n="aboutCtaBtn2">Explore Services →</button>
     </div>
   </section>
   <footer>
@@ -656,90 +658,90 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <!-- ===================== PRICING ===================== -->
 <div class="page" id="page-pricing">
   <div class="page-hero">
-    <div class="page-hero-label" data-i18n="navPricing">Pricing</div>
-    <h1>Transparent Pricing. No Surprises.</h1>
-    <p>Flexible plans designed for Malaysian SMEs — whether you need full managed IT, AI development, or both. All prices in MYR.</p>
+    <div class="page-hero-label" data-i18n="priceHeroLabel">Pricing</div>
+    <h1 data-i18n="priceHeroTitle">Transparent Pricing. No Surprises.</h1>
+    <p data-i18n="priceHeroDesc">Flexible plans designed for Malaysian SMEs — whether you need full managed IT, AI development, or both. All prices in MYR.</p>
   </div>
 
   <section class="pricing-section">
-    <div class="section-eyebrow">Managed IT Plans</div>
-    <h2 class="section-title">Monthly IT Support Retainers</h2>
+    <div class="section-eyebrow" data-i18n="priceManagedEyebrow">Managed IT Plans</div>
+    <h2 class="section-title reveal" data-i18n="priceManagedTitle">Monthly IT Support Retainers</h2>
     <div class="pricing-grid">
-      <div class="price-card">
-        <h3>Starter</h3>
-        <p class="tagline">For small teams getting started with managed IT</p>
+      <div class="price-card reveal">
+        <h3 data-i18n="priceTier1Name">Starter</h3>
+        <p class="tagline" data-i18n="priceTier1Tag">For small teams getting started with managed IT</p>
         <div class="price-amount"><span class="amt">RM 799</span><span class="period">/ month</span></div>
         <ul class="price-features">
-          <li>Up to 5 users supported</li>
-          <li>Remote helpdesk (business hours)</li>
-          <li>Monthly system health check</li>
-          <li>Basic antivirus & endpoint protection</li>
-          <li>Email & communication setup</li>
-          <li class="na">Network monitoring</li>
-          <li class="na">24/7 support</li>
-          <li class="na">PDPA compliance review</li>
+          <li data-i18n="priceTier1F1">Up to 5 users supported</li>
+          <li data-i18n="priceTier1F2">Remote helpdesk (business hours)</li>
+          <li data-i18n="priceTier1F3">Monthly system health check</li>
+          <li data-i18n="priceTier1F4">Basic antivirus & endpoint protection</li>
+          <li data-i18n="priceTier1F5">Email & communication setup</li>
+          <li class="na" data-i18n="priceTier1Na1">Network monitoring</li>
+          <li class="na" data-i18n="priceTier1Na2">24/7 support</li>
+          <li class="na" data-i18n="priceTier1Na3">PDPA compliance review</li>
         </ul>
-        <button class="price-cta sec" onclick="goPage('contact')">Get Started</button>
+        <button class="price-cta sec" onclick="goPage('contact')" data-i18n="priceGetStarted">Get Started</button>
       </div>
 
-      <div class="price-card featured">
-        <div class="price-badge">Most Popular</div>
-        <h3>Business</h3>
-        <p class="tagline">Full managed IT for growing SMEs</p>
+      <div class="price-card featured reveal reveal-delay-1">
+        <div class="price-badge" data-i18n="priceBadge">Most Popular</div>
+        <h3 data-i18n="priceTier2Name">Business</h3>
+        <p class="tagline" data-i18n="priceTier2Tag">Full managed IT for growing SMEs</p>
         <div class="price-amount"><span class="amt">RM 1,899</span><span class="period">/ month</span></div>
         <ul class="price-features">
-          <li>Up to 20 users supported</li>
-          <li>Remote helpdesk (extended hours)</li>
-          <li>24/7 system monitoring & alerts</li>
-          <li>Network setup & management</li>
-          <li>Cloud backup & disaster recovery</li>
-          <li>Monthly IT performance reports</li>
-          <li>PDPA compliance support</li>
-          <li class="na">Dedicated account manager</li>
+          <li data-i18n="priceTier2F1">Up to 20 users supported</li>
+          <li data-i18n="priceTier2F2">Remote helpdesk (extended hours)</li>
+          <li data-i18n="priceTier2F3">24/7 system monitoring & alerts</li>
+          <li data-i18n="priceTier2F4">Network setup & management</li>
+          <li data-i18n="priceTier2F5">Cloud backup & disaster recovery</li>
+          <li data-i18n="priceTier2F6">Monthly IT performance reports</li>
+          <li data-i18n="priceTier2F7">PDPA compliance support</li>
+          <li class="na" data-i18n="priceTier2Na1">Dedicated account manager</li>
         </ul>
-        <button class="price-cta main" onclick="goPage('contact')">Get Started</button>
+        <button class="price-cta main" onclick="goPage('contact')" data-i18n="priceGetStarted">Get Started</button>
       </div>
 
-      <div class="price-card">
-        <h3>Enterprise</h3>
-        <p class="tagline">Full-service IT for larger or complex operations</p>
-        <div class="price-amount"><span class="amt">Custom</span><span class="period">/ month</span></div>
+      <div class="price-card reveal reveal-delay-2">
+        <h3 data-i18n="priceTier3Name">Enterprise</h3>
+        <p class="tagline" data-i18n="priceTier3Tag">Full-service IT for larger or complex operations</p>
+        <div class="price-amount"><span class="amt" data-i18n="priceTier3Amt">Custom</span><span class="period">/ month</span></div>
         <ul class="price-features">
-          <li>Unlimited users</li>
-          <li>24/7 helpdesk & on-site support</li>
-          <li>Full network & server management</li>
-          <li>Dedicated account manager</li>
-          <li>PDPA & compliance full audit</li>
-          <li>Custom SLA agreements</li>
-          <li>Quarterly business IT reviews</li>
-          <li>Priority response guaranteed</li>
+          <li data-i18n="priceTier3F1">Unlimited users</li>
+          <li data-i18n="priceTier3F2">24/7 helpdesk & on-site support</li>
+          <li data-i18n="priceTier3F3">Full network & server management</li>
+          <li data-i18n="priceTier3F4">Dedicated account manager</li>
+          <li data-i18n="priceTier3F5">PDPA & compliance full audit</li>
+          <li data-i18n="priceTier3F6">Custom SLA agreements</li>
+          <li data-i18n="priceTier3F7">Quarterly business IT reviews</li>
+          <li data-i18n="priceTier3F8">Priority response guaranteed</li>
         </ul>
-        <button class="price-cta sec" onclick="goPage('contact')">Request Quote</button>
+        <button class="price-cta sec" onclick="goPage('contact')" data-i18n="priceRequestQuote">Request Quote</button>
       </div>
     </div>
-    <p class="pricing-note">All plans include a <span>free initial IT audit</span>. Contracts are month-to-month — no lock-in.</p>
+    <p class="pricing-note reveal"><span data-i18n="priceNoteHighlight">All plans include a free initial IT audit</span>. <span data-i18n="priceNoteNoLock">Contracts are month-to-month — no lock-in.</span></p>
   </section>
 
   <section class="addons-section">
-    <div class="section-eyebrow">AI Development</div>
-    <h2 class="section-title">AI Project Pricing</h2>
-    <p style="color:var(--gray);font-size:.92rem;margin-bottom:.5rem">AI projects are quoted per engagement. Below are our typical starting prices.</p>
+    <div class="section-eyebrow" data-i18n="priceAddonEyebrow">AI Development</div>
+    <h2 class="section-title reveal" data-i18n="priceAddonTitle">AI Project Pricing</h2>
+    <p style="color:var(--gray);font-size:.92rem;margin-bottom:.5rem" data-i18n="priceAddonSub">AI projects are quoted per engagement. Below are our typical starting prices.</p>
     <div class="addons-grid">
-      <div class="addon-card"><h4>AI Chatbot</h4><div class="ap">From RM 3,500</div><p>Custom chatbot for your website, WhatsApp, or internal use. Trained on your data.</p></div>
-      <div class="addon-card"><h4>Process Automation</h4><div class="ap">From RM 5,000</div><p>Automate repetitive business workflows — data entry, approvals, reporting, and more.</p></div>
-      <div class="addon-card"><h4>ML Model Development</h4><div class="ap">From RM 8,000</div><p>Custom machine learning models for prediction, classification, or recommendation.</p></div>
-      <div class="addon-card"><h4>AI Integration</h4><div class="ap">From RM 2,500</div><p>Integrate AI tools like ChatGPT, vision APIs, or custom models into your existing systems.</p></div>
-      <div class="addon-card"><h4>Cloud Migration</h4><div class="ap">From RM 4,000</div><p>Full cloud migration project — planning, execution, and post-migration support included.</p></div>
-      <div class="addon-card"><h4>PDPA Compliance Audit</h4><div class="ap">From RM 1,800</div><p>Full audit plus policy documentation and staff training to ensure compliance.</p></div>
+      <div class="addon-card reveal"><h4 data-i18n="priceAddon1Title">AI Chatbot</h4><div class="ap">From RM 3,500</div><p data-i18n="priceAddon1Desc">Custom chatbot for your website, WhatsApp, or internal use. Trained on your data.</p></div>
+      <div class="addon-card reveal reveal-delay-1"><h4 data-i18n="priceAddon2Title">Process Automation</h4><div class="ap">From RM 5,000</div><p data-i18n="priceAddon2Desc">Automate repetitive business workflows — data entry, approvals, reporting, and more.</p></div>
+      <div class="addon-card reveal reveal-delay-2"><h4 data-i18n="priceAddon3Title">ML Model Development</h4><div class="ap">From RM 8,000</div><p data-i18n="priceAddon3Desc">Custom machine learning models for prediction, classification, or recommendation.</p></div>
+      <div class="addon-card reveal"><h4 data-i18n="priceAddon4Title">AI Integration</h4><div class="ap">From RM 2,500</div><p data-i18n="priceAddon4Desc">Integrate AI tools like ChatGPT, vision APIs, or custom models into your existing systems.</p></div>
+      <div class="addon-card reveal reveal-delay-1"><h4 data-i18n="priceAddon5Title">Cloud Migration</h4><div class="ap">From RM 4,000</div><p data-i18n="priceAddon5Desc">Full cloud migration project — planning, execution, and post-migration support included.</p></div>
+      <div class="addon-card reveal reveal-delay-2"><h4 data-i18n="priceAddon6Title">PDPA Compliance Audit</h4><div class="ap">From RM 1,800</div><p data-i18n="priceAddon6Desc">Full audit plus policy documentation and staff training to ensure compliance.</p></div>
     </div>
   </section>
 
-  <section class="cta-band">
-    <h2>Need a Custom Quote?</h2>
-    <p>Every business is different. Tell us what you need and we'll build a package that fits your budget and goals.</p>
+  <section class="cta-band reveal">
+    <h2 data-i18n="priceCtaTitle">Need a Custom Quote?</h2>
+    <p data-i18n="priceCtaDesc">Every business is different. Tell us what you need and we'll build a package that fits your budget and goals.</p>
     <div class="cta-btns">
-      <button class="btn-navy" onclick="goPage('contact')">Request Custom Quote</button>
-      <button class="btn-primary" onclick="goPage('services')" data-i18n="idxHeroBtn2">Explore Services →</button>
+      <button class="btn-navy" onclick="goPage('contact')" data-i18n="priceCtaBtn1">Request Custom Quote</button>
+      <button class="btn-primary" onclick="goPage('services')" data-i18n="priceCtaBtn2">Explore Services →</button>
     </div>
   </section>
   <footer>
@@ -755,61 +757,61 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <!-- ===================== CONTACT ===================== -->
 <div class="page" id="page-contact">
   <div class="page-hero">
-    <div class="page-hero-label" data-i18n="navContact">Contact Us</div>
-    <h1>Let's Talk About Your Business</h1>
-    <p>Whether you have a specific project in mind or just want to explore what's possible — we'd love to hear from you. No pressure, no commitment.</p>
+    <div class="page-hero-label" data-i18n="contactHeroLabel">Contact Us</div>
+    <h1 data-i18n="contactHeroTitle">Let's Talk About Your Business</h1>
+    <p data-i18n="contactHeroDesc">Whether you have a specific project in mind or just want to explore what's possible — we'd love to hear from you. No pressure, no commitment.</p>
   </div>
 
   <section class="contact-section">
     <div class="contact-info">
-      <h2>Get in Touch</h2>
-      <p>We typically respond within 1 business day. For urgent matters, reach us directly via WhatsApp or phone.</p>
-      <div class="contact-detail">
+      <h2 class="reveal" data-i18n="contactInfoTitle">Get in Touch</h2>
+      <p class="reveal" data-i18n="contactInfoDesc">We typically respond within 1 business day. For urgent matters, reach us directly via WhatsApp or phone.</p>
+      <div class="contact-detail reveal">
         <div class="contact-icon"><i class="ti ti-map-pin"></i></div>
-        <div><h5>Office Location</h5><p>Tamarind Suites, Cyberjaya, Selangor</p></div>
+        <div><h5 data-i18n="contactOffice">Office Location</h5><p>Tamarind Suites, Cyberjaya, Selangor</p></div>
       </div>
-      <div class="contact-detail">
+      <div class="contact-detail reveal reveal-delay-1">
         <div class="contact-icon"><i class="ti ti-mail"></i></div>
-        <div><h5>Email</h5><p>info@dutaintegra.my</p></div>
+        <div><h5 data-i18n="contactEmail">Email</h5><p>info@dutaintegra.my</p></div>
       </div>
-      <div class="contact-detail">
+      <div class="contact-detail reveal reveal-delay-2">
         <div class="contact-icon"><i class="ti ti-phone"></i></div>
-        <div><h5>Phone / WhatsApp</h5><p>+60 11-5403 4051</p></div>
+        <div><h5 data-i18n="contactPhone">Phone / WhatsApp</h5><p>+60 11-5403 4051</p></div>
       </div>
-      <div class="contact-detail">
+      <div class="contact-detail reveal reveal-delay-3">
         <div class="contact-icon"><i class="ti ti-clock"></i></div>
-        <div><h5>Business Hours</h5><p>Monday – Friday, 9am – 6pm MYT<br>Weekend support available for managed IT clients</p></div>
+        <div><h5 data-i18n="contactHours">Business Hours</h5><p data-i18n="contactHoursVal">Monday – Friday, 9am – 6pm MYT<br>Weekend support available for managed IT clients</p></div>
       </div>
     </div>
 
-    <div class="contact-form">
-      <h3>Send Us a Message</h3>
+    <div class="contact-form reveal">
+      <h3 data-i18n="contactFormTitle">Send Us a Message</h3>
       <div class="form-row">
-        <div class="form-group"><label>Full Name *</label><input type="text" id="contact-name" placeholder="Ahmad bin Rahman"></div>
-        <div class="form-group"><label>Company Name</label><input type="text" id="contact-company" placeholder="Your Company Sdn Bhd"></div>
+        <div class="form-group"><label data-i18n="contactName">Full Name *</label><input type="text" id="contact-name" placeholder="Ahmad bin Rahman"></div>
+        <div class="form-group"><label data-i18n="contactCompany">Company Name</label><input type="text" id="contact-company" placeholder="Your Company Sdn Bhd"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Email Address *</label><input type="email" id="contact-email" placeholder="you@company.com"></div>
-        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="contact-phone" placeholder="+60 12-345 6789"></div>
+        <div class="form-group"><label data-i18n="contactEmailLabel">Email Address *</label><input type="email" id="contact-email" placeholder="you@company.com"></div>
+        <div class="form-group"><label data-i18n="contactPhoneLabel">Phone / WhatsApp</label><input type="tel" id="contact-phone" placeholder="+60 12-345 6789"></div>
       </div>
       <div class="form-group">
-        <label>What are you interested in? *</label>
+        <label data-i18n="contactServiceLabel">What are you interested in? *</label>
         <select id="contact-service">
           <option value="">Select a service...</option>
-          <option data-i18n="idxSvc1Title">AI Software Development</option>
-          <option data-i18n="idxSvc2Title">Managed IT Services</option>
-          <option>Cloud Migration</option>
-          <option>IT Security & PDPA Compliance</option>
-          <option>Business Intelligence</option>
-          <option>Free IT Audit</option>
-          <option>Custom / Multiple Services</option>
+          <option data-i18n="svc1Title">AI Software Development</option>
+          <option data-i18n="svc2Title">Managed IT Services</option>
+          <option data-i18n="priceAddon5Title">Cloud Migration</option>
+          <option data-i18n="svc4Title">IT Security & PDPA Compliance</option>
+          <option data-i18n="svc5Title">Business Intelligence</option>
+          <option data-i18n="contactOptAudit">Free IT Audit</option>
+          <option data-i18n="contactOptCustom">Custom / Multiple Services</option>
         </select>
       </div>
       <div class="form-group">
-        <label>Tell us about your business &amp; needs</label>
+        <label data-i18n="contactMessageLabel">Tell us about your business &amp; needs</label>
         <textarea id="contact-message" placeholder="e.g. We're a 15-person retail company in Johor looking to automate our inventory tracking and get better IT support..."></textarea>
       </div>
-      <button class="form-submit" id="contact-submit" onclick="submitForm()">Send Message →</button>
+      <button class="form-submit" id="contact-submit" onclick="submitForm()" data-i18n="contactSubmit">Send Message →</button>
     </div>
   </section>
   <footer>
