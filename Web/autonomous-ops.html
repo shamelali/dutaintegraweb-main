@@ -7,8 +7,8 @@
 <meta name="description" content="Duta Integra Autonomous Ops: AI monitors your infrastructure 24/7, predicts failures before they happen, and resolves issues automatically. Human-in-the-loop on every action." data-i18n="opsHeroDesc">
 <link rel="canonical" href="https://dutaintegra.my/autonomous-ops.html">
 <!-- Search engine verification — replace placeholders with real codes -->
-<meta name="google-site-verification" content="YOUR_GOOGLE_SITE_VERIFICATION_CODE">
-<meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE">
+    <meta name="google-site-verification" content="m2PLSMszP1wPhT4dWDXXdIYqG8Kdrtn6Vcx2_9SFjMw">
+    <meta name="google-site-verification" content="Jw9gXTmsZJY7DFvXiL23u5Vl7XwcrjYtBEGM0LapJ84">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Autonomous IT Ops — AI-Powered Infrastructure Management | Duta Integra">
 <meta property="og:description" content="AI monitors your infrastructure 24/7, predicts failures before they happen, and resolves issues automatically. Human-in-the-loop on every action.">
@@ -24,7 +24,31 @@
 <link rel="icon" type="image/png" href="../assets/dis-favicon.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="css/fonts.css" />
+<link rel="stylesheet" href="css/shadcn-tokens.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        brand: { navy:'#0B1D3A', blue:'#1565C0', electric:'#00B4FF', white:'#F8FAFF', gray:'#8A9BB5', dark:'#060F1F' },
+        shadcn: {
+          bg: 'hsl(var(--background))',
+          fg: 'hsl(var(--foreground))',
+          card: 'hsl(var(--card))',
+          muted: 'hsl(var(--muted))',
+          border: 'hsl(var(--border))',
+          primary: 'hsl(var(--primary))',
+        }
+      },
+      fontFamily: { sans:['DM Sans','ui-sans-serif','system-ui','sans-serif'], display:['Syne','ui-sans-serif','system-ui','sans-serif'] },
+      borderRadius: { sm:'var(--radius-sm)', DEFAULT:'var(--radius)', md:'var(--radius-md)', lg:'var(--radius-lg)', xl:'var(--radius-xl)' },
+    }
+  }
+}
+</script>
 <style>
 :root{--navy:#0B1D3A;--blue:#1565C0;--electric:#00B4FF;--white:#F8FAFF;--gray:#8A9BB5;--dark:#060F1F}
 *{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
@@ -191,6 +215,9 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <div style="flex:1;min-width:200px">
       <p style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:.35rem">PDPA Consent Required</p>
       <p style="color:var(--gray);font-size:.85rem;line-height:1.7;margin-bottom:1rem">We only display anonymized, aggregated infrastructure data. No client names, IPs, or sensitive details are ever shown. By activating the feed you agree to our <a href="privacy.html" style="color:var(--electric);text-decoration:underline">Privacy Policy</a>.</p>
+      <div style="margin-bottom:.75rem">
+        <input type="email" id="consent-email" placeholder="your@email.com" required style="width:100%;max-width:320px;padding:.55rem .8rem;border:1.5px solid #E5EBF5;border-radius:8px;font-size:.85rem;color:var(--navy);outline:none">
+      </div>
       <label style="display:flex;align-items:flex-start;gap:.5rem;cursor:pointer;font-size:.85rem;color:var(--navy)">
         <input type="checkbox" id="consent-check" style="margin-top:.15rem;width:16px;height:16px;accent-color:var(--electric)">
         <span>I consent to viewing aggregated infrastructure monitoring data as described above.</span>
@@ -526,16 +553,25 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 
   window.submitConsent = function() {
     if (!check.checked) return;
+    var emailInput = document.getElementById('consent-email');
+    var email = emailInput ? emailInput.value.trim() : '';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    var consentText = 'I consent to viewing aggregated infrastructure monitoring data as described above.';
     fetch('/api/ops/consent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ consent: true, ts: new Date().toISOString() })
+      body: JSON.stringify({ email: email, consent: true, consentText: consentText })
     }).then(function() {
       localStorage.setItem('ops_feed_consent', 'true');
+      localStorage.setItem('ops_feed_email', email);
       banner.style.display = 'none';
       activateFeed();
     }).catch(function() {
       localStorage.setItem('ops_feed_consent', 'true');
+      localStorage.setItem('ops_feed_email', email);
       banner.style.display = 'none';
       activateFeed();
     });
@@ -564,31 +600,43 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
           item.style.cssText = 'border-bottom:1px solid rgba(255,255,255,.06);padding:.75rem 0;display:flex;gap:.8rem;align-items:flex-start';
           var icon = document.createElement('div');
           icon.style.cssText = 'flex-shrink:0;width:32px;height:32px;background:rgba(0,180,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center';
-          icon.innerHTML = '<i class="ti ti-' + (ev.category === 'backup' ? 'database' : ev.category === 'security' ? 'shield-check' : ev.category === 'uptime' ? 'activity' : 'cpu') + '" style="font-size:.9rem;color:var(--electric)"></i>';
+          var iconName = ev.cat === 'backup' ? 'database' : ev.cat === 'security' ? 'shield-check' : ev.cat === 'uptime' ? 'activity' : ev.cat === 'patch' ? 'refresh' : ev.cat === 'disk' ? 'device-desktop' : ev.cat === 'ssl' ? 'certificate' : ev.cat === 'firewall' ? 'shield' : ev.cat === 'database' ? 'database' : ev.cat === 'memory' ? 'cpu' : ev.cat === 'access' ? 'users' : ev.cat === 'scale' ? 'arrows-maximize' : ev.cat === 'cost' ? 'coin' : 'server';
+          icon.innerHTML = '<i class="ti ti-' + iconName + '" style="font-size:.9rem;color:var(--electric)"></i>';
           var body = document.createElement('div');
           body.style.cssText = 'flex:1;min-width:0';
           var title = document.createElement('div');
           title.style.cssText = 'font-size:.85rem;color:rgba(255,255,255,.9);font-weight:500;margin-bottom:.15rem';
-          title.textContent = ev.message || ev.type || 'Event';
+          title.textContent = ev.action || 'Event';
           var meta = document.createElement('div');
           meta.style.cssText = 'font-size:.72rem;color:rgba(255,255,255,.4)';
-          meta.textContent = ev.region ? ev.region + ' · ' : '';
+          meta.textContent = ev.client_region ? ev.client_region + ' · ' : '';
+          meta.textContent += ev.client_industry ? ev.client_industry + ' · ' : '';
           meta.textContent += ev.ts ? timeAgo(ev.ts) : '';
           if (ev.severity) {
             var sev = document.createElement('span');
             sev.style.cssText = 'display:inline-block;padding:.1rem .45rem;border-radius:4px;font-size:.65rem;font-weight:600;margin-left:.4rem;background:' +
               (ev.severity === 'warning' ? 'rgba(255,180,0,.15);color:#ffb800' :
-               ev.severity === 'critical' ? 'rgba(255,60,60,.15);color:#ff5555' :
+               ev.severity === 'error' ? 'rgba(255,60,60,.15);color:#ff5555' :
                'rgba(0,180,255,.12);color:var(--electric)');
             sev.textContent = ev.severity;
             meta.appendChild(sev);
           }
-          body.appendChild(title);
-          body.appendChild(meta);
+          if (ev.detail) {
+            var det = document.createElement('div');
+            det.style.cssText = 'font-size:.75rem;color:rgba(255,255,255,.5);margin-top:.2rem';
+            det.textContent = ev.detail;
+            body.appendChild(title);
+            body.appendChild(meta);
+            body.appendChild(det);
+          } else {
+            body.appendChild(title);
+            body.appendChild(meta);
+          }
           item.appendChild(icon);
           item.appendChild(body);
           feedList.appendChild(item);
         });
+        if (feedStatus) feedStatus.textContent = 'Live · ' + data.events.length + ' events';
       })
       .catch(function() {});
   }
