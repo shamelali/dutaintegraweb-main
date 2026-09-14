@@ -147,8 +147,8 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       <div><h5 data-i18n="contactPhone">Phone / WhatsApp</h5><p>+60 11-5403 4051</p></div>
     </div>
     <div class="contact-detail">
-      <div class="contact-icon" data-i18n="contactHoursVal"><i class="ti ti-clock"></i></div>
-      <div><h5 data-i18n="contactHours">Business Hours</h5><p>Monday – Friday, 9am – 6pm MYT<br>Weekend support available for managed IT clients</p></div>
+      <div class="contact-icon"><i class="ti ti-clock"></i></div>
+      <div><h5 data-i18n="contactHours">Business Hours</h5><p data-i18n="contactHoursVal">Monday – Friday, 9am – 6pm MYT<br>Weekend support available for managed IT clients</p></div>
     </div>
   </div>
 
@@ -165,7 +165,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       </div>
       <div class="form-group">
         <label for="contact-service" data-i18n="contactServiceLabel">What are you interested in? *</label>
-        <select id="contact-service" required>
+        <select id="contact-service" required onchange="if(this.value==='Free IT Audit'){window.location='quiz.html'}">
           <option value="">Select a service...</option>
           <option>AI Software Development</option>
           <option>Managed IT Services</option>
