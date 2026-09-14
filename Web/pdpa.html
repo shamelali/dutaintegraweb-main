@@ -86,6 +86,7 @@
     .weight{font-size:.7rem;color:var(--gray);background:#F0F4F8;padding:.15rem .4rem;border-radius:4px;margin-left:.5rem}
     @media(max-width:600px){.btn-secondary{margin-left:0;display:inline-block;margin-top:.5rem}.step-indicators{gap:.3rem}}
   </style>
+<link rel="stylesheet" href="css/dark.css">
 <!-- Google Analytics — replace YOUR_GA4_ID with your measurement ID from analytics.google.com -->
 <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA4_ID"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','YOUR_GA4_ID')</script> -->
@@ -101,6 +102,8 @@
     <li><a href="about.html">About</a></li>    <li><a href="pricing.html">Pricing</a></li>
     <li><a href="autonomous-ops.html" style="color:var(--electric)">Autonomous Ops</a></li>
     <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+      <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
+    <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
 </nav>
 
@@ -320,5 +323,6 @@ function showResult(data) {
 }
 showStep(1);
 </script>
+<script src="js/site.js"></script>
 </body>
 </html>

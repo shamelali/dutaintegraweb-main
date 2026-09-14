@@ -49,7 +49,7 @@ The server serves `Web/` at `/` and exposes:
 ## Test
 
 ```bash
-npm test               # node --test, 51 tests against a real HTTP server
+npm test               # node --test, 59 tests against a real HTTP server
 ```
 
 ## How lead capture works

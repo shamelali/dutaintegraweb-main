@@ -74,6 +74,7 @@ footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
 .footer-bottom p{color:rgba(255,255,255,.3);font-size:.78rem}
 @media(max-width:768px){.footer-top{grid-template-columns:1fr}.nav-links{gap:1rem}}
 </style>
+<link rel="stylesheet" href="css/dark.css">
 
 <script type="application/ld+json">
 {
@@ -176,6 +177,8 @@ footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
     <li><a href="/autonomous-ops.html" style="color:var(--electric)">Autonomous Ops</a></li>
     <li><a href="/contact.html">Contact</a></li>
     <li><a href="/portal/login.html" class="nav-cta">Client Portal</a></li>
+      <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
+    <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
 </nav>
 
@@ -289,5 +292,6 @@ function toggleFaq(btn) {
   item.classList.toggle('open');
 }
 </script>
+<script src="js/site.js"></script>
 </body>
 </html>
