@@ -39,6 +39,9 @@
     { "source": "/api/portal/tickets/:id", "destination": "/api/gateway" },
     { "source": "/api/portal/tickets", "destination": "/api/gateway" },
     { "source": "/admin/clients/:id/send-digest", "destination": "/api/gateway" },
-    { "source": "/admin/clients", "destination": "/api/gateway" }
+    { "source": "/admin/clients", "destination": "/api/gateway" },
+    { "source": "/api/ops/feed", "destination": "/api/gateway" },
+    { "source": "/api/ops/consent", "destination": "/api/gateway" },
+    { "source": "/api/ops/events", "destination": "/api/gateway" }
   ]
 }
