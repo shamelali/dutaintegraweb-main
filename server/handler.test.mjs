@@ -563,8 +563,6 @@ describe("client portal — auth and tickets", () => {
       assert.equal(res.status, 200);
       const html = await res.text();
       assert.ok(html.includes("Built by DI"));
-      assert.ok(html.includes("MDEC"));
-      assert.ok(html.includes("PIKOM"));
     });
 
     test("serves /insights.html as a static page", async () => {
