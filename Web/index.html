@@ -313,11 +313,11 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <nav>
   <div class="logo"><a href="index.html"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions" class="logo-img"></picture><span class="logo-text">Duta Integra Solutions</span></a></div>
   <ul class="nav-links">
-    <li><a href="services.html">Services</a></li>
-    <li><a href="about.html">About</a></li>    <li><a href="pricing.html">Pricing</a></li>
-    <li><a href="quiz.html" style="color:var(--electric)">Find Your Tier</a></li>
-    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
-    <li><a href="autonomous-ops.html" style="color:var(--electric)">Autonomous Ops</a></li>
+    <li><a href="services.html" data-i18n="idxFooterServices">Services</a></li>
+    <li><a href="about.html" data-i18n="navAbout">About</a></li>    <li><a href="pricing.html" data-i18n="navPricing">Pricing</a></li>
+    <li><a href="quiz.html" style="color:var(--electric)" data-i18n="navQuiz">Find Your Tier</a></li>
+    <li><a href="contact.html" class="nav-cta" data-i18n="navContact">Contact Us</a></li>
+    <li><a href="autonomous-ops.html" style="color:var(--electric)" data-i18n="navAutonomousOps">Autonomous Ops</a></li>
     <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
     <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
@@ -326,12 +326,12 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <!-- ===================== HOME ===================== -->
 <div class="page active" id="page-home">
   <section class="hero">
-    <div class="hero-badge">🇲🇾 Founder-Led · AI-First · Cyberjaya, Malaysia</div>
-    <h1>Smart Technology.<br><span>A Partner Who Answers.</span></h1>
-    <p>We build the AI systems and manage the IT infrastructure Malaysian SMEs run on — with the founder still on every account, a real proposal within 3 working days, and no lock-in contracts.</p>
+    <div class="hero-badge" data-i18n="idxHeroBadge">🇲🇾 Founder-Led · AI-First · Cyberjaya, Malaysia</div>
+    <h1 data-i18n="idxHeroTitle1">Smart Technology.<br><span data-i18n="idxHeroTitle2">A Partner Who Answers.</span></h1>
+    <p data-i18n="idxHeroDesc">We build the AI systems and manage the IT infrastructure Malaysian SMEs run on — with the founder still on every account, a real proposal within 3 working days, and no lock-in contracts.</p>
     <div class="hero-btns">
-      <a href="contact.html" class="btn-primary">Get a Free IT Audit</a>
-      <a href="services.html" class="btn-outline">Explore Services →</a>
+      <a href="contact.html" class="btn-primary" data-i18n="idxHeroBtn1">Get a Free IT Audit</a>
+      <a href="services.html" class="btn-outline" data-i18n="idxHeroBtn2">Explore Services →</a>
     </div>
     <div class="hero-stats">
       <div><span class="stat-val">3</span><span class="stat-label">Days to First Proposal</span></div>
@@ -342,24 +342,24 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   </section>
 
   <section class="services-home">
-    <div class="section-eyebrow">What We Do</div>
-    <h2 class="section-title">Two Pillars. One Partner.</h2>
-    <p class="section-sub">We combine cutting-edge AI development with rock-solid managed IT — so you never need to juggle multiple vendors again.</p>
+    <div class="section-eyebrow" data-i18n="idxSvcEyebrow">What We Do</div>
+    <h2 class="section-title" data-i18n="idxSvcTitle">Two Pillars. One Partner.</h2>
+    <p class="section-sub" data-i18n="idxSvcSub">We combine cutting-edge AI development with rock-solid managed IT — so you never need to juggle multiple vendors again.</p>
     <div class="svc-grid">
       <div class="svc-card">
         <a href="services.html" style="text-decoration:none">
         <div class="svc-icon"><i class="ti ti-robot"></i></div>
-        <h3>AI Software Development</h3>
+        <h3 data-i18n="idxSvc1Title">AI Software Development</h3>
         <p>Custom AI applications, intelligent chatbots, and process automation built specifically for your business workflows.</p>
-        <span class="svc-link">Learn more →</span>
+        <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
       <div class="svc-card">
         <a href="services.html" style="text-decoration:none">
         <div class="svc-icon"><i class="ti ti-device-desktop"></i></div>
-        <h3>Managed IT Services</h3>
-        <p>End-to-end IT management — cloud infrastructure, helpdesk, network security, and hardware maintenance.</p>
-        <span class="svc-link">Learn more →</span>
+        <h3 data-i18n="idxSvc2Title">Managed IT Services</h3>
+        <p data-i18n="idxSvc2Desc">End-to-end IT management — cloud infrastructure, helpdesk, network security, and hardware maintenance.</p>
+        <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
       <div class="svc-card">
@@ -367,15 +367,15 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <div class="svc-icon"><i class="ti ti-cloud"></i></div>
         <h3>Cloud Migration & Setup</h3>
         <p>Move your business to the cloud seamlessly with planning, migration, and ongoing cloud management.</p>
-        <span class="svc-link">Learn more →</span>
+        <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
       <div class="svc-card">
         <a href="services.html" style="text-decoration:none">
         <div class="svc-icon"><i class="ti ti-shield-lock"></i></div>
-        <h3>IT Security & Compliance</h3>
-        <p>PDPA compliance audits, cybersecurity monitoring, and data protection policies for your peace of mind.</p>
-        <span class="svc-link">Learn more →</span>
+        <h3 data-i18n="idxSvc4Title">IT Security & Compliance</h3>
+        <p data-i18n="idxSvc4Desc">PDPA compliance audits, cybersecurity monitoring, and data protection policies for your peace of mind.</p>
+        <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
       <div class="svc-card">
@@ -383,14 +383,14 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <div class="svc-icon"><i class="ti ti-chart-bar"></i></div>
         <h3>Business Intelligence (Launching Next)</h3>
         <p>Data-driven insights, predictive BI analytics, and intelligent dashboards to help you make smarter business decisions.</p>
-        <span class="svc-link">Learn more →</span>
+        <span class="svc-link" data-i18n="idxLearnMore">Learn more →</span>
         </a>
       </div>
     </div>
   </section>
 
   <section class="clients-strip">
-    <p>Trusted by businesses across Malaysia</p>
+    <p data-i18n="idxClientsTitle">Trusted by businesses across Malaysia</p>
     <div class="client-logos">
       <a class="client-logo-pill" href="https://eastelpro.vercel.app" target="_blank" rel="noopener">Eastelpro</a>
       <a class="client-logo-pill" href="https://duta-connect.vercel.app" target="_blank" rel="noopener">DUTAConnect</a>
@@ -399,21 +399,21 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   </section>
 
   <section class="why">
-    <div class="section-eyebrow">Why Choose Us</div>
-    <h2 class="section-title">Built for Malaysian SMEs</h2>
-    <div class="why-grid">
-      <div class="why-card"><div class="why-num">01</div><h4>Local Expertise</h4><p>We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.</p></div>
-      <div class="why-card"><div class="why-num">02</div><h4>AI + IT Combined</h4><p>One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.</p></div>
-      <div class="why-card"><div class="why-num">03</div><h4>Transparent Pricing</h4><p>No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.</p></div>
-      <div class="why-card"><div class="why-num">04</div><h4>Fast Onboarding</h4><p>Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.</p></div>
+    <div class="section-eyebrow" data-i18n="idxWhyEyebrow">Why Choose Us</div>
+    <h2 class="section-title" data-i18n="idxWhyTitle">Built for Malaysian SMEs</h2>
+    <div class="why-grid" data-i18n="idxWhy1Desc">
+      <div class="why-card"><div class="why-num">01</div><h4 data-i18n="idxWhy1Title">Local Expertise</h4><p>We understand PDPA, SST, ePerolehan, and the SME landscape. No need to explain Malaysian context to us.</p></div>
+      <div class="why-card"><div class="why-num">02</div><h4 data-i18n="idxWhy2Title">AI + IT Combined</h4><p>One vendor for your AI ambitions and day-to-day IT — simpler, cheaper, and better coordinated.</p></div>
+      <div class="why-card"><div class="why-num">03</div><h4 data-i18n="idxWhy3Title">Transparent Pricing</h4><p>No hidden fees. Clear monthly retainers and project scopes designed for growing businesses.</p></div>
+      <div class="why-card"><div class="why-num">04</div><h4 data-i18n="idxWhy4Title">Fast Onboarding</h4><p>Free initial audit, clear proposal within 3 working days, and on-schedule delivery you can count on.</p></div>
     </div>
   </section>
 
   <section class="cta-band">
     <h2>Ready to Modernize Your Business?</h2>
-    <p>Start with a free IT audit or AI readiness assessment — no obligation, no strings attached.</p>
+    <p data-i18n="idxCtaDesc">Start with a free IT audit or AI readiness assessment — no obligation, no strings attached.</p>
     <div class="cta-btns">
-      <a href="contact.html" class="btn-navy">Book Free Consultation</a>
+      <a href="contact.html" class="btn-navy" data-i18n="idxCtaBtn1">Book Free Consultation</a>
       <a href="pricing.html" class="btn-primary">View Pricing</a>
     </div>
   </section>
@@ -422,17 +422,17 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="logo"><picture><source srcset="../assets/dis-logo-footer.webp" type="image/webp"><img src="../assets/dis-logo-footer.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div>
-        <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
+        <p data-i18n="idxFooterDesc">Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.</p>
       </div>
       <div class="footer-col">
-        <h5>Company</h5>
-        <a href="about.html">About Us</a>        <a href="pricing.html">Pricing</a>
+        <h5 data-i18n="idxFooterCompany">Company</h5>
+        <a href="about.html">About Us</a>        <a href="pricing.html" data-i18n="navPricing">Pricing</a>
         <a href="contact.html">Contact</a>
         <a href="stats.html">Live Stats</a>
         <a href="insights.html">Insights</a>
       </div>
       <div class="footer-col">
-        <h5>Services</h5>
+        <h5 data-i18n="idxFooterServices">Services</h5>
         <a href="services.html">AI Development</a>
         <a href="services.html">Managed IT</a>
         <a href="services.html">Cloud Migration</a>
@@ -460,8 +460,8 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <div class="svc-full-grid">
       <div class="svc-full-card">
       <div class="icon"><i class="ti ti-robot"></i></div>
-      <h3>AI Software Development</h3>
-      <p>We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
+      <h3 data-i18n="idxSvc1Title">AI Software Development</h3>
+      <p data-i18n="idxSvc1Desc">We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
         <ul class="svc-features">
           <li>Custom AI chatbots & virtual assistants</li>
           <li>Business process automation (RPA)</li>
@@ -474,7 +474,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       </div>
       <div class="svc-full-card">
       <div class="icon"><i class="ti ti-device-desktop"></i></div>
-      <h3>Managed IT Services</h3>
+      <h3 data-i18n="idxSvc2Title">Managed IT Services</h3>
       <p>We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
         <ul class="svc-features">
           <li>24/7 remote IT helpdesk support</li>
@@ -488,7 +488,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       </div>
       <div class="svc-full-card">
       <div class="icon"><i class="ti ti-cloud"></i></div>
-      <h3>Cloud Migration & Management</h3>
+      <h3 data-i18n="idxSvc3Title">Cloud Migration & Management</h3>
       <p>Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
         <ul class="svc-features">
           <li>Cloud readiness assessment</li>
@@ -547,15 +547,15 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <h2>Not Sure Which Service You Need?</h2>
     <p>Book a free 30-minute consultation and we'll recommend the right solution for your business.</p>
     <div class="cta-btns">
-      <button class="btn-navy" onclick="goPage('contact')">Book Free Consultation</button>
+      <button class="btn-navy" onclick="goPage('contact')" data-i18n="idxCtaBtn1">Book Free Consultation</button>
       <button class="btn-primary" onclick="goPage('pricing')">See Pricing →</button>
     </div>
   </section>
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a><a href="stats.html">Live Stats</a><a href="insights.html">Insights</a><a href="calculator.html">Calculator</a><a href="faq.html">FAQ</a></div>
-      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+      <div class="footer-col"><h5 data-i18n="idxFooterCompany">Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')" data-i18n="navPricing">Pricing</a><a onclick="goPage('contact')">Contact</a><a href="stats.html">Live Stats</a><a href="insights.html">Insights</a><a href="calculator.html" data-i18n="navCalculator">Calculator</a><a href="faq.html" data-i18n="navFaq">FAQ</a></div>
+      <div class="footer-col"><h5 data-i18n="idxFooterServices">Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegra.my</p></div>
   </footer>
@@ -616,14 +616,14 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <p>We'd love to meet you — whether over a call, a coffee, or a WhatsApp message.</p>
     <div class="cta-btns">
       <button class="btn-navy" onclick="goPage('contact')">Get in Touch</button>
-      <button class="btn-primary" onclick="goPage('services')">Explore Services →</button>
+      <button class="btn-primary" onclick="goPage('services')" data-i18n="idxHeroBtn2">Explore Services →</button>
     </div>
   </section>
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a><a href="stats.html">Live Stats</a><a href="insights.html">Insights</a><a href="calculator.html">Calculator</a><a href="faq.html">FAQ</a></div>
-      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+      <div class="footer-col"><h5 data-i18n="idxFooterCompany">Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')" data-i18n="navPricing">Pricing</a><a onclick="goPage('contact')">Contact</a><a href="stats.html">Live Stats</a><a href="insights.html">Insights</a><a href="calculator.html" data-i18n="navCalculator">Calculator</a><a href="faq.html" data-i18n="navFaq">FAQ</a></div>
+      <div class="footer-col"><h5 data-i18n="idxFooterServices">Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegra.my</p></div>
   </footer>
@@ -632,7 +632,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <!-- ===================== PRICING ===================== -->
 <div class="page" id="page-pricing">
   <div class="page-hero">
-    <div class="page-hero-label">Pricing</div>
+    <div class="page-hero-label" data-i18n="navPricing">Pricing</div>
     <h1>Transparent Pricing. No Surprises.</h1>
     <p>Flexible plans designed for Malaysian SMEs — whether you need full managed IT, AI development, or both. All prices in MYR.</p>
   </div>
@@ -715,14 +715,14 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <p>Every business is different. Tell us what you need and we'll build a package that fits your budget and goals.</p>
     <div class="cta-btns">
       <button class="btn-navy" onclick="goPage('contact')">Request Custom Quote</button>
-      <button class="btn-primary" onclick="goPage('services')">Explore Services →</button>
+      <button class="btn-primary" onclick="goPage('services')" data-i18n="idxHeroBtn2">Explore Services →</button>
     </div>
   </section>
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a><a href="stats.html">Live Stats</a><a href="insights.html">Insights</a><a href="calculator.html">Calculator</a><a href="faq.html">FAQ</a></div>
-      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+      <div class="footer-col"><h5 data-i18n="idxFooterCompany">Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')" data-i18n="navPricing">Pricing</a><a onclick="goPage('contact')">Contact</a><a href="stats.html">Live Stats</a><a href="insights.html">Insights</a><a href="calculator.html" data-i18n="navCalculator">Calculator</a><a href="faq.html" data-i18n="navFaq">FAQ</a></div>
+      <div class="footer-col"><h5 data-i18n="idxFooterServices">Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegra.my</p></div>
   </footer>
@@ -731,7 +731,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 <!-- ===================== CONTACT ===================== -->
 <div class="page" id="page-contact">
   <div class="page-hero">
-    <div class="page-hero-label">Contact Us</div>
+    <div class="page-hero-label" data-i18n="navContact">Contact Us</div>
     <h1>Let's Talk About Your Business</h1>
     <p>Whether you have a specific project in mind or just want to explore what's possible — we'd love to hear from you. No pressure, no commitment.</p>
   </div>
@@ -772,8 +772,8 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <label>What are you interested in? *</label>
         <select id="contact-service">
           <option value="">Select a service...</option>
-          <option>AI Software Development</option>
-          <option>Managed IT Services</option>
+          <option data-i18n="idxSvc1Title">AI Software Development</option>
+          <option data-i18n="idxSvc2Title">Managed IT Services</option>
           <option>Cloud Migration</option>
           <option>IT Security & PDPA Compliance</option>
           <option>Business Intelligence</option>
@@ -791,9 +791,9 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   <footer>
     <div class="footer-top">
       <div class="footer-brand"><div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div><p>Your trusted AI and IT partner in Malaysia.</p></div>
-      <div class="footer-col"><h5>Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')">Pricing</a><a onclick="goPage('contact')">Contact</a><a href="stats.html">Live Stats</a><a href="insights.html">Insights</a><a href="calculator.html">Calculator</a><a href="faq.html">FAQ</a></div>
-      <div class="footer-col"><h5>Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
-      <div class="footer-col"><h5>Legal</h5><a href="privacy.html">Privacy Policy</a><a href="pdpa.html">PDPA Check</a><a href="sla.html">SLA</a><a href="cases.html">Case Studies</a>
+      <div class="footer-col"><h5 data-i18n="idxFooterCompany">Company</h5><a onclick="goPage('about')">About Us</a><a onclick="goPage('pricing')" data-i18n="navPricing">Pricing</a><a onclick="goPage('contact')">Contact</a><a href="stats.html">Live Stats</a><a href="insights.html">Insights</a><a href="calculator.html" data-i18n="navCalculator">Calculator</a><a href="faq.html" data-i18n="navFaq">FAQ</a></div>
+      <div class="footer-col"><h5 data-i18n="idxFooterServices">Services</h5><a onclick="goPage('services')">AI Development</a><a onclick="goPage('services')">Managed IT</a><a onclick="goPage('services')">Cloud Migration</a><a onclick="goPage('services')">IT Security</a></div>
+      <div class="footer-col"><h5>Legal</h5><a href="privacy.html">Privacy Policy</a><a href="pdpa.html">PDPA Check</a><a href="sla.html">SLA</a><a href="cases.html" data-i18n="navCaseStudies">Case Studies</a>
       <a href="tos.html">Terms of Service</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p><p>info@dutaintegra.my</p></div>
