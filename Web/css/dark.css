@@ -1,24 +1,46 @@
 /* ========================================
    DARK MODE — shared across all pages
+   Works with Tailwind + shadcn tokens
    ======================================== */
 
-/* Base */
+/* === Tailwind dark mode bridge === */
+body.dark-mode {
+  --background: 222 47% 6%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 11%;
+  --card-foreground: 210 40% 98%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 200 100% 41%;
+}
+
+/* === shadcn utility dark overrides === */
+body.dark-mode .shadcn-card { background: hsl(var(--card)); border-color: hsl(var(--border)); }
+body.dark-mode .shadcn-badge { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); border-color: hsl(var(--border)); }
+body.dark-mode .shadcn-badge.primary { background: hsl(200 100% 41% / 0.15); color: hsl(200 100% 55%); border-color: hsl(200 100% 41% / 0.25); }
+body.dark-mode .shadcn-btn-outline { border-color: hsl(var(--border)); color: hsl(var(--foreground)); }
+body.dark-mode .shadcn-btn-outline:hover { background: hsl(var(--muted)); }
+body.dark-mode .shadcn-separator { background: hsl(var(--border)); }
+
+/* === Base === */
 body.dark-mode { background: #0a0f1d; color: #e2e8f0; }
 body.dark-mode * { scrollbar-color: #2d3f5e #0a0f1d; }
 
-/* Nav */
+/* === Nav === */
 body.dark-mode nav { background: #050a14; border-bottom-color: rgba(255,255,255,.05); }
 body.dark-mode .logo { color: #e2e8f0; }
 body.dark-mode .logo-text { color: #e2e8f0; }
 body.dark-mode .nav-links a { color: rgba(255,255,255,.6); }
 body.dark-mode .nav-links a:hover { color: var(--electric); }
 
-/* Hero / Page Hero */
+/* === Hero / Page Hero === */
 body.dark-mode .hero { background: #050a14; }
 body.dark-mode .page-hero { background: #050a14; }
 body.dark-mode .page { background: #0a0f1d; }
 
-/* Sections */
+/* === Sections === */
 body.dark-mode .services-home,
 body.dark-mode .svc-page-section,
 body.dark-mode .pricing-section { background: #0f1629; }
@@ -27,7 +49,7 @@ body.dark-mode .section-eyebrow { color: var(--electric); }
 body.dark-mode .section-sub { color: rgba(255,255,255,.5); }
 body.dark-mode p { color: rgba(255,255,255,.7); }
 
-/* Cards */
+/* === Cards === */
 body.dark-mode .svc-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .svc-card:hover { border-color: var(--electric); }
 body.dark-mode .svc-card h3 { color: #C084FC; }
@@ -43,22 +65,22 @@ body.dark-mode .value-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .value-card h4 { color: #e2e8f0; }
 body.dark-mode .value-card p { color: rgba(255,255,255,.5); }
 
-/* Clients */
+/* === Clients === */
 body.dark-mode .clients-strip { background: #0a0f1d; }
 body.dark-mode .client-logo-pill { background: #1a2744; border-color: #2d3f5e; color: #e2e8f0; }
 
-/* CTA */
+/* === CTA === */
 body.dark-mode .cta-band { background: linear-gradient(135deg, #0f1629, #1a2744); }
 body.dark-mode .cta-band h2 { color: #e2e8f0; }
 body.dark-mode .cta-band p { color: rgba(255,255,255,.5); }
 
-/* Process */
+/* === Process === */
 body.dark-mode .process-section { background: #0f1629; }
 body.dark-mode .process-step { background: #1a2744; }
 body.dark-mode .process-step h4 { color: #e2e8f0; }
 body.dark-mode .process-step p { color: rgba(255,255,255,.5); }
 
-/* About */
+/* === About === */
 body.dark-mode .about-story { background: #0f1629; }
 body.dark-mode .about-story-text h2 { color: #e2e8f0; }
 body.dark-mode .about-story-text p { color: rgba(255,255,255,.6); }
@@ -69,7 +91,7 @@ body.dark-mode .values-section,
 body.dark-mode .founder-section { background: #0a0f1d; }
 body.dark-mode .founder-card { background: #1a2744; }
 
-/* Contact */
+/* === Contact === */
 body.dark-mode .contact-section { background: #0f1629; }
 body.dark-mode .contact-info h2 { color: #e2e8f0; }
 body.dark-mode .contact-info p { color: rgba(255,255,255,.6); }
@@ -80,7 +102,7 @@ body.dark-mode .form-group input,
 body.dark-mode .form-group select,
 body.dark-mode .form-group textarea { background: #0f1629; border-color: #2d3f5e; color: #e2e8f0; }
 
-/* Pricing */
+/* === Pricing === */
 body.dark-mode .pricing-grid .price-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .pricing-grid .price-card:nth-child(1) h3 { color: #5EEAD4; }
 body.dark-mode .pricing-grid .price-card:nth-child(2) h3 { color: #00B4FF; }
@@ -92,7 +114,7 @@ body.dark-mode .addons-section { background: #0a0f1d; }
 body.dark-mode .addon-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .addon-card h4 { color: #e2e8f0; }
 
-/* Stats / Insights */
+/* === Stats / Insights === */
 body.dark-mode .stats-hero,
 body.dark-mode .insights-hero { background: #050a14; }
 body.dark-mode .stats-section,
@@ -104,7 +126,7 @@ body.dark-mode .insight-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .insight-card h3 { color: #e2e8f0; }
 body.dark-mode .insight-card p { color: rgba(255,255,255,.6); }
 
-/* FAQ */
+/* === FAQ === */
 body.dark-mode .faq-hero { background: #050a14; }
 body.dark-mode .faq-section { background: #0f1629; }
 body.dark-mode .faq-item { background: #1a2744; border-color: #2d3f5e; }
@@ -113,7 +135,7 @@ body.dark-mode .faq-item p { color: rgba(255,255,255,.6); }
 body.dark-mode .faq-question { color: #e2e8f0; }
 body.dark-mode .faq-answer p { color: rgba(255,255,255,.6); }
 
-/* Calculator */
+/* === Calculator === */
 body.dark-mode .calc-section { background: #0f1629; }
 body.dark-mode .calc-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .calc-card label { color: #e2e8f0; }
@@ -122,13 +144,13 @@ body.dark-mode .calc-card input { background: #0f1629; border-color: #2d3f5e; co
 body.dark-mode .result-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .result-card h3 { color: #e2e8f0; }
 
-/* Quiz */
+/* === Quiz === */
 body.dark-mode .quiz-hero { background: #050a14; }
 body.dark-mode .quiz-section { background: #0f1629; }
 body.dark-mode .quiz-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .quiz-card h3 { color: #e2e8f0; }
 
-/* Autonomous Ops */
+/* === Autonomous Ops === */
 body.dark-mode .ops-hero { background: #050a14; }
 body.dark-mode .ops-section { background: #0f1629; }
 body.dark-mode .ops-card { background: #1a2744; border-color: #2d3f5e; }
@@ -137,7 +159,7 @@ body.dark-mode .ops-card p { color: rgba(255,255,255,.6); }
 body.dark-mode .feed-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .feed-card h4 { color: #e2e8f0; }
 
-/* Legal pages (privacy, tos, sla, pdpa) */
+/* === Legal pages === */
 body.dark-mode .legal-content { background: #0f1629; }
 body.dark-mode .legal-content h2 { color: #e2e8f0; }
 body.dark-mode .legal-content h3 { color: #e2e8f0; }
@@ -151,20 +173,20 @@ body.dark-mode .legal-content th { background: #1a2744; color: #e2e8f0; border-c
 body.dark-mode .legal-content td { border-color: #2d3f5e; color: rgba(255,255,255,.6); }
 body.dark-mode .legal-content tr:nth-child(even) { background: rgba(255,255,255,.03); }
 
-/* SLA specific */
+/* === SLA === */
 body.dark-mode .sla-badge { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .sla-badge .pct { color: var(--electric); }
 body.dark-mode .severity-table th { background: #1a2744; color: #e2e8f0; }
 body.dark-mode .severity-table td { border-color: #2d3f5e; color: rgba(255,255,255,.7); }
 
-/* Cases */
+/* === Cases === */
 body.dark-mode .case-card { background: #1a2744; border-color: #2d3f5e; }
 body.dark-mode .case-card h3 { color: #e2e8f0; }
 body.dark-mode .case-card p { color: rgba(255,255,255,.6); }
 body.dark-mode .case-metric .val { color: var(--electric); }
 body.dark-mode .case-metric .lbl { color: rgba(255,255,255,.5); }
 
-/* Footer */
+/* === Footer === */
 body.dark-mode footer { background: #030508; }
 body.dark-mode .footer-brand p { color: rgba(255,255,255,.3); }
 body.dark-mode .footer-col h5 { color: rgba(255,255,255,.4); }
@@ -172,21 +194,23 @@ body.dark-mode .footer-col a { color: rgba(255,255,255,.4); }
 body.dark-mode .footer-bottom { border-top-color: rgba(255,255,255,.05); }
 body.dark-mode .footer-bottom p { color: rgba(255,255,255,.25); }
 
-/* Buttons */
+/* === Buttons === */
 body.dark-mode .btn-primary { background: var(--electric); color: #0a0f1d; }
 body.dark-mode .btn-navy { background: var(--electric); color: #0a0f1d; }
 body.dark-mode .btn-outline { border-color: rgba(255,255,255,.3); color: #e2e8f0; }
 body.dark-mode .btn-outline:hover { background: var(--electric); color: #0a0f1d; }
 body.dark-mode .nav-cta { background: var(--electric) !important; color: #0a0f1d !important; }
+body.dark-mode .shadcn-btn-primary { background: var(--electric); color: #0a0f1d; }
+body.dark-mode .shadcn-btn-primary:hover { opacity: 0.9; }
 
-/* General text helpers */
+/* === General text === */
 body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4 { color: #e2e8f0; }
 body.dark-mode .text-navy { color: #e2e8f0 !important; }
 body.dark-mode .text-gray { color: rgba(255,255,255,.5) !important; }
 body.dark-mode a { color: rgba(255,255,255,.6); }
 body.dark-mode a:hover { color: var(--electric); }
 
-/* Toggle buttons */
+/* === Toggle buttons === */
 .dark-toggle, .lang-toggle {
   background: rgba(255,255,255,.1);
   border: 1.5px solid rgba(255,255,255,.15);
