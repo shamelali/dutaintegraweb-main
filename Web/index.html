@@ -355,7 +355,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     <h1 data-i18n="idxHeroTitle1">Smart Technology.<br><span data-i18n="idxHeroTitle2">A Partner Who Answers.</span></h1>
     <p data-i18n="idxHeroDesc">We build the AI systems and manage the IT infrastructure Malaysian SMEs run on — with the founder still on every account, a real proposal within 3 working days, and no lock-in contracts.</p>
     <div class="hero-btns">
-      <a href="contact.html" class="btn-primary" data-i18n="idxHeroBtn1">Get a Free IT Audit</a>
+      <a href="quiz.html" class="btn-primary" data-i18n="idxHeroBtn1">Get a Free IT Audit</a>
       <a href="services.html" class="btn-outline" data-i18n="idxHeroBtn2">Explore Services →</a>
     </div>
     <div class="hero-stats reveal">
@@ -796,7 +796,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       </div>
       <div class="form-group">
         <label data-i18n="contactServiceLabel">What are you interested in? *</label>
-        <select id="contact-service">
+        <select id="contact-service" onchange="if(this.value==='Free IT Audit'){window.location='quiz.html'}">
           <option value="">Select a service...</option>
           <option data-i18n="svc1Title">AI Software Development</option>
           <option data-i18n="svc2Title">Managed IT Services</option>
