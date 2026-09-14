@@ -108,33 +108,33 @@ footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
   </div>
   <ul class="nav-links">
     <li><a href="/services.html">Services</a></li>
-    <li><a href="/services.html">Case Studies</a></li>
-    <li><a href="/pricing.html">Pricing</a></li>
-    <li><a href="/autonomous-ops.html" style="color:var(--electric)">Autonomous Ops</a></li>
+    <li><a href="/services.html" data-i18n="navCaseStudies">Case Studies</a></li>
+    <li><a href="/pricing.html" data-i18n="navPricing">Pricing</a></li>
+    <li><a href="/autonomous-ops.html" style="color:var(--electric)" data-i18n="navAutonomousOps">Autonomous Ops</a></li>
     <li><a href="/contact.html">Contact</a></li>
-    <li><a href="/portal/login.html" class="nav-cta">Client Portal</a></li>
+    <li><a href="/portal/login.html" class="nav-cta" data-i18n="navClientPortal">Client Portal</a></li>
       <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
     <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
 </nav>
 
 <section class="calc-hero">
-  <div class="section-eyebrow">Savings Calculator</div>
+  <div class="section-eyebrow" data-i18n="calcHeroLabel">Savings Calculator</div>
   <h1 class="section-title">How Much Can<br>You Save?</h1>
-  <p class="section-sub">Enter your team's manual workload and see the real hours and ringgit saved by each DI tier. No fluff — just the numbers.</p>
+  <p class="section-sub" data-i18n="calcHeroSub">Enter your team's manual workload and see the real hours and ringgit saved by each DI tier. No fluff — just the numbers.</p>
 </section>
 
 <form class="calc-form" id="calcForm" onsubmit="return false">
   <div class="form-group">
-    <label>Team size</label>
+    <label data-i18n="calcTeamSize">Team size</label>
     <input type="number" id="staff" min="1" max="500" value="10" required>
   </div>
   <div class="form-group">
-    <label>Manual IT/admin hours per week (total across team)</label>
+    <label data-i18n="calcHoursWeek">Manual IT/admin hours per week (total across team)</label>
     <input type="number" id="manualHours" min="1" max="2000" value="20" required>
   </div>
   <div class="form-group">
-    <label>Your biggest pain points (optional — amplifies savings)</label>
+    <label data-i18n="calcPainTitle">Your biggest pain points (optional — amplifies savings)</label>
     <div class="pain-grid">
       <div class="pain-chip" data-value="compliance">PDPA / Compliance</div>
       <div class="pain-chip" data-value="reporting">Manual Reporting</div>
@@ -144,7 +144,7 @@ footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
       <div class="pain-chip" data-value="onboarding">Staff Onboarding</div>
     </div>
   </div>
-  <button class="calc-btn" type="button" id="calcBtn" onclick="runCalc()">Calculate Savings</button>
+  <button class="calc-btn" type="button" id="calcBtn" onclick="runCalc()" data-i18n="calcBtn">Calculate Savings</button>
 </form>
 
 <section class="results" id="results">
@@ -165,9 +165,9 @@ footer{background:rgba(0,0,0,.4);padding:3rem 6% 2rem}
       <div class="logo"><picture><source srcset="../assets/dis-logo-footer.webp" type="image/webp"><img src="../assets/dis-logo-footer.png" alt="Duta Integra Solutions"></picture><span class="logo-text">Duta Integra Solutions</span></div>
       <p>Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow with smart technology.</p>
     </div>
-    <div class="footer-col"><h5>Company</h5><a href="/about.html">About Us</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a><a href="/stats.html">Live Stats</a><a href="/calculator.html">Calculator</a><a href="/faq.html">FAQ</a></div>
+    <div class="footer-col"><h5>Company</h5><a href="/about.html">About Us</a><a href="/pricing.html" data-i18n="navPricing">Pricing</a><a href="/contact.html">Contact</a><a href="/stats.html">Live Stats</a><a href="/calculator.html" data-i18n="navCalculator">Calculator</a><a href="/faq.html" data-i18n="navFaq">FAQ</a></div>
     <div class="footer-col"><h5>Services</h5><a href="/services.html">AI Development</a><a href="/services.html">Managed IT</a><a href="/services.html">Cloud Migration</a><a href="/services.html">IT Security</a></div>
-    <div class="footer-col"><h5>Legal</h5><a href="/privacy.html">Privacy Policy</a><a href="/pdpa.html">PDPA Check</a><a href="/sla.html">SLA</a><a href="/cases.html">Case Studies</a><a href="/tos.html">Terms of Service</a></div>
+    <div class="footer-col"><h5>Legal</h5><a href="/privacy.html">Privacy Policy</a><a href="/pdpa.html">PDPA Check</a><a href="/sla.html">SLA</a><a href="/cases.html" data-i18n="navCaseStudies">Case Studies</a><a href="/tos.html">Terms of Service</a></div>
   </div>
   <div class="footer-bottom">
     <p>&copy; 2026 Duta Integra Solutions Sdn Bhd. All rights reserved.</p>

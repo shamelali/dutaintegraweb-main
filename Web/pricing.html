@@ -104,24 +104,24 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   <div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture></div>
   <ul class="nav-links">
     <li><a href="services.html">Services</a></li>
-    <li><a href="about.html">About</a></li>    <li><a href="pricing.html">Pricing</a></li>
-    <li><a href="autonomous-ops.html" style="color:var(--electric)">Autonomous Ops</a></li>
-    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+    <li><a href="about.html" data-i18n="navAbout">About</a></li>    <li><a href="pricing.html" data-i18n="navPricing">Pricing</a></li>
+    <li><a href="autonomous-ops.html" style="color:var(--electric)" data-i18n="navAutonomousOps">Autonomous Ops</a></li>
+    <li><a href="contact.html" class="nav-cta" data-i18n="navContact">Contact Us</a></li>
       <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
     <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
 </nav>
 
 <div class="page-hero">
-  <div class="page-hero-label">Pricing</div>
-  <h1>Simple, Transparent Pricing</h1>
-  <p>No hidden fees. No surprises. Just clear pricing designed for Malaysian SMEs.</p>
+  <div class="page-hero-label" data-i18n="navPricing">Pricing</div>
+  <h1 data-i18n="priceHeroTitle">Simple, Transparent Pricing</h1>
+  <p data-i18n="priceHeroDesc">No hidden fees. No surprises. Just clear pricing designed for Malaysian SMEs.</p>
 </div>
 
 <section class="pricing-section">
-  <div class="section-eyebrow">Managed IT Services</div>
-  <h2 class="section-title">Monthly Retainer Plans</h2>
-  <p class="section-sub">Flat-rate IT support that scales with your business. No per-incident charges.</p>
+  <div class="section-eyebrow" data-i18n="priceManagedEyebrow">Managed IT Services</div>
+  <h2 class="section-title" data-i18n="priceManagedTitle">Monthly Retainer Plans</h2>
+  <p class="section-sub" data-i18n="priceManagedSub">Flat-rate IT support that scales with your business. No per-incident charges.</p>
   
   <div class="pricing-grid">
     <div class="price-card">
@@ -171,7 +171,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <li>Unlimited on-site support</li>
         <li>Dedicated IT manager</li>
       </ul>
-      <a href="contact.html" class="price-cta sec">Contact Us</a>
+      <a href="contact.html" class="price-cta sec" data-i18n="navContact">Contact Us</a>
       <a href="autonomous-ops.html" style="display:block;text-align:center;margin-top:.5rem;font-size:.85rem;color:var(--electric)">Add Autonomous Ops →</a>
     </div>
   </div>
@@ -180,8 +180,8 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 </section>
 
 <section class="addons-section">
-  <div class="section-eyebrow">Optional Add-Ons</div>
-  <h2 class="section-title">Enhance Your Plan</h2>
+  <div class="section-eyebrow" data-i18n="priceAddonEyebrow">Optional Add-Ons</div>
+  <h2 class="section-title" data-i18n="priceAddonTitle">Enhance Your Plan</h2>
   
   <div class="addons-grid">
     <div class="addon-card">
@@ -208,11 +208,11 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 </section>
 
 <section class="cta-band">
-  <h2>Not Sure What's Right for You?</h2>
-  <p>Book a free 30-minute consultation and we'll recommend the best solution for your needs and budget.</p>
+  <h2 data-i18n="priceCtaTitle">Not Sure What's Right for You?</h2>
+  <p data-i18n="priceCtaDesc">Book a free 30-minute consultation and we'll recommend the best solution for your needs and budget.</p>
   <div class="cta-btns">
-    <a href="contact.html" class="btn-navy">Book Free Consultation</a>
-    <a href="services.html" class="btn-primary">View Services →</a>
+    <a href="contact.html" class="btn-navy" data-i18n="priceCtaBtn1">Book Free Consultation</a>
+    <a href="services.html" class="btn-primary" data-i18n="priceCtaBtn2">View Services →</a>
   </div>
 </section>
 <footer>
@@ -223,12 +223,12 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     </div>
     <div class="footer-col">
       <h5>Company</h5>
-      <a href="about.html">About Us</a>      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About Us</a>      <a href="pricing.html" data-i18n="navPricing">Pricing</a>
       <a href="contact.html">Contact</a>
       <a href="stats.html">Live Stats</a>
       <a href="insights.html">Insights</a>
-      <a href="calculator.html">Calculator</a>
-      <a href="faq.html">FAQ</a>
+      <a href="calculator.html" data-i18n="navCalculator">Calculator</a>
+      <a href="faq.html" data-i18n="navFaq">FAQ</a>
     </div>
     <div class="footer-col">
       <h5>Services</h5>
@@ -242,7 +242,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       <a href="privacy.html">Privacy Policy</a>
       <a href="pdpa.html">PDPA Check</a>
       <a href="sla.html">SLA</a>
-      <a href="cases.html">Case Studies</a>
+      <a href="cases.html" data-i18n="navCaseStudies">Case Studies</a>
       <a href="tos.html">Terms of Service</a>
     </div>
   </div>

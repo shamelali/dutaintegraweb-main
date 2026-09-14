@@ -94,29 +94,29 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
   <div class="logo"><picture><source srcset="../assets/dis-logo-nav.webp" type="image/webp"><img src="../assets/dis-logo-nav.png" alt="Duta Integra Solutions"></picture></div>
   <ul class="nav-links">
     <li><a href="services.html">Services</a></li>
-    <li><a href="about.html">About</a></li>    <li><a href="pricing.html">Pricing</a></li>
-    <li><a href="quiz.html" style="color:var(--electric)">Find Your Tier</a></li>
-    <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
-    <li><a href="autonomous-ops.html" style="color:var(--electric)">Autonomous Ops</a></li>
+    <li><a href="about.html" data-i18n="navAbout">About</a></li>    <li><a href="pricing.html" data-i18n="navPricing">Pricing</a></li>
+    <li><a href="quiz.html" style="color:var(--electric)" data-i18n="navQuiz">Find Your Tier</a></li>
+    <li><a href="contact.html" class="nav-cta" data-i18n="navContact">Contact Us</a></li>
+    <li><a href="autonomous-ops.html" style="color:var(--electric)" data-i18n="navAutonomousOps">Autonomous Ops</a></li>
     <li><button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="ti ti-moon"></i></button></li>
     <li><button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" title="Toggle language">BM</button></li>
   </ul>
 </nav>
 
 <div class="page-hero">
-  <div class="page-hero-label">Our Services</div>
+  <div class="page-hero-label" data-i18n="svcHeroLabel">Our Services</div>
   <h1>Everything Your Business Needs to Thrive Digitally</h1>
-  <p>From AI-powered automation to round-the-clock IT support — we're your complete technology partner so you can focus on growing your business.</p>
+  <p data-i18n="svcHeroDesc">From AI-powered automation to round-the-clock IT support — we're your complete technology partner so you can focus on growing your business.</p>
 </div>
 
 <section class="svc-page-section">
-  <div class="section-eyebrow">Core Offerings</div>
-  <h2 class="section-title" style="color:var(--electric)">What We Deliver</h2>
+  <div class="section-eyebrow" data-i18n="svcCoreEyebrow">Core Offerings</div>
+  <h2 class="section-title" style="color:var(--electric)" data-i18n="svcCoreTitle">What We Deliver</h2>
   <div class="svc-full-grid">
     <div class="svc-full-card">
       <div class="icon"><i class="ti ti-robot"></i></div>
-      <h3>AI Software Development</h3>
-      <p>We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
+      <h3 data-i18n="svc1Title">AI Software Development</h3>
+      <p data-i18n="svc1Desc">We design and build custom AI-powered applications that automate repetitive tasks, extract insights from your data, and create smarter customer experiences.</p>
       <ul class="svc-features">
         <li>Custom AI chatbots & virtual assistants</li>
         <li>Business process automation (RPA)</li>
@@ -125,12 +125,12 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <li>Natural language processing (NLP) tools</li>
         <li>AI-powered dashboards & reporting</li>
       </ul>
-      <a href="contact.html" class="btn-primary">Get a Quote</a>
+      <a href="contact.html" class="btn-primary" data-i18n="svcGetQuote">Get a Quote</a>
     </div>
     <div class="svc-full-card">
       <div class="icon"><i class="ti ti-device-desktop"></i></div>
-      <h3>Managed IT Services</h3>
-      <p>We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
+      <h3 data-i18n="svc2Title">Managed IT Services</h3>
+      <p data-i18n="svc2Desc">We take full ownership of your IT infrastructure so you never have to worry about downtime, security breaches, or outdated systems again.</p>
       <ul class="svc-features">
         <li>24/7 remote IT helpdesk support</li>
         <li>Network setup, monitoring & management</li>
@@ -139,12 +139,12 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <li>Software licensing & updates</li>
         <li>Monthly IT health reports</li>
       </ul>
-      <a href="contact.html" class="btn-primary">Get a Quote</a>
+      <a href="contact.html" class="btn-primary" data-i18n="svcGetQuote">Get a Quote</a>
     </div>
     <div class="svc-full-card">
       <div class="icon"><i class="ti ti-cloud"></i></div>
-      <h3>Cloud Migration & Management</h3>
-      <p>Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
+      <h3 data-i18n="svc3Title">Cloud Migration & Management</h3>
+      <p data-i18n="svc3Desc">Move your business to the cloud safely and efficiently. We handle everything from planning to post-migration support on AWS, Azure, and Google Cloud.</p>
       <ul class="svc-features">
         <li>Cloud readiness assessment</li>
         <li>Migration planning & execution</li>
@@ -153,12 +153,12 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <li>Cloud cost optimisation</li>
         <li>Ongoing cloud management</li>
       </ul>
-      <a href="contact.html" class="btn-primary">Get a Quote</a>
+      <a href="contact.html" class="btn-primary" data-i18n="svcGetQuote">Get a Quote</a>
     </div>
     <div class="svc-full-card">
       <div class="icon"><i class="ti ti-shield-lock"></i></div>
-      <h3>IT Security & PDPA Compliance</h3>
-      <p>Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
+      <h3 data-i18n="svc4Title">IT Security & PDPA Compliance</h3>
+      <p data-i18n="svc4Desc">Protect your business from cyber threats and ensure you're fully compliant with Malaysia's Personal Data Protection Act (PDPA) 2010.</p>
       <ul class="svc-features">
         <li>PDPA compliance audit & policy drafting</li>
         <li>Cybersecurity risk assessment</li>
@@ -167,12 +167,12 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <li>Incident response planning</li>
         <li>Ongoing security monitoring</li>
       </ul>
-      <a href="contact.html" class="btn-primary">Get a Quote</a>
+      <a href="contact.html" class="btn-primary" data-i18n="svcGetQuote">Get a Quote</a>
     </div>
     <div class="svc-full-card">
       <div class="icon"><i class="ti ti-chart-bar"></i></div>
-      <h3>Business Intelligence (Launching Next)</h3>
-      <p>Transform raw data into actionable insights with our upcoming Business Intelligence solutions — interactive dashboards, predictive analytics, and automated reporting.</p>
+      <h3 data-i18n="svc5Title">Business Intelligence (Launching Next)</h3>
+      <p data-i18n="svc5Desc">Transform raw data into actionable insights with our upcoming Business Intelligence solutions — interactive dashboards, predictive analytics, and automated reporting.</p>
       <ul class="svc-features">
         <li>Sales intelligence & revenue tracking</li>
         <li>Marketing campaign performance analytics</li>
@@ -181,29 +181,29 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
         <li>AI-powered insights & recommendations</li>
         <li>Real-time operational dashboards</li>
       </ul>
-      <a href="contact.html" class="btn-primary">Get Notified</a>
+      <a href="contact.html" class="btn-primary" data-i18n="svcGetNotified">Get Notified</a>
     </div>
   </div>
 </section>
 
 <section class="process-section">
-  <div class="section-eyebrow">How We Work</div>
-  <h2 class="section-title">Our Process</h2>
-  <p class="section-sub">Simple, transparent, and built around your needs.</p>
-  <div class="process-steps">
-    <div class="process-step"><div class="step-num">1</div><h4>Free Audit</h4><p>We assess your current IT setup or AI readiness — no obligation, no sales pressure.</p></div>
-    <div class="process-step"><div class="step-num">2</div><h4>Proposal</h4><p>You get a clear, detailed proposal with scope, timeline, and fixed pricing within 3 working days.</p></div>
-    <div class="process-step"><div class="step-num">3</div><h4>Delivery</h4><p>Our team executes the project with weekly check-ins and full transparency throughout.</p></div>
-    <div class="process-step"><div class="step-num">4</div><h4>Support</h4><p>We don't disappear after delivery — ongoing support and optimisation is part of the package.</p></div>
+  <div class="section-eyebrow" data-i18n="svcProcessEyebrow">How We Work</div>
+  <h2 class="section-title" data-i18n="svcProcessTitle">Our Process</h2>
+  <p class="section-sub" data-i18n="svcProcessSub">Simple, transparent, and built around your needs.</p>
+  <div class="process-steps" data-i18n="svcStep1Desc">
+    <div class="process-step"><div class="step-num">1</div><h4 data-i18n="svcStep1Title">Free Audit</h4><p>We assess your current IT setup or AI readiness — no obligation, no sales pressure.</p></div>
+    <div class="process-step"><div class="step-num">2</div><h4 data-i18n="svcStep2Title">Proposal</h4><p>You get a clear, detailed proposal with scope, timeline, and fixed pricing within 3 working days.</p></div>
+    <div class="process-step"><div class="step-num">3</div><h4 data-i18n="svcStep3Title">Delivery</h4><p>Our team executes the project with weekly check-ins and full transparency throughout.</p></div>
+    <div class="process-step"><div class="step-num">4</div><h4 data-i18n="svcStep4Title">Support</h4><p>We don't disappear after delivery — ongoing support and optimisation is part of the package.</p></div>
   </div>
 </section>
 
 <section class="cta-band">
-  <h2>Not Sure Which Service You Need?</h2>
-  <p>Book a free 30-minute consultation and we'll recommend the right solution for your business.</p>
+  <h2 data-i18n="svcCtaTitle">Not Sure Which Service You Need?</h2>
+  <p data-i18n="svcCtaDesc">Book a free 30-minute consultation and we'll recommend the right solution for your business.</p>
   <div class="cta-btns">
-    <a href="contact.html" class="btn-navy">Book Free Consultation</a>
-    <a href="pricing.html" class="btn-primary">See Pricing →</a>
+    <a href="contact.html" class="btn-navy" data-i18n="svcCtaBtn1">Book Free Consultation</a>
+    <a href="pricing.html" class="btn-primary" data-i18n="svcCtaBtn2">See Pricing →</a>
   </div>
 </section>
 <footer>
@@ -214,12 +214,12 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
     </div>
     <div class="footer-col">
       <h5>Company</h5>
-      <a href="about.html">About Us</a>      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About Us</a>      <a href="pricing.html" data-i18n="navPricing">Pricing</a>
       <a href="contact.html">Contact</a>
       <a href="stats.html">Live Stats</a>
       <a href="insights.html">Insights</a>
-      <a href="calculator.html">Calculator</a>
-      <a href="faq.html">FAQ</a>
+      <a href="calculator.html" data-i18n="navCalculator">Calculator</a>
+      <a href="faq.html" data-i18n="navFaq">FAQ</a>
     </div>
     <div class="footer-col">
       <h5>Services</h5>
@@ -233,7 +233,7 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
       <a href="privacy.html">Privacy Policy</a>
       <a href="pdpa.html">PDPA Check</a>
       <a href="sla.html">SLA</a>
-      <a href="cases.html">Case Studies</a>
+      <a href="cases.html" data-i18n="navCaseStudies">Case Studies</a>
       <a href="tos.html">Terms of Service</a>
     </div>
   </div>
