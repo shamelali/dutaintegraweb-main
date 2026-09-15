@@ -77,6 +77,8 @@ tailwind.config = {
     .option .icon{font-size:1.5rem;margin-bottom:.5rem;color:var(--electric)}
     .option .label{font-weight:600;font-size:.9rem}
     .option .desc{font-size:.78rem;color:var(--gray);margin-top:.3rem}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .spinner{display:inline-block;width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:.5rem}
     .slider-container{margin:1.5rem 0}
     .slider-container label{display:block;font-weight:600;margin-bottom:.5rem;font-size:.9rem}
     .slider-container input[type=range]{width:100%;accent-color:var(--electric);height:6px}
@@ -249,7 +251,9 @@ function prevStep() { if (step > 1) { step--; showStep(step); } }
 
 async function fetchResult() {
   const btn = document.getElementById('nextBtn');
-  btn.disabled = true; btn.textContent = 'Analyzing...';
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Analyzing...';
+  document.getElementById('quizNav').style.opacity = '0.6';
   try {
     const res = await fetch('/api/quiz', {
       method: 'POST',
@@ -257,33 +261,54 @@ async function fetchResult() {
       body: JSON.stringify({teamSize, itSpend, painPoints})
     });
     const data = await res.json();
-    if (data.error) throw new Error(data.error);
+    if (!res.ok) throw new Error(data.error || 'Audit failed');
     showResult(data);
   } catch(e) {
-    document.getElementById('resultArea').innerHTML = '<p style="color:red">Something went wrong. Please try again.</p><br><button class="btn-primary" onclick="location.reload()">Try Again</button>';
-    btn.disabled = false; btn.textContent = 'Next \u2192';
+    document.getElementById('resultArea').innerHTML =
+      '<p style="color:#dc2626;text-align:center;margin-bottom:1rem">&#9888; ' + (e.message || 'Something went wrong') + '</p>' +
+      '<div style="text-align:center"><button class="btn-primary" onclick="fetchResult()">Try Again</button></div>';
+    document.getElementById('step4').classList.remove('hidden');
+    btn.disabled = false; btn.innerHTML = 'Run Audit &#8594;';
+    document.getElementById('quizNav').style.opacity = '1';
   }
 }
 function showResult(data) {
   step = 4; showStep(4);
   const emoji = {Foundation:'\u{1F3E2}',Growth:'\u{1F4C8}','AI Partner':'\u{1F916}'};
   const findingsHtml = data.findings.map(f =>
-    '<div class="finding-item"><div class="icon">\u26A0\uFE0F</div><div class="text">' + f + '</div></div>'
+    '<div class="finding-item"><div class="icon">\u26A1</div><div class="text">' + f + '</div></div>'
   ).join('');
+  const waMsg = encodeURIComponent(
+    'Hi Duta Integra! I completed the free IT audit.\n\n' +
+    'My result: ' + data.tier + ' (Score: ' + data.score + '/100)\n' +
+    'Estimated savings: ' + data.estimatedSavings + '\n\n' +
+    'I\'d like to discuss next steps.'
+  );
+  const waUrl = 'https://wa.me/601154034051?text=' + waMsg;
   document.getElementById('resultArea').innerHTML =
     '<div class="tier-badge">Audit Complete</div>' +
     '<div class="tier">' + (emoji[data.tier] || '\u2705') + ' ' + data.tier + ' Tier</div>' +
-    '<div class="score">IT Readiness Score: ' + data.score + '/95 &middot; ' + data.auditDate + '</div>' +
+    '<div class="score">IT Readiness Score: ' + data.score + '/100 &middot; ' + data.auditDate + '</div>' +
     '<div class="description">' + data.description + '</div>' +
     '<div class="findings"><h4>Key Findings</h4>' + findingsHtml + '</div>' +
     '<div class="savings-box"><div class="label">Estimated Annual Savings</div><div class="amount">' + data.estimatedSavings + '</div><div class="note">Based on similar Malaysian SMEs we work with</div></div>' +
     '<div class="next-step"><h4>Recommended Next Step</h4><p>' + data.nextStep + '</p></div>' +
     '<div style="text-align:center">' +
-      '<a href="contact.html" class="btn-primary">Book Free Audit Call</a>' +
+      '<a href="' + waUrl + '" target="_blank" rel="noopener noreferrer" class="btn-primary" style="background:#25D366;display:inline-flex;align-items:center;gap:.5rem">&#128172; Chat on WhatsApp</a>' +
+      '<a href="contact.html" class="btn-secondary">Book Audit Call</a>' +
       '<button class="btn-secondary" onclick="location.reload()">Run Again</button>' +
     '</div>';
   document.getElementById('nextBtn').style.display = 'none';
   document.getElementById('prevBtn').style.display = 'none';
+  document.getElementById('quizNav').style.opacity = '1';
+
+  // Analytics: fire on audit completion
+  if (window.gtag) {
+    window.gtag('event', 'quiz_complete', { tier: data.tier, score: data.score });
+  }
+  if (window.fbq) {
+    window.fbq('track', 'Lead', { content_name: data.tier, value: data.score });
+  }
 }
 showStep(1);
 </script>
