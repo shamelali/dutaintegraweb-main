@@ -215,19 +215,24 @@ async function serveStatic(req, res, urlPath) {
   try {
     info = await stat(filePath);
   } catch {
-    // SPA fallback: serve index.html for non-API, non-file routes
-    const indexPath = resolveStaticPath("/");
-    try {
-      const indexInfo = await stat(indexPath);
-      res.writeHead(200, {
-        "content-type": "text/html; charset=utf-8",
-        "content-length": indexInfo.size,
-        "x-content-type-options": "nosniff",
-      });
-      createReadStream(indexPath).pipe(res);
-    } catch {
-      send(res, 404, { error: "Not found" });
+    // SPA fallback: only for HTML requests (browser navigation)
+    const accept = req.headers.accept ?? "";
+    if (accept.includes("text/html")) {
+      const indexPath = resolveStaticPath("/");
+      try {
+        const indexInfo = await stat(indexPath);
+        res.writeHead(200, {
+          "content-type": "text/html; charset=utf-8",
+          "content-length": indexInfo.size,
+          "x-content-type-options": "nosniff",
+        });
+        createReadStream(indexPath).pipe(res);
+      } catch {
+        send(res, 404, { error: "Not found" });
+      }
+      return;
     }
+    send(res, 404, { error: "Not found" });
     return;
   }
   if (info.isDirectory()) return serveStatic(req, res, `${urlPath.replace(/\/$/, "")}/index.html`);
@@ -408,7 +413,13 @@ async function recordQuizAudit(data) {
 
   const record = {
     id: randomUUID(),
-    ...data,
+    team_size: data.teamSize,
+    it_spend: data.itSpend,
+    pain_points: data.painPoints,
+    tier: data.tier,
+    score: data.score,
+    ip: data.ip,
+    user_agent: data.userAgent,
     created_at: new Date().toISOString(),
   };
 
