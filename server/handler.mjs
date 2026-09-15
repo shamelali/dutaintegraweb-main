@@ -215,7 +215,19 @@ async function serveStatic(req, res, urlPath) {
   try {
     info = await stat(filePath);
   } catch {
-    send(res, 404, { error: "Not found" });
+    // SPA fallback: serve index.html for non-API, non-file routes
+    const indexPath = resolveStaticPath("/");
+    try {
+      const indexInfo = await stat(indexPath);
+      res.writeHead(200, {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": indexInfo.size,
+        "x-content-type-options": "nosniff",
+      });
+      createReadStream(indexPath).pipe(res);
+    } catch {
+      send(res, 404, { error: "Not found" });
+    }
     return;
   }
   if (info.isDirectory()) return serveStatic(req, res, `${urlPath.replace(/\/$/, "")}/index.html`);
