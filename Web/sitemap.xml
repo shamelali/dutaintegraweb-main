@@ -16,4 +16,10 @@
   <url><loc>https://dutaintegra.my/sla.html</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
   <url><loc>https://dutaintegra.my/cases.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://dutaintegra.my/tos.html</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://dutaintegra.my/flowmail.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dutaintegra.my/praxis.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dutaintegra.my/ontrac.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dutaintegra.my/sensai.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dutaintegra.my/integrall.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://dutaintegra.my/dutaconnect.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>

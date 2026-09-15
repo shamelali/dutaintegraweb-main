@@ -143,7 +143,12 @@ describe("POST /api/send-email", () => {
 
   test("accepts a cross-origin POST from an allowlisted origin and sends CORS headers", async () => {
     process.env.ALLOWED_ORIGINS = "https://dutaintegra.my";
-    const res = await post(VALID, { origin: "https://dutaintegra.my" });
+    const csrfToken = "test-csrf-token-abc123";
+    const res = await post(VALID, { 
+      origin: "https://dutaintegra.my",
+      cookie: `csrf_token=${csrfToken}`,
+      "x-csrf-token": csrfToken
+    });
     assert.equal(res.status, 200);
     assert.equal(res.headers.get("access-control-allow-origin"), "https://dutaintegra.my");
     assert.equal((await listEnquiries()).length, 1);

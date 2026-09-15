@@ -78,9 +78,15 @@ export async function verifyPassword(password, stored) {
 // ── session management ───────────────────────────────────────────────────────
 
 const SESSION_DAYS = 30;
+const MAX_SESSIONS = 1000;
 const sessions = new Map(); // token → { clientId, expiresAt }
 
 export function createSession(clientId) {
+  // Enforce session ceiling — evict oldest when at capacity
+  if (sessions.size >= MAX_SESSIONS) {
+    const oldest = sessions.keys().next().value;
+    sessions.delete(oldest);
+  }
   const token = randomBytes(32).toString("hex");
   const expiresAt = Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000;
   sessions.set(token, { clientId, expiresAt });

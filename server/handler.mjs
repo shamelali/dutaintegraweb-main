@@ -163,6 +163,26 @@ export function checkOrigin(req) {
   return { status: 403, body: { error: "Invalid origin" } };
 }
 
+/** CSRF token validation — compares cookie token with header token.
+ *  Only enforced for cross-origin requests (Origin header present). */
+export function validateCsrf(req) {
+  // Same-origin requests (no Origin header) don't need CSRF tokens
+  if (!req.headers.origin) return true;
+  
+  const cookieHeader = req.headers.cookie ?? "";
+  const cookies = Object.fromEntries(cookieHeader.split(";").map(c => c.trim().split("=")));
+  const cookieToken = cookies.csrf_token;
+  const headerToken = req.headers["x-csrf-token"];
+  
+  if (!cookieToken || !headerToken) return false;
+  if (cookieToken.length !== headerToken.length) return false;
+  
+  // Constant-time comparison
+  const a = Buffer.from(cookieToken);
+  const b = Buffer.from(headerToken);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
 function send(res, status, body, extraHeaders = {}) {
   const payload = JSON.stringify(body);
   res.writeHead(status, {
@@ -263,6 +283,11 @@ async function handleSendEmail(req, res) {
 
   const blocked = checkOrigin(req);
   if (blocked) return send(res, blocked.status, blocked.body, headers);
+
+  // CSRF validation for state-changing requests
+  if (!validateCsrf(req)) {
+    return send(res, 403, { error: "Invalid CSRF token" }, headers);
+  }
 
   const limited = rateLimit(`enquiry:${clientIp(req)}`);
   if (!limited.allowed) {
