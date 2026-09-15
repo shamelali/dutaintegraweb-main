@@ -1,8 +1,8 @@
 {
-  "framework": null,
-  "buildCommand": "",
-  "outputDirectory": "Web",
-  "installCommand": "",
+  "framework": "vite",
+  "installCommand": "cd web-new && npm install",
+  "buildCommand": "cd web-new && npm run build",
+  "outputDirectory": "web-new/dist",
   "headers": [
     {
       "source": "/(.*)",
@@ -12,15 +12,9 @@
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com; frame-ancestors 'none';" }
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" }
       ]
     }
-  ],
-  "redirects": [
-    { "source": "/ms", "destination": "/" },
-    { "source": "/ms/", "destination": "/" },
-    { "source": "/ms/:path+", "destination": "/:path+" }
   ],
   "rewrites": [
     { "source": "/api/send-email", "destination": "/api/gateway" },
@@ -43,6 +37,12 @@
     { "source": "/admin/clients", "destination": "/api/gateway" },
     { "source": "/api/ops/feed", "destination": "/api/gateway" },
     { "source": "/api/ops/consent", "destination": "/api/gateway" },
-    { "source": "/api/ops/events", "destination": "/api/gateway" }
+    { "source": "/api/ops/events", "destination": "/api/gateway" },
+    { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
+  ],
+  "redirects": [
+    { "source": "/ms", "destination": "/" },
+    { "source": "/ms/", "destination": "/" },
+    { "source": "/ms/:path+", "destination": "/:path+" }
   ]
 }

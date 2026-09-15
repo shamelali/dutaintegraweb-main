@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { Bot, Monitor, Cloud, Shield, BarChart3, Target, Zap, Timer, Flag, ArrowRight, X } from "lucide-react"
+import { Bot, Monitor, Cloud, Shield, Target, Zap, Timer, Flag, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/hooks/use-language"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { LiveFeed } from "@/components/live-feed"
 import type { TranslationKey } from "@/i18n/translations"
 
 const services = [
@@ -115,6 +116,9 @@ export function HomePage() {
               <Link to="/services">{t("idxHeroBtn2")}</Link>
             </Button>
           </div>
+
+          {/* Live AI Activity Feed */}
+          <LiveFeed />
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto reveal reveal-delay-4">
