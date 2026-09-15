@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perjanjian Perkhidmatan Utama - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+  <style>
+    @media print {
+      .legal-doc { font-size: 10pt; line-height: 1.6; }
+      .legal-doc__watermark { display: none; }
+      .legal-doc__page-break { page-break-after: always; }
+      .legal-doc__no-break { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Perjanjian Perkhidmatan Utama</h1>
+        <p class="legal-doc__subtitle">SULIT</p>
+        <div class="legal-doc__meta">
+          <span>Dokumen: MSA-{{DOC_NUMBER}}</span>
+          <span>Versi: {{DOC_VERSION}}</span>
+          <span>Tarikh: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <p class="legal-doc__intro">
+          Perjanjian Perkhidmatan Utama ini ("<strong>Perjanjian</strong>") dimasukkan pada <strong>{{EFFECTIVE_DATE}}</strong> ("<strong>Tarikh Kuat Kuasa</strong>") oleh dan antara:
+        </p>
+
+        <div class="legal-doc__parties">
+          <div class="legal-doc__party">
+            <h3 class="legal-doc__party-title">Penyedia Perkhidmatan</h3>
+            <p><strong>Duta Integra Solutions Sdn Bhd</strong><br>
+            Pendaftaran Syarikat: {{COMPANY_REG_NO}}<br>
+            Alamat: Cyberjaya, Malaysia<br>
+            E-mel: {{COMPANY_EMAIL}}<br>
+            (selanjutnya disebut sebagai "<strong>Penyedia</strong>")</p>
+          </div>
+          <div class="legal-doc__party">
+            <h3 class="legal-doc__party-title">Pelanggan</h3>
+            <p><strong>{{CLIENT_NAME}}</strong><br>
+            Pendaftaran Syarikat: {{CLIENT_REG_NO}}<br>
+            Alamat: {{CLIENT_ADDRESS}}<br>
+            E-mel: {{CLIENT_EMAIL}}<br>
+            (selanjutnya disebut sebagai "<strong>Pelanggan</strong>")</p>
+          </div>
+        </div>
+
+        <p>(Secara kolektif disebut sebagai "<strong>Para Pihak</strong>" dan secara individu sebagai "<strong>Pihak</strong>").</p>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">1. Perkhidmatan</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>1.1 Perkhidmatan.</strong> Penyedia hendaklah melaksanakan perkhidmatan sebagaimana dinyatakan dalam setiap Pernyataan Kerja ("<strong>PK</strong>") yang dilaksanakan oleh Para Pihak. Setiap PK hendaklah merujuk Perjanjian ini dan, apabila dilaksanakan, hendaklah dimasukkan di sini sebagai rujukan.</p>
+            <p class="legal-doc__clause-text"><strong>1.2 Perubahan Skop.</strong> Sebarang perubahan kepada skop Perkhidmatan hendaklah didokumentasikan dalam Perintah Perubahan bertulis yang ditandatangani oleh kedua-dua Pihak.</p>
+            <p class="legal-doc__clause-text"><strong>1.3 Standard.</strong> Penyedia hendaklah melaksanakan Perkhidmatan secara profesional dan berdaya guna, selaras dengan standard industri.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">2. Tempoh dan Pemutusan</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>2.1 Tempoh.</strong> Perjanjian ini bermula pada Tarikh Kuat Kuasa dan berterusan selama <strong>{{TERM_MONTHS}} bulan</strong> melainkan jika diputuskan terlebih dahulu mengikut Seksyen ini.</p>
+            <p class="legal-doc__clause-text"><strong>2.2 Pemutusan untuk Kemudahan.</strong> Mana-mana Pihak boleh memutuskan Perjanjian ini dengan notis bertulis <strong>{{NOTICE_DAYS}} hari</strong>.</p>
+            <p class="legal-doc__clause-text"><strong>2.3 Pemutusan untuk Sebab.</strong> Mana-mana Pihak boleh memutuskan dengan segera jika Pihak lain: (a) melanggar Perjanjian ini secara material dan gagal memperbetulkannya dalam 30 hari; (b) menjadi tidak solvent atau bankrap; (c) menghentikan operasi perniagaan.</p>
+            <p class="legal-doc__clause-text"><strong>2.4 Kesan Pemutusan.</strong> Apabila diputuskan: (a) Pelanggan hendaklah membayar semua Perkhidmatan yang dilaksanakan sehingga tarikh pemutusan; (b) Penyedia hendaklah menyerahkan semua hasil kerja; (c) setiap Pihak hendaklah mengembalikan/memusnahkan Maklumat Sulit Pihak lain.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Yuran dan Pembayaran</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>3.1 Yuran.</strong> Yuran bagi Perkhidmatan dinyatakan dalam setiap PK atau Jadual Harga yang dilampirkan.</p>
+            <p class="legal-doc__clause-text"><strong>3.2 Invois.</strong> Penyedia hendaklah mengeluarkan invois bulanan atau mengikut milestone mengikut PK. Invois harus dibayar <strong>Net 30</strong> hari dari tarikh invois.</p>
+            <p class="legal-doc__clause-text"><strong>3.3 Pembayaran Lewat.</strong> Amaun tertunggak dikenakan faedah <strong>1.5% sebulan</strong> (atau maksimum yang dibenarkan oleh undang-undang).</p>
+            <p class="legal-doc__clause-text"><strong>3.4 Cukai.</strong> Yuran tidak termasuk cukai berkenaan (SST 8%). Pelanggan bertanggungjawab ke atas semua cukai berkenaan.</p>
+            <p class="legal-doc__clause-text"><strong>3.5 Perbelanjaan.</strong> Perbelanjaan perjalanan/keluar kira-kira yang diluluskan terlebih dahulu dibayar balik mengikut kos sebenar dengan resit.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">4. Harta Intelek</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>4.1 IP Pelanggan.</strong> Pelanggan mempertahankan semua hak ke atas IP sedia ada dan data yang disediakan kepada Penyedia.</p>
+            <p class="legal-doc__clause-text"><strong>4.2 Hasil Kerja.</strong> Apabila pembayaran penuh dibuat, semua hasil kerja (penghantaran, kod, reka bentuk, dokumentasi) yang dicipta oleh Penyedia di bawah Perjanjian ini akan dimiliki oleh Pelanggan ("<strong>Hasil Kerja</strong>"). Penyedia menyerahkan hak kepada Hasil Kerja kepada Pelanggan.</p>
+            <p class="legal-doc__clause-text"><strong>4.3 IP Penyedia.</strong> Penyedia mempertahankan hakmilik ke atas alat sedia ada, kerangka kerja, pustaka, metodologi, dan pengetahuan ("<strong>IP Penyedia</strong>"). Pelanggan menerima lesen perpetu, bebas royalti, tidak eksklusif untuk menggunakan IP Penyedia yang tertanam dalam Hasil Kerja.</p>
+            <p class="legal-doc__clause-text"><strong>4.3 IP Pihak Ketiga.</strong> Penyedia tidak boleh menggabungkan IP pihak ketiga tanpa keizinan bertulis terlebih dahulu daripada Pelanggan dan lesen yang sesuai.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">5. Kesulitan</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>5.1 Takrifan.</strong> "Maklumat Sulit" bermaksud semua maklumat bukan awam yang didedahkan oleh mana-mana Pihak.</p>
+            <p class="legal-doc__clause-text"><strong>5.2 Kewajipan.</strong> Setiap Pihak hendaklah: (a) memegang Maklumat Sulit secara sulit; (b) tidak mendedahkan kepada pihak ketiga; (c) menggunakan hanya untuk melaksanakan Perjanjian ini; (d) mengekaskan akses kepada pekerja yang perlu tahu.</p>
+            <p class="legal-doc__clause-text"><strong>5.3 Pengecualian.</strong> Bukan sulit jika: tersedia awam, dibangunkan secara bebas, diterima daripada pihak ketiga dengan sah, atau diperlukan oleh undang-undang.</p>
+            <p class="legal-doc__clause-text"><strong>5.4 Tempoh.</strong> Kewajipan sulit kekal selama <strong>2 tahun</strong> selepas pemutusan.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">6. Perlindungan Data (PDPA)</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>6.1 Pematuhan.</strong> Kedua-dua Pihak hendaklah mematuhi Akta Perlindungan Data Peribadi 2010 ("PDPA") dan undang-undang perlindungan data yang berkenaan.</p>
+            <p class="legal-doc__clause-text"><strong>6.2 Peranan.</strong> Pelanggan adalah Pengawal Data; Penyedia adalah Pemproses Data bagi data peribadi Pelanggan.</p>
+            <p class="legal-doc__clause-text"><strong>6.3 Pemprosesan.</strong> Penyedia hendaklah: (a) memproses data peribadi hanya mengikut arahan bertulis Pelanggan; (b) melaksanakan langkah-langkah keselamatan yang sesuai; (c) tidak melibatkan sub-pemproses tanpa keizinan bertulis Pelanggan; (d) membantu Pelanggan dengan permintaan subjek data; (e) memberitahu Pelanggan tentang pelanggaran data dalam 72 jam.</p>
+            <p class="legal-doc__clause-text"><strong>6.4 DPA.</strong> Adendum Pemprosesan Data (DPA) berasingan boleh dilaksanakan untuk kewajipan terperinci.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">7. Waranti dan Penafian</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>7.1 Waranti Penyedia.</strong> Penyedia menguaranti: (a) Perkhidmatan dilaksanakan secara profesional; (b) Hasil Kerja tidak melanggar IP pihak ketiga; (c) pematuhan undang-undang berkenaan.</p>
+            <p class="legal-doc__clause-text"><strong>7.2 Penafian.</strong> KECHUALI SEBAGAIMANA DINYATAKAN SECARA NYATA, PERKHIDMATAN DIBERIKAN "SEBAGAIMANA ADANYA" TANPA WARANTI APA PUN, NYATA ATAU TERSEMBUNYI.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">8. Had Liabiliti</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>8.1 Had.</strong> Liabiliti agregat tiada Pihak melebihi <strong>12 bulan yuran</strong> dibayar/terhutang oleh Pelanggan.</p>
+            <p class="legal-doc__clause-text"><strong>8.2 Pengecualian.</strong> Tiada Pihak bertanggungjawab ke atas kerugian tidak langsung, mengikut, denda, atau khas; kehilangan keuntungan, data, atau peluang perniagaan.</p>
+            <p class="legal-doc__clause-text"><strong>8.3 Pengecualian kepada Had.</strong> Had tidak terpakai bagi: (a) pelanggaran IP; (b) pelanggaran sulit; (c) kelalaian berat/niat jahat; (d) kewajipan pembayaran.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">8. Indemniti</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>8.1 Oleh Penyedia.</strong> Penyedia hendaklah mengindemniti Pelanggan terhadap tuntutan pihak ketiga yang timbul daripada: (a) pelanggaran IP oleh Hasil Kerja; (b) kelalaian/niat jahat Penyedia; (c) pelanggaran Seksyen 4 atau 5.</p>
+            <p class="legal-doc__clause-text"><strong>8.2 Oleh Pelanggan.</strong> Pelanggan hendaklah mengindemniti Penyedia terhadap tuntutan pihak ketiga yang timbul daripada: (a) kandungan/data Pelanggan; (b) pelanggaran Pelanggan terhadap Perjanjian ini.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">9. Insurans</h2>
+          <p class="legal-doc__clause-text">
+            Penyedia hendaklah mengekalkan: (a) Indemniti Profesional (min. RM 1,000,000); (b) Liabiliti Am Perdagangan (min. RM 1,000,000); (c) Kompensasi Pekerja sebagaimana dikehendaki undang-undang. Sijil disediakan atas permintaan.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">10. Kuasa Majeur</h2>
+          <p class="legal-doc__clause-text">
+            Tiada Pihak bertanggungjawab atas kegagalan/kelewatan disebabkan kejadian di luar kawalan munasabah (bencana alam, perang, pemberontakan, mogok, tindakan kerajaan, pandemik). Pihak yang terjejas hendaklah memberi notis segera dan menggunakan usaha munasabah untuk memitigasi.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">11. Undang-Undang Yang Menguasai dan Penyelesaian Pertikaian</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>11.1 Undang-Undang Yang Menguasai.</strong> Undang-undang Malaysia.</p>
+            <p class="legal-doc__clause-text"><strong>11.2 Penyelesaian Pertikaian.</strong> Perundingan suci hati (30 hari) → Mediasi (Kuala Lumpur) → Arbitrase (Kuala Lumpur, bahasa Inggeris, 1 arbitrator) atau Mahkamah Kuala Lumpur.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">12. Peruntukan Am</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>12.1 Keseluruhan Perjanjian.</strong> Perjanjian ini + PK + Lampiran = keseluruhan perjanjian.</p>
+            <p class="legal-doc__clause-text"><strong>12.2 Pindaan.</strong> Bertulis, ditandatangani kedua-dua Pihak.</p>
+            <p class="legal-doc__clause-text"><strong>12.3 Kebolehpisahan.</strong> Peruntukan tidak sah dipisahkan; yang lain dikuatkuasakan.</p>
+            <p class="legal-doc__clause-text"><strong>12.4 Pelepasan.</strong> Tiada pelepasan melainkan bertulis.</p>
+            <p class="legal-doc__clause-text"><strong>12.5 Penghakiman.</strong> Tiada penghakiman tanpa keizinan (kecuali kepada afiliat/pewaris).</p>
+            <p class="legal-doc__clause-text"><strong>12.6 Notis.</strong> Bertulis, dihantar secara peribadi, pos berdaftar, atau e-mel ke alamat di atas.</p>
+            <p class="legal-doc__clause-text"><strong>12.7 Kaunterpart/Tanda Tangan Elektronik.</strong> Sah dalam kaunterpart; tanda tangan elektronik sah.</p>
+          </div>
+        </section>
+
+        <div class="legal-doc__signature-block">
+          <p class="legal-doc__signature-intro">DENGAN INI, Para Pihak telah melaksanakan Perjanjian ini pada Tarikh Kuat Kuasa.</p>
+
+          <div class="legal-doc__signature-row">
+            <div class="legal-doc__signature-column">
+              <div class="legal-doc__signature-line"></div>
+              <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+              <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+              <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+              <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+              <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+            </div>
+
+            <div class="legal-doc__signature-column">
+              <div class="legal-doc__signature-line"></div>
+              <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+              <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+              <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+              <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+              <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | Sulit — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="msa-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>

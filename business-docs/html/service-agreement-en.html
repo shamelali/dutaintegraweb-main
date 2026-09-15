@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duta Integra Solutions - Service Agreement</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/brand-variables.css">
+  <link rel="stylesheet" href="../shared/print-base.css">
+  <link rel="stylesheet" href="../shared/legal-print.css">
+  <style>
+    .no-print { display: block; }
+    @media print { .no-print { display: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="legal-doc__watermark">
+    <img src="../../shared/assets/logo-primary.svg" alt="">
+  </div>
+
+  <main class="legal-doc">
+    <header class="legal-doc__header">
+      <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+      <h1 class="legal-doc__title">Service Agreement</h1>
+      <p class="legal-doc__subtitle">Retainer Engagement · Month-to-Month</p>
+      <div class="legal-doc__meta">
+        <span>Version <span class="ph">{{VERSION}}</span> · <span class="ph">{{DATE}}</span></span>
+        <span>Ref: <span class="ph">{{AGREEMENT_REF}}</span></span>
+      </div>
+    </header>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">1. Parties</h2>
+      <p class="legal-doc__clause-text">
+        This Service Agreement ("Agreement") is entered into on <span class="ph">{{DATE}}</span> between:
+      </p>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title"><strong>Provider:</strong> Duta Integra Solutions Sdn Bhd</p>
+        <p class="legal-doc__clause-text">Company Registration: <span class="ph">{{COMPANY_REG}}</span><br>Cyberjaya, Malaysia<br>hello@dutaintegra.my</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title"><strong>Client:</strong> <span class="ph">{{CLIENT_COMPANY}}</span></p>
+        <p class="legal-doc__clause-text">Company Registration: <span class="ph">{{CLIENT_REG}}</span><br>Address: <span class="ph">{{CLIENT_ADDRESS}}</span><br>Contact: <span class="ph">{{CLIENT_CONTACT}}</span></p>
+      </div>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">2. Scope of Services</h2>
+      <p class="legal-doc__clause-text">The Provider shall deliver the Services as described in the attached <strong>Scope Appendix</strong> (Annex A), corresponding to the selected tier:</p>
+      <ul class="legal-doc__list">
+        <li class="legal-doc__list-item"><strong>Foundation Tier</strong> (from RM 2,000/month): 24/7 managed IT support & helpdesk, cloud infrastructure & backups, security monitoring & incident response, PDPA compliance support, monthly system health reports, dedicated IT engineer.</li>
+        <li class="legal-doc__list-item"><strong>Growth Tier</strong> (from RM 5,300/month): All Foundation services, plus sales & workflow automation, content creation & management, ads management, monthly performance reporting, dedicated account manager.</li>
+        <li class="legal-doc__list-item"><strong>AI Partner Tier</strong> (custom pricing): All Growth services, plus dedicated AI development budget, priority roadmap, quarterly strategy reviews.</li>
+        <li class="legal-doc__list-item"><strong>Add-ons</strong> (per Scope Appendix): Website Development, Website Care, Custom AI Systems, Sales Automation, Content Creation, Ads Management.</li>
+      </ul>
+      <p class="legal-doc__clause-text">The selected tier and any add-ons are specified in the <strong>Pricing Schedule</strong> (Annex B).</p>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">3. Fees & Payment</h2>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">3.1 Monthly Retainer</p>
+        <p class="legal-doc__clause-text">The Client shall pay the monthly retainer fee as specified in Annex B, invoiced on the 1st of each calendar month, due within 14 days of invoice date.</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">3.2 Onboarding Fee</p>
+        <p class="legal-doc__clause-text">A one-time onboarding fee of <strong>RM <span class="ph">{{ONBOARDING_FEE}}</span></strong> is due upon signing. <strong>Waived if this Agreement is signed by <span class="ph">{{DEADLINE_DATE}}</span></strong> (14 days from proposal date).</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">3.3 Payment Methods</p>
+        <p class="legal-doc__clause-text">Bank transfer to Duta Integra Solutions Sdn Bhd (account details on invoice). Late payments incur 1.5% monthly interest.</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">3.4 Scope Changes</p>
+        <p class="legal-doc__clause-text">Additional services beyond the Scope Appendix require a written Change Order with agreed pricing before work begins.</p>
+      </div>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">4. Term & Termination</h2>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">4.1 Term</p>
+        <p class="legal-doc__clause-text">This Agreement commences on the signing date and continues month-to-month.</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">4.2 Termination for Convenience</p>
+        <p class="legal-doc__clause-text">Either party may terminate with 30 days' written notice. The Client pays for all services rendered up to the termination date.</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">4.3 Termination for Cause</p>
+        <p class="legal-doc__clause-text">Either party may terminate immediately upon material breach (uncured after 14 days' written notice), insolvency, or force majeure exceeding 60 days.</p>
+      </div>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">5. Service Levels & Responsibilities</h2>
+      <ul class="legal-doc__list">
+        <li class="legal-doc__list-item">Provider responds to critical incidents within 2 hours (business hours), 4 hours (after hours).</li>
+        <li class="legal-doc__list-item">Provider maintains 99.9% uptime for managed infrastructure (excluding scheduled maintenance).</li>
+        <li class="legal-doc__list-item">Client provides timely access to systems, credentials, and decision-makers.</li>
+        <li class="legal-doc__list-item">Client designates a primary point of contact for approvals and communication.</li>
+      </ul>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">6. Intellectual Property</h2>
+      <p class="legal-doc__clause-text">6.1 <strong>Pre-existing IP:</strong> Each party retains ownership of their pre-existing intellectual property.</p>
+      <p class="legal-doc__clause-text">6.2 <strong>Deliverables:</strong> Upon full payment, Client owns all custom deliverables created specifically for them under this Agreement (code, content, designs, configurations). Provider retains a non-exclusive license to reuse generic frameworks, libraries, and methodologies.</p>
+      <p class="legal-doc__clause-text">6.3 <strong>Third-party services:</strong> Client is responsible for licenses of third-party platforms (AWS, Google, Meta, etc.) used in the Services.</p>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">7. Confidentiality</h2>
+      <p class="legal-doc__clause-text">Both parties shall keep confidential all non-public information exchanged (technical, commercial, financial, personal data). Confidentiality survives termination for 3 years. This clause is supplemented by the separate Non-Disclosure Agreement.</p>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">8. Data Protection & PDPA</h2>
+      <ul class="legal-doc__list">
+        <li class="legal-doc__list-item">Provider acts as Data Processor; Client is Data Controller.</li>
+        <li class="legal-doc__list-item">Provider implements appropriate technical/organizational measures per Malaysia PDPA 2010 (as amended 2024).</li>
+        <li class="legal-doc__list-item">Breach notification within 72 hours of discovery.</li>
+        <li class="legal-doc__list-item">Data Processing Addendum (DPA) attached as Annex C if personal data is processed.</li>
+      </ul>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">9. Limitation of Liability</h2>
+      <p class="legal-doc__clause-text">9.1 Neither party is liable for indirect, consequential, or punitive damages (lost profits, data loss, business interruption).</p>
+      <p class="legal-doc__clause-text">9.2 Provider's aggregate liability is capped at <strong>12 months' retainer fees</strong> paid under this Agreement.</p>
+      <p class="legal-doc__clause-text">9.3 Liability cap does not apply to: (a) confidentiality breaches, (b) IP infringement, (c) wilful misconduct, (d) data protection fines attributable to Provider's negligence.</p>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">10. Indemnity</h2>
+      <p class="legal-doc__clause-text">Each party indemnifies the other against third-party claims arising from their breach of this Agreement, negligence, or IP infringement.</p>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">11. General</h2>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">11.1 Governing Law</p>
+        <p class="legal-doc__clause-text">This Agreement is governed by the laws of Malaysia. Courts of Selangor have exclusive jurisdiction.</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">11.2 Entire Agreement</p>
+        <p class="legal-doc__clause-text">This Agreement, its Annexes, and the NDA constitute the entire agreement. Amendments require written consent.</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">11.3 Assignment</p>
+        <p class="legal-doc__clause-text">Neither party may assign without the other's written consent (not unreasonably withheld).</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">11.4 Force Majeure</p>
+        <p class="legal-doc__clause-text">Neither party is liable for failures caused by events beyond reasonable control.</p>
+      </div>
+      <div class="legal-doc__clause">
+        <p class="legal-doc__clause-title">11.5 Notices</p>
+        <p class="legal-doc__clause-text">Notices via email to the addresses above are deemed received upon sending.</p>
+      </div>
+    </section>
+
+    <section class="legal-doc__section">
+      <h2 class="legal-doc__section-title">Annexes</h2>
+      <ul class="legal-doc__list">
+        <li class="legal-doc__list-item"><strong>Annex A — Scope Appendix:</strong> Detailed deliverables, timelines, and acceptance criteria.</li>
+        <li class="legal-doc__list-item"><strong>Annex B — Pricing Schedule:</strong> Selected tier, add-ons, monthly fee, onboarding fee, payment terms.</li>
+        <li class="legal-doc__list-item"><strong>Annex C — Data Processing Addendum:</strong> (If applicable) PDPA roles, data categories, sub-processors, security measures.</li>
+        <li class="legal-doc__list-item"><strong>Annex D — Non-Disclosure Agreement:</strong> Separate NDA document, incorporated by reference.</li>
+      </ul>
+    </section>
+
+    <div class="legal-doc__signature-block">
+      <p style="font-weight:600; margin-bottom:16px;">Executed by the parties as of the date first written above:</p>
+      <div class="legal-doc__signature-row">
+        <div class="legal-doc__signature-column">
+          <div class="legal-doc__signature-line"></div>
+          <div class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</div>
+          <div class="legal-doc__signature-detail">Authorized Signatory · Name: <span class="ph">{{PROVIDER_SIGNATORY}}</span></div>
+          <div class="legal-doc__signature-detail">Title: <span class="ph">{{PROVIDER_TITLE}}</span> · Date: <span class="ph">{{DATE}}</span></div>
+          <div class="legal-doc__chop"><span class="legal-doc__chop-text">[Company Chop]</span></div>
+        </div>
+        <div class="legal-doc__signature-column">
+          <div class="legal-doc__signature-line"></div>
+          <div class="legal-doc__signature-label"><span class="ph">{{CLIENT_COMPANY}}</span></div>
+          <div class="legal-doc__signature-detail">Authorized Signatory · Name: <span class="ph">{{CLIENT_SIGNATORY}}</span></div>
+          <div class="legal-doc__signature-detail">Title: <span class="ph">{{CLIENT_TITLE}}</span> · Date: <span class="ph">{{DATE}}</span></div>
+          <div class="legal-doc__chop"><span class="legal-doc__chop-text">[Company Chop]</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legal-doc__page-number">Page <span class="ph">{{PAGE}}</span> of <span class="ph">{{TOTAL_PAGES}}</span></div>
+  </main>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px;">
+    <button class="btn btn--primary" onclick="window.print(); return false;" style="padding:12px 24px;border:none;border-radius:6px;background:#1E2D3D;color:#fff;font-weight:600;cursor:pointer;">Print / Save as PDF</button>
+    <button class="btn btn--outline" onclick="window.location.href='nda-en.html'; return false;" style="margin-left:12px;padding:12px 24px;border:2px solid #1E2D3D;border-radius:6px;background:#fff;color:#1E2D3D;font-weight:600;cursor:pointer;">View NDA</button>
+  </div>
+</body>
+</html>

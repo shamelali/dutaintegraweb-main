@@ -1,0 +1,39 @@
+{
+  "name": "dutaintegra-business-docs",
+  "version": "1.0.0",
+  "description": "Business Communication Documents for Duta Integra Solutions Sdn Bhd",
+  "private": true,
+  "scripts": {
+    "generate:pdf": "node scripts/generate-pdf.js",
+    "generate:pdf:letterhead": "node scripts/generate-pdf.js --category=letterhead",
+    "generate:pdf:business-card": "node scripts/generate-pdf.js --category=business-card",
+    "generate:pdf:email-signature": "node scripts/generate-pdf.js --category=email-signature",
+    "validate": "node scripts/validate-all.js",
+    "validate:fix": "node scripts/validate-all.js --fix",
+    "validate:letterhead": "node scripts/validate-all.js --category=letterhead",
+    "dev": "npx serve html -p 3000",
+    "clean": "rm -rf pdf-output"
+  },
+  "keywords": [
+    "business-documents",
+    "letterhead",
+    "business-card",
+    "email-signature",
+    "nda",
+    "msa",
+    "proposal",
+    "invoice",
+    "bilingual",
+    "malaysia"
+  ],
+  "author": "Duta Integra Solutions Sdn Bhd",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "puppeteer": "^21.0.0",
+    "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Quote / Estimate</h1>
+        <p class="legal-doc__subtitle">VALID FOR 30 DAYS</p>
+        <div class="legal-doc__meta">
+          <span>Quote #: {{QUOTE_NUMBER}}</span>
+          <span>Version: {{DOC_VERSION}}</span>
+          <span>Date: {{DOC_DATE}}</span>
+          <span>Valid Until: {{VALID_UNTIL}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <div class="quote__header-info">
+          <div class="quote__from">
+            <h3 class="legal-doc__section-title" style="margin-bottom: 8px;">From:</h3>
+            <p><strong>Duta Integra Solutions Sdn Bhd</strong><br>
+            Cyberjaya, Malaysia<br>
+            hello@dutaintegra.my<br>
+            +60 11-5403 4051<br>
+            Reg: {{COMPANY_REG_NO}}</p>
+          </div>
+          <div class="quote__to">
+            <h3 class="legal-doc__section-title" style="margin-bottom: 8px;">To:</h3>
+            <p><strong>{{CLIENT_NAME}}</strong><br>
+            {{CLIENT_ADDRESS}}<br>
+            {{CLIENT_EMAIL}}<br>
+            {{CLIENT_PHONE}}</p>
+          </div>
+        </div>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Quote Details</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Project / Service</th><td>{{PROJECT_NAME}}</td></tr>
+              <tr><th>Reference</th><td>{{PROJECT_NUMBER}}</td></tr>
+              <tr><th>Prepared For</th><td>{{CLIENT_NAME}} ({{CLIENT_CONTACT}})</td></tr>
+              <tr><th>Prepared By</th><td>Duta Integra Solutions Sdn Bhd</td></tr>
+              <tr><th>Quote Date</th><td>{{DOC_DATE}}</td></tr>
+              <tr><th>Validity</th><td>{{VALID_UNTIL}} (30 days from quote date)</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Line Items</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Description</th><th style="text-align: center;">Qty</th><th style="text-align: right;">Unit Price (RM)</th><th style="text-align: right;">Total (RM)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{ITEM_1_DESC}}</td><td style="text-align: center;">{{ITEM_1_QTY}}</td><td style="text-align: right;">{{ITEM_1_UNIT}}</td><td style="text-align: right;">{{ITEM_1_TOTAL}}</td></tr>
+              <tr><td>2</td><td>{{ITEM_2_DESC}}</td><td style="text-align: center;">{{ITEM_2_QTY}}</td><td style="text-align: right;">{{ITEM_2_UNIT}}</td><td style="text-align: right;">{{ITEM_2_TOTAL}}</td></tr>
+              <tr><td>3</td><td>{{ITEM_3_DESC}}</td><td style="text-align: center;">{{ITEM_3_QTY}}</td><td style="text-align: right;">{{ITEM_3_UNIT}}</td><td style="text-align: right;">{{ITEM_3_TOTAL}}</td></tr>
+              <tr><td>4</td><td>{{ITEM_4_DESC}}</td><td style="text-align: center;">{{ITEM_4_QTY}}</td><td style="text-align: right;">{{ITEM_4_UNIT}}</td><td style="text-align: right;">{{ITEM_4_TOTAL}}</td></tr>
+              <tr><td>5</td><td>{{ITEM_5_DESC}}</td><td style="text-align: center;">{{ITEM_5_QTY}}</td><td style="text-align: right;">{{ITEM_5_UNIT}}</td><td style="text-align: right;">{{ITEM_5_TOTAL}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Pricing Summary</h2>
+          <table class="table" style="max-width: 400px; margin-left: auto;">
+            <tbody>
+              <tr><td>Subtotal</td><td style="text-align: right;">{{SUBTOTAL}}</td></tr>
+              <tr><td>SST (8%)</td><td style="text-align: right;">{{SST_AMOUNT}}</td></tr>
+              <tr style="border-top: 2px solid var(--color-gold); font-weight: 700; font-size: 12pt;">
+                <td>Total</td><td style="text-align: right;">{{TOTAL_AMOUNT}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Terms & Conditions</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Validity:</strong> This quote is valid for 30 days from the date of issue (until {{VALID_UNTIL}}).</li>
+            <li class="legal-doc__list-item"><strong>Currency:</strong> All amounts in Malaysian Ringgit (MYR).</li>
+            <li class="legal-doc__list-item"><strong>Tax:</strong> Prices exclude Sales & Service Tax (SST 8%), which will be added to the final invoice.</li>
+            <li class="legal-doc__list-item"><strong>Payment Terms:</strong> {{PAYMENT_TERMS}} (default: Net 30 days from invoice date).</li>
+            <li class="legal-doc__list-item"><strong>Deposit:</strong> {{DEPOSIT_PERCENTAGE}}% deposit required upon acceptance to commence work.</li>
+            <li class="legal-doc__list-item"><strong>Scope:</strong> This quote covers only the items listed above. Additional work requires a revised quote.</li>
+            <li class="legal-doc__list-item"><strong>Timeline:</strong> Estimated timeline: {{TIMELINE}}. Actual dates to be confirmed upon acceptance.</li>
+            <li class="legal-doc__list-item"><strong>Validity:</strong> This quote expires on {{VALID_UNTIL}}. Prices subject to change after expiry.</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Acceptance</h2>
+          <p class="legal-doc__section-text">
+            To accept this quote, please sign below and return a copy to hello@dutaintegra.my. Work will commence upon receipt of signed acceptance and deposit.
+          </p>
+
+          <div class="legal-doc__signature-block">
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | Quote {{QUOTE_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="quote-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>

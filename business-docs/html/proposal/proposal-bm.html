@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadangan Projek - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Cadangan Projek</h1>
+        <p class="legal-doc__subtitle">SULIT</p>
+        <div class="legal-doc__meta">
+          <span>Dokumen: CAD-{{DOC_NUMBER}}</span>
+          <span>Versi: {{DOC_VERSION}}</span>
+          <span>Tarikh: {{DOC_DATE}}</span>
+          <span>Sah Sehingke: {{VALID_UNTIL}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <div class="proposal__cover">
+          <h2 class="proposal__project-title">{{PROJECT_NAME}}</h2>
+          <p class="proposal__client">Disediakan untuk: {{CLIENT_NAME}}</p>
+          <p class="proposal__date">Disediakan oleh: Duta Integra Solutions Sdn Bhd</p>
+          <p class="proposal__date">Tarikh: {{DOC_DATE}} | Nombor Cadangan: {{DOC_NUMBER}}</p>
+        </div>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">1. Ringkasan Eksekutif</h2>
+          <p class="legal-doc__section-text">
+            {{EXECUTIVE_SUMMARY}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">2. Memahami Keperluan Anda</h2>
+          <p class="legal-doc__section-text">
+            {{CLIENT_NEEDS}}
+          </p>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">{{NEED_1}}</li>
+            <li class="legal-doc__list-item">{{NEED_2}}</li>
+            <li class="legal-doc__list-item">{{NEED_3}}</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Penyelesaian Dicadangkan</h2>
+          <p class="legal-doc__section-text">
+            {{SOLUTION_OVERVIEW}}
+          </p>
+          <h3 style="margin: 16px 0 8px 0; font-family: var(--font-display); color: var(--color-navy);">Komponen Utama:</h3>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>{{COMPONENT_1_NAME}}:</strong> {{COMPONENT_1_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>{{COMPONENT_2_NAME}}:</strong> {{COMPONENT_2_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>{{COMPONENT_3_NAME}}:</strong> {{COMPONENT_3_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>{{COMPONENT_4_NAME}}:</strong> {{COMPONENT_4_DESC}}</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">4. Metodologi & Pendekatan</h2>
+          <p class="legal-doc__section-text">
+            {{METHODOLOGY}}
+          </p>
+          <h3 style="margin: 16px 0 8px 0; font-family: var(--font-display); color: var(--color-navy);">Proses Kami:</h3>
+          <ol class="legal-doc__list" style="list-style: decimal; padding-left: 24px;">
+            <li class="legal-doc__list-item"><strong>Penemuan:</strong> {{PHASE_1}}</li>
+            <li class="legal-doc__list-item"><strong>Reka Bentuk:</strong> {{PHASE_2}}</li>
+            <li class="legal-doc__list-item"><strong>Pembangunan:</strong> {{PHASE_3}}</li>
+            <li class="legal-doc__list-item"><strong>Pelaksanaan:</strong> {{PHASE_4}}</li>
+            <li class="legal-doc__list-item"><strong>Sokongan:</strong> {{PHASE_5}}</li>
+          </ol>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">5. Pasukan & Kepakaran</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Peranan</th><th>Nama</th><th>Pengalaman</th><th>Tanggungjawab</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ketua Projek</td><td>{{TEAM_LEAD}}</td><td>{{TEAM_LEAD_EXP}}</td><td>Penghantaran keseluruhan, komunikasi pelanggan</td></tr>
+              <tr><td>Ketua Teknikal</td><td>{{TECH_LEAD}}</td><td>{{TECH_LEAD_EXP}}</td><td>Seni bina, semakan kod</td></tr>
+              <tr><td>Pembangunan Senior</td><td>{{DEV_1}}</td><td>{{DEV_1_EXP}}</td><td>Pembangunan teras</td></tr>
+              <tr><td>Pembangun</td><td>{{DEV_2}}</td><td>{{DEV_2_EXP}}</td><td>Pembangunan ciri</td></tr>
+              <tr><td>Jurutera QA</td><td>{{QA_ENGINEER}}</td><td>{{QA_EXP}}</td><td>Ujian, jaminan kualiti</td></tr>
+              <tr><td>Perekabentuk</td><td>{{DESIGNER}}</td><td>{{DESIGNER_EXP}}</td><td>Reka bentuk UI/UX</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">6. Garis Masa & Milestone</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Fasa</th><th>Tempoh</th><th>Penghantaran Utama</th><th>Tarikh Sasaran</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1. Penemuan & Perancangan</td><td>{{PHASE_1_DURATION}}</td><td>{{PHASE_1_DELIVERABLES}}</td><td>{{PHASE_1_DATE}}</td></tr>
+              <tr><td>Reka Bentuk & Seni Bina</td><td>{{PHASE_2_DURATION}}</td><td>{{PHASE_2_DELIVERABLES}}</td><td>{{PHASE_2_DATE}}</td></tr>
+              <tr><td>Pembangunan</td><td>{{PHASE_3_DURATION}}</td><td>{{PHASE_3_DELIVERABLES}}</td><td>{{PHASE_3_DATE}}</td></tr>
+              <tr><td>Ujian & Jaminan Kualiti</td><td>{{PHASE_4_DURATION}}</td><td>{{PHASE_4_DELIVERABLES}}</td><td>{{PHASE_4_DATE}}</td></tr>
+              <tr><td>Pelaksanaan & Go-Live</td><td>{{PHASE_5_DURATION}}</td><td>{{PHASE_5_DELIVERABLES}}</td><td>{{PHASE_5_DATE}}</td></tr>
+              <tr><td>Latihan & Penyerahan</td><td>{{PHASE_6_DURATION}}</td><td>{{PHASE_6_DELIVERABLES}}</td><td>{{PHASE_6_DATE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">6. Pelaburan</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Item</th><th>Penerangan</th><th>Amaun (RM)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Fasa 1: Penemuan</td><td>{{PHASE_1_COST_DESC}}</td><td>{{PHASE_1_COST}}</td></tr>
+              <tr><td>Reka Bentuk & Seni Bina</td><td>{{PHASE_2_COST_DESC}}</td><td>{{PHASE_2_COST}}</td></tr>
+              <tr><td>Pembangunan</td><td>{{PHASE_3_COST_DESC}}</td><td>{{PHASE_3_COST}}</td></tr>
+              <tr><td>Ujian & Jaminan Kualiti</td><td>{{PHASE_4_COST_DESC}}</td><td>{{PHASE_4_COST}}</td></tr>
+              <tr><td>Pelaksanaan & Latihan</td><td>{{PHASE_5_COST_DESC}}</td><td>{{PHASE_5_COST}}</td></tr>
+              <tr><td><strong>Subjumlah</strong></td><td></td><td><strong>{{SUBTOTAL}}</strong></td></tr>
+              <tr><td>SST (8%)</td><td></td><td>{{SST_AMOUNT}}</td></tr>
+              <tr><td><strong>Jumlah Pelaburan</strong></td><td></td><td><strong>{{TOTAL_INVESTMENT}}</strong></td></tr>
+            </tbody>
+          </table>
+          <p class="legal-doc__section-text">
+            <strong>Terma Pembayaran:</strong> {{PAYMENT_TERMS}} | <strong>Kelahiran:</strong> {{VALID_UNTIL}} | <strong>Mata Wang:</strong> MYR (Ringgit Malaysia)
+          </p>
+          <p class="legal-doc__section-text">
+            <strong>Jadual Pembayaran:</strong> {{PAYMENT_SCHEDULE}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">8. Kenapa Duta Integra?</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Kepakaran Lokal:</strong> Berasaskan di Cyberjaya, pemahaman mendalam landskap PKS Malaysia, kepatuhan PDPA, SST</li>
+            <li class="legal-doc__list-item"><strong>Trek Rekod Terbukti:</strong> Menghantar 50+ projek untuk PKS Malaysia sejak 2023</li>
+            <li class="legal-doc__list-item"><strong>Penghantaran Sepenuhnya:</strong> Dari strategi ke pelaksanaan dan sokongan berterusan</li>
+            <li class="legal-doc__list-item"><strong>Harga Telus:</strong> Tiada cekah tersembunyi, harga tetap mengikut milestone</li>
+            <li class="legal-doc__list-item"><strong>Sokongan Berterusan:</strong> Sokongan dan pengoptimuman pasca-pelancaran disertakan</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">9. Langkah Seterusnya</h2>
+          <ol class="legal-doc__list" style="list-style: decimal; padding-left: 24px;">
+            <li class="legal-doc__list-item">Semak cadangan ini dan berikan maklum balas</li>
+            <li class="legal-doc__list-item">Jadualkan panggilan untuk penjelasan (jika perlu)</li>
+            <li class="legal-doc__list-item">Tandatangani dan kembalikan dengan deposit untuk memulakan</li>
+            <li class="legal-doc__list-item">Mesyuarah kickoff dalam 5 hari bekerja</li>
+          </ol>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">10. Penerimaan</h2>
+          <div class="legal-doc__signature-block">
+            <p class="legal-doc__signature-intro">Dengan menandatangani di bawah, {{CLIENT_NAME}} menerima cadangan ini dan membenarkan Duta Integra Solutions Sdn Bhd memulakan kerja mengikut terma yang dinyatakan.</p>
+
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | Sulit — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="proposal-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>

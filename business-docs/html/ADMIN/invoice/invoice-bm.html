@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invois - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Invois Cukai</h1>
+        <p class="legal-doc__subtitle">NO. DAFTAR SST: {{SST_REG_NO}}</p>
+        <div class="legal-doc__meta">
+          <span>Invois #: {{INVOICE_NUMBER}}</span>
+          <span>Tarikh: {{INVOICE_DATE}}</span>
+          <span>Tarikh Jatuh Tempo: {{DUE_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <div class="invoice__header-info">
+          <div class="invoice__from">
+            <h3 class="legal-doc__section-title" style="margin-bottom: 8px;">Dari:</h3>
+            <p><strong>Duta Integra Solutions Sdn Bhd</strong><br>
+            Cyberjaya, Malaysia<br>
+            hello@dutaintegra.my<br>
+            +60 11-5403 4051<br>
+            No. Daftar SST: {{SST_REG_NO}}<br>
+            No. Pendaftaran: {{COMPANY_REG_NO}}</p>
+          </div>
+          <div class="invoice__to">
+            <h3 class="legal-doc__section-title" style="margin-bottom: 8px;">Kepada:</h3>
+            <p><strong>{{CLIENT_NAME}}</strong><br>
+            {{CLIENT_ADDRESS}}<br>
+            {{CLIENT_EMAIL}}<br>
+            {{CLIENT_PHONE}}<br>
+            No. SST: {{CLIENT_SST_NO}}</p>
+          </div>
+        </div>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Butiran Invois</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Nombor Invois</th><td>{{INVOICE_NUMBER}}</td></tr>
+              <tr><th>Tarikh Invois</th><td>{{INVOICE_DATE}}</td></tr>
+              <tr><th>Tarikh Jatuh Tempo</th><td>{{DUE_DATE}}</td></tr>
+              <tr><th>Terma Pembayaran</th><td>{{PAYMENT_TERMS}} (Lazim: Net 30)</td></tr>
+              <tr><th>Nombor PO</th><td>{{PO_NUMBER}}</td></tr>
+              <tr><th>Rujukan Projek</th><td>{{PROJECT_NUMBER}} - {{PROJECT_NAME}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Butiran Item</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Penerangan</th><th style="text-align: center;">Kuantiti</th><th style="text-align: right;">Harga Unit (RM)</th><th style="text-align: right;">Jumlah (RM)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{ITEM_1_DESC}}</td><td style="text-align: center;">{{ITEM_1_QTY}}</td><td style="text-align: right;">{{ITEM_1_UNIT}}</td><td style="text-align: right;">{{ITEM_1_TOTAL}}</td></tr>
+              <tr><td>2</td><td>{{ITEM_2_DESC}}</td><td style="text-align: center;">{{ITEM_2_QTY}}</td><td style="text-align: right;">{{ITEM_2_UNIT}}</td><td style="text-align: right;">{{ITEM_2_TOTAL}}</td></tr>
+              <tr><td>3</td><td>{{ITEM_3_DESC}}</td><td style="text-align: center;">{{ITEM_3_QTY}}</td><td style="text-align: right;">{{ITEM_3_UNIT}}</td><td style="text-align: right;">{{ITEM_3_TOTAL}}</td></tr>
+              <tr><td>4</td><td>{{ITEM_4_DESC}}</td><td style="text-align: center;">{{ITEM_4_QTY}}</td><td style="text-align: right;">{{ITEM_4_UNIT}}</td><td style="text-align: right;">{{ITEM_4_TOTAL}}</td></tr>
+              <tr><td>5</td><td>{{ITEM_5_DESC}}</td><td style="text-align: center;">{{ITEM_5_QTY}}</td><td style="text-align: right;">{{ITEM_5_UNIT}}</td><td style="text-align: right;">{{ITEM_5_TOTAL}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Ringkasan Invois</h2>
+          <table class="table" style="max-width: 400px; margin-left: auto;">
+            <tbody>
+              <tr><td>Subjumlah</td><td style="text-align: right;">{{SUBTOTAL}}</td></tr>
+              <tr><td>SST (8%)</td><td style="text-align: right;">{{SST_AMOUNT}}</td></tr>
+              <tr style="border-top: 2px solid var(--color-gold); font-weight: 700; font-size: 12pt;">
+                <td>Jumlah Terhutang</td><td style="text-align: right;">{{TOTAL_AMOUNT}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Arahan Pembayaran</h2>
+          <table class="table" style="max-width: 500px;">
+            <tbody>
+              <tr><th style="width: 30%;">Bank</th><td>{{BANK_NAME}}</td></tr>
+              <tr><th>Nama Akaun</th><td>Duta Integra Solutions Sdn Bhd</td></tr>
+              <tr><th>Nombor Akaun</th><td>{{ACCOUNT_NUMBER}}</td></tr>
+              <tr><th>SWIFT/BIC</th><td>{{SWIFT_CODE}}</td></tr>
+              <tr><th>Rujukan</th><td>{{INVOICE_NUMBER}} - {{CLIENT_NAME}}</td></tr>
+            </tbody>
+          </table>
+          <p class="legal-doc__section-text" style="margin-top: 16px;">
+            <strong>Terma Pembayaran:</strong> {{PAYMENT_TERMS}} dari tarikh invois. Pembayaran lewat tertakluk kepada faedah 1.5% sebulan.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Nota</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">Sila masukkan nombor invois sebagai rujukan pembayaran.</li>
+            <li class="legal-doc__list-item">No. Daftar SST: {{SST_REG_NO}} | No. Pendaftaran: {{COMPANY_REG_NO}}</li>
+            <li class="legal-doc__list-item">Semua amaun dalam Ringgit Malaysia (MYR).</li>
+            <li class="legal-doc__list-item">Pembayaran melalui pemindahan bank diutamakan. Cek dibayar kepada "Duta Integra Solutions Sdn Bhd".</li>
+            <li class="legal-doc__list-item">Untuk pertanyaan, hubungi: hello@dutaintegra.my atau +60 11-5403 4051</li>
+          </ul>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | Invois {{INVOICE_NUMBER}} | {{INVOICE_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="invoice-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>
