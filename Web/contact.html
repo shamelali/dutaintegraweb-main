@@ -228,6 +228,20 @@ footer{background:var(--dark);padding:3rem 6% 2rem}
 </footer>
 
 <script>
+// CSRF token generation
+function getCsrfToken() {
+  let token = document.cookie.match(/csrf_token=([^;]+)/);
+  if (!token) {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    token = Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+    document.cookie = `csrf_token=${token}; Path=/; SameSite=Strict; Max-Age=3600`;
+  } else {
+    token = token[1];
+  }
+  return token;
+}
+
 function submitForm() {
   const name = document.getElementById('contact-name').value.trim();
   const company = document.getElementById('contact-company').value.trim();
@@ -247,7 +261,10 @@ function submitForm() {
 
   fetch('/api/send-email', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': getCsrfToken()
+    },
     body: JSON.stringify({ name, company, email, phone, service, message })
   })
   .then(res => res.json())
