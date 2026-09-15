@@ -361,6 +361,9 @@ async function handleAdminEnquiries(req, res) {
 // Score-based tier recommendation (Foundation / Growth / AI Partner)
 // Adapted from the Explee 7-step lead-gen playbook.
 
+const VALID_PAIN_POINTS = new Set(["manual_work", "scaling", "security", "ai_automation"]);
+const MAX_SCORE = 100; // 30 (team>20) + 30 (spend>=20k) + 40 (pain capped)
+
 function scoreQuiz(body) {
   let score = 0;
   const teamSize = Number(body.teamSize) || 0;
@@ -375,21 +378,107 @@ function scoreQuiz(body) {
   else if (itSpend < 20000) score += 20;
   else score += 30;
 
-  if (painPoints.includes("manual_work")) score += 15;
-  if (painPoints.includes("scaling")) score += 15;
-  if (painPoints.includes("security")) score += 15;
-  if (painPoints.includes("ai_automation")) score += 20;
-  return score;
+  let painScore = 0;
+  if (painPoints.includes("manual_work")) painScore += 15;
+  if (painPoints.includes("scaling")) painScore += 15;
+  if (painPoints.includes("security")) painScore += 15;
+  if (painPoints.includes("ai_automation")) painScore += 20;
+  score += Math.min(painScore, 40); // cap pain contribution at 40
+
+  return Math.min(score, MAX_SCORE);
+}
+
+/** Persist a quiz completion for analytics. */
+async function recordQuizAudit(data) {
+  const { appendFile, mkdir } = await import("node:fs/promises");
+  const { dirname, join } = await import("node:path");
+  const { randomUUID } = await import("node:crypto");
+
+  const record = {
+    id: randomUUID(),
+    ...data,
+    created_at: new Date().toISOString(),
+  };
+
+  // JSONL local store
+  const store = process.env.QUIZ_STORE || join(
+    dirname(new URL(import.meta.url).pathname),
+    "..", "data", "quiz-audits.jsonl"
+  );
+  await mkdir(dirname(store), { recursive: true });
+  await appendFile(store, JSON.stringify(record) + "\n", "utf8");
+
+  // Supabase if configured
+  if (process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
+    try {
+      const { default: fetch } = await import("node:fetch");
+      await fetch(`${process.env.SUPABASE_URL}/rest/v1/quiz_audits`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": process.env.SUPABASE_SERVICE_ROLE_KEY,
+          "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+          "Prefer": "return=minimal",
+        },
+        body: JSON.stringify(record),
+      });
+    } catch (err) {
+      console.error(`[quiz] supabase persist failed: ${err.message}`);
+    }
+  }
+
+  return record;
 }
 
 async function handleQuiz(req, res) {
+  const headers = corsHeaders(req);
+
+  if (req.method === "OPTIONS") {
+    res.writeHead(204, headers);
+    res.end();
+    return;
+  }
+  if (req.method !== "POST") {
+    send(res, 405, { error: "Method not allowed" }, headers);
+    return;
+  }
+
+  const blocked = checkOrigin(req);
+  if (blocked) return send(res, blocked.status, blocked.body, headers);
+
+  const limited = rateLimit(`quiz:${clientIp(req)}`);
+  if (!limited.allowed) {
+    return send(
+      res,
+      429,
+      { error: "Too many attempts. Please try again later." },
+      { ...headers, "retry-after": String(Math.ceil(limited.retryAfterMs / 1000)) },
+    );
+  }
+
   try {
     const parsed = await readJsonBody(req);
-    if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
+    if (parsed.error) return send(res, parsed.error.status, parsed.error.body, headers);
     const body = parsed.data;
 
-    if (!body.teamSize || !body.itSpend || !Array.isArray(body.painPoints))
-      return send(res, 400, { error: "Missing teamSize, itSpend, or painPoints" });
+    if (!body || typeof body !== "object")
+      return send(res, 400, { error: "Invalid payload" }, headers);
+
+    if (typeof body.teamSize !== "number" || body.teamSize < 1 || body.teamSize > 3)
+      return send(res, 400, { error: "teamSize must be 1, 2, or 3" }, headers);
+
+    if (typeof body.itSpend !== "number" || body.itSpend < 0)
+      return send(res, 400, { error: "itSpend must be a non-negative number" }, headers);
+
+    if (!Array.isArray(body.painPoints))
+      return send(res, 400, { error: "painPoints must be an array" }, headers);
+
+    const invalidPp = body.painPoints.filter((p) => !VALID_PAIN_POINTS.has(p));
+    if (invalidPp.length > 0)
+      return send(res, 400, { error: `Invalid painPoints: ${invalidPp.join(", ")}` }, headers);
+
+    if (body.painPoints.length > 4)
+      return send(res, 400, { error: "Maximum 4 pain points allowed" }, headers);
 
     const score = scoreQuiz(body);
     let tier, description, nextStep, findings, estimatedSavings;
@@ -401,7 +490,7 @@ async function handleQuiz(req, res) {
       findings = [
         "Team size suggests you may be overpaying for enterprise-tier tools you don't use",
         "Low IT spend often means reactive break-fix — each unplanned outage costs 5–10× more than prevention",
-        "Manual work pain points indicate automation ROI of 3–6 months"
+        "Manual work pain points indicate automation ROI of 3–6 months",
       ];
       estimatedSavings = "RM 18,000–36,000/year by shifting from reactive to managed IT";
     } else if (score < 60) {
@@ -411,7 +500,7 @@ async function handleQuiz(req, res) {
       findings = [
         "Scaling pain points mean your infrastructure is a bottleneck — every new hire amplifies the problem",
         "Security/compliance gaps expose you to PDPA fines up to RM 1,000,000",
-        "Your IT spend is likely 30–50% below what companies your size typically need"
+        "Your IT spend is likely 30–50% below what companies your size typically need",
       ];
       estimatedSavings = "RM 48,000–96,000/year with proper cloud migration and managed security";
     } else {
@@ -421,18 +510,31 @@ async function handleQuiz(req, res) {
       findings = [
         "AI automation needs combined with manual work = 40–60% time savings on repetitive tasks",
         "Your team size justifies dedicated AI engineering — the ROI crosses positive within 3 months",
-        "Security/compliance concerns + AI = opportunity for a unified PDPA-compliant automation stack"
+        "Security/compliance concerns + AI = opportunity for a unified PDPA-compliant automation stack",
       ];
       estimatedSavings = "RM 120,000–240,000/year in recovered productivity and reduced headcount needs";
     }
 
-    return send(res, 200, {
-      tier, score, description, nextStep, findings, estimatedSavings,
-      auditDate: new Date().toISOString().split('T')[0]
-    });
+    const auditDate = new Date().toISOString().split("T")[0];
+    const result = { tier, score, description, nextStep, findings, estimatedSavings, auditDate };
+
+    // Persist for analytics (fire-and-forget — don't block response)
+    recordQuizAudit({
+      teamSize: body.teamSize,
+      itSpend: body.itSpend,
+      painPoints: body.painPoints,
+      tier,
+      score,
+      ip: clientIp(req),
+      userAgent: String(req.headers["user-agent"] ?? "").slice(0, 400) || null,
+    }).catch((err) => console.error(`[quiz] persist error: ${err.message}`));
+
+    console.log(`[quiz] completed tier="${tier}" score=${score} ip=${clientIp(req)}`);
+
+    return send(res, 200, result, headers);
   } catch (err) {
     console.error("[server] quiz error:", err);
-    return send(res, 500, { error: "Quiz scoring failed. Please try again." });
+    return send(res, 500, { error: "Quiz scoring failed. Please try again." }, headers);
   }
 }
 

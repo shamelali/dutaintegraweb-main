@@ -714,3 +714,118 @@ describe("client portal — auth and tickets", () => {
     });
   });
 });
+
+describe("POST /api/quiz", () => {
+  async function postQuiz(body, headers = {}) {
+    const res = await fetch(`${base}/api/quiz`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-forwarded-for": nextIp(),
+        ...headers,
+      },
+      body: JSON.stringify(body),
+    });
+    return { status: res.status, body: await res.json().catch(() => null), headers: res.headers };
+  }
+
+  test("returns Foundation tier for small team, low spend, no pain points", async () => {
+    const res = await postQuiz({ teamSize: 1, itSpend: 2000, painPoints: [] });
+    assert.equal(res.status, 200);
+    assert.equal(res.body.tier, "Foundation");
+    assert.ok(res.body.score >= 0 && res.body.score <= 100);
+    assert.ok(Array.isArray(res.body.findings));
+    assert.ok(typeof res.body.estimatedSavings === "string");
+    assert.ok(typeof res.body.auditDate === "string");
+  });
+
+  test("returns AI Partner tier for large team, high spend, multiple pain points", async () => {
+    const res = await postQuiz({ teamSize: 3, itSpend: 25000, painPoints: ["manual_work", "scaling", "security", "ai_automation"] });
+    assert.equal(res.status, 200);
+    assert.equal(res.body.tier, "AI Partner");
+    assert.ok(res.body.score >= 60, `Expected score >= 60, got ${res.body.score}`);
+  });
+
+  test("returns Growth tier for medium inputs", async () => {
+    const res = await postQuiz({ teamSize: 2, itSpend: 15000, painPoints: ["manual_work"] });
+    assert.equal(res.status, 200);
+    assert.ok(["Foundation", "Growth"].includes(res.body.tier));
+  });
+
+  test("caps score at 100", async () => {
+    const res = await postQuiz({ teamSize: 3, itSpend: 50000, painPoints: ["manual_work", "scaling", "security", "ai_automation"] });
+    assert.equal(res.status, 200);
+    assert.ok(res.body.score <= 100, `Expected score <= 100, got ${res.body.score}`);
+  });
+
+  test("rejects GET with 405", async () => {
+    const res = await fetch(`${base}/api/quiz`);
+    assert.equal(res.status, 405);
+  });
+
+  test("rejects missing teamSize", async () => {
+    const res = await postQuiz({ itSpend: 10000, painPoints: [] });
+    assert.equal(res.status, 400);
+    assert.ok(res.body.error.includes("teamSize"));
+  });
+
+  test("rejects invalid teamSize", async () => {
+    const res = await postQuiz({ teamSize: 5, itSpend: 10000, painPoints: [] });
+    assert.equal(res.status, 400);
+  });
+
+  test("rejects negative itSpend", async () => {
+    const res = await postQuiz({ teamSize: 1, itSpend: -1, painPoints: [] });
+    assert.equal(res.status, 400);
+  });
+
+  test("rejects invalid painPoints type", async () => {
+    const res = await postQuiz({ teamSize: 1, itSpend: 10000, painPoints: "manual" });
+    assert.equal(res.status, 400);
+  });
+
+  test("rejects unknown painPoint values", async () => {
+    const res = await postQuiz({ teamSize: 1, itSpend: 10000, painPoints: ["manual_work", "unknown_value"] });
+    assert.equal(res.status, 400);
+    assert.ok(res.body.error.includes("unknown_value"));
+  });
+
+  test("rejects more than 4 pain points", async () => {
+    const res = await postQuiz({ teamSize: 1, itSpend: 10000, painPoints: ["manual_work", "scaling", "security", "ai_automation", "manual_work"] });
+    assert.equal(res.status, 400);
+  });
+
+  test("persists audit to JSONL store", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "quiz-"));
+    const quizStore = join(dir, "quiz-audits.jsonl");
+    process.env.QUIZ_STORE = quizStore;
+    try {
+      const res = await postQuiz({ teamSize: 2, itSpend: 10000, painPoints: ["scaling"] });
+      assert.equal(res.status, 200);
+      // Give fire-and-forget persist a moment
+      await new Promise((r) => setTimeout(r, 100));
+      const raw = await readFile(quizStore, "utf8");
+      const lines = raw.trim().split("\n").filter(Boolean);
+      assert.ok(lines.length > 0);
+      const record = JSON.parse(lines[lines.length - 1]);
+      assert.equal(record.tier, res.body.tier);
+      assert.equal(record.score, res.body.score);
+      assert.ok(record.id);
+      assert.ok(record.created_at);
+    } finally {
+      delete process.env.QUIZ_STORE;
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("rate limits quiz submissions", async () => {
+    // The rate limit is 5/min per IP. Send 5 requests with the same IP.
+    const ip = nextIp();
+    for (let i = 0; i < 5; i++) {
+      const res = await postQuiz({ teamSize: 1, itSpend: 5000, painPoints: [] }, { "x-forwarded-for": ip });
+      assert.equal(res.status, 200, `Request ${i + 1} should succeed`);
+    }
+    const res = await postQuiz({ teamSize: 1, itSpend: 5000, painPoints: [] }, { "x-forwarded-for": ip });
+    assert.equal(res.status, 429);
+  });
+});
