@@ -39,7 +39,7 @@
     navAbout:         { en: 'About',         bm: 'Tentang' },
     navPricing:       { en: 'Pricing',       bm: 'Harga' },
     navContact:       { en: 'Contact Us',    bm: 'Hubungi Kami' },
-    navQuiz:          { en: 'Find Your Tier', bm: 'Cari Pelan Anda' },
+    navQuiz:          { en: 'Free IT Audit',  bm: 'Audit IT Percuma' },
     navAutonomousOps: { en: 'Autonomous Ops', bm: 'Autonomous Ops' },
     navCaseStudies:   { en: 'Case Studies',  bm: 'Kajian Kes' },
     navClientPortal:  { en: 'Client Portal', bm: 'Portal Pelanggan' },
@@ -307,7 +307,7 @@
     casesHeroDesc:    { en: 'Real results from real businesses. See how our managed IT services transform operations for Malaysian SMEs.', bm: 'Keputusan sebenar dari perniagaan sebenar. Lihat bagaimana perkhidmatan IT terurus kami mengubah operasi untuk SME Malaysia.' },
     casesCtaTitle:    { en: 'Ready to transform your IT?', bm: 'Bersedia mengubah IT anda?' },
     casesCtaDesc:     { en: "Start with a free assessment. We'll identify your biggest wins and show you exactly how managed IT can help.", bm: 'Mulakan dengan penilaian percuma. Kami akan mengenal pasti kemenangan terbesar anda dan menunjukkan bagaimana IT terurus boleh membantu.' },
-    casesFindTier:    { en: 'Find Your Tier', bm: 'Cari Pelan Anda' },
+    casesFindTier:    { en: 'Free IT Audit',  bm: 'Audit IT Percuma' },
     casesConsult:     { en: 'Book a Consultation', bm: 'Buat Temujanji' },
 
     // ---- CALCULATOR PAGE ----
