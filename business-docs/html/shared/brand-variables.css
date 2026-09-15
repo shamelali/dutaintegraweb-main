@@ -1,0 +1,345 @@
+/* Duta Integra Solutions - Brand Variables */
+/* Used across all business communication documents */
+
+:root {
+  /* Brand Colors */
+  --color-navy: #1E2D3D;
+  --color-navy-2: #16232F;
+  --color-navy-ink: #0F1822;
+  --color-gold: #C9A227;
+  --color-gold-2: #D4B03A;
+  --color-gold-3: #A8851B;
+  --color-gold-soft: rgba(201, 162, 39, 0.14);
+  --color-white: #FFFFFF;
+  --color-text: #1E2D3D;
+  --color-text-light: #6B7280;
+  --color-border: #E5E7EB;
+
+  /* Typography */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Layout */
+  --page-width: 210mm;
+  --page-height: 297mm;
+  --margin-top: 25mm;
+  --margin-bottom: 25mm;
+  --margin-left: 20mm;
+  --margin-right: 20mm;
+
+  /* Business Card */
+  --card-width: 90mm;
+  --card-height: 54mm;
+  --card-bleed: 3mm;
+
+  /* Typography Scale */
+  --text-xs: 10px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 32px;
+  --text-4xl: 40px;
+
+  /* Font Weights */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Print Base Styles */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Base Page Setup */
+.page {
+  width: var(--page-width);
+  height: var(--page-height);
+  margin: 0 auto;
+  background: var(--color-white);
+  font-family: var(--font-body);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  position: relative;
+}
+
+/* Letterhead Specific */
+.letterhead {
+  padding: var(--margin-top) var(--margin-right) var(--margin-bottom) var(--margin-left);
+}
+
+.letterhead__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.letterhead__logo {
+  width: 60px;
+  height: auto;
+}
+
+.letterhead__company-name {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-navy);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.letterhead__tagline {
+  font-size: var(--text-sm);
+  color: var(--color-gold);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: var(--space-xs) 0 0 0;
+}
+
+.letterhead__contact {
+  font-size: var(--text-xs);
+  color: var(--color-text-light);
+  text-align: right;
+  line-height: 1.8;
+}
+
+.letterhead__contact a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.letterhead__contact a:hover {
+  color: var(--color-gold);
+}
+
+.letterhead__body {
+  margin-top: var(--space-xl);
+}
+
+.letterhead__footer {
+  position: absolute;
+  bottom: var(--margin-bottom);
+  left: var(--margin-left);
+  right: var(--margin-right);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  color: var(--color-text-light);
+}
+
+.letterhead__reg-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.letterhead__watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  width: 60%;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.letterhead__watermark img {
+  width: 100%;
+  height: auto;
+}
+
+/* Business Card */
+.business-card {
+  width: var(--card-width);
+  height: var(--card-height);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.business-card__side {
+  width: 100%;
+  height: 100%;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.business-card__front {
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-ink) 100%);
+  color: var(--color-white);
+}
+
+.business-card__back {
+  background: var(--color-white);
+  color: var(--color-text);
+}
+
+.business-card__logo {
+  width: 40px;
+  height: auto;
+  margin-bottom: var(--space-md);
+}
+
+.business-card__name {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.business-card__title {
+  font-size: var(--text-sm);
+  color: var(--color-gold);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-md) 0;
+}
+
+.business-card__contact {
+  font-size: var(--text-xs);
+  line-height: 2;
+  opacity: 0.9;
+}
+
+.business-card__contact a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.business-card__qr {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto;
+}
+
+.business-card__tagline {
+  font-size: var(--text-xs);
+  color: var(--color-text-light);
+  text-align: center;
+  margin-top: var(--space-md);
+}
+
+/* Email Signature */
+.email-signature {
+  max-width: 600px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.email-signature__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.email-signature__logo {
+  width: 48px;
+  height: auto;
+}
+
+.email-signature__name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-navy);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.email-signature__title {
+  font-size: var(--text-xs);
+  color: var(--color-gold);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-md) 0;
+}
+
+.email-signature__divider {
+  width: 40px;
+  height: 2px;
+  background: var(--color-gold);
+  margin: var(--space-md) 0;
+}
+
+.email-signature__contact {
+  font-size: var(--text-xs);
+  color: var(--color-text-light);
+  line-height: 2;
+}
+
+.email-signature__contact a {
+  color: var(--color-navy);
+  text-decoration: none;
+}
+
+.email-signature__social {
+  margin-top: var(--space-md);
+}
+
+.email-signature__social a {
+  display: inline-block;
+  margin-right: var(--space-sm);
+  color: var(--color-gold);
+  text-decoration: none;
+}
+
+/* Language-specific adjustments */
+.lang-bm .letterhead__tagline::after {
+  content: "Rakan Kongsi AI & IT untuk PKS Malaysia";
+}
+
+.lang-en .letterhead__tagline::after {
+  content: "AI & IT Partner for Malaysian SMEs";
+}

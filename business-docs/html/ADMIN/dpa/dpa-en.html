@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Processing Addendum - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+  <style>
+    @media print {
+      .legal-doc { font-size: 10pt; line-height: 1.6; }
+      .legal-doc__watermark { display: none; }
+      .legal-doc__page-break { page-break-after: always; }
+      .legal-doc__no-break { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Data Processing Addendum</h1>
+        <p class="legal-doc__subtitle">PDPA / GDPR COMPLIANT</p>
+        <div class="legal-doc__meta">
+          <span>Document: DPA-{{DOC_NUMBER}}</span>
+          <span>Version: {{DOC_VERSION}}</span>
+          <span>Date: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <p class="legal-doc__intro">
+          This Data Processing Addendum ("<strong>DPA</strong>") is entered into on <strong>{{EFFECTIVE_DATE}}</strong> by and between:
+        </p>
+
+        <div class="legal-doc__parties">
+          <div class="legal-doc__party">
+            <h3 class="legal-doc__party-title">Data Controller</h3>
+            <p><strong>{{CLIENT_NAME}}</strong><br>
+            (hereinafter referred to as "<strong>Controller</strong>")</p>
+          </div>
+          <div class="legal-doc__party">
+            <h3 class="legal-doc__party-title">Data Processor</h3>
+            <p><strong>Duta Integra Solutions Sdn Bhd</strong><br>
+            Company Registration: {{COMPANY_REG_NO}}<br>
+            Address: Cyberjaya, Malaysia<br>
+            Email: {{COMPANY_EMAIL}}<br>
+            (hereinafter referred to as "<strong>Processor</strong>")</p>
+          </div>
+        </div>
+
+        <p>(Collectively the "<strong>Parties</strong>"). This DPA forms part of the Master Services Agreement ("<strong>MSA</strong>") dated {{MSA_DATE}} between the Parties.</p>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">1. Definitions</h2>
+          <p class="legal-doc__section-text">Capitalized terms have the meaning given in the MSA. Additionally:</p>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Personal Data:</strong> Any information relating to an identified or identifiable natural person ("<strong>Data Subject</strong>")</li>
+            <li class="legal-doc__list-item"><strong>Processing:</strong> Any operation on Personal Data (collection, recording, organization, storage, adaptation, retrieval, use, disclosure, erasure, etc.)</li>
+            <li class="legal-doc__list-item"><strong>Data Subject:</strong> The natural person to whom Personal Data relates</li>
+            <li class="legal-doc__list-item"><strong>Sub-processor:</strong> Any third party engaged by Processor to process Personal Data on Controller's behalf</li>
+            <li class="legal-doc__list-item"><strong>Personal Data Breach:</strong> Breach of security leading to accidental/unlawful destruction, loss, alteration, unauthorized disclosure, or access to Personal Data</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">2. Scope and Roles</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>2.1 Roles.</strong> Controller is the Data Controller. Processor is the Data Processor. The Parties acknowledge their respective roles and responsibilities under applicable data protection laws.</p>
+            <p class="legal-doc__clause-text"><strong>2.2 Applicable Laws.</strong> This DPA applies to processing subject to: (a) Malaysia's Personal Data Protection Act 2010 ("<strong>PDPA</strong>"); (b) EU GDPR where applicable; (c) other applicable data protection laws.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Processing Details</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Category</th><th>Details</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Categories of Data Subjects</td><td>{{DATA_SUBJECTS}}</td></tr>
+              <tr><td>Categories of Personal Data</th><td>{{PERSONAL_DATA_CATEGORIES}}</td></tr>
+              <tr><td>Sensitive/Special Category Data</td><td>{{SENSITIVE_DATA}}</td></tr>
+              <tr><td>Purpose of Processing</td><td>{{PROCESSING_PURPOSE}}</td></tr>
+              <tr><td>Duration of Processing</td><td>{{PROCESSING_DURATION}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">4. Processor's Obligations</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>4.1 Processing Instructions.</strong> Processor shall: (a) process Personal Data only on Controller's documented instructions; (b) not process for any other purpose; (c) inform Controller if instruction violates applicable law.</p>
+            <p class="legal-doc__clause-text"><strong>4.2 Confidentiality.</strong> Processor shall ensure all personnel processing Personal Data are subject to confidentiality obligations.</p>
+            <p class="legal-doc__clause-text"><strong>4.3 Security Measures.</strong> Processor shall implement appropriate technical and organizational measures (see Annex A), including: encryption at rest/transit, access controls, pseudonymization, regular testing, incident response procedures.</p>
+            <p class="legal-doc__clause-text"><strong>4.4 Personnel.</strong> Processor shall ensure: (a) personnel are bound by confidentiality; (b) receive regular data protection training; (c) access is on need-to-know basis.</p>
+            <p class="legal-doc__clause-text"><strong>4.5 Sub-processors.</strong> Processor shall: (a) not engage sub-processors without Controller's prior written consent; (b) impose equivalent obligations on sub-processors; (c) maintain updated list of sub-processors (Annex B); (d) remain fully liable for sub-processor acts/omissions.</p>
+            <p class="legal-doc__clause-text"><strong>4.6 Data Subject Rights.</strong> Processor shall assist Controller in fulfilling Data Subject rights (access, rectification, erasure, restriction, portability, objection, automated decision-making) within 10 business days of Controller's request.</p>
+            <p class="legal-doc__clause-text"><strong>4.7 Personal Data Breach.</strong> Processor shall notify Controller without undue delay (within 72 hours) of any Personal Data Breach, providing: nature, categories/number of data subjects/records, likely consequences, measures taken/proposed.</p>
+            <p class="legal-doc__clause-text"><strong>4.7 Records.</strong> Processor shall maintain records of processing activities and make available to Controller/supervisory authority upon request.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">5. International Transfers</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text">
+              Processor shall not transfer Personal Data outside Malaysia (or the EEA where GDPR applies) without Controller's prior written consent and appropriate safeguards (Standard Contractual Clauses, Binding Corporate Rules, adequacy decision, or other lawful mechanism).
+            </p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">6. Data Retention and Deletion</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>6.1 Retention.</strong> Processor shall retain Personal Data only for the duration of the MSA or as required by law.</p>
+            <p class="legal-doc__clause-text"><strong>6.2 Deletion/Return.</strong> Upon termination/expiry of MSA, Processor shall: (a) delete or return all Personal Data to Controller; (b) delete existing copies unless retention required by law; (c) provide written certification of deletion/return within 30 days.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">7. Audits and Inspections</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text">
+              Controller may audit Processor's compliance upon reasonable notice (minimum 10 business days), during business hours, with reasonable frequency (max once per 12 months unless breach suspected). Processor shall cooperate and provide access to relevant records, systems, and personnel. Costs borne by Controller unless material non-compliance found.
+            </p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">8. Liability and Indemnification</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text">
+              Processor's liability for DPA breaches is subject to the MSA's limitation of liability clause. Processor shall indemnify Controller for damages arising from Processor's breach of this DPA, subject to the MSA's liability cap.
+            </p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">9. Term and Termination</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text">
+              This DPA commences on the Effective Date and continues for the duration of the MSA. Upon MSA termination, Section 6 (Deletion/Return) survives. Either Party may terminate this DPA if the other materially breaches and fails to cure within 30 days.
+            </p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">10. General</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>10.1 Entire Agreement.</strong> This DPA + MSA = entire agreement on data processing.</p>
+            <p class="legal-doc__clause-text"><strong>10.2 Amendment.</strong> Written, signed by both Parties.</p>
+            <p class="legal-doc__clause-text"><strong>10.3 Governing Law.</strong> Laws of Malaysia.</p>
+            <p class="legal-doc__clause-text"><strong>10.4 Dispute Resolution.</strong> Per MSA.</p>
+            <p class="legal-doc__clause-text"><strong>10.5 Precedence.</strong> In case of conflict between this DPA and MSA, this DPA prevails on data protection matters.</p>
+          </div>
+        </section>
+
+        <div class="legal-doc__signature-block">
+          <p class="legal-doc__signature-intro">IN WITNESS WHEREOF, the Parties have executed this DPA as of the Effective Date.</p>
+
+          <div class="legal-doc__signature-row">
+            <div class="legal-doc__signature-column">
+              <div class="legal-doc__signature-line"></div>
+              <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd (Processor)</p>
+              <p class="legal-doc__signature-detail">Name: ___________________________</p>
+              <p class="legal-doc__signature-detail">Title: ___________________________</p>
+              <p class="legal-doc__signature-detail">Date: ___________________________</p>
+              <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+            </div>
+
+            <div class="legal-doc__signature-column">
+              <div class="legal-doc__signature-line"></div>
+              <p class="legal-doc__signature-label">{{CLIENT_NAME}} (Controller)</p>
+              <p class="legal-doc__signature-detail">Name: ___________________________</p>
+              <p class="legal-doc__signature-detail">Title: ___________________________</p>
+              <p class="legal-doc__signature-detail">Date: ___________________________</p>
+              <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | Confidential — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+
+        <!-- Annexes -->
+        <div class="legal-doc__page-break"></div>
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Annex A: Technical and Organizational Security Measures</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">Encryption: AES-256 at rest; TLS 1.2+ in transit</li>
+            <li class="legal-doc__list-item">Access Control: Role-based access, MFA for admin access, principle of least privilege</li>
+            <li class="legal-doc__list-item">Network Security: Firewalls, IDS/IPS, VPC isolation, WAF</li>
+            <li class="legal-doc__list-item">Vulnerability Management: Quarterly scans, annual penetration testing, patch management within 30 days</li>
+            <li class="legal-doc__list-item">Incident Response: 24/7 monitoring, 1-hour escalation, 72-hour breach notification</li>
+            <li class="legal-doc__list-item">Business Continuity: Daily backups, 4-hour RPO, 24-hour RTO, annual DR testing</li>
+            <li class="legal-doc__list-item">Personnel Security: Background checks, annual training, confidentiality agreements, need-to-know access</li>
+            <li class="legal-doc__list-item">Physical Security: SOC 2 Type II certified data centers, biometric access, 24/7 monitoring</li>
+            <li class="legal-doc__list-item">Certifications: ISO 27001, SOC 2 Type II, PCI DSS (where applicable)</li>
+          </ul>
+        </section>
+
+        <div class="legal-doc__page-break"></div>
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Annex B: Approved Sub-processors</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Sub-processor</th><th>Service</th><th>Location</th><th>Safeguards</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{SUBPROCESSOR_1}}</td><td>{{SUB_1_SERVICE}}</td><td>{{SUB_1_LOCATION}}</td><td>Standard Contractual Clauses</td></tr>
+              <tr><td>{{SUBPROCESSOR_2}}</td><td>{{SUB_2_SERVICE}}</td><td>{{SUB_2_LOCATION}}</td><td>Standard Contractual Clauses</td></tr>
+              <tr><td>{{SUBPROCESSOR_3}}</td><td>{{SUB_3_SERVICE}}</td><td>{{SUB_3_LOCATION}}</td><td>Standard Contractual Clauses</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | Confidential — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="dpa-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>

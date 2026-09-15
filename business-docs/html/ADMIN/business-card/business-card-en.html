@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duta Integra Solutions - Business Card</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/brand-variables.css">
+  <link rel="stylesheet" href="../shared/print-base.css">
+  <style>
+    .business-card__sheet {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 24px;
+    }
+
+    .business-card__side--print {
+      page-break-after: always;
+    }
+
+    .no-print { display: block; }
+    @media print {
+      .no-print { display: none !important; }
+      .business-card__sheet { display: none; }
+      .business-card__side--print { display: block; page-break-after: always; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Screen Preview -->
+  <div class="no-print">
+    <div style="text-align: center; padding: 24px; background: #F8FAFC; margin-bottom: 16px;">
+      <h1 style="font-family: 'Rajdhani', sans-serif; font-size: 24px; color: #1E2D3D; margin-bottom: 8px;">Business Card Preview</h1>
+      <p style="color: #6B7280; font-size: 14px;">Click "Print / Save as PDF" to generate print-ready cards</p>
+      <div style="margin-top: 16px;">
+        <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+        <a href="business-card-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+      </div>
+    </div>
+
+    <div class="business-card__sheet">
+      <div class="business-card business-card__front">
+        <div class="business-card__side">
+          <img src="../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="business-card__logo">
+          <h2 class="business-card__name">[Your Name]</h2>
+          <p class="business-card__title">[Your Title]</p>
+          <div class="business-card__contact">
+            <a href="tel:+601154034051">+60 11-5403 4051</a><br>
+            <a href="mailto:yourname@dutaintegra.my">yourname@dutaintegra.my</a><br>
+            <a href="https://dutaintegra.my">dutaintegra.my</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="business-card business-card__back">
+        <div class="business-card__side" style="justify-content: center; align-items: center; text-align: center;">
+          <div class="business-card__qr no-print" style="width: 64px; height: 64px; background: #E5E7EB; display: flex; align-items: center; justify-content: center; color: #6B7280; font-size: 10px;">[QR Code]</div>
+          <img src="../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" style="width: 48px; height: auto; margin-bottom: 12px; opacity: 0.5;">
+          <p class="business-card__tagline">AI & IT Partner for Malaysian SMEs</p>
+          <p class="business-card__tagline">Cyberjaya, Malaysia</p>
+          <p class="business-card__tagline">dutaintegra.my</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Print Versions (hidden on screen, shown on print) -->
+    <div class="business-card business-card__side--print business-card__front">
+      <div class="business-card__side">
+        <img src="../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="business-card__logo">
+        <h2 class="business-card__name">[Your Name]</h2>
+        <p class="business-card__title">[Your Title]</p>
+        <div class="business-card__contact">
+          <a href="tel:+601154034051">+60 11-5403 4051</a><br>
+          <a href="mailto:yourname@dutaintegra.my">yourname@dutaintegra.my</a><br>
+          <a href="https://dutaintegra.my">dutaintegra.my</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="business-card business-card__side--print business-card__back">
+      <div class="business-card__side" style="justify-content: center; align-items: center; text-align: center;">
+        <div style="width: 64px; height: 64px; background: #E5E7EB; display: flex; align-items: center; justify-content: center; color: #6B7280; font-size: 10px; margin: 0 auto 12px;">[QR Code]</div>
+        <img src="../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" style="width: 48px; height: auto; margin-bottom: 12px; opacity: 0.5;">
+        <p class="business-card__tagline">AI & IT Partner for Malaysian SMEs</p>
+        <p class="business-card__tagline">Cyberjaya, Malaysia</p>
+        <p class="business-card__tagline">dutaintegra.my</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="business-card-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>

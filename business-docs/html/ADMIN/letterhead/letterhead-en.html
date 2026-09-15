@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duta Integra Solutions - Letterhead</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/brand-variables.css">
+  <link rel="stylesheet" href="../shared/print-base.css">
+  <style>
+    .letterhead__watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      width: 60%;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .letterhead__watermark img {
+      width: 100%;
+      height: auto;
+    }
+    .no-print { display: block; }
+    @media print { .no-print { display: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="page letterhead">
+    <div class="letterhead__watermark">
+      <img src="../shared/assets/logo-primary.svg" alt="">
+    </div>
+
+    <div class="letterhead__content">
+      <header class="letterhead__header">
+        <div class="letterhead__brand">
+          <img src="../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="letterhead__logo">
+          <div>
+            <h1 class="letterhead__company-name">Duta Integra Solutions</h1>
+            <p class="letterhead__tagline">AI & IT Partner for Malaysian SMEs</p>
+          </div>
+        </div>
+        <address class="letterhead__contact">
+          <strong>Cyberjaya, Malaysia</strong><br>
+          <a href="tel:+601154034051">+60 11-5403 4051</a><br>
+          <a href="mailto:hello@dutaintegra.my">hello@dutaintegra.my</a><br>
+          <a href="https://dutaintegra.my">dutaintegra.my</a>
+        </address>
+      </header>
+
+      <main class="letterhead__body">
+        <!-- Letter content goes here -->
+        <div class="no-print" style="color: #6B7280; font-size: 10pt; font-style: italic; text-align: center; padding: 40px;">
+          [Letter content will appear here when printed on this letterhead]
+        </div>
+      </main>
+
+      <footer class="letterhead__footer">
+        <div class="letterhead__reg-info">
+          <span>Duta Integra Solutions Sdn Bhd</span>
+          <span>Company Registration: [Registration Number]</span>
+        </div>
+        <span>© 2025 Duta Integra Solutions Sdn Bhd. All rights reserved.</span>
+      </footer>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="letterhead-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>

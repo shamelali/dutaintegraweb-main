@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Tax Invoice</h1>
+        <p class="legal-doc__subtitle">SST REG. NO: {{SST_REG_NO}}</p>
+        <div class="legal-doc__meta">
+          <span>Invoice #: {{INVOICE_NUMBER}}</span>
+          <span>Date: {{INVOICE_DATE}}</span>
+          <span>Due Date: {{DUE_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <div class="invoice__header-info">
+          <div class="invoice__from">
+            <h3 class="legal-doc__section-title" style="margin-bottom: 8px;">From:</h3>
+            <p><strong>Duta Integra Solutions Sdn Bhd</strong><br>
+            Cyberjaya, Malaysia<br>
+            hello@dutaintegra.my<br>
+            +60 11-5403 4051<br>
+            SST Reg: {{SST_REG_NO}}<br>
+            Reg: {{COMPANY_REG_NO}}</p>
+          </div>
+          <div class="invoice__to">
+            <h3 class="legal-doc__section-title" style="margin-bottom: 8px;">Bill To:</h3>
+            <p><strong>{{CLIENT_NAME}}</strong><br>
+            {{CLIENT_ADDRESS}}<br>
+            {{CLIENT_EMAIL}}<br>
+            {{CLIENT_PHONE}}<br>
+            {{CLIENT_SST_NO}}</p>
+          </div>
+        </div>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Invoice Details</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Invoice Number</th><td>{{INVOICE_NUMBER}}</td></tr>
+              <tr><th>Invoice Date</th><td>{{INVOICE_DATE}}</td></tr>
+              <tr><th>Due Date</th><td>{{DUE_DATE}}</td></tr>
+              <tr><th>Payment Terms</th><td>{{PAYMENT_TERMS}} (Default: Net 30)</td></tr>
+              <tr><th>PO Number</th><td>{{PO_NUMBER}}</td></tr>
+              <tr><th>Project Reference</th><td>{{PROJECT_NUMBER}} - {{PROJECT_NAME}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Line Items</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Description</th><th style="text-align: center;">Qty</th><th style="text-align: right;">Unit Price (RM)</th><th style="text-align: right;">Total (RM)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{ITEM_1_DESC}}</td><td style="text-align: center;">{{ITEM_1_QTY}}</td><td style="text-align: right;">{{ITEM_1_UNIT}}</td><td style="text-align: right;">{{ITEM_1_TOTAL}}</td></tr>
+              <tr><td>2</td><td>{{ITEM_2_DESC}}</td><td style="text-align: center;">{{ITEM_2_QTY}}</td><td style="text-align: right;">{{ITEM_2_UNIT}}</td><td style="text-align: right;">{{ITEM_2_TOTAL}}</td></tr>
+              <tr><td>3</td><td>{{ITEM_3_DESC}}</td><td style="text-align: center;">{{ITEM_3_QTY}}</td><td style="text-align: right;">{{ITEM_3_UNIT}}</td><td style="text-align: right;">{{ITEM_3_TOTAL}}</td></tr>
+              <tr><td>4</td><td>{{ITEM_4_DESC}}</td><td style="text-align: center;">{{ITEM_4_QTY}}</td><td style="text-align: right;">{{ITEM_4_UNIT}}</td><td style="text-align: right;">{{ITEM_4_TOTAL}}</td></tr>
+              <tr><td>5</td><td>{{ITEM_5_DESC}}</td><td style="text-align: center;">{{ITEM_5_QTY}}</td><td style="text-align: right;">{{ITEM_5_UNIT}}</td><td style="text-align: right;">{{ITEM_5_TOTAL}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Invoice Summary</h2>
+          <table class="table" style="max-width: 400px; margin-left: auto;">
+            <tbody>
+              <tr><td>Subtotal</td><td style="text-align: right;">{{SUBTOTAL}}</td></tr>
+              <tr><td>SST (8%)</td><td style="text-align: right;">{{SST_AMOUNT}}</td></tr>
+              <tr style="border-top: 2px solid var(--color-gold); font-weight: 700; font-size: 12pt;">
+                <td>Total Amount Due</td><td style="text-align: right;">{{TOTAL_AMOUNT}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Payment Instructions</h2>
+          <table class="table" style="max-width: 500px;">
+            <tbody>
+              <tr><th style="width: 30%;">Bank</th><td>{{BANK_NAME}}</td></tr>
+              <tr><th>Account Name</th><td>Duta Integra Solutions Sdn Bhd</td></tr>
+              <tr><th>Account Number</th><td>{{ACCOUNT_NUMBER}}</td></tr>
+              <tr><th>SWIFT/BIC</th><td>{{SWIFT_CODE}}</td></tr>
+              <tr><th>Reference</th><td>{{INVOICE_NUMBER}} - {{CLIENT_NAME}}</td></tr>
+            </tbody>
+          </table>
+          <p class="legal-doc__section-text" style="margin-top: 16px;">
+            <strong>Payment Terms:</strong> {{PAYMENT_TERMS}} from invoice date. Late payments subject to 1.5% per month interest.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Notes</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">Please include the invoice number as payment reference.</li>
+            <li class="legal-doc__list-item">SST Registration No: {{SST_REG_NO}} | Company Reg: {{COMPANY_REG_NO}}</li>
+            <li class="legal-doc__list-item">All amounts in Malaysian Ringgit (MYR).</li>
+            <li class="legal-doc__list-item">Payment via bank transfer preferred. Cheques payable to "Duta Integra Solutions Sdn Bhd".</li>
+            <li class="legal-doc__list-item">For queries, contact: hello@dutaintegra.my or +60 11-5403 4051</li>
+          </ul>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | Invoice {{INVOICE_NUMBER}} | {{INVOICE_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="invoice-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>
