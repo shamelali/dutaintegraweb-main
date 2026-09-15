@@ -21,3 +21,12 @@ npm-debug.log*
 # prevent git bundles from being committed
 *.bundle
 .vercel
+
+# redundant backups (git has full history)
+Web-backup-*/
+
+# binary docs
+*.docx
+
+# personal tool configs
+obsidian-knowledge-base/
