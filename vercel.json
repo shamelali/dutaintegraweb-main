@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "",
+  "buildCommand": "npm run build:web",
   "outputDirectory": "Web",
   "installCommand": "",
   "headers": [
@@ -43,6 +43,7 @@
     { "source": "/admin/clients", "destination": "/api/gateway" },
     { "source": "/api/ops/feed", "destination": "/api/gateway" },
     { "source": "/api/ops/consent", "destination": "/api/gateway" },
-    { "source": "/api/ops/events", "destination": "/api/gateway" }
+    { "source": "/api/ops/events", "destination": "/api/gateway" },
+    { "source": "/((?!api/|admin/|assets/|.*\\.).*)", "destination": "/index.html" }
   ]
 }

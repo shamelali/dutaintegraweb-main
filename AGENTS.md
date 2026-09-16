@@ -8,76 +8,87 @@ Marketing site + lead-capture API for dutaintegra.my. Node >= 22, ES modules,
 | Path | What it is |
 |---|---|
 | `Web/` | Static HTML. `vercel.json` sets `outputDirectory: "Web"`, so this is what deploys. |
-| `Web/assets/index-*.js` | A **built React bundle** (380 KB). `Web/index.html` is a Vite build artifact, not hand-written. |
+| `Web/assets/index-*.js` | The **built React bundle**, produced by `web-new/`. `Web/index.html` is a Vite build artifact, not hand-written. **Do not edit by hand — regenerate with `npm run build:web`.** |
 | `server/` | The Node server: `handler.mjs` (routing + most endpoints), `portal.mjs` (client auth), `enquiries.mjs` (storage), `stats.mjs`, `digest.mjs`, `autonomous-ops.mjs` |
 | `api/gateway.js` | Vercel serverless entrypoint. Just re-exports `handle` from `server/handler.mjs`. |
 | `api/audit.js` | Separate self-contained audit tool, wired to its own rewrites |
 | `vercel.json` | Deployment + the security headers production actually enforces |
-| `web-new/` | React 19 + Vite + Tailwind 4 source, 6 routes. Not built by `vercel.json`. |
+| `web-new/` | React 19 + Vite + Tailwind 4 source, 7 routes. This **is** the canonical frontend; `npm run build:web` builds it into `Web/`. |
+| `scripts/sync-web.mjs` | Copies `web-new/dist` into `Web/`, replacing only `index.html`, `assets/index-*.{js,css}`, and root public files. Leaves the standalone static pages alone. |
 
-## There are two frontends and they collide
+## Frontend: `web-new/` is canonical
 
-This is the single most confusing thing in the repo. Neither the READMEs nor
-`HANDOFF.md` explain it.
+**Resolved: React (`web-new/`) wins.** The other `Web/*.html` pages are
+standalone static pages (tools, legal, landing pages) that are still served
+directly and are *not* part of the React app. `Web/index.html` and
+`Web/assets/index-*` are generated — never edit them directly.
 
-`Web/` is a **mix**: `index.html` is a React build artifact (`<div id="root">`
-plus a hashed `/assets/index-*.js`), while the other 23 pages are hand-written
-HTML with inline scripts. So React and static HTML are shipped side by side in
-the same directory.
+`npm run build:web` runs `npm --prefix web-new ci && npm --prefix web-new run
+build && node scripts/sync-web.mjs`, and `vercel.json` sets
+`buildCommand: "npm run build:web"`. So Vercel now builds React from source on
+every deploy instead of shipping whatever bundle happened to be committed.
 
-`web-new/` is the React source for that bundle, with routes `/`, `/services`,
-`/about`, `/pricing`, `/contact`, `/quiz` — all six of which **also exist as
-static `.html` files** in `Web/`. Two implementations of the same six pages.
+React routes: `/`, `/services`, `/about`, `/pricing`, `/contact`, `/quiz`.
 
 Production (`https://www.dutaintegra.my`):
 
 | Path | Result |
 |---|---|
-| `/` | 200, serves the React bundle |
-| `/services`, `/about`, `/pricing`, `/contact`, `/quiz`, `/cases`, `/calculator`, `/faq` | **404** |
+| `/`, `/services`, `/about`, `/pricing`, `/contact`, `/quiz` | 200, serve the React app |
+| `/audit.html`, `/cases.html`, other `.html` pages | 200, standalone static pages |
 
-The clean-URL routes 404 because `vercel.json` has no SPA fallback rewrite;
-static pages are only reachable with an explicit `.html`. The React navbar
-links to `/services`, `/about`, `/pricing`, `/quiz`, `/contact` — so the live
-homepage's own navigation already 404s.
+### The SPA fallback rewrite
 
-Some static pages link clean URLs (`/services`, `/work`, `/pricing`, `/about`,
-`/contact`, `/audit`) that also 404; `79` references still use `services.html`.
-`/work` has no page at all in either frontend.
+Clean URLs previously 404'd because there was no SPA fallback. The last entry
+in `vercel.json` `rewrites` is:
 
-**Nothing here is settled.** Do not assume `Web/` is canonical just because it
-deploys — the deployed homepage is React. Decide which frontend is real, make
-one win, and delete the other. `bf66f32` previously turned the build command
-off to dodge pre-existing TypeScript errors in `web-new/`, which is worth
-resolving rather than working around.
+```json
+{ "source": "/((?!api/|admin/|assets/|.*\\.).*)", "destination": "/index.html" }
+```
+
+Order matters — Vercel applies rewrites top to bottom, so `/api/*` and
+`/admin/*` rules must stay *above* this one. The negative lookahead excludes
+`api/`, `admin/`, `assets/`, and anything containing a dot, which is what keeps
+every existing static page and asset resolving to itself. If you add a static
+page under a path with no extension, add it to the lookahead or it will be
+swallowed by the fallback.
+
+### Fonts
+
+`web-new/src/index.css` declares `--font-heading: "Syne"` and
+`--font-sans: "Inter"`, and `web-new/index.html` loads both from Google Fonts.
+The production CSP already allows `fonts.googleapis.com` (`style-src`) and
+`fonts.gstatic.com` (`font-src`), so no CSP change is needed. `Web/audit.html`
+loads Google Fonts separately and is the only static page that does.
 
 ## Where the site actually breaks in production
 
 Verified against `https://www.dutaintegra.my`, not inferred from config.
 
-**Every clean URL 404s.** `vercel.json` has no SPA fallback rewrite, so only
-`/` (and explicit `.html` paths) resolve:
+**Clean URLs 404'd.** Fixed by the SPA fallback rewrite described above. Note
+the legacy pages still link the `.html` variants (`79` references to
+`services.html` and similar); those keep working but a visitor who lands on a
+static page navigates the static site, not React.
 
 | Path | Result |
 |---|---|
-| `/` | 200 — serves the React bundle |
+| `/`, `/services`, `/about`, `/pricing`, `/contact`, `/quiz` | 200 — serve the React app (via the SPA fallback) |
 | `/services.html`, `/about.html`, `/pricing.html`, `/cases.html`, `/calculator.html`, `/audit.html` | 200 — static HTML |
-| `/services`, `/about`, `/pricing`, `/contact`, `/quiz`, `/cases`, `/calculator`, `/faq` | **404** |
 
-The React navbar links to `/services`, `/about`, `/pricing`, `/quiz`,
-`/contact`, so the live homepage's own menu 404s. Static pages also link clean
-URLs (`/services`, `/work`, `/audit`, `/about`, `/pricing`, `/contact`); `/work`
-has no page at all in either frontend. 79 references still use `services.html`.
+Both sets now resolve. The `.html` variants are the *legacy* static
+implementations of pages that React also serves; React is canonical, and the
+static ones remain for deep links and standalone tools.
 
-**Fonts are declared but never loaded, in both frontends.**
+**Fonts.** Both frontends now load the fonts they declare.
 
 - `Web/audit.html` is the only static page that requests Google Fonts
-  (`fonts.googleapis.com` + `fonts.gstatic.com`). The CSP blocked both, so it
-  rendered in fallback fonts. Fixed in `c82e2a4`.
-- The React bundle declares `--font-sans: "Inter"` and
-  `--font-heading: "Syne"` but ships **no `@font-face`, no Google Fonts import,
-  and no `.woff` file** — so `/` renders in fallback fonts too, and no CSP
-  change affects that. Fixing it means adding the font sources to `web-new/`.
+  (`fonts.googleapis.com` + `fonts.gstatic.com`). The CSP used to block both, so
+  it rendered in fallback fonts. Fixed in `c82e2a4`.
+- The React app declares `--font-sans: "Inter"` and `--font-heading: "Syne"` and
+  **now loads both** via `<link>` tags in `web-new/index.html`. Previously it
+  shipped no `@font-face`, no import, and no `.woff`, so it rendered in fallback
+  fonts. The existing CSP already allowed both origins, so no policy change was
+  needed.
 
 ## The thing that trips people up
 
@@ -94,14 +105,17 @@ Two consequences worth remembering:
    `handler.mjs`. Editing one does not affect the other. They are intentionally
    kept in sync via `SECURITY_HEADERS` in `handler.mjs`; if you change a policy,
    change both.
-2. `web-new/` builds nothing in production (`buildCommand: ""`,
-   `outputDirectory: "Web"`). Decide which is canonical before investing there.
+2. Vercel runs `buildCommand: "npm run build:web"` before uploading, so the
+   committed `Web/index.html` + `Web/assets/index-*` are **build outputs**. They
+   are committed anyway so the repo works without a build step; regenerate them
+   with `npm run build:web` rather than editing them.
 
 ## Workflow
 
 ```bash
 npm test            # 89 tests, node:test, no deps
 npm start           # loads .env via --env-file-if-exists
+npm run build:web   # build web-new/ into Web/ (the deploy artifact)
 ```
 
 `npm start`/`dev` pass `--env-file-if-exists=.env`, so a missing `.env` is fine.

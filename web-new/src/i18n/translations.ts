@@ -208,8 +208,8 @@ export const translations = {
     bm: "Milikan Malaysia",
   },
   idxFooterDesc: {
-    en: "Your trusted AI and IT partner in Malaysia. We help SMEs modernize, automate, and grow through smart technology.",
-    bm: "Rakan kongsi AI dan IT anda yang dipercayai di Malaysia. Kami membantu SME memodenkan, mengautomasi, dan berkembang melalui teknologi pintar.",
+    en: "Your trusted AI and IT partner in Malaysia. We help SMEs modernise, automate, and grow through smart technology.",
+    bm: "Rakan kongsi AI dan IT kepercayaan anda di Malaysia. Kami membantu SME memodenkan, mengautomasi, dan berkembang melalui teknologi cerdik.",
   },
   idxFooterCompany: {
     en: "Company",
@@ -247,21 +247,13 @@ export const translations = {
     en: "© 2026 Duta Integra Solutions Sdn Bhd. All rights reserved. | Tamarind Suites, Cyberjaya, Selangor",
     bm: "© 2026 Duta Integra Solutions Sdn Bhd. Hak cipta terpelihara. | Tamarind Suites, Cyberjaya, Selangor",
   },
-  idxFooterDesc: {
-    en: "Your trusted AI and IT partner in Malaysia. We help SMEs modernise, automate, and grow through smart technology.",
-    bm: "Rakan kongsi AI dan IT kepercayaan anda di Malaysia. Kami membantu SME memodenkan, mengautomasi, dan berkembang melalui teknologi cerdik.",
-  },
-  idxFooterCompany: {
-    en: "Company",
-    bm: "Syarikat",
-  },
-  idxFooterServices: {
-    en: "Services",
-    bm: "Perkhidmatan",
-  },
   svcHeroLabel: {
     en: "Our Services",
     bm: "Perkhidmatan Kami",
+  },
+  svcHeroDesc: {
+    en: "From AI software to managed IT and cybersecurity, we cover the technology your business runs on — so you can focus on running it.",
+    bm: "Daripada perisian AI kepada IT terurus dan keselamatan siber, kami melindungi teknologi yang menjalankan perniagaan anda — supaya anda boleh fokus menjalankannya.",
   },
   svcHeroTitle: {
     en: "Everything Your Business Needs to Thrive Digitally",
@@ -483,6 +475,10 @@ export const translations = {
     en: "Not Sure Which Service You Need?",
     bm: "Tidak Pasti Perkhidmatan Yang Anda Perlukan?",
   },
+  svcCtaDesc: {
+    en: "Tell us what you're trying to solve and we'll recommend the right mix of services — no obligation.",
+    bm: "Beritahu kami apa yang ingin anda selesaikan dan kami akan syorkan gabungan perkhidmatan yang sesuai — tanpa kewajipan.",
+  },
   svcCtaBtn1: {
     en: "Book Free Consultation",
     bm: "Buat Temujanji Percuma",
@@ -495,9 +491,25 @@ export const translations = {
     en: "About Us",
     bm: "Tentang Kami",
   },
+  aboutHeroDesc: {
+    en: "A Malaysian-owned technology partner helping SMEs modernise with AI, automation, and dependable IT — built on straight answers and work that lasts.",
+    bm: "Rakan teknologi milik Malaysia yang membantu SME memodenkan perniagaan dengan AI, automasi, dan IT yang boleh diharap — berasaskan jawapan jujur dan kerja yang tahan lama.",
+  },
   aboutHeroTitle: {
     en: "Technology With a Malaysian Heart",
     bm: "Teknologi Dengan Hati Malaysia",
+  },
+  aboutStory1: {
+    en: "Duta Integra started with a simple observation: Malaysian SMEs were being sold technology they didn't need, by people who never explained it.",
+    bm: "Duta Integra bermula dengan satu pemerhatian mudah: SME Malaysia dijual teknologi yang mereka tidak perlukan, oleh pihak yang tidak pernah menjelaskannya.",
+  },
+  aboutStory2: {
+    en: "After years building systems for larger organisations, I kept meeting business owners who were stuck — paying for tools nobody used and systems nobody maintained.",
+    bm: "Selepas bertahun-tahun membina sistem untuk organisasi besar, saya terus bertemu pemilik perniagaan yang tersekat — membayar untuk alat yang tidak digunakan dan sistem yang tidak diselenggara.",
+  },
+  aboutStory3: {
+    en: "So we built the partner we wished existed: one that explains the trade-offs, rightsizes the solution, and stays accountable after go-live.",
+    bm: "Jadi kami bina rakan kongsi yang kami harap ada: satu yang menjelaskan pilihan, menyesuaikan penyelesaian mengikut keperluan, dan terus bertanggungjawab selepas sistem berjalan.",
   },
   aboutStoryTitle: {
     en: "Our Story",
@@ -571,9 +583,21 @@ export const translations = {
     en: "Why I Started Duta Integra",
     bm: "Mengapa Saya Menubuhkan Duta Integra",
   },
+  aboutFounderP1: {
+    en: "I spent years watching capable Malaysian businesses lose time and money to technology that was chosen for them rather than with them. Long contracts, unexplained invoices, and systems that quietly stopped working — because nobody was accountable once the deal was signed.",
+    bm: "Saya menghabiskan bertahun-tahun melihat perniagaan Malaysia yang berkemampuan kehilangan masa dan wang kerana teknologi yang dipilih untuk mereka, bukan bersama mereka. Kontrak panjang, invois yang tidak dijelaskan, dan sistem yang senyap-senyap berhenti berfungsi — kerana tiada sesiapa bertanggungjawab selepas perjanjian ditandatangani.",
+  },
+  aboutFounderP2: {
+    en: "Duta Integra exists to be the opposite: we say what we'd do ourselves, price it plainly, and stay on the hook. If something we built isn't working, that's our problem to fix — not yours to discover.",
+    bm: "Duta Integra wujud untuk menjadi sebaliknya: kami katakan apa yang kami sendiri akan lakukan, letakkan harga secara jelas, dan terus bertanggungjawab. Jika sesuatu yang kami bina tidak berfungsi, itu masalah kami untuk dibaiki — bukan untuk anda temui sendiri.",
+  },
   aboutFounderRole: {
     en: "Founder & CEO",
     bm: "Pengasas & CEO",
+  },
+  aboutCtaDesc: {
+    en: "Whether you need a system built, your IT steadied, or a straight answer about where to start — we're happy to talk it through.",
+    bm: "Sama ada anda perlukan sistem dibina, IT anda distabilkan, atau jawapan jujur tentang dari mana hendak bermula — kami sedia berbincang.",
   },
   aboutCtaTitle: {
     en: "Want to Know More?",
@@ -811,6 +835,14 @@ export const translations = {
     en: "Full audit plus policy documentation and staff training to ensure compliance.",
     bm: "Audit penuh ditambah dokumentasi dasar dan latihan kakitangan untuk memastikan pematuhan.",
   },
+  priceCtaTitle: {
+    en: "Not Sure What's Right for You?",
+    bm: "Tidak Pasti Apa Yang Sesuai Untuk Anda?",
+  },
+  priceCtaDesc: {
+    en: "Every business is different. Tell us your setup and we'll put together a plan that fits — with no lock-in and no surprises.",
+    bm: "Setiap perniagaan berbeza. Beritahu kami keadaan anda dan kami akan sediakan pelan yang sesuai — tanpa ikatan dan tanpa kejutan.",
+  },
   priceCtaBtn1: {
     en: "Request Custom Quote",
     bm: "Minta Sebut Harga Tersuai",
@@ -822,6 +854,98 @@ export const translations = {
   contactHeroLabel: {
     en: "Contact Us",
     bm: "Hubungi Kami",
+  },
+  contactHeroDesc: {
+    en: "Tell us what you're working on. We'll come back with a straight answer and a clear next step — usually within one business day.",
+    bm: "Beritahu kami apa yang sedang anda usahakan. Kami akan balas dengan jawapan jujur dan langkah seterusnya yang jelas — biasanya dalam satu hari bekerja.",
+  },
+  contactHeroTitle: {
+    en: "Let's Start a Conversation",
+    bm: "Mari Mulakan Perbualan",
+  },
+  contactWhatsappTitle: {
+    en: "WhatsApp",
+    bm: "WhatsApp",
+  },
+  contactWhatsappDesc: {
+    en: "Fastest way to reach us — message us directly for a quick reply.",
+    bm: "Cara terpantas untuk menghubungi kami — hantar mesej terus untuk balasan pantas.",
+  },
+  contactEmailTitle: {
+    en: "Email",
+    bm: "Emel",
+  },
+  contactEmailDesc: {
+    en: "Prefer email? Send us the details and we'll respond in full.",
+    bm: "Lebih suka emel? Hantar butiran kepada kami dan kami akan membalas dengan lengkap.",
+  },
+  contactHoursTitle: {
+    en: "Business Hours",
+    bm: "Waktu Perniagaan",
+  },
+  contactHoursDesc: {
+    en: "Monday – Friday, 9am – 6pm MYT",
+    bm: "Isnin – Jumaat, 9pagi – 6petang MYT",
+  },
+  contactAddressTitle: {
+    en: "Office Location",
+    bm: "Lokasi Pejabat",
+  },
+  contactAddress: {
+    en: "Tamarind Suites, Cyberjaya, Selangor, Malaysia",
+    bm: "Tamarind Suites, Cyberjaya, Selangor, Malaysia",
+  },
+  contactFormSub: {
+    en: "Fill in the form below and we'll get back to you within one business day.",
+    bm: "Isi borang di bawah dan kami akan menghubungi anda dalam satu hari bekerja.",
+  },
+  contactFullName: {
+    en: "Full Name",
+    bm: "Nama Penuh",
+  },
+  contactServicePlaceholder: {
+    en: "Select a service...",
+    bm: "Pilih perkhidmatan...",
+  },
+  contactService: {
+    en: "What are you interested in?",
+    bm: "Apa yang anda minati?",
+  },
+  contactServiceAi: {
+    en: "AI Software Development",
+    bm: "Pembangunan Perisian AI",
+  },
+  contactServiceManaged: {
+    en: "Managed IT Services",
+    bm: "Perkhidmatan IT Terurus",
+  },
+  contactServiceCloud: {
+    en: "Cloud Migration",
+    bm: "Migrasi Awan",
+  },
+  contactServiceSecurity: {
+    en: "IT Security & PDPA Compliance",
+    bm: "Keselamatan IT & Pematuhan PDPA",
+  },
+  contactServiceCustom: {
+    en: "Custom / Multiple Services",
+    bm: "Tersuai / Pelbagai Perkhidmatan",
+  },
+  contactMessage: {
+    en: "Tell us about your business & needs",
+    bm: "Ceritakan tentang perniagaan & keperluan anda",
+  },
+  contactMessagePlaceholder: {
+    en: "What are you trying to solve? Share as much or as little as you like.",
+    bm: "Apa yang ingin anda selesaikan? Kongsi sebanyak atau sedikit yang anda mahu.",
+  },
+  contactSending: {
+    en: "Sending...",
+    bm: "Menghantar...",
+  },
+  contactPrivacyNote: {
+    en: "We'll only use your details to respond to this enquiry. No spam, no lists.",
+    bm: "Kami hanya akan menggunakan butiran anda untuk membalas pertanyaan ini. Tiada spam, tiada senarai.",
   },
   contactInfoTitle: {
     en: "Get in Touch",
