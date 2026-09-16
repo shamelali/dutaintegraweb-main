@@ -158,6 +158,21 @@ than a workflow defect. Check that before assuming a red X means broken code.
 health probe is deterministic, so an agent-driven run would burn tokens for no
 benefit.
 
+Deployed:
+
+| Automation | ID | Schedule |
+|---|---|---|
+| DI uptime + deploy-integrity watch | `1aebf583-b3f9-44d3-af7f-227398cedf4a` | `*/15 * * * *` UTC |
+
+Deploying a change means rebuilding the tarball and re-uploading, which creates
+a *new* automation — the tarball is snapshotted at upload time, so editing
+`automations/uptime-watch/main.py` in the repo changes nothing until redeployed.
+Uploads are capped at 1 MB.
+
+Alerting needs a secret named `ALERT_WEBHOOK_URL` (a Slack incoming webhook
+works). It is fetched at runtime, so adding it later requires no redeploy. Until
+it exists the watch still runs and records history; it just reports silently.
+
 ## Conventions
 
 **Rate limiting.** `rateLimit(key, now, limit, windowMs)` is module-level state
