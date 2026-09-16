@@ -32,7 +32,7 @@ tests use only the standard library.
 ## Run it
 
 ```bash
-cp .env.example .env   # then set CONTACT_INBOX_EMAIL
+cp .env.example .env   # then uncomment and set CONTACT_INBOX_EMAIL
 npm start              # serves http://0.0.0.0:3000
 npm run dev            # same, with --watch
 ```
