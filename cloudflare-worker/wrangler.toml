@@ -1,0 +1,19 @@
+name = "dutaintegra-worker"
+main = "src/index.js"
+compatibility_date = "2026-09-15"
+
+# Bind the Web directory as assets
+[assets]
+directory = "../Web"
+binding = "ASSETS"
+
+# Optional: KV namespace for storing form submissions
+# Uncomment and set the ID after creating the KV namespace
+# [[kv_namespaces]]
+# binding = "ENQUIRY_STORE"
+# id = "your-kv-namespace-id-here"
+
+# Optional: For email sending (if using external service)
+[vars]
+# CONTACT_INBOX_EMAIL = "your-email@example.com"
+# ADMIN_TOKEN = "your-admin-token"

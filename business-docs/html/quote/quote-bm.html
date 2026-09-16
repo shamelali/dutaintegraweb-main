@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anggaran / Kutipan Harga - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Anggaran / Kutipan Harga</h1>
+        <p class="legal-doc__subtitle">SAH SELAMA 30 HARI</p>
+        <div class="legal-doc__meta">
+          <span>Anggaran #: {{QUOTE_NUMBER}}</span>
+          <span>Versi: {{DOC_VERSION}}</span>
+          <span>Tarikh: {{DOC_DATE}}</span>
+          <span>Sah Sehingke: {{VALID_UNTIL}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <div class="quote__header-info">
+          <div class="quote__from">
+            <h3 class="legal-doc__section-title" style="margin-bottom: 8px;">Dari:</h3>
+            <p><strong>Duta Integra Solutions Sdn Bhd</strong><br>
+            Cyberjaya, Malaysia<br>
+            hello@dutaintegra.my<br>
+            +60 11-5403 4051<br>
+            Reg: {{COMPANY_REG_NO}}</p>
+          </div>
+          <div class="quote__to">
+            <h3 class="legal-doc__section-title" style="margin-bottom: 8px;">Kepada:</h3>
+            <p><strong>{{CLIENT_NAME}}</strong><br>
+            {{CLIENT_ADDRESS}}<br>
+            {{CLIENT_EMAIL}}<br>
+            {{CLIENT_PHONE}}</p>
+          </div>
+        </div>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Butiran Anggaran</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Projek / Perkhidmatan</th><td>{{PROJECT_NAME}}</td></tr>
+              <tr><th>Rujukan</th><td>{{PROJECT_NUMBER}}</td></tr>
+              <tr><th>Untuk</th><td>{{CLIENT_NAME}} ({{CLIENT_CONTACT}})</td></tr>
+              <tr><td>Disediakan Oleh</td><td>Duta Integra Solutions Sdn Bhd</td></tr>
+              <tr><td>Tarikh Anggaran</td><td>{{DOC_DATE}}</td></tr>
+              <tr><td>Kelahiran</td><td>{{VALID_UNTIL}} (30 hari dari tarikh anggaran)</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Butiran Item</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Penerangan</th><th style="text-align: center;">Kuantiti</th><th style="text-align: right;">Harga Unit (RM)</th><th style="text-align: right;">Jumlah (RM)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{ITEM_1_DESC}}</td><td style="text-align: center;">{{ITEM_1_QTY}}</td><td style="text-align: right;">{{ITEM_1_UNIT}}</td><td style="text-align: right;">{{ITEM_1_TOTAL}}</td></tr>
+              <tr><td>2</td><td>{{ITEM_2_DESC}}</td><td style="text-align: center;">{{ITEM_2_QTY}}</td><td style="text-align: right;">{{ITEM_2_UNIT}}</td><td style="text-align: right;">{{ITEM_2_TOTAL}}</td></tr>
+              <tr><td>3</td><td>{{ITEM_3_DESC}}</td><td style="text-align: center;">{{ITEM_3_QTY}}</td><td style="text-align: right;">{{ITEM_3_UNIT}}</td><td style="text-align: right;">{{ITEM_3_TOTAL}}</td></tr>
+              <tr><td>4</td><td>{{ITEM_4_DESC}}</td><td style="text-align: center;">{{ITEM_4_QTY}}</td><td style="text-align: right;">{{ITEM_4_UNIT}}</td><td style="text-align: right;">{{ITEM_4_TOTAL}}</td></tr>
+              <tr><td>5</td><td>{{ITEM_5_DESC}}</td><td style="text-align: center;">{{ITEM_5_QTY}}</td><td style="text-align: right;">{{ITEM_5_UNIT}}</td><td style="text-align: right;">{{ITEM_5_TOTAL}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Ringkasan Harga</h2>
+          <table class="table" style="max-width: 400px; margin-left: auto;">
+            <tbody>
+              <tr><td>Subjumlah</td><td style="text-align: right;">{{SUBTOTAL}}</td></tr>
+              <tr><td>SST (8%)</td><td style="text-align: right;">{{SST_AMOUNT}}</td></tr>
+              <tr style="border-top: 2px solid var(--color-gold); font-weight: 700; font-size: 12pt;">
+                <td>Jumlah</td><td style="text-align: right;">{{TOTAL_AMOUNT}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Terma & Syarat</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Kelahiran:</strong> Anggaran ini sah selama 30 hari dari tarikh keluaran (sehingga {{VALID_UNTIL}}).</li>
+            <li class="legal-doc__list-item"><strong>Mata Wang:</strong> Semua amaun dalam Ringgit Malaysia (MYR).</li>
+            <li class="legal-doc__list-item"><strong>Cukai:</strong> Harga tidak termasuk Cukai Jualan & Perkhidmatan (SST 8%), yang akan ditambah pada invois akhir.</li>
+            <li class="legal-doc__list-item"><strong>Terma Pembayaran:</strong> {{PAYMENT_TERMS}} (lazim: Net 30 hari dari tarikh invois).</li>
+            <li class="legal-doc__list-item"><strong>Deposit:</strong> {{DEPOSIT_PERCENTAGE}}% deposit diperlukan semasa penerimaan untuk memulakan kerja.</li>
+            <li class="legal-doc__list-item"><strong>Skop:</strong> Anggaran ini hanya merangkumi item yang disenaraikan di atas. Kerja tambahan memerlukan anggaran baru.</li>
+            <li class="legal-doc__list-item"><strong>Garis Masa:</strong> Garis masa anggaran: {{TIMELINE}}. Tarikh sebenar disahkan semasa penerimaan.</li>
+            <li class="legal-doc__list-item"><strong>Kelahiran:</strong> Anggaran ini tamat pada {{VALID_UNTIL}}. Harga tertakluk kepada perubahan selepas tamat tempoh.</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Penerimaan</h2>
+          <p class="legal-doc__section-text">
+            Untuk menerima anggaran ini, sila tandatangkan di bawah dan hantar salinan ke hello@dutaintegra.my. Kerja akan dimulakan apabila penerimaan ditandatangani dan deposit diterima.
+          </p>
+
+          <div class="legal-doc__signature-block">
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | Anggaran {{QUOTE_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="quote-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>

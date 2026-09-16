@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adendum Pemprosesan Data - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+  <style>
+    @media print {
+      .legal-doc { font-size: 10pt; line-height: 1.6; }
+      .legal-doc__watermark { display: none; }
+      .legal-doc__page-break { page-break-after: always; }
+      .legal-doc__no-break { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Adendum Pemprosesan Data</h1>
+        <p class="legal-doc__subtitle">PDPA / GDPR COMPLIANT</p>
+        <div class="legal-doc__meta">
+          <span>Dokumen: DPA-{{DOC_NUMBER}}</span>
+          <span>Versi: {{DOC_VERSION}}</span>
+          <span>Tarikh: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <p class="legal-doc__intro">
+          Adendum Pemprosesan Data ("<strong>DPA</strong>") ini dimasukkan pada <strong>{{EFFECTIVE_DATE}}</strong> oleh dan antara:
+        </p>
+
+        <div class="legal-doc__parties">
+          <div class="legal-doc__party">
+            <h3 class="legal-doc__party-title">Pengawal Data</h3>
+            <p><strong>{{CLIENT_NAME}}</strong><br>
+            (selanjutnya disebut sebagai "<strong>Pengawal</strong>")</p>
+          </div>
+          <div class="legal-doc__party">
+            <h3 class="legal-doc__party-title">Pemproses Data</h3>
+            <p><strong>Duta Integra Solutions Sdn Bhd</strong><br>
+            Pendaftaran Syarikat: {{COMPANY_REG_NO}}<br>
+            Alamat: Cyberjaya, Malaysia<br>
+            E-mel: {{COMPANY_EMAIL}}<br>
+            (selanjutnya disebut sebagai "<strong>Pemproses</strong>")</p>
+          </div>
+        </div>
+
+        <p>(Secara kolektif disebut sebagai "<strong>Para Pihak</strong>"). DPA ini merupakan sebahagian daripada Perjanjian Perkhidmatan Utama ("<strong>PPU</strong>") bertarikh {{MSA_DATE}} antara Para Pihak.</p>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">1. Takrifan</h2>
+          <p class="legal-doc__section-text">Terma bercapital mempunyai maklmut yang diberikan dalam PPU. Tambahan pula:</p>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Data Peribadi:</strong> Maklumat apa jua yang berkaitan dengan individu semula jadi yang dikenal pasti atau boleh dikenal pasti ("<strong>Subjek Data</strong>")</li>
+            <li class="legal-doc__list-item"><strong>Pemprosesan:</strong> Operasi apa jua ke atas Data Peribadi (pengumpulan, rekod, pengorganisasian, penyimpanan, adaptasi, pengambilan semula, penggunaan, pendedahan, pemadaman, dll.)</li>
+            <li class="legal-doc__list-item"><strong>Subjek Data:</strong> Individu semula jadi yang Data Peribadi berkaitan dengannya</li>
+            <li class="legal-doc__list-item"><strong>Sub-pemproses:</strong> Mana-mana pihak ketiga yang dilantik oleh Pemproses untuk memproses Data Peribadi bagi pihak Pengawal</li>
+            <li class="legal-doc__list-item"><strong>Pelanggaran Data Peribadi:</strong> Pelanggaran keselamatan yang mengakibatkan pemusnahan, kehilangan, pengubahan, pendedahan tidak dibenarkan, atau akses tidak dibenarkan kepada Data Peribadi secara tidak sengaja/terhadap undang-undang</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">2. Skop dan Peranan</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>2.1 Peranan.</strong> Pengawal adalah Pengawal Data. Pemproses adalah Pemproses Data. Para Pihak mengakui peranan dan tanggungjawab mereka masing-masing di bawah undang-undang perlindungan data yang berkenaan.</p>
+            <p class="legal-doc__clause-text"><strong>2.2 Undang-Undang Berkenaan.</strong> DPA ini terpakai bagi pemprosesan yang tertakluk kepada: (a) Akta Perlindungan Data Peribadi 2010 Malaysia ("<strong>PDPA</strong>"); (b) GDPR EU jika berkenaan; (c) undang-undang perlindungan data lain yang berkenaan.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Butiran Pemprosesan</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Kategori</th><th>Butiran</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Kategori Subjek Data</td><td>{{DATA_SUBJECTS}}</td></tr>
+              <tr><td>Kategori Data Peribadi</th><td>{{PERSONAL_DATA_CATEGORIES}}</td></tr>
+              <tr><td>Data Sensitif/Kategori Khas</td><td>{{SENSITIVE_DATA}}</td></tr>
+              <tr><td>Tujuan Pemprosesan</td><td>{{PROCESSING_PURPOSE}}</td></tr>
+              <tr><td>Tempoh Pemprosesan</td><td>{{PROCESSING_DURATION}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">4. Kewajipan Pemproses</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>4.1 Arahan Pemprosesan.</strong> Pemproses hendaklah: (a) memproses Data Peribadi hanya mengikut arahan bertulis Pengawal; (b) tidak memproses untuk tujuan lain; (c) memberitahu Pengawal jika arahan melanggar undang-undang berkenaan.</p>
+            <p class="legal-doc__clause-text"><strong>4.2 Kesulitan.</strong> Pemproses hendaklah memastikan semua pekerja yang memproses Data Peribadi terikat oleh kewajipan sulit.</p>
+            <p class="legal-doc__clause-text"><strong>4.3 Langkah-Langkah Keselamatan.</strong> Pemproses hendaklah melaksanakan langkah teknikal dan organisasi yang sesuai (lihat Annex A), termasuk: pengkrytan rehat/transit, kawalan akses, penamaan samar, ujian berkala, prosedur respons insiden.</p>
+            <p class="legal-doc__clause-text"><strong>4.4 Personel.</strong> Pemproses hendaklah memastikan: (a) personel terikat oleh kewajipan sulit; (b) menerima latihan perlindungan data berkala; (c) akses mengikut keperluan.</p>
+            <p class="legal-doc__clause-text"><strong>4.5 Sub-pemproses.</strong> Pemproses hendaklah: (a) tidak melantik sub-pemproses tanpa keizinan bertulis Pengawal; (b) mengenakan kewajipan setara ke atas sub-pemproses; (c) menyimpan senarai sub-pemproses terkini (Annex B); (d) kekal bertanggungjawab penuh atas perbuatan/tinggalan sub-pemproses.</p>
+            <p class="legal-doc__clause-text"><strong>4.6 Hak Subjek Data.</strong> Pemproses hendaklah membantu Pengawal memenuhi hak Subjek Data (akses, pembetulan, pemadaman, sekatan, kebolehalih, bantahan, keputusan automatik) dalam 10 hari bekerja permintaan Pengawal.</p>
+            <p class="legal-doc__clause-text"><strong>4.7 Pelanggaran Data Peribadi.</strong> Pemproses hendaklah memberitahu Pengawal tanpa kelewatan (dalam 72 jam) mengenai sebarang Pelanggaran Data Peribadi, dengan menyediakan: sifat, kategori/bilangan subjek data/rekod, kesan berkemungkinan, langkah diambil/dicadangkan.</p>
+            <p class="legal-doc__clause-text"><strong>4.8 Rekod.</strong> Pemproses hendaklah menyimpan rekod aktiviti pemprosesan dan menyediakannya kepada Pengawal/pihak pengawas apabila diminta.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">5. Penghantaran Antarabangsa</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text">
+              Pemproses tidak boleh memindahkan Data Peribadi ke luar Malaysia (atau EEA jika GDPR terpakai) tanpa keizinan bertulis terlebih dahulu daripada Pengawal dan penjaminan yang sesuai (Klausa Standard Kontrak, Kaedah Korporat Mengikat, keputusan kesesuaian, atau mekanisme sah lain).
+            </p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">6. Penyimpanan dan Pemadaman Data</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>6.1 Penyimpanan.</strong> Pemproses hendaklah menyimpan Data Peribadi hanya selama tempoh PPU atau sebagaimana dikehendaki undang-undang.</p>
+            <p class="legal-doc__clause-text"><strong>6.2 Pemadaman/Penghantaran.</strong> Apabila tamat tempoh/tamat PPU, Pemproses hendaklah: (a) memadam atau mengembalikan semua Data Peribadi kepada Pengawal; (b) memadam salinan sedia ada melainkan penyimpanan dikehendaki undang-undang; (c) menyediakan pengesahan bertulis pemadaman/penghantaran dalam 30 hari.</p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">7. Audit dan Pemeriksaan</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text">
+              Pengawal boleh mengaudit pematuhan Pemproses atas notis munasabah (minimum 10 hari bekerja), waktu pejabat, kekerapan munasabah (maks sekali dalam 12 bulan melainkan pelanggaran disyaki). Pemproses hendaklah bekerjasama dan menyediakan akses ke rekod, sistem, dan personel yang berkaitan. Kos ditanggung Pengawal melainkan ketidakpatuhan material ditemui.
+            </p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">8. Liabiliti dan Indemniti</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text">
+              Liabiliti Pemproses bagi pelanggaran DPA tertakluk kepada klausul had liabiliti PPU. Pemproses hendaklah mengindemniti Pengawal bagi kerugian yang timbul daripada pelanggaran Pemproses terhadap DPA ini, tertakluk kepada had liabiliti PPU.
+            </p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">9. Tempoh dan Pemutusan</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text">
+              DPA ini bermula pada Tarikh Kuat Kuasa dan berterusan selama tempoh PPU. Apabila PPU tamat, Seksyen 6 (Pemadaman/Penghantaran) kekal. Mana-mana Pihak boleh memutuskan DPA ini jika Pihak lain melanggar secara material dan gagal memperbetulkan dalam 30 hari.
+            </p>
+          </div>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">10. Am</h2>
+          <div class="legal-doc__clause">
+            <p class="legal-doc__clause-text"><strong>10.1 Keseluruhan Perjanjian.</strong> DPA ini + PPU = keseluruhan perjanjian tentang pemprosesan data.</p>
+            <p class="legal-doc__clause-text"><strong>10.2 Pindaan.</strong> Bertulis, ditandatangani kedua-dua Pihak.</p>
+            <p class="legal-doc__clause-text"><strong>10.3 Undang-Undang Yang Menguasai.</strong> Undang-undang Malaysia.</p>
+            <p class="legal-doc__clause-text"><strong>10.4 Penyelesaian Pertikaian.</strong> Mengikut PPU.</p>
+            <p class="legal-doc__clause-text"><strong>10.5 Keutamaan.</strong> Jika ada percanggahan antara DPA ini dan PPU, DPA ini menguatkuasai mengenai perkara perlindungan data.</p>
+          </div>
+        </section>
+
+        <div class="legal-doc__signature-block">
+          <p class="legal-doc__signature-intro">DENGAN INI, Para Pihak telah melaksanakan DPA ini pada Tarikh Kuat Kuasa.</p>
+
+          <div class="legal-doc__signature-row">
+            <div class="legal-doc__signature-column">
+              <div class="legal-doc__signature-line"></div>
+              <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd (Pemproses)</p>
+              <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+              <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+              <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+              <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+            </div>
+
+            <div class="legal-doc__signature-column">
+              <div class="legal-doc__signature-line"></div>
+              <p class="legal-doc__signature-label">{{CLIENT_NAME}} (Pengawal)</p>
+              <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+              <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+              <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+              <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | Sulit — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+
+        <!-- Annex A -->
+        <div class="legal-doc__page-break"></div>
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Annex A: Langkah-Langkah Keselamatan Teknikal dan Organisasi</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">Pengkrytan: AES-256 pada rehat; TLS 1.2+ dalam transit</li>
+            <li class="legal-doc__list-item">Kawalan Akses: Berasaskan peranan, PPA untuk akses admin, prinsip keistimewaan minimum</li>
+            <li class="legal-doc__list-item">Keselamatan Rangkaian: Dinding api, IDS/IPS, pengasingan VPC, WAF</li>
+            <li class="legal-doc__list-item">Pengurusan Kerentanan: Imbasan suku tahunan, ujian penembusan tahunan, pengurusan tambal dalam 30 hari</li>
+            <li class="legal-doc__list-item">Respons Insiden: Pemantauan 24/7, eskalasi 1 jam, notifikasi pelanggaran 72 jam</li>
+            <li class="legal-doc__list-item">Kesinambungan Perniagaan: Sandaran harian, 4-jam RPO, 24-jam RTO, ujian DR tahunan</li>
+            <li class="legal-doc__list-item">Keselamatan Personel: Semakan latar belakang, latihan tahunan, perjanjian sulit, akses perlu-tahu</li>
+            <li class="legal-doc__list-item">Keselamatan Fizikal: Pusat data berlesen SOC 2 Type II, akses biometrik, pemantauan 24/7</li>
+            <li class="legal-doc__list-item">Pelesenan: ISO 27001, SOC 2 Type II, PCI DSS (di mana berkenaan)</li>
+          </ul>
+        </section>
+
+        <div class="legal-doc__page-break"></div>
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Annex B: Sub-pemproses Diluluskan</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Sub-pemproses</th><th>Perkhidmatan</th><th>Lokasi</th><th>Penjaminan</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{SUBPROCESSOR_1}}</td><td>{{SUB_1_SERVICE}}</td><td>{{SUB_1_LOCATION}}</td><td>Klausa Standard Kontrak</td></tr>
+              <tr><td>{{SUBPROCESSOR_2}}</td><td>{{SUB_2_SERVICE}}</td><td>{{SUB_2_LOCATION}}</td><td>Klausa Standard Kontrak</td></tr>
+              <tr><td>{{SUBPROCESSOR_3}}</td><td>{{SUB_3_SERVICE}}</td><td>{{SUB_3_LOCATION}}</td><td>Klausa Standard Kontrak</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | Sulit — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="dpa-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>

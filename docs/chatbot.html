@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            flex-direction: column;
+        }
+
+        #chat-container {
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #messages {
+            height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .message {
+            padding: 8px 12px;
+            margin: 6px 0;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .user-message {
+            text-align: right;
+            background: #e3f2fd;
+            color: #1a237e;
+            margin-left: auto;
+        }
+
+        .assistant-message {
+            background: #f1f8e9;
+            color: #2e7d32;
+        }
+
+        #chat-input {
+            display: flex;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        #chat-input input {
+            flex-grow: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+        }
+
+        #chat-input button {
+            padding: 0 20px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        #chat-input button:hover {
+            background: #1565c0;
+        }
+
+        .typing-indicator {
+            padding: 8px 12px;
+            color: #666;
+            font-style: italic;
+            max-width: 85%;
+            margin-left: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <div id="chat-input">
+            <input type="text" id="input-message" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const messages = [];
+        const messagesDiv = document.getElementById("messages");
+
+        function addMessage(content, isUser, isTyping = false) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+
+            if (isUser) {
+                messageDiv.classList.add("user-message");
+            } else if (isTyping) {
+                messageDiv.classList.add("typing-indicator");
+                messageDiv.textContent = "AI is typing...";
+                messagesDiv.appendChild(messageDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                return;
+            } else {
+                messageDiv.classList.add("assistant-message");
+            }
+
+            messageDiv.textContent = content;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function clearTyping() {
+            const typing = messagesDiv.querySelector(".typing-indicator");
+            if (typing) {
+                typing.remove();
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("input-message");
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            messages.push({ content: message, role: 'user' });
+
+            // Show typing indicator
+            addMessage('', false, true);
+
+            try {
+                const response = await puter.ai.chat(messages);
+                clearTyping();
+
+                if (response && response.message) {
+                    addMessage(response.message, false);
+                    messages.push(response.message);
+                } else if (response && response.content) {
+                    addMessage(response.content, false);
+                    messages.push({ content: response.content, role: 'assistant' });
+                } else {
+                    addMessage("I received a response but no message content was found.", false);
+                }
+            } catch (error) {
+                clearTyping();
+                console.error("AI response error:", error);
+                addMessage("Sorry, I encountered an error. Please try again.", false);
+            }
+        }
+
+        // Allow pressing Enter to send
+        document.getElementById("input-message").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Project Proposal</h1>
+        <p class="legal-doc__subtitle">CONFIDENTIAL</p>
+        <div class="legal-doc__meta">
+          <span>Document: PROP-{{DOC_NUMBER}}</span>
+          <span>Version: {{DOC_VERSION}}</span>
+          <span>Date: {{DOC_DATE}}</span>
+          <span>Valid Until: {{VALID_UNTIL}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <div class="proposal__cover">
+          <h2 class="proposal__project-title">{{PROJECT_NAME}}</h2>
+          <p class="proposal__client">Prepared for: {{CLIENT_NAME}}</p>
+          <p class="proposal__date">Prepared by: Duta Integra Solutions Sdn Bhd</p>
+          <p class="proposal__date">Date: {{DOC_DATE}} | Proposal #: {{DOC_NUMBER}}</p>
+        </div>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">1. Executive Summary</h2>
+          <p class="legal-doc__section-text">
+            {{EXECUTIVE_SUMMARY}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">2. Understanding Your Needs</h2>
+          <p class="legal-doc__section-text">
+            {{CLIENT_NEEDS}}
+          </p>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">{{NEED_1}}</li>
+            <li class="legal-doc__list-item">{{NEED_2}}</li>
+            <li class="legal-doc__list-item">{{NEED_3}}</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Proposed Solution</h2>
+          <p class="legal-doc__section-text">
+            {{SOLUTION_OVERVIEW}}
+          </p>
+          <h3 style="margin: 16px 0 8px 0; font-family: var(--font-display); color: var(--color-navy);">Key Components:</h3>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>{{COMPONENT_1_NAME}}:</strong> {{COMPONENT_1_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>{{COMPONENT_2_NAME}}:</strong> {{COMPONENT_2_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>{{COMPONENT_3_NAME}}:</strong> {{COMPONENT_3_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>{{COMPONENT_4_NAME}}:</strong> {{COMPONENT_4_DESC}}</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">4. Methodology & Approach</h2>
+          <p class="legal-doc__section-text">
+            {{METHODOLOGY}}
+          </p>
+          <h3 style="margin: 16px 0 8px 0; font-family: var(--font-display); color: var(--color-navy);">Our Process:</h3>
+          <ol class="legal-doc__list" style="list-style: decimal; padding-left: 24px;">
+            <li class="legal-doc__list-item"><strong>Discovery:</strong> {{PHASE_1}}</li>
+            <li class="legal-doc__list-item"><strong>Design:</strong> {{PHASE_2}}</li>
+            <li class="legal-doc__list-item"><strong>Build:</strong> {{PHASE_3}}</li>
+            <li class="legal-doc__list-item"><strong>Deploy:</strong> {{PHASE_4}}</li>
+            <li class="legal-doc__list-item"><strong>Support:</strong> {{PHASE_5}}</li>
+          </ol>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">5. Team & Expertise</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Role</th><th>Name</th><th>Experience</th><th>Responsibility</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Project Lead</td><td>{{TEAM_LEAD}}</td><td>{{TEAM_LEAD_EXP}}</td><td>Overall delivery, client communication</td></tr>
+              <tr><td>Technical Lead</td><td>{{TECH_LEAD}}</td><td>{{TECH_LEAD_EXP}}</td><td>Architecture, code review</td></tr>
+              <tr><td>Senior Developer</td><td>{{DEV_1}}</td><td>{{DEV_1_EXP}}</td><td>Core development</td></tr>
+              <tr><td>Developer</td><td>{{DEV_2}}</td><td>{{DEV_2_EXP}}</td><td>Feature development</td></tr>
+              <tr><td>QA Engineer</td><td>{{QA_ENGINEER}}</td><td>{{QA_EXP}}</td><td>Testing, quality assurance</td></tr>
+              <tr><td>Designer</td><td>{{DESIGNER}}</td><td>{{DESIGNER_EXP}}</td><td>UI/UX design</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">6. Timeline & Milestones</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Phase</th><th>Duration</th><th>Key Deliverables</th><th>Target Date</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1. Discovery & Planning</td><td>{{PHASE_1_DURATION}}</td><td>{{PHASE_1_DELIVERABLES}}</td><td>{{PHASE_1_DATE}}</td></tr>
+              <tr><td>Design & Architecture</td><td>{{PHASE_2_DURATION}}</td><td>{{PHASE_2_DELIVERABLES}}</td><td>{{PHASE_2_DATE}}</td></tr>
+              <tr><td>Development</td><td>{{PHASE_3_DURATION}}</td><td>{{PHASE_3_DELIVERABLES}}</td><td>{{PHASE_3_DATE}}</td></tr>
+              <tr><td>Testing & QA</td><td>{{PHASE_4_DURATION}}</td><td>{{PHASE_4_DELIVERABLES}}</td><td>{{PHASE_4_DATE}}</td></tr>
+              <tr><td>Deployment & Go-Live</td><td>{{PHASE_5_DURATION}}</td><td>{{PHASE_5_DELIVERABLES}}</td><td>{{PHASE_5_DATE}}</td></tr>
+              <tr><td>Training & Handover</td><td>{{PHASE_6_DURATION}}</td><td>{{PHASE_6_DELIVERABLES}}</td><td>{{PHASE_6_DATE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">7. Investment</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Item</th><th>Description</th><th>Amount (RM)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Phase 1: Discovery</td><td>{{PHASE_1_COST_DESC}}</td><td>{{PHASE_1_COST}}</td></tr>
+              <tr><td>Design & Architecture</td><td>{{PHASE_2_COST_DESC}}</td><td>{{PHASE_2_COST}}</td></tr>
+              <tr><td>Development</td><td>{{PHASE_3_COST_DESC}}</td><td>{{PHASE_3_COST}}</td></tr>
+              <tr><td>Testing & QA</td><td>{{PHASE_4_COST_DESC}}</td><td>{{PHASE_4_COST}}</td></tr>
+              <tr><td>Deployment & Training</td><td>{{PHASE_5_COST_DESC}}</td><td>{{PHASE_5_COST}}</td></tr>
+              <tr><td><strong>Subtotal</strong></td><td></td><td><strong>{{SUBTOTAL}}</strong></td></tr>
+              <tr><td>SST (8%)</td><td></td><td>{{SST_AMOUNT}}</td></tr>
+              <tr><td><strong>Total Investment</strong></td><td></td><td><strong>{{TOTAL_INVESTMENT}}</strong></td></tr>
+            </tbody>
+          </table>
+          <p class="legal-doc__section-text">
+            <strong>Payment Terms:</strong> {{PAYMENT_TERMS}} | <strong>Validity:</strong> {{VALID_UNTIL}} | <strong>Currency:</strong> MYR (Ringgit Malaysia)
+          </p>
+          <p class="legal-doc__section-text">
+            <strong>Payment Schedule:</strong> {{PAYMENT_SCHEDULE}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">8. Why Duta Integra?</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Local Expertise:</strong> Based in Cyberjaya, deep understanding of Malaysian SME landscape, PDPA, SST compliance</li>
+            <li class="legal-doc__list-item"><strong>Proven Track Record:</strong> Delivered 50+ projects for Malaysian SMEs since 2023</li>
+            <li class="legal-doc__list-item"><strong>End-to-End Delivery:</strong> From strategy to deployment and ongoing support</li>
+            <li class="legal-doc__list-item"><strong>Transparent Pricing:</strong> No hidden fees, fixed-price milestones</li>
+            <li class="legal-doc__list-item"><strong>Ongoing Support:</strong> Post-launch support and optimization included</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">9. Next Steps</h2>
+          <ol class="legal-doc__list" style="list-style: decimal; padding-left: 24px;">
+            <li class="legal-doc__list-item">Review this proposal and provide feedback</li>
+            <li class="legal-doc__list-item">Schedule clarification call (if needed)</li>
+            <li class="legal-doc__list-item">Sign and return with deposit to initiate</li>
+            <li class="legal-doc__list-item">Kickoff meeting within 5 business days</li>
+          </ol>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">10. Acceptance</h2>
+          <div class="legal-doc__signature-block">
+            <p class="legal-doc__signature-intro">By signing below, {{CLIENT_NAME}} accepts this proposal and authorizes Duta Integra Solutions Sdn Bhd to commence work per the terms outlined.</p>
+
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | Confidential — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="proposal-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>

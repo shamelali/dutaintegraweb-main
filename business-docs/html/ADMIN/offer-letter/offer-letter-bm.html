@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surat Tawaran Kerja - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Surat Tawaran Kerja</h1>
+        <p class="legal-doc__subtitle">SULIT</p>
+        <div class="legal-doc__meta">
+          <span>Dokumen: OFF-{{DOC_NUMBER}}</span>
+          <span>Versi: {{DOC_VERSION}}</span>
+          <span>Tarikh: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <div class="offer__intro">
+          <p class="legal-doc__section-text">
+            <strong>{{CANDIDATE_NAME}}</strong><br>
+            {{CANDIDATE_ADDRESS}}<br>
+            {{CANDIDATE_EMAIL}} | {{CANDIDATE_PHONE}}
+          </p>
+          <p class="legal-doc__section-text" style="margin-top: 16px;">
+            <strong>Tarikh:</strong> {{DOC_DATE}}<br>
+            <strong>Rujukan:</strong> OFF-{{DOC_NUMBER}}
+          </p>
+        </div>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Sayangi {{CANDIDATE_NAME}},</h2>
+          <p class="legal-doc__section-text">
+            Kami gembira untuk menawarkan jawatan <strong>{{POSITION_TITLE}}</strong> di Duta Integra Solutions Sdn Bhd. Kami terkesan dengan kemahiran, pengalaman, dan keselarasan anda dengan misi kami untuk memberdayakan PKS Malaysia melalui AI dan penyelesaian IT terurus.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Butiran Jawatan</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Jawatan</th><td>{{POSITION_TITLE}}</td></tr>
+              <tr><th>Jabatan</th><td>{{DEPARTMENT}}</td></tr>
+              <tr><th>Berichterus</th><td>{{REPORTING_MANAGER}}</td></tr>
+              <tr><th>Lokasi</th><td>{{WORK_LOCATION}} (Hibrid: {{REMOTE_DAYS}} hari remote/minggu)</td></tr>
+              <tr><th>Jenis Perkhidmatan</th><td>{{EMPLOYMENT_TYPE}} (Penuh)</td></tr>
+              <tr><th>Tarikh Mula</th><td>{{START_DATE}}</td></tr>
+              <tr><th>Tempoh Percubaan</th><td>{{PROBATION_PERIOD}} bulan ({{PROBATION_DAYS}} hari)</td></tr>
+              <tr><th>Jam Kerja</th><td>{{WORK_HOURS}} (Isnin-Jumaat, {{WORK_HOURS_DETAILS}})</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Saraan & Faedah</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Komponen</th><th>Butiran</th><th>Amaun (RM)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Gaji Asas</td><td>Bulanan, dibayar pada {{PAY_DATE}} setiap bulan</td><td>{{BASE_SALARY}}</td></tr>
+              <tr><td>Elaun</td><td>{{ALLOWANCE_DETAILS}}</td><td>{{ALLOWANCE_AMOUNT}}</td></tr>
+              <tr><td>Bonus Pembolehubah</td><td>{{BONUS_DETAILS}} (Berkenaan prestasi)</td><td>{{BONUS_AMOUNT}}</td></tr>
+              <tr style="border-top: 2px solid var(--color-gold); font-weight: 700;"><td><strong>Jumlah Saraan Bulanan</strong></td><td></td><td><strong>{{TOTAL_MONTHLY}}</strong></td></tr>
+              <tr><td>CTC Tahunan</td><td>Kos kepada Syarikat (anggaran)</td><td>{{ANNUAL_CTC}}</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin: 16px 0 8px 0; font-family: var(--font-display); color: var(--color-navy);">Faedah:</h3>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Perubatan:</strong> {{MEDICAL_BENEFITS}} (Pekerja + {{DEPENDENTS_COUNT}} tanggungan)</li>
+            <li class="legal-doc__list-item"><strong>Cuti:</strong> {{ANNUAL_LEAVE}} hari cuti tahunan + {{PUBLIC_HOLIDAYS}} cuti umum + {{MEDICAL_LEAVE}} hari cuti sakit</li>
+            <li class="legal-doc__list-item"><strong>Peralatan:</strong> Elaun laptop/peralatan {{HARDWARE_ALLOWANCE}} + elaun telefon {{PHONE_ALLOWANCE}}</li>
+            <li class="legal-doc__list-item"><strong>Pembelajaran:</strong> Bajet pembelajaran tahunan {{LEARNING_BUDGET}} (kursus, pensijilan, konferens)</li>
+            <li class="legal-doc__list-item"><strong>Kerja Fleksibel:</strong> {{REMOTE_DAYS}} hari remote/minggu, jam fleksibel</li>
+            <li class="legal-doc__list-item"><strong>Insurans:</strong> {{INSURANCE_DETAILS}} (Kumpulan hayat, kemalangan peribadi)</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Percubaan & Pengesahan</h2>
+          <p class="legal-doc__section-text">
+            Perkhidmatan anda akan tertakluk kepada tempoh percubaan <strong>{{PROBATION_PERIOD}} bulan</strong> dari tarikh mula. Selama tempoh ini, mana-mana pihak boleh memutuskan perkhidmatan dengan notis bertulis <strong>{{NOTICE_PROBATION}} hari</strong>. Apabila berjaya, perkhidmatan anda akan disahkan secara bertulis.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Pemutusan</h2>
+          <p class="legal-doc__section-text">
+            Apabila disahkan, mana-mana pihak boleh memutuskan perkhidmatan dengan notis bertulis <strong>{{NOTICE_CONFIRMED}} hari</strong>. Syarikat boleh memutuskan dengan segera atas kelakuan teruk, pelanggaran sulit, atau pelanggaran material polisi.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Kesulitan & Penghakiman IP</h2>
+          <p class="legal-doc__section-text">
+            Anda dikehendaki menandatangani Perjanjian Kesulitan dan Perjanjian Penghakiman Harta Intelek apabila memulakan kerja. Keseluruhan hasil kerja, penemuan, dan inovasi yang dicipta semasa perkhidmatan menjadi milik Syarikat.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Semakan Latar Belakang</h2>
+          <p class="legal-doc__section-text">
+            Tawaran ini tertakluk kepada penyelidikan latar belakang yang berjaya (sejarah perkhidmatan, pendidikan, rujukan) dalam {{BACKGROUND_CHECK_DAYS}} hari dari tarikh mula.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Penerimaan</h2>
+          <p class="legal-doc__section-text">
+            Sila tandatangani dan kembalikan tawaran ini pada <strong>{{ACCEPTANCE_DEADLINE}}</strong> untuk mengesahkan penerimaan. Tawaran ini tamat pada tarikh tersebut jika tidak diterima.
+          </p>
+
+          <div class="legal-doc__signature-block">
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Jawatan: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Cap Syarikat]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CANDIDATE_NAME}}</p>
+                <p class="legal-doc__signature-detail">Nama: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tarikh: ___________________________</p>
+                <p class="legal-doc__signature-detail">Tanda Tangan: ___________________________</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Muka Surat 1 daripada 1 | OFF-{{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Cetak / Simpan sebagai PDF</a>
+    <a href="offer-letter-en.html" class="btn btn--outline" style="margin-left: 12px;">View EN Version</a>
+  </div>
+</body>
+</html>

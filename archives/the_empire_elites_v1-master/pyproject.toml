@@ -1,0 +1,29 @@
+[project]
+name = "the_empire_elites"
+version = "0.1.0"
+description = "the_empire_elites using crewAI"
+authors = [{ name = "Shamel Ali", email = "shamel@leish.my" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[file-processing,litellm,tools]",
+    "groq>=1.2.0",
+    "pydantic",
+]
+
+[project.scripts]
+the_empire_elites = "the_empire_elites.main:run"
+run_crew = "the_empire_elites.main:run"
+train = "the_empire_elites.main:train"
+replay = "the_empire_elites.main:replay"
+test = "the_empire_elites.main:test"
+run_with_trigger = "the_empire_elites.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
+
+[tool.uv]
+override-dependencies = ["litellm<=1.82.6"]

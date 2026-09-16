@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4B03A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C9A227;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="#1E2D3D"/>
+  <!-- Gold accent ring -->
+  <circle cx="60" cy="60" r="54" fill="none" stroke="url(#goldGradient)" stroke-width="4"/>
+  <!-- Duta Integra initials -->
+  <text x="60" y="72" font-family="Rajdhani, sans-serif" font-size="36" font-weight="700" fill="url(#goldGradient)" text-anchor="middle" letter-spacing="-2">DI</text>
+  <!-- Decorative elements -->
+  <path d="M 30 40 L 45 40" stroke="url(#goldGradient)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 75 40 L 90 40" stroke="url(#goldGradient)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 30 80 L 45 80" stroke="url(#goldGradient)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 75 80 L 90 80" stroke="url(#goldGradient)" stroke-width="2" stroke-linecap="round"/>
+</svg>

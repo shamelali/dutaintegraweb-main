@@ -1,0 +1,18 @@
+{
+  "name": "dutaintegra-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "dutaintegra.my — Duta Integra Solutions marketing site plus its lead-capture API",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server/index.mjs",
+    "dev": "node --watch server/index.mjs",
+    "test": "node --test \"server/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@slack/web-api": "^8.1.1"
+  }
+}

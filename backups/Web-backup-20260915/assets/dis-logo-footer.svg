@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 50">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1D3A"/>
+      <stop offset="100%" stop-color="#1565C0"/>
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" x="5" y="5" rx="7" fill="url(#bg)"/>
+  <text x="25" y="32" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="800" font-size="17" fill="#00B4FF">DI</text>
+  <text x="56" y="24" font-family="system-ui,sans-serif" font-weight="700" font-size="14" fill="#E8EAF0">Duta Integra</text>
+  <text x="56" y="38" font-family="system-ui,sans-serif" font-weight="500" font-size="9" fill="#8A9BB5">Solutions</text>
+</svg>

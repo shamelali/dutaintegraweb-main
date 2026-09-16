@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — Duta Integra</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f9fafb; color: #1c1917; }
+    .topbar { background: #1c1917; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .topbar h1 { font-size: 18px; font-weight: 600; }
+    .topbar .user { font-size: 13px; opacity: 0.8; }
+    .topbar a { color: #fff; text-decoration: none; font-size: 13px; opacity: 0.8; }
+    .topbar a:hover { opacity: 1; }
+    .container { max-width: 900px; margin: 32px auto; padding: 0 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .stat-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .stat-card .label { font-size: 13px; color: #6b7280; margin-bottom: 4px; }
+    .stat-card .value { font-size: 28px; font-weight: 700; }
+    .stat-card .value.green { color: #16a34a; }
+    .stat-card .value.blue { color: #2563eb; }
+    .stat-card .value.amber { color: #d97706; }
+    .section { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    .section h2 { font-size: 16px; margin-bottom: 16px; color: #1c1917; }
+    .nav-links { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px; }
+    .nav-links a { padding: 10px 20px; background: #fff; border: 1px solid #d1d5db; border-radius: 8px; text-decoration: none; color: #374151; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+    .nav-links a:hover { border-color: #1c1917; color: #1c1917; }
+    .nav-links a.active { background: #1c1917; color: #fff; border-color: #1c1917; }
+    .health-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+    .health-dot.healthy { background: #16a34a; }
+    .health-dot.attention { background: #d97706; }
+    .health-dot.needs_review { background: #dc2626; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; padding: 8px 12px; border-bottom: 1px solid #e5e7eb; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+    .badge.open { background: #dbeafe; color: #1d4ed8; }
+    .badge.in_progress { background: #fef3c7; color: #92400e; }
+    .badge.resolved { background: #d1fae5; color: #065f46; }
+    .badge.closed { background: #f3f4f6; color: #6b7280; }
+    .empty { color: #9ca3af; text-align: center; padding: 24px; font-size: 14px; }
+    .loading { text-align: center; padding: 40px; color: #6b7280; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Duta Integra</h1>
+    <div>
+      <span class="user" id="userName"></span>
+      <a href="#" id="logoutLink" style="margin-left:12px">Sign out</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="nav-links">
+      <a href="/portal/dashboard.html" class="active">Dashboard</a>
+      <a href="/portal/tickets.html">Tickets</a>
+      <a href="/portal/health.html">Health</a>
+    </div>
+
+    <div class="grid">
+      <div class="stat-card">
+        <div class="label">Open Tickets</div>
+        <div class="value blue" id="openCount">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">In Progress</div>
+        <div class="value amber" id="progressCount">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Resolved</div>
+        <div class="value green" id="resolvedCount">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Your Tier</div>
+        <div class="value" id="tierLabel">—</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Recent Tickets</h2>
+      <div id="ticketsArea" class="loading">Loading…</div>
+    </div>
+  </div>
+
+  <script>
+    async function init() {
+      try {
+        const meRes = await fetch('/api/portal/me');
+        if (meRes.status === 401) { window.location.href = '/portal/login.html'; return; }
+        const me = await meRes.json();
+        document.getElementById('userName').textContent = me.client.name;
+        document.getElementById('tierLabel').textContent = me.client.tier.charAt(0).toUpperCase() + me.client.tier.slice(1);
+
+        const healthRes = await fetch('/api/portal/health');
+        if (healthRes.ok) {
+          const h = await healthRes.json();
+          document.getElementById('openCount').textContent = h.tickets.open;
+          document.getElementById('progressCount').textContent = h.tickets.in_progress;
+          document.getElementById('resolvedCount').textContent = h.tickets.resolved;
+        }
+
+        const ticketsRes = await fetch('/api/portal/tickets');
+        if (ticketsRes.ok) {
+          const { tickets } = await ticketsRes.json();
+          renderTickets(tickets.slice(0, 5));
+        }
+      } catch {
+        window.location.href = '/portal/login.html';
+      }
+    }
+
+    function renderTickets(tickets) {
+      const area = document.getElementById('ticketsArea');
+      if (!tickets.length) { area.innerHTML = '<div class="empty">No tickets yet. <a href="/portal/tickets.html">Create one</a>.</div>'; return; }
+      area.innerHTML = `<table><thead><tr><th>Subject</th><th>Status</th><th>Priority</th><th>Created</th></tr></thead><tbody>` +
+        tickets.map(t => `<tr><td>${esc(t.subject)}</td><td><span class="badge ${t.status}">${t.status.replace('_',' ')}</span></td><td>${t.priority}</td><td>${new Date(t.createdAt).toLocaleDateString()}</td></tr>`).join('') +
+        `</tbody></table>`;
+    }
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    document.getElementById('logoutLink').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('/api/portal/logout', { method: 'POST' });
+      window.location.href = '/portal/login.html';
+    });
+
+    init();
+  </script>
+</body>
+</html>

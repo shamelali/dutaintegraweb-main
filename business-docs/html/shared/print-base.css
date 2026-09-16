@@ -1,0 +1,298 @@
+/* Print Base Styles - Shared across all documents */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .page-break {
+    page-break-after: always;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+}
+
+/* Base Page Setup */
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  background: #FFFFFF;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #1E2D3D;
+  font-size: 11pt;
+  line-height: 1.6;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.page__content {
+  padding: 25mm 20mm;
+}
+
+/* Header Styles */
+.doc-header {
+  margin-bottom: 32px;
+}
+
+.doc-header__logo {
+  width: 60px;
+  height: auto;
+  margin-bottom: 12px;
+}
+
+.doc-header__title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28pt;
+  font-weight: 700;
+  color: #1E2D3D;
+  margin: 8px 0 4px 0;
+  letter-spacing: -0.02em;
+}
+
+.doc-header__subtitle {
+  font-size: 10pt;
+  color: #C9A227;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Section Styles */
+.section {
+  margin: 24px 0;
+}
+
+.section__title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14pt;
+  font-weight: 700;
+  color: #1E2D3D;
+  margin: 0 0 12px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.section__text {
+  margin: 8px 0;
+  text-align: justify;
+}
+
+/* Table Styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 10pt;
+}
+
+.table th,
+.table td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid #E5E7EB;
+}
+
+.table th {
+  background: #F8FAFC;
+  font-weight: 700;
+  color: #1E2D3D;
+  font-size: 9pt;
+}
+
+.table td {
+  font-size: 10pt;
+  color: #1E2D3D;
+}
+
+.table--striped tbody tr:nth-child(even) {
+  background: #F8FAFC;
+}
+
+/* Form Field Styles */
+.field-row {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.field {
+  flex: 1;
+}
+
+.field__label {
+  display: block;
+  font-size: 9pt;
+  font-weight: 600;
+  color: #1E2D3D;
+  margin-bottom: 4px;
+}
+
+.field__value {
+  font-size: 10pt;
+  color: #1E2D3D;
+  padding: 4px 0;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+/* Signature Block */
+.signature-block {
+  margin-top: 48px;
+}
+
+.signature-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
+.signature-column {
+  width: 45%;
+}
+
+.signature-line {
+  border-top: 1px solid #1E2D3D;
+  height: 48px;
+  margin-bottom: 8px;
+}
+
+.signature-label {
+  font-size: 9pt;
+  font-weight: 600;
+  color: #1E2D3D;
+}
+
+.signature-detail {
+  font-size: 8pt;
+  color: #6B7280;
+  margin-top: 4px;
+}
+
+.signature-chop {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.signature-chop-text {
+  font-size: 8pt;
+  color: #6B7280;
+}
+
+/* Watermark */
+.watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  width: 50%;
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@media print {
+  .watermark {
+    display: none;
+  }
+}
+
+/* Page Number */
+.page-number {
+  text-align: center;
+  font-size: 8pt;
+  color: #6B7280;
+  margin-top: 24px;
+}
+
+/* No Print Class */
+.no-print {
+  display: block;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Button Styles (for web view) */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10pt;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn--primary {
+  background: #1E2D3D;
+  color: #FFFFFF;
+}
+
+.btn--primary:hover {
+  background: #16232F;
+}
+
+.btn--gold {
+  background: #C9A227;
+  color: #1E2D3D;
+}
+
+.btn--gold:hover {
+  background: #D4B03A;
+}
+
+.btn--outline {
+  background: transparent;
+  border: 1px solid #C9A227;
+  color: #C9A227;
+}
+
+.btn--outline:hover {
+  background: #C9A227;
+  color: #1E2D3D;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 8pt;
+  font-weight: 700;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge--draft {
+  background: rgba(201, 162, 39, 0.14);
+  color: #A8851B;
+}
+
+.badge--confidential {
+  background: rgba(30, 45, 61, 0.1);
+  color: #1E2D3D;
+}

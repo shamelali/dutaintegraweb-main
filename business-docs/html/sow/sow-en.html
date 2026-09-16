@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statement of Work - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+  <link rel="stylesheet" href="../../shared/legal-print.css">
+  <style>
+    @media print {
+      .legal-doc { font-size: 10pt; line-height: 1.6; }
+      .legal-doc__watermark { display: none; }
+      .legal-doc__page-break { page-break-after: always; }
+      .legal-doc__no-break { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Statement of Work</h1>
+        <p class="legal-doc__subtitle">CONFIDENTIAL</p>
+        <div class="legal-doc__meta">
+          <span>Document: SOW-{{DOC_NUMBER}}</span>
+          <span>Version: {{DOC_VERSION}}</span>
+          <span>Date: {{DOC_DATE}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <table class="table legal-doc__info-table">
+          <tbody>
+            <tr><th>Project Name</th><td>{{PROJECT_NAME}}</td></tr>
+            <tr><th>Project Number</th><td>{{PROJECT_NUMBER}}</td></tr>
+            <tr><th>Master Agreement</th><td>MSA-{{MSA_NUMBER}}</td></tr>
+            <tr><th>Client</th><td>{{CLIENT_NAME}}</td></tr>
+            <tr><th>Provider</th><td>Duta Integra Solutions Sdn Bhd</td></tr>
+            <tr><th>Effective Date</th><td>{{EFFECTIVE_DATE}}</td></tr>
+            <tr><th>Start Date</th><td>{{PROJECT_START}}</td></tr>
+            <tr><th>Estimated End Date</th><td>{{PROJECT_END}}</td></tr>
+            <tr><th>Project Manager (Provider)</th><td>{{PM_PROVIDER}}</td></tr>
+            <tr><th>Project Manager (Client)</th><td>{{PM_CLIENT}}</td></tr>
+          </tbody>
+        </table>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">1. Project Overview</h2>
+          <p class="legal-doc__section-text">
+            <strong>Objective:</strong> {{PROJECT_OBJECTIVE}}<br>
+            <strong>Background:</strong> {{PROJECT_BACKGROUND}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">2. Scope of Work</h2>
+          <p class="legal-doc__section-text">Provider shall perform the following services:</p>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item"><strong>Phase 1 - Discovery & Planning:</strong> {{PHASE_1_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Phase 2 - Design & Architecture:</strong> {{PHASE_2_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Phase 3 - Development & Implementation:</strong> {{PHASE_3_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Phase 4 - Testing & QA:</strong> {{PHASE_4_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Phase 5 - Deployment & Go-Live:</strong> {{PHASE_5_DESC}}</li>
+            <li class="legal-doc__list-item"><strong>Phase 6 - Training & Handover:</strong> {{PHASE_6_DESC}}</li>
+          </ul>
+          <p class="legal-doc__section-text"><strong>Out of Scope:</strong> {{OUT_OF_SCOPE}}</p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Deliverables</h2>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Deliverable</th><th>Description</th><th>Due Date</th><th>Acceptance Criteria</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{DELIVERABLE_1_NAME}}</td><td>{{DELIVERABLE_1_DESC}}</td><td>{{DELIVERABLE_1_DATE}}</td><td>{{DELIVERABLE_1_AC}}</td></tr>
+              <tr><td>2</td><td>{{DELIVERABLE_2_NAME}}</td><td>{{DELIVERABLE_2_DESC}}</td><td>{{DELIVERABLE_2_DATE}}</td><td>{{DELIVERABLE_2_AC}}</td></tr>
+              <tr><td>3</td><td>{{DELIVERABLE_3_NAME}}</td><td>{{DELIVERABLE_3_DESC}}</td><td>{{DELIVERABLE_3_DATE}}</td><td>{{DELIVERABLE_3_AC}}</td></tr>
+              <tr><td>4</td><td>{{DELIVERABLE_4_NAME}}</td><td>{{DELIVERABLE_4_DESC}}</td><td>{{DELIVERABLE_4_DATE}}</td><td>{{DELIVERABLE_4_AC}}</td></tr>
+              <tr><td>5</td><td>{{DELIVERABLE_5_NAME}}</td><td>{{DELIVERABLE_5_DESC}}</td><td>{{DELIVERABLE_5_DATE}}</td><td>{{DELIVERABLE_5_AC}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">3. Timeline & Milestones</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Milestone</th><th>Target Date</th><th>Dependencies</th><th>Owner</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Kickoff & Requirements Finalized</td><td>{{MILESTONE_1_DATE}}</td><td>—</td><td>Both</td></tr>
+              <tr><td>Design & Architecture Approved</td><td>{{MILESTONE_2_DATE}}</td><td>Requirements sign-off</td><td>Provider</td></tr>
+              <tr><td>Development Complete (Alpha)</td><td>{{MILESTONE_3_DATE}}</td><td>Design approval</td><td>Provider</td></tr>
+              <tr><td>UAT Complete</td><td>{{MILESTONE_4_DATE}}</td><td>Alpha delivery</td><td>Client</td></tr>
+              <tr><td>Go-Live / Launch</td><td>{{MILESTONE_5_DATE}}</td><td>UAT sign-off</td><td>Both</td></tr>
+              <tr><td>Project Closure & Handover</td><td>{{MILESTONE_6_DATE}}</td><td>Go-live stable</td><td>Provider</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">4. Assumptions & Dependencies</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">Client provides timely access to systems, stakeholders, and documentation</li>
+            <li class="legal-doc__list-item">Client designates a single point of contact for decisions/approvals</li>
+            <li class="legal-doc__list-item">Client provides timely feedback (within 3 business days) on deliverables</li>
+            <li class="legal-doc__list-item">Third-party APIs/services available and documented</li>
+            <li class="legal-doc__list-item">No changes to scope without formal Change Order</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">5. Acceptance Criteria</h2>
+          <p class="legal-doc__section-text">
+            Deliverables are accepted when: (a) all acceptance criteria met; (b) Client signs acceptance form; or (c) 5 business days pass without written objection after delivery.
+          </p>
+          <p class="legal-doc__section-text">
+            Client shall test each deliverable within <strong>5 business days</strong>. Defects reported in writing. Provider fixes critical defects within <strong>3 business days</strong>, major within <strong>5 business days</strong>, minor within <strong>10 business days</strong>.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">6. Fees & Payment Schedule</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Milestone / Deliverable</th><th>Amount (RM)</th><th>Due</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Deposit / Kickoff</td><td>{{PAYMENT_1_AMOUNT}}</td><td>Upon signing</td></tr>
+              <tr><td>Design & Architecture Complete</td><td>{{PAYMENT_2_AMOUNT}}</td><td>Milestone 2</td></tr>
+              <tr><td>Development Complete (Alpha)</td><td>{{PAYMENT_3_AMOUNT}}</td><td>Milestone 3</td></tr>
+              <tr><td>UAT Complete</td><td>{{PAYMENT_4_AMOUNT}}</td><td>Milestone 4</td></tr>
+              <tr><td>Go-Live / Final Delivery</td><td>{{PAYMENT_5_AMOUNT}}</td><td>Milestone 5</td></tr>
+              <tr><td><strong>Total</strong></td><td><strong>{{TOTAL_AMOUNT}}</strong></td><td></td></tr>
+            </tbody>
+          </table>
+          <p class="legal-doc__section-text">All amounts in MYR, exclusive of SST (8%). Payment terms: Net 30 days.</p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">7. Change Management</h2>
+          <p class="legal-doc__section-text">
+            Any change to scope, timeline, or budget requires a written Change Order signed by both Parties. Provider will assess impact within 3 business days and provide revised timeline/cost.
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">8. Client Responsibilities</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">Designate a Project Manager with decision-making authority</li>
+            <li class="legal-doc__list-item">Provide timely access to systems, data, and stakeholders</li>
+            <li class="legal-doc__list-item">Review deliverables within agreed timeframes</li>
+            <li class="legal-doc__list-item">Provide timely feedback on designs, prototypes, and test results</li>
+            <li class="legal-doc__list-item">Obtain necessary third-party approvals/access</li>
+            <li class="legal-doc__list-item">Ensure availability for UAT and training sessions</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">9. Acceptance & Sign-off</h2>
+          <div class="legal-doc__signature-block">
+            <p class="legal-doc__signature-intro">By signing below, both Parties acknowledge and agree to the terms of this Statement of Work.</p>
+
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Duta Integra Solutions Sdn Bhd</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">{{CLIENT_NAME}}</p>
+                <p class="legal-doc__signature-detail">Name: ___________________________</p>
+                <p class="legal-doc__signature-detail">Title: ___________________________</p>
+                <p class="legal-doc__signature-detail">Date: ___________________________</p>
+                <div class="legal-doc__chop"><p class="legal-doc__chop-text">[Company Chop]</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | Confidential — {{DOC_NUMBER}} | {{DOC_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="sow-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>

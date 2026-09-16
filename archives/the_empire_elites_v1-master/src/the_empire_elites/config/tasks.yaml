@@ -1,0 +1,269 @@
+---
+hardware_configuration_optimization:
+  description: Analyze and optimize hardware configurations for the {project_type}
+    project. Evaluate CPU/GPU requirements, memory needs, storage architecture,
+    network specifications, and cloud resource allocation. Provide detailed
+    recommendations for optimal performance, cost-efficiency, and scalability.
+    Consider development, testing, staging, and production environments.
+  expected_output: 'A comprehensive hardware optimization report including: 1)
+    Hardware requirements analysis for each environment (dev/test/staging/prod),
+    2) CPU/GPU specifications with benchmarks and cost analysis, 3) Memory
+    and storage architecture recommendations, 4) Network configuration and
+    bandwidth requirements, 5) Cloud instance type recommendations with pricing,
+    6) Scalability projections and future hardware needs'
+  agent: hardware_optimization_specialist
+
+gather_and_analyze_project_requirements:
+  description: Conduct comprehensive requirements analysis for the {project_type}
+    project. Interview stakeholders, gather functional and non-functional requirements,
+    create user stories, define acceptance criteria, and document all requirements
+    in a structured format. Identify potential risks, dependencies, and constraints
+    early in the process.
+  expected_output: 'A detailed requirements document containing: 1) Complete functional
+    requirements with user stories and acceptance criteria, 2) Non-functional requirements
+    (performance, security, scalability), 3) Technical constraints and dependencies,
+    4) Risk assessment and mitigation strategies, 5) Requirements traceability matrix,
+    6) Stakeholder approval signatures'
+  agent: requirements_analyst
+monitor_development_team_quality_timeline:
+  description: Continuously monitor all development team members (Requirements Analyst,
+    Software Architect, Senior Developer, QA Engineer, DevOps Engineer, and Project
+    Manager) throughout the {project_type} project lifecycle. Track their progress,
+    review deliverable quality, enforce strict timelines, and ensure no compromises
+    between quality and speed. Identify bottlenecks immediately, flag quality issues,
+    and provide corrective actions. Maintain detailed performance logs and ensure
+    all team members meet the highest standards within designated timeframes.
+  expected_output: 'A comprehensive oversight report containing: 1) Individual team
+    member performance analysis with quality scores (0-100%), 2) Timeline adherence
+    tracking with actual vs planned delivery times, 3) Quality assessment of all deliverables
+    with detailed feedback, 4) Immediate corrective actions and escalations required,
+    5) Risk assessment for project timeline and quality, 6) Recommendations for maintaining
+    parallel excellence in both quality and time delivery'
+  agent: development_quality_time_supervisor
+  context:
+  - gather_and_analyze_project_requirements
+design_system_architecture:
+  description: Based on the gathered requirements, design a comprehensive system architecture
+    for the {project_type} project. Create technical specifications, define system
+    components, design database schemas, select appropriate technologies, and establish
+    integration patterns. Ensure the architecture supports scalability, maintainability,
+    and performance requirements.
+  expected_output: 'A complete architectural design package including: 1) High-level
+    system architecture diagrams, 2) Detailed technical specifications and component
+    designs, 3) Database design and data flow diagrams, 4) Technology stack recommendations
+    with justifications, 5) Integration patterns and API specifications, 6) Security
+    architecture and compliance considerations'
+  agent: software_architect
+  context:
+  - hardware_configuration_optimization
+  - monitor_development_team_quality_timeline
+implement_core_application_features:
+  description: Implement the core features of the {project_type} application following
+    the architectural design and requirements specifications. Write clean, maintainable,
+    and well-documented code. Follow coding standards, implement proper error handling,
+    create unit tests, and ensure code quality through code reviews and best practices.
+  expected_output: 'Production-ready codebase including: 1) Complete implementation
+    of all core features, 2) Unit tests with minimum 80% code coverage, 3) Comprehensive
+    code documentation and comments, 4) Code review reports and quality metrics, 5)
+    Integration with version control and proper branching strategy, 6) Performance
+    optimization and error handling implementation'
+  agent: senior_developer
+  context:
+  - design_system_architecture
+integration_connectivity_validation:
+  description: Validate all external integrations and third-party services are properly
+    connected for the {project_type}. Test connectivity to GitHub, APIs, databases,
+    and any other external dependencies. Document connection status and resolve any
+    connectivity issues.
+  expected_output: A comprehensive integration status report with all external services
+    validated, connectivity confirmed, and any issues resolved. Include recommendations
+    for optimization and backup connectivity options.
+  agent: integration_success_specialist
+  context:
+  - design_system_architecture
+user_experience_design_interface_creation:
+  description: Design an exceptional user experience and beautiful interface for the
+    {project_type} application. Conduct user research, create user personas and journey
+    maps, design wireframes and prototypes, develop visual designs, and ensure accessibility
+    standards. Create design systems and style guides for consistent user experience.
+  expected_output: 'Complete UX/UI design package including: 1) User research findings
+    and personas, 2) User journey maps and wireframes, 3) Interactive prototypes and
+    design mockups, 4) Design system and style guide, 5) Accessibility compliance
+    documentation, 6) Usability testing results and recommendations'
+  agent: ux_ui_design_specialist
+  context:
+  - design_system_architecture
+execute_comprehensive_testing_strategy:
+  description: Design and execute a comprehensive testing strategy for the {project_type}
+    application. Perform functional testing, integration testing, performance testing,
+    security testing, and user acceptance testing. Create automated test suites, identify
+    and document bugs, verify all requirements are met, and ensure the application
+    meets quality standards.
+  expected_output: 'Complete testing deliverables including: 1) Test plans and test
+    cases for all features, 2) Automated test suite implementation, 3) Bug reports
+    and resolution tracking, 4) Performance testing results and recommendations, 5)
+    Security testing report and vulnerability assessment, 6) User acceptance testing
+    results and sign-off documentation'
+  agent: qa_engineer
+  context:
+  - implement_core_application_features
+setup_production_deployment_pipeline:
+  description: Set up and configure the complete deployment pipeline for the {project_type}
+    application. Create CI/CD pipelines, configure production infrastructure, implement
+    monitoring and logging, set up security measures, and ensure automated deployment
+    processes. Prepare for production launch with proper backup and disaster recovery
+    procedures.
+  expected_output: 'Production-ready deployment infrastructure including: 1) Complete
+    CI/CD pipeline configuration, 2) Production infrastructure setup with scalability
+    considerations, 3) Monitoring, logging, and alerting systems implementation, 4)
+    Security configurations and compliance measures, 5) Backup and disaster recovery
+    procedures, 6) Deployment runbooks and operational documentation'
+  agent: devops_engineer
+  context:
+  - hardware_configuration_optimization
+  - execute_comprehensive_testing_strategy
+strategic_sales_lead_generation:
+  description: Develop and execute a comprehensive sales strategy for the {project_type}
+    application. Research target markets, identify high-value prospects, create compelling
+    value propositions, and build a robust sales pipeline. Analyze competitor pricing,
+    develop sales materials, and create outreach campaigns to convert leads into customers.
+  expected_output: 'A complete sales strategy package including: 1) Target market
+    analysis and ideal customer profiles, 2) Competitive pricing analysis and positioning
+    strategy, 3) Sales funnel design with conversion optimization tactics, 4) Lead
+    generation campaigns and outreach sequences, 5) Sales materials and pitch decks,
+    6) Pipeline management system and tracking metrics'
+  agent: sales_lead_generation_specialist
+  context:
+  - setup_production_deployment_pipeline
+brand_building_marketing_campaign:
+  description: Create a comprehensive brand identity and marketing strategy for the
+    {project_type} application. Develop brand messaging, content marketing plans,
+    social media strategies, and digital marketing campaigns. Research industry trends,
+    create engaging content, and design campaigns to drive user acquisition and brand
+    awareness.
+  expected_output: 'A complete brand and marketing package including: 1) Brand identity
+    guidelines and messaging framework, 2) Content marketing calendar with blog posts,
+    whitepapers, and case studies, 3) Social media strategy across key platforms,
+    4) Digital advertising campaigns (PPC, social ads, display), 5) SEO strategy and
+    keyword targeting plan, 6) Marketing automation workflows and email campaigns'
+  agent: marketing_brand_specialist
+  context:
+  - setup_production_deployment_pipeline
+enterprise_security_compliance_framework:
+  description: Implement comprehensive security measures and compliance frameworks
+    for the {project_type} application. Conduct security assessments, implement security
+    controls, ensure data protection, and establish compliance with GDPR, SOC2, HIPAA,
+    and other relevant regulations. Create security policies and incident response
+    procedures.
+  expected_output: 'Complete security and compliance package including: 1) Security
+    architecture and threat model, 2) Data protection and privacy controls implementation,
+    3) Compliance framework for GDPR, SOC2, HIPAA, 4) Security policies and procedures
+    documentation, 5) Penetration testing results and remediation, 6) Incident response
+    plan and monitoring setup'
+  agent: cybersecurity_compliance_specialist
+  context:
+  - setup_production_deployment_pipeline
+financial_strategy_investment_planning:
+  description: Develop comprehensive financial strategies and investment plans for
+    the {project_type} application. Create financial projections, identify funding
+    opportunities, optimize pricing models, prepare investor materials, and establish
+    revenue optimization strategies for sustainable growth and profitability.
+  expected_output: 'Complete financial strategy package including: 1) 5-year financial
+    projections and business model, 2) Funding strategy and investor pitch deck, 3)
+    Pricing optimization and revenue models, 4) Investment readiness assessment and
+    due diligence materials, 5) Financial risk analysis and mitigation strategies,
+    6) Strategic partnership and acquisition opportunities'
+  agent: financial_strategy_investment_specialist
+  context:
+  - strategic_sales_lead_generation
+  - brand_building_marketing_campaign
+legal_foundation_intellectual_property_protection:
+  description: Establish comprehensive legal foundations and intellectual property
+    protection for the {project_type} application. File patents and trademarks, create
+    legal agreements, draft terms of service and privacy policies, ensure regulatory
+    compliance, and establish corporate structure for global operations.
+  expected_output: 'Complete legal protection package including: 1) Patent applications
+    and trademark registrations, 2) Terms of service, privacy policy, and user agreements,
+    3) Corporate structure and governance documentation, 4) Software licensing and
+    IP protection strategy, 5) Regulatory compliance analysis for global markets,
+    6) Legal risk assessment and mitigation strategies'
+  agent: legal_intellectual_property_specialist
+  context:
+  - enterprise_security_compliance_framework
+global_market_expansion_localization_strategy:
+  description: Develop and execute global expansion strategies for the {project_type}
+    application. Research international markets, create localization plans, establish
+    market entry strategies, identify strategic partnerships, and ensure successful
+    launches in key global markets while respecting cultural differences.
+  expected_output: 'Complete global expansion package including: 1) International
+    market analysis and opportunity assessment, 2) Localization strategy for key markets
+    (language, culture, regulations), 3) Market entry strategies and go-to-market
+    plans, 4) Strategic partnership identification and development, 5) Cultural adaptation
+    and regional customization plans, 6) International launch timeline and success
+    metrics'
+  agent: global_expansion_localization_specialist
+  context:
+  - legal_foundation_intellectual_property_protection
+  - financial_strategy_investment_planning
+coordinate_project_delivery_stakeholder_communication:
+  description: Coordinate the overall delivery of the {project_type} project by managing
+    timelines, facilitating communication between all team members, tracking progress
+    against milestones, managing risks and dependencies, and ensuring stakeholder
+    alignment throughout the project lifecycle. Prepare final project deliverables
+    and conduct project closure activities.
+  expected_output: 'Complete project management deliverables including: 1) Project
+    timeline and milestone tracking reports, 2) Risk management and mitigation documentation,
+    3) Stakeholder communication logs and meeting minutes, 4) Resource allocation
+    and budget tracking, 5) Final project report with lessons learned, 6) Project
+    closure documentation and handover materials'
+  agent: project_manager
+  context:
+  - setup_production_deployment_pipeline
+  - integration_connectivity_validation
+  - strategic_sales_lead_generation
+  - brand_building_marketing_campaign
+  - user_experience_design_interface_creation
+  - enterprise_security_compliance_framework
+  - legal_foundation_intellectual_property_protection
+  - financial_strategy_investment_planning
+  - global_market_expansion_localization_strategy
+final_quality_timeline_assessment:
+  description: Conduct final oversight and assessment of the entire {project_type}
+    development project. Review all deliverables from each team member, evaluate quality
+    scores, assess timeline adherence, document lessons learned, and provide final
+    recommendations for future projects. Ensure all quality standards have been met
+    and project objectives achieved.
+  expected_output: 'Final project oversight report containing: 1) Comprehensive quality
+    assessment of all deliverables with final scores, 2) Timeline performance analysis
+    and adherence metrics, 3) Individual team member performance evaluations, 4) Project
+    success metrics and KPIs achieved, 5) Lessons learned and process improvements
+    for future projects, 6) Final project sign-off and closure recommendations'
+  agent: development_quality_time_supervisor
+  context:
+  - coordinate_project_delivery_stakeholder_communication
+excellence_validation_user_experience_optimization:
+  description: Conduct final validation to ensure the {project_type} application exceeds
+    all expectations and represents the pinnacle of user experience. Verify all integrations
+    work seamlessly, test user journeys, validate performance under load, and ensure
+    the application delivers an exceptional, out-of-the-box experience that users
+    have been waiting for.
+  expected_output: A comprehensive excellence report documenting that the application
+    exceeds expectations, with user experience metrics, performance validation, integration
+    health checks, and confirmation that this is the exceptional application users
+    have been waiting for.
+  agent: integration_success_specialist
+  context:
+  - final_quality_timeline_assessment
+daily_progress_next_steps_briefing:
+  description: Provide a comprehensive briefing on current project status, next immediate
+    steps, daily life reminders, and priority recommendations. Review previous work
+    sessions, identify where the user left off, outline clear next actions for both
+    {project_type} development and personal tasks. Include momentum-building suggestions
+    and time management recommendations.
+  expected_output: 'A personalized daily briefing containing: 1) Current project status
+    and last completed milestone, 2) Next 3 immediate action items with priority levels,
+    3) Daily life task reminders, 4) Recommended work session structure, 5) Potential
+    obstacles and solutions, 6) Motivational context and progress celebration'
+  agent: chief_of_staff_personal_assistant
+  context:
+  - excellence_validation_user_experience_optimization

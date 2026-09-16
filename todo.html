@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .todo-container {
+            background: white;
+            margin: auto;
+            width: 80%;
+            padding: 20px;
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            position: relative;
+        }
+
+        #username {
+            position: absolute;
+            top: 0px;
+            left: 20px;
+        }
+
+        #todo-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #todo-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        #todo-list li:last-child {
+            border-bottom: none;
+        }
+
+        #todo-list li.completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+    </style>
+    <script src="https://js.puter.com/v2/"></script>
+</head>
+
+<body>
+    <div class="todo-container">
+        <h1 style="margin-top:40px;">My To-Do List</h1>
+        <p id="username"></p>
+        <input type="text" id="todo-input" placeholder="Add a new task...">
+        <button id="add-todo">Add</button>
+        <button id="clear-all">Clear All</button>
+
+        <ul id="todo-list"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const usernameEl = document.getElementById('username');
+            const todoInput = document.getElementById('todo-input');
+            const addButton = document.getElementById('add-todo');
+            const clearAllButton = document.getElementById('clear-all');
+            const todoList = document.getElementById('todo-list');
+
+            // Set username when user logs in
+            puter.onAuth = async (user) => {
+                usernameEl.textContent = `Welcome, ${user.username}`;
+            };
+
+            // Try to get the user from the session on init
+            try {
+                const user = await puter.getUser();
+                usernameEl.textContent = `Welcome, ${user.username}`;
+            } catch (e) {
+                // No user logged in yet
+            }
+
+            // Load todos from the Puter Key-Value Store
+            const storedTodos = JSON.parse(await puter.kv.get('todos') ?? null) || [];
+            
+            // Render todos from storage
+            storedTodos.forEach(todo => {
+                const li = document.createElement('li');
+                li.textContent = todo.text;
+                if (todo.completed) {
+                    li.classList.add('completed');
+                }
+                todoList.appendChild(li);
+            });
+
+            // Add todo
+            addButton.addEventListener('click', () => {
+                const todoText = todoInput.value.trim();
+                if (todoText) {
+                    const todo = { text: todoText, completed: false };
+                    const li = document.createElement('li');
+                    li.textContent = todo.text;
+                    todoList.appendChild(li);
+                    saveTodo(todo);
+                    todoInput.value = '';
+                }
+            });
+
+            // Clear all todos
+            clearAllButton.addEventListener('click', async () => {
+                todoList.innerHTML = ''; // Clear the list on the page
+                await puter.kv.del('todos'); // Clear the todos
+            });
+
+            // Toggle completed on click
+            todoList.addEventListener('click', (event) => {
+                if (event.target.tagName === 'LI') {
+                    event.target.classList.toggle('completed');
+                    updateList();
+                }
+            });
+
+            function saveTodo(todo) {
+                const currentTodos = JSON.parse(await puter.kv.get('todos') ?? '[]');
+                currentTodos.push(todo);
+                updateList(currentTodos);
+            }
+
+            async function updateList(todosFromStorage = null) {
+                const todos = todosFromStorage || [...todoList.children].map(li => {
+                    return { text: li.textContent, completed: li.classList.contains('completed') };
+                });
+                
+                // Update UI
+                todoList.innerHTML = '';
+                todos.forEach(todo => {
+                    const li = document.createElement('li');
+                    li.textContent = todo.text;
+                    if (todo.completed) {
+                        li.classList.add('completed');
+                    }
+                    todoList.appendChild(li);
+                });
+                
+                // Save to storage
+                await puter.kv.set('todos', JSON.stringify(todos));
+            }
+        });
+    </script>
+</body>
+
+</html>

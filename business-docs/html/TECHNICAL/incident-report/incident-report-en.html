@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incident Report - Duta Integra Solutions</title>
+  <link rel="icon" type="image/svg+xml" href="../../shared/assets/logo-primary.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/brand-variables.css">
+  <link rel="stylesheet" href="../../shared/print-base.css">
+</head>
+<body>
+  <div class="page legal-doc">
+    <div class="legal-doc__watermark">
+      <img src="../../shared/assets/watermark.svg" alt="">
+    </div>
+
+    <div class="legal-doc__content">
+      <header class="legal-doc__header">
+        <img src="../../shared/assets/logo-primary.svg" alt="Duta Integra Solutions" class="legal-doc__logo">
+        <h1 class="legal-doc__title">Incident Report</h1>
+        <p class="legal-doc__subtitle">CONFIDENTIAL</p>
+        <div class="legal-doc__meta">
+          <span>Incident ID: {{INCIDENT_ID}}</span>
+          <span>Reported: {{REPORT_DATE}}</span>
+          <span>Severity: {{SEVERITY}}</span>
+        </div>
+      </header>
+
+      <div class="legal-doc__body">
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Incident Summary</h2>
+          <table class="table">
+            <tbody>
+              <tr><th style="width: 30%;">Incident Title</th><td>{{INCIDENT_TITLE}}</td></tr>
+              <tr><th>Date/Time Detected</th><td>{{DETECTED_DATETIME}}</td></tr>
+              <tr><th>Date/Time Resolved</th><td>{{RESOLVED_DATETIME}}</td></tr>
+              <tr><th>Status</th><td>{{STATUS}}</td></tr>
+              <tr><th>Severity</th><td>{{SEVERITY}}</td></tr>
+              <tr><th>Reported By</th><td>{{REPORTED_BY}}</td></tr>
+              <tr><th>Assigned To</th><td>{{ASSIGNED_TO}}</td></tr>
+              <tr><th>Affected Systems</th><td>{{AFFECTED_SYSTEMS}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Description</h2>
+          <p class="legal-doc__section-text">
+            {{DESCRIPTION}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Timeline</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Date/Time</th><th>Event</th><th>Actor</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{TIMELINE_1_TIME}}</td><td>{{TIMELINE_1_EVENT}}</td><td>{{TIMELINE_1_ACTOR}}</td><td>{{TIMELINE_1_NOTES}}</td></tr>
+              <tr><td>{{TIMELINE_2_TIME}}</td><td>{{TIMELINE_2_EVENT}}</td><td>{{TIMELINE_2_ACTOR}}</td><td>{{TIMELINE_2_NOTES}}</td></tr>
+              <tr><td>{{TIMELINE_3_TIME}}</td><td>{{TIMELINE_3_EVENT}}</td><td>{{TIMELINE_3_ACTOR}}</td><td>{{TIMELINE_3_NOTES}}</td></tr>
+              <tr><td>{{TIMELINE_4_TIME}}</td><td>{{TIMELINE_4_EVENT}}</td><td>{{TIMELINE_4_ACTOR}}</td><td>{{TIMELINE_4_NOTES}}</td></tr>
+              <tr><td>{{TIMELINE_5_TIME}}</td><td>{{TIMELINE_5_EVENT}}</td><td>{{TIMELINE_5_ACTOR}}</td><td>{{TIMELINE_5_NOTES}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Root Cause Analysis</h2>
+          <p class="legal-doc__section-text">
+            {{ROOT_CAUSE}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Impact Assessment</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Area</th><th>Impact Level</th><th>Details</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Users Affected</td><td>{{IMPACT_USERS}}</td><td>{{IMPACT_USERS_DETAILS}}</td></tr>
+              <tr><td>Services Affected</td><td>{{IMPACT_SERVICES}}</td><td>{{IMPACT_SERVICES_DETAILS}}</td></tr>
+              <tr><td>Data Impact</td><td>{{IMPACT_DATA}}</td><td>{{IMPACT_DATA_DETAILS}}</td></tr>
+              <tr><td>Revenue Impact</td><td>{{IMPACT_REVENUE}}</td><td>{{IMPACT_REVENUE_DETAILS}}</td></tr>
+              <tr><td>Reputation Impact</td><td>{{IMPACT_REPUTATION}}</td><td>{{IMPACT_REPUTATION_DETAILS}}</td></tr>
+              <tr><td>Compliance Impact</td><td>{{IMPACT_COMPLIANCE}}</td><td>{{IMPACT_COMPLIANCE_DETAILS}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Resolution</h2>
+          <p class="legal-doc__section-text">
+            {{RESOLUTION}}
+          </p>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Preventive Measures</h2>
+          <ul class="legal-doc__list">
+            <li class="legal-doc__list-item">{{PREVENTIVE_1}}</li>
+            <li class="legal-doc__list-item">{{PREVENTIVE_2}}</li>
+            <li class="legal-doc__list-item">{{PREVENTIVE_3}}</li>
+            <li class="legal-doc__list-item">{{PREVENTIVE_4}}</li>
+          </ul>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Follow-up Actions</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Action</th><th>Owner</th><th>Due Date</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{FOLLOWUP_1_ACTION}}</td><td>{{FOLLOWUP_1_OWNER}}</td><td>{{FOLLOWUP_1_DUE}}</td><td>{{FOLLOWUP_1_STATUS}}</td></tr>
+              <tr><td>{{FOLLOWUP_2_ACTION}}</td><td>{{FOLLOWUP_2_OWNER}}</td><td>{{FOLLOWUP_2_DUE}}</td><td>{{FOLLOWUP_2_STATUS}}</td></tr>
+              <tr><td>{{FOLLOWUP_3_ACTION}}</td><td>{{FOLLOWUP_3_OWNER}}</td><td>{{FOLLOWUP_3_DUE}}</td><td>{{FOLLOWUP_3_STATUS}}</td></tr>
+              <tr><td>{{FOLLOWUP_4_ACTION}}</td><td>{{FOLLOWUP_4_OWNER}}</td><td>{{FOLLOWUP_4_DUE}}</td><td>{{FOLLOWUP_4_STATUS}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Communication Log</h2>
+          <table class="table">
+            <thead>
+              <tr><th>Date/Time</th><th>Channel</th><th>Audience</th><th>Message Summary</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{COMM_1_TIME}}</td><td>{{COMM_1_CHANNEL}}</td><td>{{COMM_1_AUDIENCE}}</td><td>{{COMM_1_MESSAGE}}</td></tr>
+              <tr><td>{{COMM_2_TIME}}</td><td>{{COMM_2_CHANNEL}}</td><td>{{COMM_2_AUDIENCE}}</td><td>{{COMM_2_MESSAGE}}</td></tr>
+              <tr><td>{{COMM_3_TIME}}</td><td>{{COMM_3_CHANNEL}}</td><td>{{COMM_3_AUDIENCE}}</td><td>{{COMM_3_MESSAGE}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="legal-doc__section">
+          <h2 class="legal-doc__section-title">Approvals</h2>
+          <div class="legal-doc__signature-block">
+            <div class="legal-doc__signature-row">
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Prepared By</p>
+                <p class="legal-doc__signature-detail">Name: {{PREPARED_BY}}</p>
+                <p class="legal-doc__signature-detail">Date: {{PREPARED_DATE}}</p>
+              </div>
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Reviewed By</p>
+                <p class="legal-doc__signature-detail">Name: {{REVIEWED_BY}}</p>
+                <p class="legal-doc__signature-detail">Date: {{REVIEWED_DATE}}</p>
+              </div>
+              <div class="legal-doc__signature-column">
+                <div class="legal-doc__signature-line"></div>
+                <p class="legal-doc__signature-label">Approved By</p>
+                <p class="legal-doc__signature-detail">Name: {{APPROVED_BY}}</p>
+                <p class="legal-doc__signature-detail">Date: {{APPROVED_DATE}}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="legal-doc__page-number">
+          Page 1 of 1 | Incident {{INCIDENT_ID}} | {{REPORT_DATE}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-print" style="text-align: center; padding: 24px; background: #F8FAFC; margin-top: 16px; border-radius: 8px;">
+    <a href="#" class="btn btn--primary" onclick="window.print(); return false;">Print / Save as PDF</a>
+    <a href="incident-report-bm.html" class="btn btn--outline" style="margin-left: 12px;">View BM Version</a>
+  </div>
+</body>
+</html>
