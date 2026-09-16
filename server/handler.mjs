@@ -49,6 +49,32 @@ const CONTENT_TYPES = {
 
 const MAX_BODY_BYTES = 32 * 1024;
 
+/**
+ * Security headers for responses served by this process.
+ *
+ * Kept in sync with the `headers` block in vercel.json, which covers the
+ * static site served directly by Vercel. Without this, pages served locally
+ * run with a different policy than production and CSP problems (a blocked
+ * font or script) only surface after deploy.
+ *
+ * HSTS is deliberately omitted: this server is reached over plain HTTP in
+ * development, and the header would make browsers force HTTPS on localhost.
+ */
+const SECURITY_HEADERS = {
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "DENY",
+  "referrer-policy": "strict-origin-when-cross-origin",
+  "permissions-policy": "camera=(), microphone=(), geolocation=()",
+  "content-security-policy":
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com; " +
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
+    "connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com; " +
+    "object-src 'none'; base-uri 'self'; frame-ancestors 'none';",
+};
+
 // ── validation ──────────────────────────────────────────────────────────────
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -264,7 +290,7 @@ async function serveStatic(req, res, urlPath) {
         res.writeHead(200, {
           "content-type": "text/html; charset=utf-8",
           "content-length": indexInfo.size,
-          "x-content-type-options": "nosniff",
+          ...SECURITY_HEADERS,
         });
         createReadStream(indexPath).pipe(res);
       } catch {
@@ -280,8 +306,7 @@ async function serveStatic(req, res, urlPath) {
   res.writeHead(200, {
     "content-type": CONTENT_TYPES[extname(filePath).toLowerCase()] ?? "application/octet-stream",
     "content-length": info.size,
-    "x-content-type-options": "nosniff",
-    "referrer-policy": "strict-origin-when-cross-origin",
+    ...SECURITY_HEADERS,
   });
   createReadStream(filePath).pipe(res);
 }

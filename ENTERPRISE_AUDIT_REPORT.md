@@ -25,6 +25,8 @@ record of the original assessment, not as a current to-do list.
 | HIGH-04 | No CSRF protection | `server/handler.mjs:166-289` — cookie/header token comparison on state-changing cross-origin requests |
 | HIGH-05 | No Content-Security-Policy | `vercel.json:16` — CSP present, alongside HSTS, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy` |
 | MED-01 | No CSP header | Same as HIGH-05 |
+| — | CSP blocked the site's own fonts | `vercel.json:16` — `style-src` now allows `fonts.googleapis.com` and `font-src` allows `fonts.gstatic.com`. See below. |
+| — | Dev server sent no CSP | `server/handler.mjs:63-76` — `SECURITY_HEADERS` applied to every static response, so local pages are policed by the same rules production enforces |
 | MED-02 | HSTS missing `preload` | `vercel.json:15` — `max-age=31536000; includeSubDomains; preload` |
 | LOW-01 | No `security.txt` | `Web/.well-known/security.txt` present, expires 2027-09-15 |
 | LOW-03 | Verbose error messages | `server/handler.mjs` returns generic string errors; stack traces go to `console.error` only |
