@@ -25,3 +25,68 @@ jobs:
 
       - name: Test
         run: node --test "server/**/*.test.mjs"
+
+  # web-new is where the frontend actually lives. Without this job its TypeScript
+  # errors go unnoticed, which is how 70 of them accumulated.
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web-new/package-lock.json
+
+      - name: Install dependencies
+        working-directory: web-new
+        run: npm ci
+
+      - name: Lint
+        working-directory: web-new
+        run: npm run lint
+
+      - name: Typecheck and build
+        working-directory: web-new
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-new-dist
+          path: web-new/dist
+          retention-days: 7
+
+  # Guards against the failure mode this repo already hit: a bundle committed to
+  # Web/ that no longer matches web-new/ source. Rebuild and diff.
+  artifact-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web-new/package-lock.json
+
+      - name: Rebuild deploy artifact
+        run: npm run build:web
+
+      - name: Fail if Web/ is stale
+        run: |
+          # Porcelain (not `git diff`) so newly emitted hashed bundles count too.
+          if [ -n "$(git status --porcelain -- Web/)" ]; then
+            echo "::error::Web/ is out of date with web-new/ source."
+            echo "Run 'npm run build:web' and commit the result."
+            git status --porcelain -- Web/
+            exit 1
+          fi
+          echo "Web/ matches a fresh build of web-new/."

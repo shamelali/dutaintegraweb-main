@@ -116,10 +116,47 @@ Two consequences worth remembering:
 npm test            # 89 tests, node:test, no deps
 npm start           # loads .env via --env-file-if-exists
 npm run build:web   # build web-new/ into Web/ (the deploy artifact)
+npm run lint:web    # oxlint over web-new/ (needs web-new/node_modules)
+npm run verify      # tests + build + lint — run this before pushing
 ```
 
 `npm start`/`dev` pass `--env-file-if-exists=.env`, so a missing `.env` is fine.
 There is no `dotenv` and shouldn't be.
+
+`npm run verify` is the whole gate in one command: it runs `build:web` before
+`lint:web` because lint needs `web-new/node_modules`, which the build installs.
+
+## CI
+
+`.github/workflows/ci.yml` has three jobs:
+
+| Job | What it does |
+|---|---|
+| `test` | `node --test` over `server/**/*.test.mjs`. Needs no install (root has zero deps). |
+| `frontend` | `npm ci`, `oxlint`, and `tsc -b && vite build` in `web-new/`; uploads `dist/`. |
+| `artifact-drift` | Runs `npm run build:web`, then fails if `Web/` no longer matches source. |
+
+The `frontend` job exists because its absence is what let 70 TypeScript errors
+accumulate in `web-new` unnoticed — CI previously only tested `server/`, so the
+frontend could rot while CI stayed green. `artifact-drift` guards the other half
+of the same failure: a committed `Web/` bundle that had drifted from `web-new/`
+source. If it fails, run `npm run build:web` and commit the result.
+
+Dependabot (`.github/dependabot.yml`) watches `web-new/` npm packages weekly and
+the workflow actions monthly. Minor and patch bumps are grouped into one PR;
+majors arrive separately so they get read properly.
+
+Be aware that GitHub Actions runs for this repo were failing at the time of
+writing with `runner_id: 0` and zero steps executed, i.e. the job never started —
+consistent with Actions being disabled or billing-locked on the account rather
+than a workflow defect. Check that before assuming a red X means broken code.
+
+## Automations
+
+`automations/` holds OpenHands automations, run on cron. See
+`automations/README.md`. These are deliberately LLM-free scripts — a scheduled
+health probe is deterministic, so an agent-driven run would burn tokens for no
+benefit.
 
 ## Conventions
 

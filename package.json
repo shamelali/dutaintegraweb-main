@@ -11,6 +11,8 @@
     "start": "node --env-file-if-exists=.env server/index.mjs",
     "dev": "node --env-file-if-exists=.env --watch server/index.mjs",
     "test": "node --test \"server/**/*.test.mjs\"",
-    "build:web": "npm --prefix web-new ci && npm --prefix web-new run build && node scripts/sync-web.mjs"
+    "lint:web": "npm --prefix web-new run lint",
+    "build:web": "npm --prefix web-new ci && npm --prefix web-new run build && node scripts/sync-web.mjs",
+    "verify": "npm test && npm run build:web && npm run lint:web"
   }
 }
