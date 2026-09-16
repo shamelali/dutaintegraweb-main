@@ -337,6 +337,50 @@ describe("GET /admin/enquiries", () => {
   });
 });
 
+// ── monthly digest ───────────────────────────────────────────────────────────
+
+describe("POST /api/monthly-digest", () => {
+  const prev = process.env.DIGEST_TOKEN;
+
+  afterEach(() => {
+    if (prev === undefined) delete process.env.DIGEST_TOKEN;
+    else process.env.DIGEST_TOKEN = prev;
+  });
+
+  async function postDigest(token) {
+    const res = await fetch(`${base}/api/monthly-digest`, {
+      method: "POST",
+      headers: token ? { "x-digest-token": token } : {},
+    });
+    return { status: res.status, body: await res.json().catch(() => null) };
+  }
+
+  test("is refused when DIGEST_TOKEN is unset", async () => {
+    delete process.env.DIGEST_TOKEN;
+    const { status } = await postDigest();
+    assert.equal(status, 403, "an unconfigured digest route must not be open");
+  });
+
+  test("is refused when DIGEST_TOKEN is unset and a token is supplied", async () => {
+    delete process.env.DIGEST_TOKEN;
+    const { status } = await postDigest("anything");
+    assert.equal(status, 403);
+  });
+
+  test("is refused when the token does not match", async () => {
+    process.env.DIGEST_TOKEN = "digest-secret";
+    assert.equal((await postDigest("wrong")).status, 403);
+    assert.equal((await postDigest()).status, 403);
+  });
+
+  test("accepts the configured token", async () => {
+    process.env.DIGEST_TOKEN = "digest-secret";
+    const { status, body } = await postDigest("digest-secret");
+    assert.equal(status, 200);
+    assert.ok(body.month, "should return a month label");
+  });
+});
+
 // ── Phase B: client portal tests ─────────────────────────────────────────────
 
 describe("client portal — auth and tickets", () => {
@@ -366,16 +410,16 @@ describe("client portal — auth and tickets", () => {
     return { status: res.status, body: await res.json().catch(() => null) };
   }
 
-  async function loginAs(email = "test@client.my", password = "securePass1") {
+  async function loginAs(email = "test@client.my", password = "securePass1", ip = nextIp()) {
     const res = await fetch(`${base}/api/portal/login`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", "x-forwarded-for": ip },
       body: JSON.stringify({ email, password }),
     });
     const setCookie = res.headers.getSetCookie?.() ?? [];
     const sessionCookie = setCookie.find((c) => c.startsWith("di_session="));
     const token = sessionCookie?.split(";")[0]?.split("=")?.[1] ?? null;
-    return { status: res.status, body: await res.json().catch(() => null), token };
+    return { status: res.status, body: await res.json().catch(() => null), token, headers: res.headers };
   }
 
   describe("POST /admin/clients", () => {
@@ -450,6 +494,45 @@ describe("client portal — auth and tickets", () => {
     test("rejects unknown email", async () => {
       const { status } = await loginAs("nobody@x.my", "pass");
       assert.equal(status, 401);
+    });
+
+    test("rate limits repeated attempts from one IP", async () => {
+      const email = `rl-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const ip = nextIp();
+
+      // Budget is 5/min; consume it, then the next attempt is refused.
+      for (let i = 0; i < 5; i += 1) {
+        const { status } = await loginAs(email, "wrong", ip);
+        assert.equal(status, 401, `attempt ${i + 1} should reach the handler`);
+      }
+
+      const blocked = await loginAs(email, "securePass1", ip);
+      assert.equal(blocked.status, 429);
+      assert.ok(blocked.headers?.get("retry-after"), "should advise when to retry");
+      assert.equal(blocked.body.error, "Too many attempts. Please try again later.");
+    });
+
+    test("a correct password does not bypass the limit", async () => {
+      const email = `rlbypass-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const ip = nextIp();
+
+      for (let i = 0; i < 6; i += 1) await loginAs(email, "wrong", ip);
+      const blocked = await loginAs(email, "securePass1", ip);
+      assert.equal(blocked.status, 429);
+    });
+
+    test("one IP's limit does not affect another", async () => {
+      const email = `rlscope-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const noisy = nextIp();
+
+      for (let i = 0; i < 6; i += 1) await loginAs(email, "wrong", noisy);
+      assert.equal((await loginAs(email, "wrong", noisy)).status, 429);
+
+      const quiet = await loginAs(email, "securePass1", nextIp());
+      assert.equal(quiet.status, 200);
     });
   });
 

@@ -28,6 +28,7 @@ record of the original assessment, not as a current to-do list.
 | MED-02 | HSTS missing `preload` | `vercel.json:15` — `max-age=31536000; includeSubDomains; preload` |
 | LOW-01 | No `security.txt` | `Web/.well-known/security.txt` present, expires 2027-09-15 |
 | LOW-03 | Verbose error messages | `server/handler.mjs` returns generic string errors; stack traces go to `console.error` only |
+| HIGH-03 | Rate limiting too generous for auth | `server/handler.mjs:140-143` — `loginRateLimit()` keyed per IP, applied to `/api/portal/login` in the router |
 
 ### CRIT-01 — exposed `.env.local` — not found
 
@@ -46,10 +47,10 @@ result only means there is nothing left to scrub from this repository.
 
 | ID | Finding | Status |
 |---|---|---|
-| HIGH-03 | Rate limiting too generous for auth | **Open** — `server/handler.mjs` has one global limiter, `WINDOW_MS=60_000`, `LIMIT_PER_WINDOW=5`. It is applied only to `enquiry:` (`:292`) and `quiz:` (`:497`) keys. **`/api/portal/login` has no rate limit at all** — `handleLogin` (`server/portal.mjs:174-193`) validates credentials on every request with no throttling. Per-endpoint limiting on the login route is the real fix. |
+| HIGH-03 | Rate limiting too generous for auth | **Fixed in this change** — `/api/portal/login` now runs its own limiter (`loginRateLimit`, keyed `login:<ip>`, 5/min) before the handler is reached. Previously the global limiter was applied only to `enquiry:` and `quiz:` keys, so login attempts were completely unthrottled and brute-forceable. |
 | MED-03 | Input validation gaps | **Partially addressed** — `handler.mjs` has a `str()` schema helper with length caps (`:56-91`), and `portal.mjs` validates required fields and subject length (`:179`, `:221-252`, `:296`). No structured schema library; residual risk is low but the endpoints are hand-validated. |
 | MED-04 | No API key rotation mechanism | **Open** — `ADMIN_TOKEN` remains manually managed. |
-| MED-06 | `handler.mjs` is a God File | **Open** — now 839 lines. |
+| MED-06 | `handler.mjs` is a God File | **Open** — now ~870 lines. |
 | LOW-02 | Missing `X-Permitted-Cross-Domain-Policies` | **Open** — header not present in `vercel.json` or server responses. |
 | LOW-04 | No frontend build pipeline | **Open, and now ambiguous** — `web-new/` is a React 19 + Vite 8 + TS app, but `vercel.json` sets `buildCommand: ""` and ships static `Web/`. Neither is clearly canonical; decide before investing here. |
 | LOW-05 | No frontend tests | **Open** — the suite covers `server/` only. |
@@ -60,8 +61,8 @@ The test suite has grown since the original count. Measured on `19fb78d`:
 
 | Metric | Report said | Actual now |
 |---|---|---|
-| Total tests | 51 | **72** (18 suites, all passing) |
-| Test file size | 1,156 lines | **`server/handler.test.mjs`, 31,300 bytes** |
+| Total tests | 51 | **79** (18 suites, all passing) |
+| Test file size | 1,156 lines | **`server/handler.test.mjs`, ~31,300 bytes** |
 | Server modules | 10 | 11 `.mjs` files in `server/`, plus `api/audit.js` + `api/gateway.js` |
 | Runtime dependencies | 0 | **0** — still accurate |
 
@@ -77,11 +78,18 @@ which are read anywhere in the codebase**, while omitting all 18 variables the
 server actually reads. It has been rewritten to document every runtime variable
 with its default and the consequence of leaving it blank.
 
-One note surfaced while documenting it: **`DIGEST_TOKEN` fails open.**
-`server/handler.mjs:722` only enforces the token when the variable is set — if it
-is unset, `POST /api/monthly-digest` is reachable by anyone. `ADMIN_TOKEN` does
-not behave this way; it fails closed. Set `DIGEST_TOKEN` in any publicly reachable
-environment.
+Two related fixes landed alongside it:
+
+- **`.env` is now actually loaded.** Nothing read the file — no `dotenv`, no
+  `--env-file` — so the README's `cp .env.example .env` produced a file that was
+  silently ignored and the contact form would never email anyone. `start`/`dev`
+  now pass `node --env-file-if-exists=.env`, which still boots fine when the
+  file is absent.
+- **`DIGEST_TOKEN` no longer fails open.** `handler.mjs` previously enforced the
+  token only when the variable was set, so an unset `DIGEST_TOKEN` left
+  `POST /api/monthly-digest` — which returns aggregated lead data — reachable by
+  anyone. It now fails closed, matching `ADMIN_TOKEN`, and the comparison is
+  constant-time rather than a plain `!==`.
 
 ---
 

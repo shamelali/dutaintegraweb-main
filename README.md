@@ -102,6 +102,21 @@ See [`.env.example`](.env.example). The two settings that matter in production:
   when the static site and the API are served from different origins.
 - **`ADMIN_TOKEN`** — protects `GET /admin/enquiries`. Generate one with
   `openssl rand -base64 32`. If unset, the route stays closed.
+- **`DIGEST_TOKEN`** — protects `POST /api/monthly-digest`. Generate one with
+  `openssl rand -base64 32`. Like `ADMIN_TOKEN`, an unset value keeps the route
+  closed; the token is compared in constant time.
+
+## Rate limits
+
+Login and the public marketing endpoints are limited separately:
+
+- `POST /api/portal/login` — 5 requests/minute per client IP (429 with
+  `Retry-After`). Credential endpoints get their own budget so a burst of failed
+  logins cannot ride on the slack the contact form needs.
+- `POST /api/send-email`, `POST /api/quiz` — 5 requests/minute per client IP.
+
+Client IP is taken from the first `X-Forwarded-For` entry, so the server must
+sit behind a proxy that sets it (Vercel does).
 
 ## Deploying
 
