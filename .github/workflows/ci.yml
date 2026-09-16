@@ -61,6 +61,32 @@ jobs:
           path: web-new/dist
           retention-days: 7
 
+  # Warnings never fail the build; only a credential the provider confirms as
+  # live does. The gate is deliberately narrow so a red X here always means a
+  # real, working secret is exposed — not a docs example or a test fixture.
+  #
+  # History is scanned too: a secret that was committed and later deleted is
+  # still recoverable by anyone with a clone. fetch-depth: 0 is required for it.
+  secret-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Scan working tree
+        run: node scripts/scan-secrets.mjs --verify
+
+      - name: Scan git history
+        run: node scripts/scan-secrets.mjs --history --verify
+
   # Guards against the failure mode this repo already hit: a bundle committed to
   # Web/ that no longer matches web-new/ source. Rebuild and diff.
   artifact-drift:

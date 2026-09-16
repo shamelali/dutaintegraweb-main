@@ -128,12 +128,13 @@ There is no `dotenv` and shouldn't be.
 
 ## CI
 
-`.github/workflows/ci.yml` has three jobs:
+`.github/workflows/ci.yml` has four jobs:
 
 | Job | What it does |
 |---|---|
 | `test` | `node --test` over `server/**/*.test.mjs`. Needs no install (root has zero deps). |
 | `frontend` | `npm ci`, `oxlint`, and `tsc -b && vite build` in `web-new/`; uploads `dist/`. |
+| `secret-scan` | `scripts/scan-secrets.mjs` over the working tree and full git history. |
 | `artifact-drift` | Runs `npm run build:web`, then fails if `Web/` no longer matches source. |
 
 The `frontend` job exists because its absence is what let 70 TypeScript errors
@@ -141,6 +142,17 @@ accumulate in `web-new` unnoticed — CI previously only tested `server/`, so th
 frontend could rot while CI stayed green. `artifact-drift` guards the other half
 of the same failure: a committed `Web/` bundle that had drifted from `web-new/`
 source. If it fails, run `npm run build:web` and commit the result.
+
+`secret-scan` uses patterns plus a liveness check. A pattern hit is only a
+warning; the job fails only when a credential is confirmed live against the API
+of the provider that issued it. That keeps a red X meaningful — a revoked token
+or a docs example never breaks the build, and `--strict` is available if you
+want pattern hits to fail too. Findings are always redacted, because printing a
+secret to warn about the secret would leak it again into the CI log.
+
+History is scanned as well as the working tree, because a secret that was
+committed and later deleted is still recoverable from any clone. That needs
+`fetch-depth: 0`, which the job sets.
 
 Dependabot (`.github/dependabot.yml`) watches `web-new/` npm packages weekly and
 the workflow actions monthly. Minor and patch bumps are grouped into one PR;
@@ -195,6 +207,27 @@ and font origin only, and granting it `script-src` would be needless risk.
 
 **Headers over plain HTTP.** `SECURITY_HEADERS` omits HSTS on purpose. Sending
 it from a local HTTP server pins browsers to HTTPS on localhost.
+
+**The dual-backend storage is silent, and that is a live risk.** `clients.mjs`,
+`enquiries.mjs`, `tickets.mjs`, `digest.mjs`, and `handler.mjs` each decide at
+request time between Supabase and a JSONL file in `data/`, based on whether
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are both set. The fallback is not
+logged. On Vercel the function filesystem is ephemeral, so if production is
+running on the fallback, writes go somewhere that a redeploy discards.
+
+`/api/health` does not detect this — it returns only `{ ok, inboxConfigured }`,
+so a site can report healthy while lead capture writes nowhere durable. There is
+also no schema file anywhere in the repo: `leads`, `clients`, `tickets`,
+`monthly_digests`, and `quiz_audits` exist only as string constants in code.
+See `prd-data-layer-hardening.md`.
+
+Watch the distinction: Supabase *reads* throw on a non-OK response, so a
+configured-but-broken Supabase fails loudly on read. The silent path is
+*unset* variables, and *writes*.
+
+`SUPABASE_SERVICE_ROLE_KEY` bypasses Row Level Security entirely. It must stay
+server-side — never Vite-prefixed (`VITE_*`), never in a client bundle, never in
+a response body or log line.
 
 ## Environment variables
 
