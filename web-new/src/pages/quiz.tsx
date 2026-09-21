@@ -60,12 +60,7 @@ export function QuizPage() {
 
   const step = state === "q1" ? 1 : state === "q2" ? 2 : state === "q3" ? 3 : 0
 
-  const handleAnswer = useCallback((qIndex: number, value: number | string[]) => {
-    setAnswers((prev) => ({ ...prev, [qIndex]: value }))
-    setState((qIndex + 2) as QuizState)
-  }, [])
-
-  const runAudit = useCallback(async () => {
+  const runAudit = useCallback(async (auditAnswers: Record<number, number | string[]>) => {
     setState("loading")
     setError(null)
     try {
@@ -73,9 +68,9 @@ export function QuizPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          teamSize: answers[0],
-          itSpend: answers[1],
-          painPoints: answers[2],
+          teamSize: auditAnswers[0],
+          itSpend: auditAnswers[1],
+          painPoints: auditAnswers[2],
         }),
       })
       const data = await res.json()
@@ -94,7 +89,22 @@ export function QuizPage() {
       setError(err instanceof Error ? err.message : "Something went wrong")
       setState("error")
     }
-  }, [answers])
+  }, [])
+
+  const handleAnswer = useCallback(
+    (qIndex: number, value: number | string[]) => {
+      const next = { ...answers, [qIndex]: value }
+      setAnswers(next)
+      // Answering the last question submits. setState hasn't flushed, so pass
+      // `next` through rather than relying on runAudit's closure over `answers`.
+      if (qIndex >= questions.length - 1) {
+        void runAudit(next)
+      } else {
+        setState(`q${qIndex + 2}` as QuizState)
+      }
+    },
+    [answers, runAudit]
+  )
 
   const handleLeadSubmit = async () => {
     setSubmittingLead(true)
@@ -213,9 +223,9 @@ export function QuizPage() {
         {state === "loading" && (
           <Card className="p-10 text-center">
             <Loader2 className="w-12 h-12 text-electric animate-spin mx-auto mb-4" />
-            <h2 className="text-2xl font-heading font-bold mb-2">{lang === "ms" ? "Menganalisis..." : "Analyzing..."}</h2>
+            <h2 className="text-2xl font-heading font-bold mb-2">{lang === "bm" ? "Menganalisis..." : "Analyzing..."}</h2>
             <p className="text-muted-foreground text-sm">
-              {lang === "ms"
+              {lang === "bm"
                 ? "Menyemak infrastruktur IT anda dan mengira potensi penjimatan..."
                 : "Reviewing your IT infrastructure and calculating potential savings..."}
             </p>
@@ -227,12 +237,12 @@ export function QuizPage() {
           <Card className="p-10 text-center">
             <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
             <h2 className="text-2xl font-heading font-bold mb-2">
-              {lang === "ms" ? "Berlaku ralat" : "Something went wrong"}
+              {lang === "bm" ? "Berlaku ralat" : "Something went wrong"}
             </h2>
             <p className="text-muted-foreground mb-6">{error}</p>
             <div className="flex gap-3 justify-center">
-              <Button variant="electric" onClick={runAudit}>
-                {lang === "ms" ? "Cuba lagi" : "Try again"}
+              <Button variant="electric" onClick={() => runAudit(answers)}>
+                {lang === "bm" ? "Cuba lagi" : "Try again"}
               </Button>
               <Button variant="outline" onClick={reset}>
                 {t("quizRetake")}
@@ -250,10 +260,10 @@ export function QuizPage() {
               <div className="text-4xl mb-3">{tierIcon}</div>
               <h1 className="text-3xl font-heading font-bold mb-2">
                 {result.tier === "AI Partner"
-                  ? (lang === "ms" ? "AI Partner" : "AI Partner")
+                  ? (lang === "bm" ? "AI Partner" : "AI Partner")
                   : result.tier === "Growth"
-                    ? (lang === "ms" ? "Growth" : "Growth")
-                    : (lang === "ms" ? "Foundation" : "Foundation")
+                    ? (lang === "bm" ? "Growth" : "Growth")
+                    : (lang === "bm" ? "Foundation" : "Foundation")
                 }
               </h1>
               <p className="text-muted-foreground max-w-md mx-auto mb-4">{result.description}</p>
@@ -267,7 +277,7 @@ export function QuizPage() {
             {result.findings.length > 0 && (
               <div className="mb-8">
                 <h3 className="font-heading font-semibold mb-3 text-sm uppercase tracking-wider text-muted-foreground">
-                  {lang === "ms" ? "Penemuan Audit" : "Audit Findings"}
+                  {lang === "bm" ? "Penemuan Audit" : "Audit Findings"}
                 </h3>
                 <div className="space-y-2">
                   {result.findings.map((f, i) => (
@@ -283,11 +293,11 @@ export function QuizPage() {
             {/* Savings */}
             <div className="bg-electric/10 rounded-xl p-6 mb-8 text-center">
               <p className="text-sm text-muted-foreground mb-1">
-                {lang === "ms" ? "Potensi Penjimatan Tahunan" : "Estimated Annual Savings"}
+                {lang === "bm" ? "Potensi Penjimatan Tahunan" : "Estimated Annual Savings"}
               </p>
               <p className="text-2xl font-bold text-electric">{result.estimatedSavings}</p>
               <p className="text-xs text-muted-foreground mt-2">
-                {lang === "ms" ? "Audit dijalankan pada" : "Audit completed on"} {result.auditDate}
+                {lang === "bm" ? "Audit dijalankan pada" : "Audit completed on"} {result.auditDate}
               </p>
             </div>
 
@@ -302,7 +312,7 @@ export function QuizPage() {
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
               >
                 <MessageCircle className="w-5 h-5" />
-                {lang === "ms" ? "Bual di WhatsApp" : "Chat on WhatsApp"}
+                {lang === "bm" ? "Bual di WhatsApp" : "Chat on WhatsApp"}
               </a>
             </div>
 
@@ -311,8 +321,8 @@ export function QuizPage() {
               <div className="text-center mb-6">
                 <Button variant="ghost" size="sm" onClick={handleLeadSubmit} disabled={submittingLead}>
                   {submittingLead
-                    ? (lang === "ms" ? "Menghantar..." : "Sending...")
-                    : (lang === "ms" ? "Hantar ringkasan audit ke email" : "Email audit summary to me")
+                    ? (lang === "bm" ? "Menghantar..." : "Sending...")
+                    : (lang === "bm" ? "Hantar ringkasan audit ke email" : "Email audit summary to me")
                   }
                 </Button>
               </div>

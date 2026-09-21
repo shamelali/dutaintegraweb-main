@@ -9,7 +9,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { useLanguage } from "@/hooks/use-language"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { useToast } from "@/hooks/use-toast"
-import type { TranslationKey } from "@/i18n/translations"
 
 export function ContactPage() {
   const { t } = useLanguage()

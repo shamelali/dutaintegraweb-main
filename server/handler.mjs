@@ -49,6 +49,32 @@ const CONTENT_TYPES = {
 
 const MAX_BODY_BYTES = 32 * 1024;
 
+/**
+ * Security headers for responses served by this process.
+ *
+ * Kept in sync with the `headers` block in vercel.json, which covers the
+ * static site served directly by Vercel. Without this, pages served locally
+ * run with a different policy than production and CSP problems (a blocked
+ * font or script) only surface after deploy.
+ *
+ * HSTS is deliberately omitted: this server is reached over plain HTTP in
+ * development, and the header would make browsers force HTTPS on localhost.
+ */
+const SECURITY_HEADERS = {
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "DENY",
+  "referrer-policy": "strict-origin-when-cross-origin",
+  "permissions-policy": "camera=(), microphone=(), geolocation=()",
+  "content-security-policy":
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com; " +
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
+    "connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com; " +
+    "object-src 'none'; base-uri 'self'; frame-ancestors 'none';",
+};
+
 // ── validation ──────────────────────────────────────────────────────────────
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -107,19 +133,39 @@ export function validateEnquiry(body) {
 
 const WINDOW_MS = 60_000;
 const LIMIT_PER_WINDOW = 5;
+
+/**
+ * Login gets a tighter budget than the marketing endpoints. The generic
+ * 5/min limiter is sized for a contact form; applied to a credential
+ * endpoint it still permits thousands of password guesses per IP per day,
+ * which is far more than a password reset flow needs to absorb.
+ */
+const LOGIN_WINDOW_MS = 60_000;
+const LOGIN_LIMIT_PER_WINDOW = 5;
+
 const hits = new Map();
 
-/** Sliding-window counter per key. Exported for tests. */
-export function rateLimit(key, now = Date.now()) {
-  const cutoff = now - WINDOW_MS;
+/**
+ * Sliding-window counter per key. Exported for tests.
+ *
+ * `limit` and `windowMs` default to the marketing-endpoint budget; auth
+ * routes pass their own.
+ */
+export function rateLimit(key, now = Date.now(), limit = LIMIT_PER_WINDOW, windowMs = WINDOW_MS) {
+  const cutoff = now - windowMs;
   const recent = (hits.get(key) ?? []).filter((t) => t > cutoff);
-  if (recent.length >= LIMIT_PER_WINDOW) {
+  if (recent.length >= limit) {
     hits.set(key, recent);
-    return { allowed: false, retryAfterMs: WINDOW_MS - (now - recent[0]) };
+    return { allowed: false, retryAfterMs: windowMs - (now - recent[0]) };
   }
   recent.push(now);
   hits.set(key, recent);
   return { allowed: true };
+}
+
+/** Rate limit for credential endpoints, keyed per IP. */
+export function loginRateLimit(ip) {
+  return rateLimit(`login:${ip}`, Date.now(), LOGIN_LIMIT_PER_WINDOW, LOGIN_WINDOW_MS);
 }
 
 export function resetRateLimit() {
@@ -244,7 +290,7 @@ async function serveStatic(req, res, urlPath) {
         res.writeHead(200, {
           "content-type": "text/html; charset=utf-8",
           "content-length": indexInfo.size,
-          "x-content-type-options": "nosniff",
+          ...SECURITY_HEADERS,
         });
         createReadStream(indexPath).pipe(res);
       } catch {
@@ -260,8 +306,7 @@ async function serveStatic(req, res, urlPath) {
   res.writeHead(200, {
     "content-type": CONTENT_TYPES[extname(filePath).toLowerCase()] ?? "application/octet-stream",
     "content-length": info.size,
-    "x-content-type-options": "nosniff",
-    "referrer-policy": "strict-origin-when-cross-origin",
+    ...SECURITY_HEADERS,
   });
   createReadStream(filePath).pipe(res);
 }
@@ -329,13 +374,29 @@ async function handleSendEmail(req, res) {
 
 // ── admin: view stored enquiries ────────────────────────────────────────────
 
-/** Constant-time token comparison; false when no token is configured. */
-export function adminTokenValid(supplied) {
-  const configured = process.env.ADMIN_TOKEN?.trim();
+/** Constant-time string compare; false unless both sides are non-empty. */
+function constantTimeEqual(configured, supplied) {
   if (!configured || typeof supplied !== "string" || !supplied) return false;
   const a = Buffer.from(configured);
   const b = Buffer.from(supplied);
   return a.length === b.length && timingSafeEqual(a, b);
+}
+
+/** Constant-time token comparison; false when no token is configured. */
+export function adminTokenValid(supplied) {
+  return constantTimeEqual(process.env.ADMIN_TOKEN?.trim(), supplied);
+}
+
+/**
+ * Token check for the cron-triggered digest route.
+ *
+ * Fails closed: with no DIGEST_TOKEN configured the route is refused rather
+ * than left open. This route aggregates and returns stored lead data, so an
+ * unset variable must not silently publish it — ADMIN_TOKEN already behaves
+ * this way.
+ */
+export function digestTokenValid(supplied) {
+  return constantTimeEqual(process.env.DIGEST_TOKEN?.trim(), supplied);
 }
 
 function escapeHtml(value) {
@@ -717,10 +778,11 @@ async function handlePdpaScore(req, res) {
 
 async function handleMonthlyDigest(req, res) {
   try {
-    // Only allow if a cron/token is provided (future enhancement)
+    // Refused unless DIGEST_TOKEN is set and matches. An unset token is a
+    // misconfiguration, not an invitation — this route returns aggregated
+    // lead data and must not be reachable by default.
     const token = req.headers["x-digest-token"] || "";
-    const configured = process.env.DIGEST_TOKEN?.trim();
-    if (configured && token !== configured) {
+    if (!digestTokenValid(token)) {
       return send(res, 403, { error: "Forbidden" });
     }
 
@@ -800,7 +862,18 @@ export async function handle(req, res) {
     if (pathname === "/api/quiz") return await handleQuiz(req, res);
 
     // ── client portal routes ──────────────────────────────────────────
-    if (pathname === "/api/portal/login") return await handleLogin(req, res);
+    if (pathname === "/api/portal/login") {
+      const limited = loginRateLimit(clientIp(req));
+      if (!limited.allowed) {
+        return send(
+          res,
+          429,
+          { error: "Too many attempts. Please try again later." },
+          { "retry-after": String(Math.ceil(limited.retryAfterMs / 1000)) },
+        );
+      }
+      return await handleLogin(req, res);
+    }
     if (pathname === "/api/portal/logout") return await handleLogout(req, res);
     if (pathname === "/api/portal/me") return await handleMe(req, res);
     if (pathname === "/api/portal/health") return await handlePortalHealth(req, res);

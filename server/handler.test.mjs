@@ -337,6 +337,50 @@ describe("GET /admin/enquiries", () => {
   });
 });
 
+// ── monthly digest ───────────────────────────────────────────────────────────
+
+describe("POST /api/monthly-digest", () => {
+  const prev = process.env.DIGEST_TOKEN;
+
+  afterEach(() => {
+    if (prev === undefined) delete process.env.DIGEST_TOKEN;
+    else process.env.DIGEST_TOKEN = prev;
+  });
+
+  async function postDigest(token) {
+    const res = await fetch(`${base}/api/monthly-digest`, {
+      method: "POST",
+      headers: token ? { "x-digest-token": token } : {},
+    });
+    return { status: res.status, body: await res.json().catch(() => null) };
+  }
+
+  test("is refused when DIGEST_TOKEN is unset", async () => {
+    delete process.env.DIGEST_TOKEN;
+    const { status } = await postDigest();
+    assert.equal(status, 403, "an unconfigured digest route must not be open");
+  });
+
+  test("is refused when DIGEST_TOKEN is unset and a token is supplied", async () => {
+    delete process.env.DIGEST_TOKEN;
+    const { status } = await postDigest("anything");
+    assert.equal(status, 403);
+  });
+
+  test("is refused when the token does not match", async () => {
+    process.env.DIGEST_TOKEN = "digest-secret";
+    assert.equal((await postDigest("wrong")).status, 403);
+    assert.equal((await postDigest()).status, 403);
+  });
+
+  test("accepts the configured token", async () => {
+    process.env.DIGEST_TOKEN = "digest-secret";
+    const { status, body } = await postDigest("digest-secret");
+    assert.equal(status, 200);
+    assert.ok(body.month, "should return a month label");
+  });
+});
+
 // ── Phase B: client portal tests ─────────────────────────────────────────────
 
 describe("client portal — auth and tickets", () => {
@@ -366,16 +410,16 @@ describe("client portal — auth and tickets", () => {
     return { status: res.status, body: await res.json().catch(() => null) };
   }
 
-  async function loginAs(email = "test@client.my", password = "securePass1") {
+  async function loginAs(email = "test@client.my", password = "securePass1", ip = nextIp()) {
     const res = await fetch(`${base}/api/portal/login`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", "x-forwarded-for": ip },
       body: JSON.stringify({ email, password }),
     });
     const setCookie = res.headers.getSetCookie?.() ?? [];
     const sessionCookie = setCookie.find((c) => c.startsWith("di_session="));
     const token = sessionCookie?.split(";")[0]?.split("=")?.[1] ?? null;
-    return { status: res.status, body: await res.json().catch(() => null), token };
+    return { status: res.status, body: await res.json().catch(() => null), token, headers: res.headers };
   }
 
   describe("POST /admin/clients", () => {
@@ -450,6 +494,45 @@ describe("client portal — auth and tickets", () => {
     test("rejects unknown email", async () => {
       const { status } = await loginAs("nobody@x.my", "pass");
       assert.equal(status, 401);
+    });
+
+    test("rate limits repeated attempts from one IP", async () => {
+      const email = `rl-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const ip = nextIp();
+
+      // Budget is 5/min; consume it, then the next attempt is refused.
+      for (let i = 0; i < 5; i += 1) {
+        const { status } = await loginAs(email, "wrong", ip);
+        assert.equal(status, 401, `attempt ${i + 1} should reach the handler`);
+      }
+
+      const blocked = await loginAs(email, "securePass1", ip);
+      assert.equal(blocked.status, 429);
+      assert.ok(blocked.headers?.get("retry-after"), "should advise when to retry");
+      assert.equal(blocked.body.error, "Too many attempts. Please try again later.");
+    });
+
+    test("a correct password does not bypass the limit", async () => {
+      const email = `rlbypass-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const ip = nextIp();
+
+      for (let i = 0; i < 6; i += 1) await loginAs(email, "wrong", ip);
+      const blocked = await loginAs(email, "securePass1", ip);
+      assert.equal(blocked.status, 429);
+    });
+
+    test("one IP's limit does not affect another", async () => {
+      const email = `rlscope-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const noisy = nextIp();
+
+      for (let i = 0; i < 6; i += 1) await loginAs(email, "wrong", noisy);
+      assert.equal((await loginAs(email, "wrong", noisy)).status, 429);
+
+      const quiet = await loginAs(email, "securePass1", nextIp());
+      assert.equal(quiet.status, 200);
     });
   });
 
@@ -832,5 +915,152 @@ describe("POST /api/quiz", () => {
     }
     const res = await postQuiz({ teamSize: 1, itSpend: 5000, painPoints: [] }, { "x-forwarded-for": ip });
     assert.equal(res.status, 429);
+  });
+});
+// ── static asset CSP ─────────────────────────────────────────────────────────
+
+describe("static responses carry a usable CSP", () => {
+  /**
+   * A CSP that blocks the site's own fonts or scripts is worse than no CSP:
+   * pages render wrong and the break only shows up in production, where
+   * vercel.json enforces the same policy. These tests read the real pages and
+   * assert every third-party origin they reference is permitted by the header
+   * this process actually sends.
+   */
+
+  function parseCsp(value) {
+    const out = {};
+    for (const part of value.split(";")) {
+      const [name, ...sources] = part.trim().split(/\s+/);
+      if (name) out[name] = sources;
+    }
+    return out;
+  }
+
+  async function cspFor(pathname) {
+    const res = await fetch(`${base}${pathname}`);
+    assert.equal(res.status, 200, `${pathname} should serve`);
+    const csp = res.headers.get("content-security-policy");
+    assert.ok(csp, `${pathname} should carry a CSP`);
+    return parseCsp(csp);
+  }
+
+  test("style-src permits the Google Fonts stylesheet origin", async () => {
+    // Web/*.html load fonts via <link href="https://fonts.googleapis.com/css2?...">
+    const csp = await cspFor("/index.html");
+    assert.ok(
+      csp["style-src"]?.includes("https://fonts.googleapis.com"),
+      `style-src must allow fonts.googleapis.com or the stylesheet is blocked; got ${csp["style-src"]}`,
+    );
+  });
+
+  test("font-src permits the Google Fonts file origin", async () => {
+    // The CSS above resolves to .woff2 files served from fonts.gstatic.com
+    const csp = await cspFor("/index.html");
+    assert.ok(
+      csp["font-src"]?.includes("https://fonts.gstatic.com"),
+      `font-src must allow fonts.gstatic.com or the font files are blocked; got ${csp["font-src"]}`,
+    );
+  });
+
+  test("allows every third-party script origin the pages use", async () => {
+    // Derived from <script src="..."> in Web/*.html. jsdelivr appears only in
+    // <link rel="stylesheet">, so it belongs in style-src, not script-src.
+    const csp = await cspFor("/index.html");
+    for (const origin of [
+      "https://cdn.tailwindcss.com",
+      "https://va.vercel-scripts.com",
+      "https://www.googletagmanager.com",
+    ]) {
+      assert.ok(csp["script-src"]?.includes(origin), `script-src should allow ${origin}`);
+    }
+    assert.ok(
+      !csp["script-src"]?.includes("https://cdn.jsdelivr.net"),
+      "jsdelivr serves only styles here; allowing it as a script origin widens attack surface for no reason",
+    );
+  });
+
+  test("style-src covers the stylesheet origins the pages use", async () => {
+    const csp = await cspFor("/index.html");
+    for (const origin of ["https://cdn.jsdelivr.net", "https://fonts.googleapis.com"]) {
+      assert.ok(csp["style-src"]?.includes(origin), `style-src should allow ${origin}`);
+    }
+  });
+
+  test("includes frame-ancestors and object-src hardening", async () => {
+    const csp = await cspFor("/index.html");
+    assert.deepEqual(csp["frame-ancestors"], ["'none'"]);
+    assert.deepEqual(csp["object-src"], ["'none'"]);
+    assert.deepEqual(csp["base-uri"], ["'self'"]);
+  });
+
+  test("does not send HSTS over plain HTTP", async () => {
+    // Sending HSTS from a local HTTP server makes browsers force HTTPS on
+    // localhost, which breaks development.
+    const res = await fetch(`${base}/index.html`);
+    assert.equal(res.headers.get("strict-transport-security"), null);
+  });
+
+  test("also applies to the SPA fallback", async () => {
+    const res = await fetch(`${base}/some/deep/link`, {
+      headers: { accept: "text/html" },
+    });
+    assert.equal(res.status, 200);
+    assert.ok(res.headers.get("content-security-policy"));
+  });
+});
+
+// ── vercel.json header parity ────────────────────────────────────────────────
+
+describe("vercel.json security headers", () => {
+  /**
+   * These headers are what production actually enforces, since Vercel serves
+   * Web/ directly and never runs this server. Parsed from the file rather than
+   * hardcoded so the test fails if someone edits the config.
+   */
+  async function loadHeaders() {
+    const raw = await readFile(new URL("../vercel.json", import.meta.url), "utf8");
+    const config = JSON.parse(raw);
+    const map = new Map();
+    for (const entry of config.headers ?? []) {
+      for (const h of entry.headers ?? []) map.set(h.key.toLowerCase(), h.value);
+    }
+    return map;
+  }
+
+  test("sends a CSP that permits the fonts and CDNs the pages use", async () => {
+    const headers = await loadHeaders();
+    const csp = headers.get("content-security-policy");
+    assert.ok(csp, "vercel.json should set a CSP");
+    for (const origin of [
+      "https://fonts.googleapis.com",
+      "https://fonts.gstatic.com",
+      "https://cdn.tailwindcss.com",
+      "https://cdn.jsdelivr.net",
+      "https://va.vercel-scripts.com",
+      "https://www.googletagmanager.com",
+    ]) {
+      assert.ok(csp.includes(origin), `production CSP must allow ${origin}`);
+    }
+    assert.ok(csp.includes("object-src 'none'"), "should harden object-src");
+    assert.ok(csp.includes("base-uri 'self'"), "should constrain base-uri");
+    assert.ok(csp.includes("frame-ancestors 'none'"), "should prevent framing");
+  });
+
+  test("sends HSTS with preload", async () => {
+    const headers = await loadHeaders();
+    const hsts = headers.get("strict-transport-security");
+    assert.ok(hsts, "vercel.json should set HSTS");
+    assert.match(hsts, /max-age=\d+/);
+    assert.ok(hsts.includes("includeSubDomains"));
+    assert.ok(hsts.includes("preload"));
+  });
+
+  test("sends the other baseline headers", async () => {
+    const headers = await loadHeaders();
+    assert.equal(headers.get("x-content-type-options"), "nosniff");
+    assert.equal(headers.get("x-frame-options"), "DENY");
+    assert.ok(headers.get("referrer-policy"));
+    assert.ok(headers.get("permissions-policy"));
   });
 });

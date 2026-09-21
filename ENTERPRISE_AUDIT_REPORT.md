@@ -7,6 +7,94 @@
 
 ---
 
+## ⚠️ Remediation Update — September 16, 2026 (commit `19fb78d`)
+
+This report was written against commit `77f65a0`. Most of its findings have since
+been fixed, and the metrics below are out of date. **Read this section before
+acting on any finding in the body** — the body is retained as a historical
+record of the original assessment, not as a current to-do list.
+
+### Verified fixed in code
+
+| ID | Finding | Evidence |
+|---|---|---|
+| CRIT-03 | Passwords stored as `[object Promise]` | `server/portal.mjs:304` — `await hashPassword(password)` |
+| HIGH-01 | Missing `await` on `verifyPassword()` | `server/portal.mjs:184` — `await verifyPassword(...)` |
+| CRIT-02 | No session expiry or ceiling | `server/portal.mjs:80-92` — `SESSION_DAYS=30`, `MAX_SESSIONS=1000`, `expiresAt` per session, expired sessions deleted on lookup (`:100`) |
+| HIGH-02 | CORS allowed all origins | `server/handler.mjs:138-163` — allowlist from `ALLOWED_ORIGINS`, returns 403 for unlisted origins |
+| HIGH-04 | No CSRF protection | `server/handler.mjs:166-289` — cookie/header token comparison on state-changing cross-origin requests |
+| HIGH-05 | No Content-Security-Policy | `vercel.json:16` — CSP present, alongside HSTS, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy` |
+| MED-01 | No CSP header | Same as HIGH-05 |
+| — | CSP blocked the site's own fonts | `vercel.json:16` — `style-src` now allows `fonts.googleapis.com` and `font-src` allows `fonts.gstatic.com`. See below. |
+| — | Dev server sent no CSP | `server/handler.mjs:63-76` — `SECURITY_HEADERS` applied to every static response, so local pages are policed by the same rules production enforces |
+| MED-02 | HSTS missing `preload` | `vercel.json:15` — `max-age=31536000; includeSubDomains; preload` |
+| LOW-01 | No `security.txt` | `Web/.well-known/security.txt` present, expires 2027-09-15 |
+| LOW-03 | Verbose error messages | `server/handler.mjs` returns generic string errors; stack traces go to `console.error` only |
+| HIGH-03 | Rate limiting too generous for auth | `server/handler.mjs:140-143` — `loginRateLimit()` keyed per IP, applied to `/api/portal/login` in the router |
+
+### CRIT-01 — exposed `.env.local` — not found
+
+A full search of all reachable git history (`git rev-list --all`, every tree) found
+**no committed `.env.local` and no committed secret file of any kind**. The only
+`.env`-named blobs are `.env.example` files belonging to the `leish-code/` and
+`redis-js-main/` subtrees that were removed when the Leish! v2 application was
+stripped from this repository.
+
+This does not prove the token never leaked — rewritten history, forks, and build
+caches are outside a clone's reach. **Treat the Vercel OIDC token as compromised
+and rotate it.** That closes the question for good and costs minutes; the search
+result only means there is nothing left to scrub from this repository.
+
+### Still open
+
+| ID | Finding | Status |
+|---|---|---|
+| HIGH-03 | Rate limiting too generous for auth | **Fixed in this change** — `/api/portal/login` now runs its own limiter (`loginRateLimit`, keyed `login:<ip>`, 5/min) before the handler is reached. Previously the global limiter was applied only to `enquiry:` and `quiz:` keys, so login attempts were completely unthrottled and brute-forceable. |
+| MED-03 | Input validation gaps | **Partially addressed** — `handler.mjs` has a `str()` schema helper with length caps (`:56-91`), and `portal.mjs` validates required fields and subject length (`:179`, `:221-252`, `:296`). No structured schema library; residual risk is low but the endpoints are hand-validated. |
+| MED-04 | No API key rotation mechanism | **Open** — `ADMIN_TOKEN` remains manually managed. |
+| MED-06 | `handler.mjs` is a God File | **Open** — now ~870 lines. |
+| LOW-02 | Missing `X-Permitted-Cross-Domain-Policies` | **Open** — header not present in `vercel.json` or server responses. |
+| LOW-04 | No frontend build pipeline | **Open, and now ambiguous** — `web-new/` is a React 19 + Vite 8 + TS app, but `vercel.json` sets `buildCommand: ""` and ships static `Web/`. Neither is clearly canonical; decide before investing here. |
+| LOW-05 | No frontend tests | **Open** — the suite covers `server/` only. |
+
+### Corrected metrics
+
+The test suite has grown since the original count. Measured on `19fb78d`:
+
+| Metric | Report said | Actual now |
+|---|---|---|
+| Total tests | 51 | **79** (18 suites, all passing) |
+| Test file size | 1,156 lines | **`server/handler.test.mjs`, ~31,300 bytes** |
+| Server modules | 10 | 11 `.mjs` files in `server/`, plus `api/audit.js` + `api/gateway.js` |
+| Runtime dependencies | 0 | **0** — still accurate |
+
+The file inventory, per-endpoint coverage table, and OWASP ASVS percentages in the
+body were derived from the old structure (they reference endpoints such as
+`/api/enrol` and `/api/contact` that no longer exist) and should be regenerated
+rather than patched.
+
+### Configuration gap — fixed in this change
+
+`.env.example` previously documented only three `OPIK_*` variables, **none of
+which are read anywhere in the codebase**, while omitting all 18 variables the
+server actually reads. It has been rewritten to document every runtime variable
+with its default and the consequence of leaving it blank.
+
+Two related fixes landed alongside it:
+
+- **`.env` is now actually loaded.** Nothing read the file — no `dotenv`, no
+  `--env-file` — so the README's `cp .env.example .env` produced a file that was
+  silently ignored and the contact form would never email anyone. `start`/`dev`
+  now pass `node --env-file-if-exists=.env`, which still boots fine when the
+  file is absent.
+- **`DIGEST_TOKEN` no longer fails open.** `handler.mjs` previously enforced the
+  token only when the variable was set, so an unset `DIGEST_TOKEN` left
+  `POST /api/monthly-digest` — which returns aggregated lead data — reachable by
+  anyone. It now fails closed, matching `ADMIN_TOKEN`, and the comparison is
+  constant-time rather than a plain `!==`.
+
+---
+
 ## Executive Summary
 
 | Metric | Result |
