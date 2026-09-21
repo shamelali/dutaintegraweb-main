@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # Frontend dependencies. These are the only third-party packages the project
+  # resolves at install time, so they carry the supply-chain risk.
+  - package-ecosystem: npm
+    directory: /web-new
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One PR for routine bumps; majors stay separate so they get read properly.
+      minor-and-patch:
+        applies-to: version-updates
+        update-types: [minor, patch]
+
+  # Action versions in .github/workflows.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
