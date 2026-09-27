@@ -817,6 +817,14 @@ describe("POST /api/quiz", () => {
     return { status: res.status, body: await res.json().catch(() => null), headers: res.headers };
   }
 
+  test("accepts a same-origin POST without env config (real browsers send Origin)", async () => {
+    // Real browsers always attach Origin to POST fetches, even same-origin.
+    // The site's own origin must pass without requiring ALLOWED_ORIGINS.
+    const res = await postQuiz({}, { origin: base });
+    assert.notEqual(res.body?.error, "Invalid origin");
+    assert.equal(res.status, 400); // origin passes; validation rejects the empty payload
+  });
+
   test("returns Foundation tier for small team, low spend, no pain points", async () => {
     const res = await postQuiz({ teamSize: 1, itSpend: 2000, painPoints: [] });
     assert.equal(res.status, 200);

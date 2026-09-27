@@ -205,6 +205,11 @@ export function corsHeaders(req) {
 export function checkOrigin(req) {
   const origin = req.headers.origin;
   if (!origin) return null; // same-origin navigation / server-to-server
+  // Same-origin POST: real browsers always attach Origin to POST fetches,
+  // even when the page and API share an origin. Match it against the
+  // request's own host so the site works on any domain without env config.
+  const host = req.headers.host;
+  if (host && (origin === `https://${host}` || origin === `http://${host}`)) return null;
   if (allowedOrigins().includes(origin)) return null;
   return { status: 403, body: { error: "Invalid origin" } };
 }
