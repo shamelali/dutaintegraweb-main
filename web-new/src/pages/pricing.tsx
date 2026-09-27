@@ -84,7 +84,7 @@ export function PricingPage() {
   return (
     <>
       {/* Hero */}
-      <section ref={heroRef} className="py-24 md:py-32 bg-gradient-to-br from-navy via-slate-deep to-navy text-center">
+      <section ref={heroRef} className="py-20 md:py-28 bg-gradient-to-br from-navy via-slate-deep to-navy text-center">
         <div className="max-w-4xl mx-auto px-6">
           <Badge variant="electric" className="mb-6 reveal">{t("priceHeroLabel")}</Badge>
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6 reveal reveal-delay-1">
@@ -97,7 +97,7 @@ export function PricingPage() {
       </section>
 
       {/* Pricing Tiers */}
-      <section ref={tiersRef} className="py-24 px-6">
+      <section ref={tiersRef} className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 reveal">{t("priceManagedEyebrow")}</Badge>
@@ -159,7 +159,7 @@ export function PricingPage() {
       </section>
 
       {/* AI Addons */}
-      <section ref={addonsRef} className="py-24 px-6 bg-muted/30">
+      <section ref={addonsRef} className="py-20 px-6 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 reveal">{t("priceAddonEyebrow")}</Badge>
@@ -182,7 +182,7 @@ export function PricingPage() {
       </section>
 
       {/* CTA */}
-      <section ref={ctaRef} className="py-24 px-6 bg-gradient-to-br from-navy to-slate-deep text-center">
+      <section ref={ctaRef} className="py-20 px-6 bg-gradient-to-br from-navy to-slate-deep text-center">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4 reveal">
             {t("priceCtaTitle")}

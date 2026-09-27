@@ -72,7 +72,7 @@ export function ContactPage() {
       )}
 
       {/* Hero */}
-      <section ref={heroRef} className="py-24 md:py-32 bg-gradient-to-br from-navy via-slate-deep to-navy text-center">
+      <section ref={heroRef} className="py-20 md:py-28 bg-gradient-to-br from-navy via-slate-deep to-navy text-center">
         <div className="max-w-4xl mx-auto px-6">
           <Badge variant="electric" className="mb-6 reveal">{t("contactHeroLabel")}</Badge>
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6 reveal reveal-delay-1">
@@ -85,7 +85,7 @@ export function ContactPage() {
       </section>
 
       {/* Form + Info */}
-      <section ref={formRef} className="py-24 px-6">
+      <section ref={formRef} className="py-20 px-6">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-12">
           {/* Info sidebar */}
           <div className="space-y-6">

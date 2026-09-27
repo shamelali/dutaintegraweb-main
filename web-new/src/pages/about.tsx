@@ -32,7 +32,7 @@ export function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section ref={heroRef} className="py-24 md:py-32 bg-gradient-to-br from-navy via-slate-deep to-navy text-center">
+      <section ref={heroRef} className="py-20 md:py-28 bg-gradient-to-br from-navy via-slate-deep to-navy text-center">
         <div className="max-w-4xl mx-auto px-6">
           <Badge variant="electric" className="mb-6 reveal">{t("aboutHeroLabel")}</Badge>
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6 reveal reveal-delay-1">
@@ -45,7 +45,7 @@ export function AboutPage() {
       </section>
 
       {/* Story + Stats */}
-      <section ref={storyRef} className="py-24 px-6">
+      <section ref={storyRef} className="py-20 px-6">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-3xl font-heading font-bold mb-6 reveal">{t("aboutStoryTitle")}</h2>
@@ -71,7 +71,7 @@ export function AboutPage() {
       </section>
 
       {/* Values */}
-      <section ref={valuesRef} className="py-24 px-6 bg-muted/30">
+      <section ref={valuesRef} className="py-20 px-6 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 reveal">{t("aboutValuesEyebrow")}</Badge>
@@ -94,7 +94,7 @@ export function AboutPage() {
       </section>
 
       {/* Founder */}
-      <section ref={founderRef} className="py-24 px-6">
+      <section ref={founderRef} className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4 reveal">{t("aboutFounderEyebrow")}</Badge>
@@ -121,7 +121,7 @@ export function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section ref={ctaRef} className="py-24 px-6 bg-gradient-to-br from-navy to-slate-deep text-center">
+      <section ref={ctaRef} className="py-20 px-6 bg-gradient-to-br from-navy to-slate-deep text-center">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4 reveal">
             {t("aboutCtaTitle")}
