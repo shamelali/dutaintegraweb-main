@@ -150,7 +150,7 @@ export function QuizPage() {
   const tierIcon = result?.tier === "AI Partner" ? "🤖" : result?.tier === "Growth" ? "📈" : "🛡️"
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-navy via-slate-deep to-navy flex items-center justify-center px-6 py-24">
+    <div className="min-h-screen bg-gradient-to-br from-navy via-slate-deep to-navy flex items-center justify-center px-6 py-20">
       <div className="w-full max-w-2xl">
         {/* Intro */}
         {state === "intro" && (
@@ -204,7 +204,7 @@ export function QuizPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {questions[step - 1].options.map((opt) => (
                 <button
-                  key={String(opt.value)}
+                  key={opt.key}
                   onClick={() => handleAnswer(step - 1, opt.value)}
                   className={`p-4 rounded-xl border text-left transition-all hover:border-electric hover:bg-electric/5 ${
                     answers[step - 1] === opt.value

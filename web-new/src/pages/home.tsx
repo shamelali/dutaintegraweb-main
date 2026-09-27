@@ -86,7 +86,7 @@ export function HomePage() {
   return (
     <>
       {/* Hero — Pain-led A/B test */}
-      <section ref={heroRef} className="relative overflow-hidden bg-gradient-to-br from-navy via-slate-deep to-navy py-24 md:py-32">
+      <section ref={heroRef} className="relative overflow-hidden bg-gradient-to-br from-navy via-slate-deep to-navy py-20 md:py-28">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(0,212,255,0.08),transparent_50%)]" />
         <div className="relative max-w-7xl mx-auto px-6 text-center">
           <Badge variant="electric" className="mb-6 reveal">
@@ -138,7 +138,7 @@ export function HomePage() {
       </section>
 
       {/* Services Grid */}
-      <section ref={servicesRef} className="py-24 px-6">
+      <section ref={servicesRef} className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 reveal">{t("idxSvcEyebrow")}</Badge>
@@ -168,7 +168,7 @@ export function HomePage() {
       </section>
 
       {/* Why Choose Us */}
-      <section ref={whyRef} className="py-24 px-6 bg-muted/30">
+      <section ref={whyRef} className="py-20 px-6 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 reveal">{t("idxWhyEyebrow")}</Badge>
@@ -212,7 +212,7 @@ export function HomePage() {
       </section>
 
       {/* WhatsApp One-Field Signup */}
-      <section className="py-24 px-6 bg-gradient-to-br from-navy to-slate-deep">
+      <section className="py-20 px-6 bg-gradient-to-br from-navy to-slate-deep">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4 reveal">
             {t("convWaTitle")}
@@ -271,7 +271,7 @@ export function HomePage() {
       </section>
 
       {/* CTA Band */}
-      <section className="py-24 px-6 bg-gradient-to-br from-navy to-slate-deep text-center border-t border-white/5">
+      <section className="py-20 px-6 bg-gradient-to-br from-navy to-slate-deep text-center border-t border-white/5">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
             {t("idxCtaTitle")}
