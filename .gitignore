@@ -30,3 +30,8 @@ Web-backup-*/
 
 # personal tool configs
 obsidian-knowledge-base/
+
+# next.js build output
+.next/
+next-env.d.ts
+tsconfig.tsbuildinfo
