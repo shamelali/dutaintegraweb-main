@@ -8,7 +8,7 @@ import { notifyEnquiry, recordEnquiry } from "./enquiries.mjs";
 import { sendDigestEmail } from "./digest.mjs";
 
 /**
- * Email provider wiring: priority Resend > Brevo > Postmark, identical in
+ * Email provider wiring: priority Brevo > Resend > Postmark, identical in
  * enquiries.mjs and digest.mjs. Brevo was chosen for this project, so the
  * Brevo-only case is the one production must hit (exactly one key set).
  */
@@ -57,13 +57,13 @@ test("brevo-only: posts to api.brevo.com with the dutaintegra.my sender", async 
   assert.equal(calls[0].body.sender.email, "no-reply@dutaintegra.my");
 });
 
-test("resend wins when both resend and brevo keys are set", async () => {
+test("brevo wins when both brevo and resend keys are set", async () => {
   process.env.RESEND_API_KEY = "test-resend-key";
   process.env.BREVO_API_KEY = "test-brevo-key";
   const delivered = await notifyEnquiry(await storedEnquiry());
   assert.equal(delivered, true);
   assert.equal(calls.length, 1);
-  assert.match(calls[0].url, /api\.resend\.com/);
+  assert.match(calls[0].url, /api\.brevo\.com/);
 });
 
 test("postmark is used when only its token is set", async () => {
@@ -80,7 +80,7 @@ test("no provider: returns false without calling fetch", async () => {
   assert.equal(calls.length, 0);
 });
 
-test("digest: postmark is supported and resend outranks brevo", async () => {
+test("digest: postmark is supported and brevo outranks resend", async () => {
   const digest = {
     month: "2026-10",
     monthLabel: "October 2026",
@@ -109,7 +109,7 @@ test("digest: postmark is supported and resend outranks brevo", async () => {
     process.env.RESEND_API_KEY = "test-resend-key";
     process.env.BREVO_API_KEY = "test-brevo-key";
     assert.equal(await sendDigestEmail(client, digest), true);
-    assert.match(calls.at(-1).url, /api\.resend\.com/);
+    assert.match(calls.at(-1).url, /api\.brevo\.com/);
   } finally {
     const { writeFile, truncate } = await import("node:fs/promises");
     try {

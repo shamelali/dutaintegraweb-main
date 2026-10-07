@@ -107,7 +107,7 @@ export async function buildDigestForClient(client) {
 
 /**
  * Send the digest email via the configured provider.
- * Priority is Resend > Brevo > Postmark, matching `enquiries.mjs`.
+ * Priority is Brevo > Resend > Postmark, matching `enquiries.mjs`.
  * Returns true on success, false if no provider or no inbox configured.
  */
 export async function sendDigestEmail(client, digest) {
@@ -120,10 +120,10 @@ export async function sendDigestEmail(client, digest) {
   const text = composeDigestText(digest);
   const html = composeDigestHtml(digest);
 
-  if (process.env.RESEND_API_KEY) {
-    await sendViaResend({ to, from, subject, text, html }, process.env.RESEND_API_KEY);
-  } else if (process.env.BREVO_API_KEY) {
+  if (process.env.BREVO_API_KEY) {
     await sendViaBrevo({ to, from, subject, text, html }, process.env.BREVO_API_KEY);
+  } else if (process.env.RESEND_API_KEY) {
+    await sendViaResend({ to, from, subject, text, html }, process.env.RESEND_API_KEY);
   } else if (process.env.POSTMARK_SERVER_TOKEN) {
     await sendViaPostmark({ to, from, subject, text, html }, process.env.POSTMARK_SERVER_TOKEN);
   } else {

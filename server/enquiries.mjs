@@ -232,7 +232,7 @@ export function enquiryBody(enquiry) {
 
 /**
  * Deliver the notification through whichever provider is configured.
- * Priority is Resend > Brevo > Postmark (first key found wins), matching
+ * Priority is Brevo > Resend > Postmark (first key found wins), matching
  * `.env.example` ("set exactly ONE") and `digest.mjs`. Returns true on
  * success. Returns false (without throwing) when no inbox or no provider is
  * configured, so the enquiry is still stored and the prospect still sees
@@ -246,10 +246,10 @@ export async function notifyEnquiry(enquiry) {
   const subject = enquirySubject(enquiry);
   const text = enquiryBody(enquiry);
 
-  if (process.env.RESEND_API_KEY) {
-    await sendViaResend({ to, from, subject, text }, process.env.RESEND_API_KEY);
-  } else if (process.env.BREVO_API_KEY) {
+  if (process.env.BREVO_API_KEY) {
     await sendViaBrevo({ to, from, subject, text }, process.env.BREVO_API_KEY);
+  } else if (process.env.RESEND_API_KEY) {
+    await sendViaResend({ to, from, subject, text }, process.env.RESEND_API_KEY);
   } else if (process.env.POSTMARK_SERVER_TOKEN) {
     await sendViaPostmark({ to, from, subject, text }, process.env.POSTMARK_SERVER_TOKEN);
   } else {
