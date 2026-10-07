@@ -107,22 +107,25 @@ export async function buildDigestForClient(client) {
 
 /**
  * Send the digest email via the configured provider.
+ * Priority is Resend > Brevo > Postmark, matching `enquiries.mjs`.
  * Returns true on success, false if no provider or no inbox configured.
  */
 export async function sendDigestEmail(client, digest) {
   const inbox = process.env.CONTACT_INBOX_EMAIL?.trim() || process.env.ADMIN_EMAIL?.trim();
   if (!inbox) return false;
 
-  const from = process.env.EMAIL_FROM?.trim() || "noreply@dutaintegrasolutions.com";
+  const from = process.env.EMAIL_FROM?.trim() || "no-reply@dutaintegra.my";
   const to = client.email;
   const subject = `Duta Integra — ${digest.monthLabel} Monthly Report`;
   const text = composeDigestText(digest);
   const html = composeDigestHtml(digest);
 
-  if (process.env.BREVO_API_KEY) {
-    await sendViaBrevo({ to, from, subject, text, html }, process.env.BREVO_API_KEY);
-  } else if (process.env.RESEND_API_KEY) {
+  if (process.env.RESEND_API_KEY) {
     await sendViaResend({ to, from, subject, text, html }, process.env.RESEND_API_KEY);
+  } else if (process.env.BREVO_API_KEY) {
+    await sendViaBrevo({ to, from, subject, text, html }, process.env.BREVO_API_KEY);
+  } else if (process.env.POSTMARK_SERVER_TOKEN) {
+    await sendViaPostmark({ to, from, subject, text, html }, process.env.POSTMARK_SERVER_TOKEN);
   } else {
     return false;
   }
@@ -265,4 +268,13 @@ async function sendViaResend({ to, from, subject, text, html }, apiKey) {
     body: JSON.stringify({ from, to: [to], subject, text, html }),
   });
   if (!res.ok) throw new Error(`Resend digest failed: ${res.status}`);
+}
+
+async function sendViaPostmark({ to, from, subject, text, html }, token) {
+  const res = await fetch("https://api.postmarkapp.com/email", {
+    method: "POST",
+    headers: { "X-Postmark-Server-Token": token, "content-type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ From: from, To: to, Subject: subject, TextBody: text, HtmlBody: html }),
+  });
+  if (!res.ok) throw new Error(`Postmark digest failed: ${res.status} ${await res.text()}`);
 }

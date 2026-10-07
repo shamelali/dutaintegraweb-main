@@ -232,9 +232,11 @@ export function enquiryBody(enquiry) {
 
 /**
  * Deliver the notification through whichever provider is configured.
- * Returns true on success. Returns false (without throwing) when no inbox or
- * no provider is configured, so the enquiry is still stored and the prospect
- * still sees success. Throws only on a genuine provider failure.
+ * Priority is Resend > Brevo > Postmark (first key found wins), matching
+ * `.env.example` ("set exactly ONE") and `digest.mjs`. Returns true on
+ * success. Returns false (without throwing) when no inbox or no provider is
+ * configured, so the enquiry is still stored and the prospect still sees
+ * success. Throws only on a genuine provider failure.
  */
 export async function notifyEnquiry(enquiry) {
   const to = resolveInboxEmail();
@@ -264,11 +266,15 @@ async function assertOk(res, provider) {
   }
 }
 
+// Default sender when EMAIL_FROM is unset. Must be a verified sender in the
+// chosen provider (Brevo: Settings → Senders & IP; Resend: Domains).
+const DEFAULT_FROM = "no-reply@dutaintegra.my";
+
 async function sendViaResend({ to, from, subject, text }, apiKey) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
-    body: JSON.stringify({ from: from || "Duta Integra <no-reply@dutaintegrasolutions.com>", to, subject, text }),
+    body: JSON.stringify({ from: from || `Duta Integra <${DEFAULT_FROM}>`, to, subject, text }),
   });
   await assertOk(res, "resend");
 }
@@ -278,7 +284,7 @@ async function sendViaBrevo({ to, from, subject, text }, apiKey) {
     method: "POST",
     headers: { "api-key": apiKey, "content-type": "application/json" },
     body: JSON.stringify({
-      sender: from ? { name: "Duta Integra", email: from } : { name: "Duta Integra", email: "no-reply@dutaintegrasolutions.com" },
+      sender: { name: "Duta Integra", email: from || DEFAULT_FROM },
       to: [{ email: to }],
       subject,
       textContent: text,
@@ -292,7 +298,7 @@ async function sendViaPostmark({ to, from, subject, text }, token) {
     method: "POST",
     headers: { "X-Postmark-Server-Token": token, "content-type": "application/json", Accept: "application/json" },
     body: JSON.stringify({
-      From: from || "no-reply@dutaintegrasolutions.com",
+      From: from || DEFAULT_FROM,
       To: to,
       Subject: subject,
       TextBody: text,
