@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0B1D3A"/>
+      <stop offset="100%" style="stop-color:#0E2A4A"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00B4FF"/>
+      <stop offset="100%" style="stop-color:#1565C0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Subtle grid pattern -->
+  <g opacity="0.03" stroke="#00B4FF" stroke-width="1">
+    <line x1="0" y1="0" x2="1200" y2="630"/>
+    <line x1="200" y1="0" x2="1200" y2="525"/>
+    <line x1="400" y1="0" x2="1200" y2="420"/>
+    <line x1="600" y1="0" x2="1200" y2="315"/>
+    <line x1="800" y1="0" x2="1200" y2="210"/>
+    <line x1="1000" y1="0" x2="1200" y2="105"/>
+    <line x1="0" y1="105" x2="1000" y2="630"/>
+    <line x1="0" y1="210" x2="800" y2="630"/>
+    <line x1="0" y1="315" x2="600" y2="630"/>
+    <line x1="0" y1="420" x2="400" y2="630"/>
+    <line x1="0" y1="525" x2="200" y2="630"/>
+  </g>
+  
+  <!-- Accent bar top -->
+  <rect x="0" y="0" width="1200" height="4" fill="url(#accent)"/>
+  
+  <!-- DI Logo mark -->
+  <rect x="80" y="140" width="8" height="80" rx="4" fill="#00B4FF"/>
+  <rect x="100" y="140" width="8" height="80" rx="4" fill="#1565C0"/>
+  
+  <!-- Company name -->
+  <text x="130" y="175" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="700" fill="#F8FAFF" letter-spacing="-0.5">Duta Integra</text>
+  <text x="130" y="215" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="400" fill="#8A9BB5" letter-spacing="3">SOLUTIONS</text>
+  
+  <!-- Tagline -->
+  <text x="80" y="310" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="700" fill="#F8FAFF" letter-spacing="-1">AI &amp; IT Services</text>
+  <text x="80" y="370" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="700" fill="#00B4FF" letter-spacing="-1">for Malaysian SMEs</text>
+  
+  <!-- Service pills -->
+  <g transform="translate(80, 420)">
+    <rect width="180" height="36" rx="18" fill="#00B4FF" opacity="0.15"/>
+    <text x="90" y="23" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#00B4FF" text-anchor="middle">AI Automation</text>
+  </g>
+  <g transform="translate(280, 420)">
+    <rect width="180" height="36" rx="18" fill="#00B4FF" opacity="0.15"/>
+    <text x="90" y="23" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#00B4FF" text-anchor="middle">Managed IT</text>
+  </g>
+  <g transform="translate(480, 420)">
+    <rect width="180" height="36" rx="18" fill="#00B4FF" opacity="0.15"/>
+    <text x="90" y="23" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#00B4FF" text-anchor="middle">Cloud Migration</text>
+  </g>
+  <g transform="translate(680, 420)">
+    <rect width="180" height="36" rx="18" fill="#00B4FF" opacity="0.15"/>
+    <text x="90" y="23" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#00B4FF" text-anchor="middle">Cybersecurity</text>
+  </g>
+  
+  <!-- Bottom bar -->
+  <rect x="0" y="580" width="1200" height="50" fill="#060F1F" opacity="0.5"/>
+  <text x="80" y="612" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500" fill="#8A9BB5">dutaintegra.my</text>
+  <text x="1120" y="612" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500" fill="#8A9BB5" text-anchor="end">🇲🇾 Malaysian-Owned</text>
+</svg>

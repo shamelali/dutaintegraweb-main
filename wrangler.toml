@@ -1,0 +1,20 @@
+name = "dutaintegra"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "public"
+
+# Environment variables (set in Cloudflare Pages dashboard)
+# SUPABASE_URL = ""
+# SUPABASE_SERVICE_ROLE_KEY = ""
+# ADMIN_TOKEN = ""
+# DIGEST_TOKEN = ""
+# ALLOWED_ORIGINS = "https://dutaintegra.my,https://www.dutaintegra.my"
+# CONTACT_INBOX_EMAIL = ""
+# EMAIL_FROM = "Duta Integra <no-reply@dutaintegrasolutions.com>"
+# RESEND_API_KEY = "" (or BREVO_API_KEY / POSTMARK_SERVER_TOKEN)
+# BREVO_API_KEY = ""
+# POSTMARK_SERVER_TOKEN = ""
+
+[vars]
+NODE_ENV = "production"
+
+# Custom domain: dutaintegra.my (configure in Cloudflare Pages dashboard)
