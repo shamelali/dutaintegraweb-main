@@ -138,6 +138,16 @@ export async function handleAuthSignup(req) {
     return sendJson(headers, 400, { error: error?.message || "Registration failed" });
   }
 
+  // Sign in immediately to get access token
+  const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.signInWithPassword({
+    email: email.toLowerCase().trim(),
+    password,
+  });
+
+  if (sessionError || !sessionData.session) {
+    return sendJson(headers, 500, { error: "User created but login failed" });
+  }
+
   // Create client record in clients table
   const client = await createClient({
     id: data.user.id,
@@ -148,7 +158,7 @@ export async function handleAuthSignup(req) {
     tier: tier || "foundation",
   });
 
-  setAuthCookie(headers, data.user.access_token, data.user.expires_in ?? 30 * 24 * 60 * 60);
+  setAuthCookie(headers, sessionData.session.access_token, sessionData.session.expires_in ?? 30 * 24 * 60 * 60);
 
   return sendJson(headers, 201, {
     ok: true,
