@@ -1,125 +1,47 @@
 /**
- * Client portal auth + API endpoints — Supabase only (Cloudflare compatible).
- * Uses HTTP-only session cookies. No external auth library.
+ * Client portal auth + API endpoints — Supabase Auth + Cloudflare compatible.
+ *
+ * Auth: Supabase Auth (signup, login, JWT verification)
+ * Sessions: HTTP-only cookies with Supabase JWT
+ * Storage: Supabase (clients, tickets, proposals, projects)
  */
 
-import { randomBytes, scrypt, createHash, timingSafeEqual } from "node:crypto";
-import { promisify } from "node:util";
+import { randomBytes, timingSafeEqual } from "node:crypto";
 
-const scryptAsync = promisify(scrypt);
+import {
+  findClientByEmail,
+  findClientById,
+  createClient,
+  listClients,
+  updateClient,
+} from "./clients-cloudflare.mjs";
 
-import { findClientByEmail, findClientById, createClient, listClients, updateClient } from "./clients-cloudflare.mjs";
-import { listTicketsForClient, findTicket, createTicket, updateTicket, countTicketsByStatus } from "./tickets-cloudflare.mjs";
-import { buildDigestForClient, sendDigestEmail } from "./digest-cloudflare.mjs";
+import {
+  listTicketsForClient,
+  findTicket,
+  createTicket,
+  updateTicket,
+  countTicketsByStatus,
+} from "./tickets-cloudflare.mjs";
 
-// ── Password Hashing ───────────────────────────────────────────────────────────
+import {
+  supabaseAdmin,
+  createSupabaseClient,
+  verifyUser,
+} from "./supabase-client.mjs";
 
-const SCRYPT_KEYLEN = 64;
-const SCRYPT_COST = 16384;
-const SCRYPT_BLOCK_SIZE = 8;
-const SCRYPT_PARALLELIZATION = 1;
+// ── Security ────────────────────────────────────────────────────────────────────
 
-export async function hashPassword(password) {
-  const salt = randomBytes(16).toString("hex");
-  const hash = await scryptAsync(password, salt, SCRYPT_KEYLEN, {
-    cost: SCRYPT_COST,
-    blockSize: SCRYPT_BLOCK_SIZE,
-    parallelization: SCRYPT_PARALLELIZATION,
-  });
-  return `scrypt:${SCRYPT_KEYLEN}:${SCRYPT_COST}:${SCRYPT_BLOCK_SIZE}:${SCRYPT_PARALLELIZATION}:${salt}:${hash.toString("hex")}`;
-}
-
-export async function verifyPassword(password, stored) {
-  if (typeof stored !== "string") return false;
-
-  if (stored.startsWith("scrypt:")) {
-    const parts = stored.split(":");
-    if (parts.length !== 7) return false;
-    const [, keylen, cost, blockSize, parallelization, salt, expectedHash] = parts;
-    const hash = await scryptAsync(password, salt, Number(keylen), {
-      cost: Number(cost),
-      blockSize: Number(blockSize),
-      parallelization: Number(parallelization),
-    });
-    const a = Buffer.from(expectedHash, "hex");
-    const b = hash;
-    return a.length === b.length && timingSafeEqual(a, b);
-  }
-
-  if (stored.includes(":")) {
-    const [salt, expectedHash] = stored.split(":");
-    const hash = createHash("sha256").update(`${salt}:${password}`).digest("hex");
-    const a = Buffer.from(expectedHash, "hex");
-    const b = Buffer.from(hash, "hex");
-    return a.length === b.length && timingSafeEqual(a, b);
-  }
-
-  return false;
-}
-
-// ── Session Management ─────────────────────────────────────────────────────────
-
-const SESSION_DAYS = 30;
-const MAX_SESSIONS = 1000;
-const sessions = new Map(); // token → { clientId, expiresAt }
-
-export function createSession(clientId) {
-  if (sessions.size >= MAX_SESSIONS) {
-    const oldest = sessions.keys().next().value;
-    sessions.delete(oldest);
-  }
-  const token = randomBytes(32).toString("hex");
-  const expiresAt = Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000;
-  sessions.set(token, { clientId, expiresAt });
-  return { token, expiresAt: new Date(expiresAt).toISOString() };
-}
-
-export function getSession(token) {
-  if (typeof token !== "string") return null;
-  const s = sessions.get(token);
-  if (!s) return null;
-  if (Date.now() > s.expiresAt) { sessions.delete(token); return null; }
-  return s;
-}
-
-function parseCookie(req) {
-  const raw = req.headers.get("cookie") ?? "";
-  const cookies = Object.fromEntries(
-    raw.split(";").map((c) => c.trim().split("=").map((v) => v.trim())),
-  );
-  return cookies;
-}
-
-function sessionFromReq(req) {
-  const cookies = parseCookie(req);
-  const token = cookies["di_session"];
-  return getSession(token);
-}
-
-function setSessionCookie(headers, token, expiresAt) {
-  const expires = new Date(expiresAt).toUTCString();
-  headers.append("Set-Cookie", `di_session=${token}; Path=/; HttpOnly; SameSite=Lax; Expires=${expires}`);
-}
-
-function clearSessionCookie(headers) {
-  headers.append("Set-Cookie", "di_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0");
-}
-
-function safeClient(c) {
-  return { id: c.id, name: c.name, email: c.email, company: c.company, tier: c.tier, status: c.status };
-}
-
-// ── Admin Auth ─────────────────────────────────────────────────────────────────
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN?.trim();
 
 function adminTokenValid(supplied) {
-  const configured = process.env.ADMIN_TOKEN?.trim();
-  if (!configured || typeof supplied !== "string" || !supplied) return false;
-  const a = new TextEncoder().encode(configured);
+  if (!ADMIN_TOKEN || typeof supplied !== "string" || !supplied) return false;
+  const a = new TextEncoder().encode(ADMIN_TOKEN);
   const b = new TextEncoder().encode(supplied);
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-// ── Response Helper ────────────────────────────────────────────────────────────
+// ── Helpers ─────────────────────────────────────────────────────────────────────
 
 function sendJson(headers, status, body) {
   const payload = JSON.stringify(body);
@@ -143,50 +65,191 @@ async function readJsonBody(req) {
   }
 }
 
-// ── Route Handlers ─────────────────────────────────────────────────────────────
+function parseCookie(req) {
+  const raw = req.headers.get("cookie") ?? "";
+  const cookies = Object.fromEntries(
+    raw.split(";").map((c) => c.trim().split("=").map((v) => v.trim())),
+  );
+  return cookies;
+}
 
-export async function handleLogin(req) {
+function getAccessToken(req) {
+  // Prefer Authorization header, fall back to cookie
+  const auth = req.headers.get("authorization") ?? "";
+  if (auth.startsWith("Bearer ")) return auth.slice(7);
+  const cookies = parseCookie(req);
+  return cookies["di_session"] ?? null;
+}
+
+function setAuthCookie(headers, token, expiresInSeconds = 30 * 24 * 60 * 60) {
+  const expires = new Date(Date.now() + expiresInSeconds * 1000).toUTCString();
+  headers.append(
+    "Set-Cookie",
+    `di_session=${token}; Path=/; HttpOnly; SameSite=Lax; Expires=${expires}`,
+  );
+}
+
+function clearAuthCookie(headers) {
+  headers.append("Set-Cookie", "di_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0");
+}
+
+function safeClient(c) {
+  return {
+    id: c.id,
+    name: c.name,
+    email: c.email,
+    company: c.company,
+    tier: c.tier,
+    status: c.status,
+    createdAt: c.created_at,
+  };
+}
+
+// ── Auth: Supabase-based ───────────────────────────────────────────────────────
+
+/**
+ * POST /api/auth/signup — register a new client via Supabase Auth
+ */
+export async function handleAuthSignup(req) {
+  const headers = new Headers();
+  const parsed = await readJsonBody(req);
+  if (parsed.error) return sendJson(headers, parsed.error.status, parsed.error.body);
+
+  const { email, password, name, company, tier } = parsed.data ?? {};
+  if (!email || !password || !name) {
+    return sendJson(headers, 400, { error: "email, password, and name are required" });
+  }
+
+  // Check if client already exists in our clients table
+  const existing = await findClientByEmail(email.toLowerCase().trim());
+  if (existing) {
+    return sendJson(headers, 409, { error: "A client with this email already exists" });
+  }
+
+  // Create Supabase Auth user
+  const { data, error } = await supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { name, company, tier: tier || "foundation" },
+  });
+
+  if (error || !data.user) {
+    return sendJson(headers, 400, { error: error?.message || "Registration failed" });
+  }
+
+  // Create client record in clients table
+  const client = await createClient({
+    id: data.user.id,
+    name: name.trim(),
+    email: email.toLowerCase().trim(),
+    passwordHash: null, // Supabase handles password
+    company: company?.trim() || null,
+    tier: tier || "foundation",
+  });
+
+  setAuthCookie(headers, data.user.access_token, data.user.expires_in ?? 30 * 24 * 60 * 60);
+
+  return sendJson(headers, 201, {
+    ok: true,
+    client: safeClient(client),
+    user: data.user,
+  });
+}
+
+/**
+ * POST /api/auth/login — login via Supabase Auth
+ */
+export async function handleAuthLogin(req) {
   const headers = new Headers();
   const parsed = await readJsonBody(req);
   if (parsed.error) return sendJson(headers, parsed.error.status, parsed.error.body);
 
   const { email, password } = parsed.data ?? {};
-  if (!email || !password) return sendJson(headers, 400, { error: "Email and password are required" });
+  if (!email || !password) {
+    return sendJson(headers, 400, { error: "Email and password are required" });
+  }
 
-  const client = await findClientByEmail(email.toLowerCase().trim());
-  if (!client) return sendJson(headers, 401, { error: "Invalid email or password" });
-  if (client.status !== "active") return sendJson(headers, 403, { error: "Account is not active" });
-  if (!(await verifyPassword(password, client.passwordHash))) {
+  // Sign in via Supabase Auth
+  const { data, error } = await supabaseAdmin.auth.signInWithPassword({
+    email: email.toLowerCase().trim(),
+    password,
+  });
+
+  if (error || !data.user || !data.session) {
     return sendJson(headers, 401, { error: "Invalid email or password" });
   }
 
-  const { token, expiresAt } = createSession(client.id);
-  setSessionCookie(headers, token, expiresAt);
+  // Find client record
+  const client = await findClientByEmail(email.toLowerCase().trim());
+  if (!client || client.status !== "active") {
+    return sendJson(headers, 403, { error: "Account is not active" });
+  }
+
+  setAuthCookie(headers, data.session.access_token, data.session.expires_in ?? 30 * 24 * 60 * 60);
+
   return sendJson(headers, 200, { ok: true, client: safeClient(client) });
 }
 
-export async function handleLogout(req) {
+/**
+ * POST /api/auth/logout — logout (clear cookie)
+ */
+export async function handleAuthLogout(req) {
   const headers = new Headers();
-  const session = sessionFromReq(req);
-  if (session) sessions.delete(session.clientId);
-  clearSessionCookie(headers);
+  clearAuthCookie(headers);
   return sendJson(headers, 200, { ok: true });
 }
 
-export async function handleMe(req) {
-  const session = sessionFromReq(req);
-  if (!session) return sendJson(new Headers(), 401, { error: "Not authenticated" });
-  const client = await findClientById(session.clientId);
-  if (!client || client.status !== "active") return sendJson(new Headers(), 401, { error: "Account not found or inactive" });
+/**
+ * GET /api/auth/me — get current authenticated client
+ */
+export async function handleAuthMe(req) {
+  const accessToken = getAccessToken(req);
+  if (!accessToken) {
+    return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  }
+
+  const user = await verifyUser(accessToken);
+  if (!user) {
+    return sendJson(new Headers(), 401, { error: "Session expired or invalid" });
+  }
+
+  const client = await findClientById(user.id);
+  if (!client || client.status !== "active") {
+    return sendJson(new Headers(), 401, { error: "Account not found or inactive" });
+  }
+
   return sendJson(new Headers(), 200, { client: safeClient(client) });
 }
 
+// ── Middleware: Require Auth ────────────────────────────────────────────────────
+
+export function requireAuth(handler) {
+  return async (req, ...args) => {
+    const accessToken = getAccessToken(req);
+    if (!accessToken) {
+      return sendJson(new Headers(), 401, { error: "Not authenticated" });
+    }
+    const user = await verifyUser(accessToken);
+    if (!user) {
+      return sendJson(new Headers(), 401, { error: "Session expired or invalid" });
+    }
+    // Attach user to request for downstream use
+    (req as any)._user = user;
+    return handler(req, ...args);
+  };
+}
+
+// ── Tickets (authenticated) ─────────────────────────────────────────────────────
+
 export async function handlePortalTickets(req) {
-  const session = sessionFromReq(req);
-  if (!session) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const accessToken = getAccessToken(req);
+  if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const user = await verifyUser(accessToken);
+  if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
 
   if (req.method === "GET") {
-    const tickets = await listTicketsForClient(session.clientId);
+    const tickets = await listTicketsForClient(user.id);
     return sendJson(new Headers(), 200, { tickets });
   }
 
@@ -198,7 +261,7 @@ export async function handlePortalTickets(req) {
       return sendJson(new Headers(), 400, { error: "Subject must be at least 3 characters" });
     }
     const ticket = await createTicket({
-      clientId: session.clientId,
+      clientId: user.id,
       subject: subject.trim(),
       description: description?.trim() || null,
       priority: ["low", "medium", "high", "urgent"].includes(priority) ? priority : "medium",
@@ -210,11 +273,13 @@ export async function handlePortalTickets(req) {
 }
 
 export async function handlePortalTicketById(req, ticketId) {
-  const session = sessionFromReq(req);
-  if (!session) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const accessToken = getAccessToken(req);
+  if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const user = await verifyUser(accessToken);
+  if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
 
   const ticket = await findTicket(ticketId);
-  if (!ticket || ticket.clientId !== session.clientId) {
+  if (!ticket || ticket.clientId !== user.id) {
     return sendJson(new Headers(), 404, { error: "Ticket not found" });
   }
 
@@ -235,24 +300,126 @@ export async function handlePortalTicketById(req, ticketId) {
 }
 
 export async function handlePortalHealth(req) {
-  const session = sessionFromReq(req);
-  if (!session) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const accessToken = getAccessToken(req);
+  if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const user = await verifyUser(accessToken);
+  if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
 
-  const client = await findClientById(session.clientId);
+  const client = await findClientById(user.id);
   if (!client) return sendJson(new Headers(), 404, { error: "Client not found" });
 
-  const counts = await countTicketsByStatus(session.clientId);
-  const digestLog = { sentAt: null }; // In-memory, not persisted in Cloudflare
+  const counts = await countTicketsByStatus(user.id);
 
   return sendJson(new Headers(), 200, {
     client: safeClient(client),
     tickets: counts,
-    lastDigest: digestLog.sentAt ?? null,
     tier: client.tier,
   });
 }
 
-// ── Admin: Client Management ───────────────────────────────────────────────────
+// ── Proposals (Phase 3) ─────────────────────────────────────────────────────────
+
+export async function handlePortalProposals(req) {
+  const accessToken = getAccessToken(req);
+  if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const user = await verifyUser(accessToken);
+  if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
+
+  if (req.method === "GET") {
+    const { data, error } = await supabaseAdmin
+      .from("proposals")
+      .select("*")
+      .eq("client_id", user.id)
+      .order("created_at", { ascending: false });
+    if (error) return sendJson(new Headers(), 500, { error: error.message });
+    return sendJson(new Headers(), 200, { proposals: data ?? [] });
+  }
+
+  if (req.method === "POST") {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return sendJson(new Headers(), parsed.error.status, parsed.error.body);
+    const { title, description, totalAmount, tier, validUntil } = parsed.data ?? {};
+    if (!title || !description) {
+      return sendJson(new Headers(), 400, { error: "title and description are required" });
+    }
+    const { data, error } = await supabaseAdmin
+      .from("proposals")
+      .insert([{
+        client_id: user.id,
+        title,
+        description,
+        total_amount: totalAmount || 0,
+        tier: tier || "foundation",
+        valid_until: validUntil || null,
+        status: "draft",
+      }])
+      .select()
+      .single();
+    if (error) return sendJson(new Headers(), 500, { error: error.message });
+    return sendJson(new Headers(), 201, { proposal: data });
+  }
+
+  return sendJson(new Headers(), 405, { error: "Method not allowed" });
+}
+
+export async function handlePortalProposalById(req, proposalId) {
+  const accessToken = getAccessToken(req);
+  if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const user = await verifyUser(accessToken);
+  if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
+
+  const { data, error } = await supabaseAdmin
+    .from("proposals")
+    .select("*")
+    .eq("id", proposalId)
+    .eq("client_id", user.id)
+    .single();
+  if (error || !data) return sendJson(new Headers(), 404, { error: "Proposal not found" });
+
+  if (req.method === "GET") return sendJson(new Headers(), 200, { proposal: data });
+
+  if (req.method === "PATCH") {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return sendJson(new Headers(), parsed.error.status, parsed.error.body);
+    const { status } = parsed.data ?? {};
+    if (!["draft", "sent", "accepted", "rejected"].includes(status)) {
+      return sendJson(new Headers(), 400, { error: "Invalid status" });
+    }
+    const { data: updated, error: updateError } = await supabaseAdmin
+      .from("proposals")
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq("id", proposalId)
+      .select()
+      .single();
+    if (updateError) return sendJson(new Headers(), 500, { error: updateError.message });
+    return sendJson(new Headers(), 200, { proposal: updated });
+  }
+
+  return sendJson(new Headers(), 405, { error: "Method not allowed" });
+}
+
+// ── Projects (Phase 3) ──────────────────────────────────────────────────────────
+
+export async function handlePortalProjects(req) {
+  const accessToken = getAccessToken(req);
+  if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const user = await verifyUser(accessToken);
+  if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
+
+  if (req.method === "GET") {
+    const { data, error } = await supabaseAdmin
+      .from("projects")
+      .select("*")
+      .eq("client_id", user.id)
+      .order("created_at", { ascending: false });
+    if (error) return sendJson(new Headers(), 500, { error: error.message });
+    return sendJson(new Headers(), 200, { projects: data ?? [] });
+  }
+
+  return sendJson(new Headers(), 405, { error: "Method not allowed" });
+}
+
+// ── Admin: Client Management (unchanged, uses ADMIN_TOKEN) ──────────────────────
 
 export async function handleAdminClients(req) {
   const url = new URL(req.url);
@@ -274,10 +441,22 @@ export async function handleAdminClients(req) {
     const existing = await findClientByEmail(email.toLowerCase().trim());
     if (existing) return sendJson(new Headers(), 409, { error: "A client with this email already exists" });
 
-    const client = await createClient({
-      name: name.trim(),
+    // Create Supabase Auth user
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
       email,
-      passwordHash: await hashPassword(password),
+      password,
+      email_confirm: true,
+      user_metadata: { name, company, tier: tier || "foundation" },
+    });
+    if (error || !data.user) {
+      return sendJson(new Headers(), 400, { error: error?.message || "Failed to create auth user" });
+    }
+
+    const client = await createClient({
+      id: data.user.id,
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      passwordHash: null,
       company: company?.trim() || null,
       tier,
     });
@@ -285,25 +464,4 @@ export async function handleAdminClients(req) {
   }
 
   return sendJson(new Headers(), 405, { error: "Method not allowed" });
-}
-
-export async function handleAdminClientDigest(req, clientId) {
-  const url = new URL(req.url);
-  const token = req.headers.get("x-admin-token") ?? url.searchParams.get("token");
-  if (!adminTokenValid(token)) return sendJson(new Headers(), 401, { error: "Unauthorized" });
-
-  if (req.method !== "POST") return sendJson(new Headers(), 405, { error: "Method not allowed" });
-
-  const client = await findClientById(clientId);
-  if (!client) return sendJson(new Headers(), 404, { error: "Client not found" });
-
-  const digest = await buildDigestForClient(client);
-  let sent = false;
-  try {
-    sent = await sendDigestEmail(client, digest);
-  } catch (err) {
-    console.error(`[admin digest] send failed for ${client.email}:`, err.message);
-  }
-
-  return sendJson(new Headers(), 200, { ok: true, sent, digest });
 }

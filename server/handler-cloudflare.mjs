@@ -21,14 +21,30 @@ import {
 import { handleStats } from "./stats-cloudflare.mjs";
 import { calculateSavings } from "./calculator.mjs";
 import { handleFeed, handleConsent, handleIngestEvent } from "./autonomous-ops-cloudflare.mjs";
+import {
+  createTask,
+  listTasks,
+  getTask,
+  updateTask,
+  approveTask,
+  requestTaskApproval,
+  deleteTask,
+  getTaskStats,
+  getAuditLog,
+  logAudit,
+} from "./ops-tasks-cloudflare.mjs";
 
 import {
-  handleLogin,
-  handleLogout,
-  handleMe,
+  handleAuthSignup,
+  handleAuthLogin,
+  handleAuthLogout,
+  handleAuthMe,
   handlePortalTickets,
   handlePortalTicketById,
   handlePortalHealth,
+  handlePortalProposals,
+  handlePortalProposalById,
+  handlePortalProjects,
   handleAdminClients,
   handleAdminClientDigest,
 } from "./portal-cloudflare.mjs";
@@ -553,25 +569,109 @@ export async function handleApi(req) {
     if (pathname === "/api/ops/consent") return await handleConsent(req);
     if (pathname === "/api/ops/events") return await handleIngestEvent(req);
 
-    // Portal routes
-    if (pathname === "/api/portal/login") {
-      const limited = loginRateLimit(clientIp(req));
-      if (!limited.allowed) {
-        return sendJson(429, { error: "Too many attempts. Please try again later." }, {
-          "retry-after": String(Math.ceil(limited.retryAfterMs / 1000)),
-        });
+    // Phase 4: Managed AI Operations — Task Management
+    if (pathname === "/api/ops/tasks") {
+      if (req.method === "GET") {
+        const filters = {};
+        const url = new URL(req.url);
+        if (url.searchParams.get("status")) filters.status = url.searchParams.get("status");
+        if (url.searchParams.get("priority")) filters.priority = url.searchParams.get("priority");
+        if (url.searchParams.get("assigneeId")) filters.assigneeId = url.searchParams.get("assigneeId");
+        if (url.searchParams.get("createdBy")) filters.createdBy = url.searchParams.get("createdBy");
+        const tasks = await listTasks(filters);
+        return sendJson(200, { tasks });
       }
-      return await handleLogin(req);
+      if (req.method === "POST") {
+        const parsed = await readJsonBody(req);
+        if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+        const task = await createTask(parsed.data);
+        return sendJson(201, { task });
+      }
+      return sendJson(405, { error: "Method not allowed" });
     }
-    if (pathname === "/api/portal/logout") return await handleLogout(req);
-    if (pathname === "/api/portal/me") return await handleMe(req);
+
+    const taskMatch = pathname.match(/^\/api\/ops\/tasks\/([a-f0-9-]+)$/);
+    if (taskMatch) {
+      const taskId = taskMatch[1];
+      if (req.method === "GET") {
+        const task = await getTask(taskId);
+        return sendJson(200, { task });
+      }
+      if (req.method === "PATCH") {
+        const parsed = await readJsonBody(req);
+        if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+        const actorId = parsed.data?.actorId || "system";
+        const task = await updateTask(taskId, parsed.data, actorId);
+        return sendJson(200, { task });
+      }
+      if (req.method === "DELETE") {
+        const actorId = "system";
+        await deleteTask(taskId, actorId);
+        return sendJson(200, { ok: true });
+      }
+      return sendJson(405, { error: "Method not allowed" });
+    }
+
+    // Task approval workflow
+    const approveMatch = pathname.match(/^\/api\/ops\/tasks\/([a-f0-9-]+)\/approve$/);
+    if (approveMatch && req.method === "POST") {
+      const parsed = await readJsonBody(req);
+      if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+      const { rejectionReason } = parsed.data ?? {};
+      const actorId = parsed.data?.actorId || "system";
+      const task = await approveTask(taskId, actorId, rejectionReason);
+      return sendJson(200, { task });
+    }
+
+    const requestApprovalMatch = pathname.match(/^\/api\/ops\/tasks\/([a-f0-9-]+)\/request-approval$/);
+    if (requestApprovalMatch && req.method === "POST") {
+      const actorId = "system";
+      const task = await requestTaskApproval(taskId, actorId);
+      return sendJson(200, { task });
+    }
+
+    // Task stats
+    if (pathname === "/api/ops/task-stats") {
+      const stats = await getTaskStats();
+      return sendJson(200, { stats });
+    }
+
+    // Audit log
+    if (pathname === "/api/ops/audit-log") {
+      const url = new URL(req.url);
+      const filters = {};
+      if (url.searchParams.get("entityType")) filters.entityType = url.searchParams.get("entityType");
+      if (url.searchParams.get("entityId")) filters.entityId = url.searchParams.get("entityId");
+      if (url.searchParams.get("actorId")) filters.actorId = url.searchParams.get("actorId");
+      if (url.searchParams.get("action")) filters.action = url.searchParams.get("action");
+      const logs = await getAuditLog(filters);
+      return sendJson(200, { logs: logs });
+    }
+
+    // Portal auth routes (Supabase Auth)
+    if (pathname === "/api/auth/signup") return await handleAuthSignup(req);
+    if (pathname === "/api/auth/login") return await handleAuthLogin(req);
+    if (pathname === "/api/auth/logout") return await handleAuthLogout(req);
+    if (pathname === "/api/auth/me") return await handleAuthMe(req);
+
+    // Portal routes (authenticated via Supabase JWT)
     if (pathname === "/api/portal/health") return await handlePortalHealth(req);
-    if (pathname === "/api/portal/tickets") return await handlePortalTickets(req, pathname);
+    if (pathname === "/api/portal/tickets") return await handlePortalTickets(req);
 
     const ticketMatch = pathname.match(/^\/api\/portal\/tickets\/([a-f0-9-]+)$/);
     if (ticketMatch && req.method === "PATCH") {
       return await handlePortalTicketById(req, ticketMatch[1]);
     }
+
+    // Proposals (Phase 3)
+    if (pathname === "/api/portal/proposals") return await handlePortalProposals(req);
+    const proposalMatch = pathname.match(/^\/api\/portal\/proposals\/([a-f0-9-]+)$/);
+    if (proposalMatch && req.method === "PATCH") {
+      return await handlePortalProposalById(req, proposalMatch[1]);
+    }
+
+    // Projects (Phase 3)
+    if (pathname === "/api/portal/projects") return await handlePortalProjects(req);
 
     // Admin client management
     if (pathname === "/admin/clients") return await handleAdminClients(req);
