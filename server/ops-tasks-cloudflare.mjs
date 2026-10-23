@@ -19,9 +19,9 @@ export const TASK_STATUSES = [
   "rejected",
   "completed",
   "cancelled",
-] as const;
+];
 
-export const TASK_PRIORITIES = ["low", "medium", "high", "urgent"] as const;
+export const TASK_PRIORITIES = ["low", "medium", "high", "urgent"];
 
 // ── Create Task ────────────────────────────────────────────────────────────────
 

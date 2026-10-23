@@ -235,7 +235,7 @@ export function requireAuth(handler) {
       return sendJson(new Headers(), 401, { error: "Session expired or invalid" });
     }
     // Attach user to request for downstream use
-    (req as any)._user = user;
+    req._user = user;
     return handler(req, ...args);
   };
 }
