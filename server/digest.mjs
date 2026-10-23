@@ -107,13 +107,21 @@ export async function buildDigestForClient(client) {
 
 /**
  * Send the digest email via the configured provider.
+<<<<<<< HEAD
+=======
+ * Priority is Brevo > Resend > Postmark, matching `enquiries.mjs`.
+>>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
  * Returns true on success, false if no provider or no inbox configured.
  */
 export async function sendDigestEmail(client, digest) {
   const inbox = process.env.CONTACT_INBOX_EMAIL?.trim() || process.env.ADMIN_EMAIL?.trim();
   if (!inbox) return false;
 
+<<<<<<< HEAD
   const from = process.env.EMAIL_FROM?.trim() || "noreply@dutaintegrasolutions.com";
+=======
+  const from = process.env.EMAIL_FROM?.trim() || "no-reply@dutaintegra.my";
+>>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
   const to = client.email;
   const subject = `Duta Integra — ${digest.monthLabel} Monthly Report`;
   const text = composeDigestText(digest);
@@ -123,6 +131,11 @@ export async function sendDigestEmail(client, digest) {
     await sendViaBrevo({ to, from, subject, text, html }, process.env.BREVO_API_KEY);
   } else if (process.env.RESEND_API_KEY) {
     await sendViaResend({ to, from, subject, text, html }, process.env.RESEND_API_KEY);
+<<<<<<< HEAD
+=======
+  } else if (process.env.POSTMARK_SERVER_TOKEN) {
+    await sendViaPostmark({ to, from, subject, text, html }, process.env.POSTMARK_SERVER_TOKEN);
+>>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
   } else {
     return false;
   }
@@ -266,3 +279,15 @@ async function sendViaResend({ to, from, subject, text, html }, apiKey) {
   });
   if (!res.ok) throw new Error(`Resend digest failed: ${res.status}`);
 }
+<<<<<<< HEAD
+=======
+
+async function sendViaPostmark({ to, from, subject, text, html }, token) {
+  const res = await fetch("https://api.postmarkapp.com/email", {
+    method: "POST",
+    headers: { "X-Postmark-Server-Token": token, "content-type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ From: from, To: to, Subject: subject, TextBody: text, HtmlBody: html }),
+  });
+  if (!res.ok) throw new Error(`Postmark digest failed: ${res.status} ${await res.text()}`);
+}
+>>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60

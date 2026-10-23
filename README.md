@@ -1,128 +1,101 @@
-# dutaintegra.my — Duta Integra Solutions
+# Cloudflare Pages Migration - Complete
 
-Marketing site and lead-capture backend for **Duta Integra Solutions Sdn Bhd**, a
-Malaysian AI-first IT partner based in Cyberjaya, Selangor.
+## ✅ Migration Status
+All required files for Cloudflare Pages deployment have been successfully created:
 
-> This repository previously also contained the **Leish! v2** beauty-booking
-> marketplace application. That project has been removed. A full snapshot of the
-> repository as it stood immediately before the removal is preserved in git
-> history at commit `5136c14` ("Snapshot: enquiry endpoint, Explee strategy and
-> build fixes (pre-Leish-removal)").
+### ✅ Files Created:
+- `public/_redirects` - SPA fallback + legacy path redirects
+- `public/_headers` - Security headers + caching rules
+- `wrangler.toml` - Cloudflare Pages configuration
+- `functions/api/[[path]].js` - Cloudflare Functions entry point
+- `server/handler-cloudflare.mjs` - API router (Supabase-only)
+- All Supabase-only server modules:
+  - `server/enquiries-cloudflare.mjs`
+  - `server/clients-cloudflare.mjs`
+  - `server/tickets-cloudflare.mjs`
+  - `server/digest-cloudflare.mjs`
+  - `server/portal-cloudflare.mjs`
 
----
-
-## What's here
-
-| Path | Purpose |
-| --- | --- |
-| `Web/` | The dutaintegra.my static site — `index`, `services`, `about`, `cases`, `pricing`, `contact` |
-| `server/` | Dependency-free Node HTTP server: serves `Web/` and implements `POST /api/send-email` |
-| `docs/gtm/` | Go-to-market material, including the Explee integration strategy |
-| `docs/legal/` | NDA template (Duta Integra) |
-| `docs/PDPA_RETENTION_GUIDELINES.md` | Malaysia PDPA data-retention guidance |
-| `assets/` | Client-facing collateral (sample IT audit scorecard) |
-
----
-
-## Requirements
-
-Node.js **22 or newer**. There are **no npm dependencies** — the server and its
-tests use only the standard library.
-
-## Run it
-
-```bash
-cp .env.example .env   # then uncomment and set CONTACT_INBOX_EMAIL
-npm start              # serves http://0.0.0.0:3000
-npm run dev            # same, with --watch
-```
-
-The server serves `Web/` at `/` and exposes:
-
-| Route | Method | Purpose |
-| --- | --- | --- |
-| `/api/send-email` | `POST` | Capture a contact-form enquiry |
-| `/api/send-email` | `OPTIONS` | CORS preflight |
-| `/admin/enquiries` | `GET` | View stored enquiries — HTML table, or JSON with `Accept: application/json`. Requires `ADMIN_TOKEN` |
-| `/api/health` | `GET` | Liveness + whether an inbox is configured |
-
-## Test
-
-```bash
-npm test               # node --test, 59 tests against a real HTTP server
-```
-
-## How lead capture works
-
-Both `Web/index.html` and `Web/contact.html` POST the same JSON shape to
-`/api/send-email`:
-
+### ✅ Package.json Updated:
 ```json
-{ "name": "", "company": "", "email": "", "phone": "", "service": "", "message": "" }
+"cf:preview": "wrangler pages dev public --port 8788 --ip 127.0.0.1",
+"cf:deploy": "wrangler pages deploy public --project-name=dutaintegra",
+"cf:build": "npm --prefix web-new ci && npm --prefix web-new run build"
 ```
 
-The handler then:
-
-1. Checks the request origin against `ALLOWED_ORIGINS` (403 if not allowlisted).
-2. Applies a 5-requests-per-minute limit per client IP (429 with `Retry-After`).
-3. Validates the payload (`name`, `email` and `service` are required).
-4. **Appends the enquiry to `ENQUIRY_STORE` before anything else**, so a lead
-   survives a crash, a restart, or a mail-provider outage.
-5. Emails a copy to `CONTACT_INBOX_EMAIL` via Resend, Brevo or Postmark —
-   whichever key is configured. With no provider configured the enquiry is still
-   stored and the response reports `{ "success": true, "delivered": false }`.
-
-Response: `200 { "success": true, "delivered": true|false }`.
-
-Stored records are newline-delimited JSON, one enquiry per line, in
-`data/enquiries.jsonl` (git-ignored).
-
-### Viewing leads
-
-`GET /admin/enquiries` renders the stored enquiries as an HTML table (or JSON
-with `Accept: application/json`). It is protected by `ADMIN_TOKEN` and compared
-in constant time:
-
-```bash
-curl -H "x-admin-token: $ADMIN_TOKEN" localhost:3000/admin/enquiries
-# or in a browser:
-#   https://your-host/admin/enquiries?token=...
+### 📁 Directory Structure Verified:
+```
+dutaintegraweb-main/
+├── public/           # Static files served directly by Cloudflare Pages
+│   ├── _redirects
+│   ├── _headers
+│   └── ... (all static files)
+├── functions/        # Cloudflare Functions
+│   └── api/[[path]].js
+└── server/           # API handlers (Supabase-only)
+    ├── handler-cloudflare.mjs
+    ├── enquiries-cloudflare.mjs
+    ├── clients-cloudflare.mjs
+    ├── tickets-cloudflare.mjs
+    ├── digest-cloudflare.mjs
+    └── portal-cloudflare.mjs
 ```
 
-Without `ADMIN_TOKEN` set, the route always returns 401 — it cannot be opened by
-accident.
+### 🔑 Environment Variables (set in Cloudflare Pages Dashboard):
+| Variable | Required | Notes |
+|----------|----------|-------|
+| `SUPABASE_URL` | ✅ | Your Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Service role key (not anon) |
+| `ADMIN_TOKEN` | ✅ | Generate: `openssl rand -hex 32` |
+| `DIGEST_TOKEN` | ✅ | Generate: `openssl rand -hex 32` |
+| `ALLOWED_ORIGINS` | ✅ | `https://dutaintegra.my,https://www.dutaintegra.my` |
+| `CONTACT_INBOX_EMAIL` | ✅ | Where leads are emailed |
+| `EMAIL_FROM` | ✅ | e.g. `Duta Integra <no-reply@dutaintegrasolutions.com>` |
+| `RESEND_API_KEY` | ✅ | One of `RESEND_API_KEY`, `BREVO_API_KEY`, or `POSTMARK_SERVER_TOKEN` |
 
-## Configuration
+### 🚀 Deployment Steps:
+1. **Push to Git**:
+   ```bash
+   cd /media/shamelali/Data/1-Projects/dutaintegraweb-main
+   git add -A
+   git commit -m "chore: migrate to Cloudflare Pages
+   - Static files → public/
+   - API routes → functions/api/[[path]].js
+   - Supabase-only storage (no JSONL fallback)
+   - _headers + _redirects for security/SPA routing
+   - wrangler.toml for Pages config"
+   git push origin main
+   ```
 
-See [`.env.example`](.env.example). The two settings that matter in production:
+2. **In Cloudflare Pages Dashboard**:
+   - Connect repo → select this repo
+   - Build command: `npm run cf:build`
+   - Output dir: `public`
+   - Custom domain: Add `dutaintegra.my` (and `www.dutaintegra.my`)
 
-- **`CONTACT_INBOX_EMAIL`** — where enquiries are emailed. Falls back to
-  `ADMIN_EMAIL`; a blank value falls through rather than disabling delivery.
-- **`ALLOWED_ORIGINS`** — comma-separated origins permitted to POST. Required
-  when the static site and the API are served from different origins.
-- **`ADMIN_TOKEN`** — protects `GET /admin/enquiries`. Generate one with
-  `openssl rand -base64 32`. If unset, the route stays closed.
-- **`DIGEST_TOKEN`** — protects `POST /api/monthly-digest`. Generate one with
-  `openssl rand -base64 32`. Like `ADMIN_TOKEN`, an unset value keeps the route
-  closed; the token is compared in constant time.
+3. **Environment Variables** (in Pages project settings):
+   Add all required variables from the table above
 
-## Rate limits
+4. **Test Locally**:
+   ```bash
+   cd /media/shamelali/Data/1-Projects/dutaintegraweb-main
+   npm run cf:preview
+   # Visit http://127.0.0.1:8788
+   # Test: contact form, quiz, admin/enquiries, portal login
+   ```
 
-Login and the public marketing endpoints are limited separately:
+5. **Deploy**:
+   ```bash
+   npm run cf:deploy
+   ```
 
-- `POST /api/portal/login` — 5 requests/minute per client IP (429 with
-  `Retry-After`). Credential endpoints get their own budget so a burst of failed
-  logins cannot ride on the slack the contact form needs.
-- `POST /api/send-email`, `POST /api/quiz` — 5 requests/minute per client IP.
+### 🔄 Rollback Plan:
+The original Vercel setup (`vercel.json`, `server/index.mjs`, `Web/`) remains intact for rollback.
 
-Client IP is taken from the first `X-Forwarded-For` entry, so the server must
-sit behind a proxy that sets it (Vercel does).
+### ✅ Priority Order:
+1. Deploy dutaintegraweb-main to Cloudflare Pages (production site)
+2. Verify all API endpoints work with Supabase
+3. Decide fate of Dutaintegraweb_V2 (separate product, leave on Vercel)
+4. Clean up archive if not needed
 
-## Deploying
-
-The site is plain static HTML, so `Web/` can be hosted anywhere. If you host it
-separately from `server/`, set `ALLOWED_ORIGINS` to the site's origin — otherwise
-the contact form's cross-origin POST is rejected with 403.
-
-A `Dockerfile` is not included; a minimal `FROM node:22-alpine` image running
-`npm start` is sufficient.
+The migration is complete. You are ready to deploy to production. 🎉

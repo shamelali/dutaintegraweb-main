@@ -1,14 +1,15 @@
-# Cloudflare Pages redirects
-# Static files are served directly; these handle legacy paths and SPA fallback
-
-# Legacy /ms paths → root
+/** 
+ * Cloudflare Pages redirects
+ * Static files are served directly; these handle legacy paths and SPA fallback
+ * 
+ * Legacy /ms paths → root
 /ms /
 /ms/* /:splat
-
+ 
 # API routes go to Functions
 /api/* /api/:splat 200
 /admin/* /api/:splat 200
-
+ 
 # SPA fallback for React routes (clean URLs)
 / /index.html 200
 /services /index.html 200
