@@ -18,9 +18,9 @@ import {
   listEnquiries,
 } from "./enquiries-cloudflare.mjs";
 
-import { handleStats } from "./stats.mjs";
+import { handleStats } from "./stats-cloudflare.mjs";
 import { calculateSavings } from "./calculator.mjs";
-import { handleFeed, handleConsent, handleIngestEvent } from "./autonomous-ops.mjs";
+import { handleFeed, handleConsent, handleIngestEvent } from "./autonomous-ops-cloudflare.mjs";
 
 import {
   handleLogin,
