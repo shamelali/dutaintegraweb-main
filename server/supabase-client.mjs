@@ -160,7 +160,7 @@ export function createSupabaseClient(accessToken) {
           return { error: null, data: { user: data } };
         },
       },
-    },
+    }),
   };
 }
 
