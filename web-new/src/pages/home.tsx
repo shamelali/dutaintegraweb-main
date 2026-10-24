@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { Bot, Monitor, Cloud, Shield, Target, Zap, Timer, Flag, ArrowRight } from "lucide-react"
+import { Bot, Monitor, Cloud, Shield, Target, Zap, Timer, Flag, ArrowRight, MessageCircle, Quote } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { DutaosModulesSection } from "@/components/dutaos-modules"
+import { waLink } from "@/lib/dutaos"
 import { useLanguage } from "@/hooks/use-language"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { LiveFeed } from "@/components/live-feed"
@@ -25,14 +27,31 @@ const whyItems = [
   { num: "04", icon: Flag, titleKey: "idxWhy4Title" as TranslationKey, descKey: "idxWhy4Desc" as TranslationKey },
 ]
 
-// Pain-led hero variants for A/B testing
+// Hero variants: product-led DutaOS hero (50%) vs the two pain-led variants (25% each).
 const heroVariants = [
+  {
+    badgeKey: "dutaosHeroBadge" as TranslationKey,
+    titleKey: "dutaosHeroTitle" as TranslationKey,
+    highlightKey: "dutaosHeroHighlight" as TranslationKey,
+    descKey: "dutaosHeroDesc" as TranslationKey,
+    ctaKey: "dutaosHeroCta1" as TranslationKey,
+    ctaKind: "whatsapp" as const,
+    cta2Key: "dutaosHeroCta2" as TranslationKey,
+    cta2Kind: "anchor" as const,
+    cta2Href: "#modules",
+    weight: 2,
+  },
   {
     badgeKey: "convBadgeA" as TranslationKey,
     titleKey: "convHeroATitle" as TranslationKey,
     highlightKey: "convHeroAHighlight" as TranslationKey,
     descKey: "convHeroADesc" as TranslationKey,
     ctaKey: "convHeroACta" as TranslationKey,
+    ctaKind: "quiz" as const,
+    cta2Key: "idxHeroBtn2" as TranslationKey,
+    cta2Kind: "link" as const,
+    cta2Href: "/services",
+    weight: 1,
   },
   {
     badgeKey: "convBadgeB" as TranslationKey,
@@ -40,6 +59,11 @@ const heroVariants = [
     highlightKey: "convHeroBHighlight" as TranslationKey,
     descKey: "convHeroBDesc" as TranslationKey,
     ctaKey: "convHeroBCta" as TranslationKey,
+    ctaKind: "quiz" as const,
+    cta2Key: "idxHeroBtn2" as TranslationKey,
+    cta2Kind: "link" as const,
+    cta2Href: "/services",
+    weight: 1,
   },
 ]
 
@@ -50,9 +74,18 @@ export function HomePage() {
   const whyRef = useScrollReveal()
   const trustRef = useScrollReveal()
 
-  // A/B test: 50/50 split
-  const [variant] = useState(() => (Math.random() < 0.5 ? 0 : 1))
+  // Weighted split: DutaOS product-led 50%, pain-led variants 25% each
+  const [variant] = useState(() => {
+    const total = heroVariants.reduce((sum, v) => sum + v.weight, 0)
+    let roll = Math.random() * total
+    for (let i = 0; i < heroVariants.length; i++) {
+      roll -= heroVariants[i].weight
+      if (roll < 0) return i
+    }
+    return 0
+  })
   const hero = heroVariants[variant]
+  const heroCtaHref = hero.ctaKind === "whatsapp" ? waLink(t("dutaosHeroWaMsg")) : "/quiz"
 
   // WhatsApp signup
   const [waName, setWaName] = useState("")
@@ -105,16 +138,31 @@ export function HomePage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 reveal reveal-delay-3">
             <Button asChild variant="electric" size="xl">
-              <Link to="/quiz">
-                <span className="flex items-center gap-2">
-                  {t(hero.ctaKey)}
-                  <ArrowRight className="w-5 h-5" />
-                </span>
-              </Link>
+              {hero.ctaKind === "whatsapp" ? (
+                <a href={heroCtaHref} target="_blank" rel="noopener noreferrer">
+                  <span className="flex items-center gap-2">
+                    <MessageCircle className="w-5 h-5" />
+                    {t(hero.ctaKey)}
+                  </span>
+                </a>
+              ) : (
+                <Link to="/quiz">
+                  <span className="flex items-center gap-2">
+                    {t(hero.ctaKey)}
+                    <ArrowRight className="w-5 h-5" />
+                  </span>
+                </Link>
+              )}
             </Button>
-            <Button asChild variant="outline" size="xl" className="border-white/20 text-white hover:bg-white/10">
-              <Link to="/services">{t("idxHeroBtn2")}</Link>
-            </Button>
+            {hero.cta2Kind === "anchor" ? (
+              <Button asChild variant="outline" size="xl" className="border-white/20 text-white hover:bg-white/10">
+                <a href={hero.cta2Href}>{t(hero.cta2Key)}</a>
+              </Button>
+            ) : (
+              <Button asChild variant="outline" size="xl" className="border-white/20 text-white hover:bg-white/10">
+                <Link to={hero.cta2Href}>{t(hero.cta2Key)}</Link>
+              </Button>
+            )}
           </div>
 
           {/* Live AI Activity Feed */}
@@ -132,6 +180,33 @@ export function HomePage() {
                 <div className="text-3xl font-bold text-electric">{stat.val}</div>
                 <div className="text-xs text-white/40 mt-1">{t(stat.labelKey)}</div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* DutaOS Modules — modular pricing (anchor target: #modules) */}
+      <DutaosModulesSection id="modules" />
+
+      {/* Social Proof — anonymised early results */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4 reveal">{t("dutaosProofEyebrow")}</Badge>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold reveal reveal-delay-1">
+              {t("dutaosProofTitle")}
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              { quoteKey: "dutaosProofQuote1" as TranslationKey, attrKey: "dutaosProofQuote1Attr" as TranslationKey },
+              { quoteKey: "dutaosProofQuote2" as TranslationKey, attrKey: "dutaosProofQuote2Attr" as TranslationKey },
+            ].map((item, i) => (
+              <Card key={item.quoteKey} className={`p-8 reveal reveal-delay-${i + 1}`}>
+                <Quote className="w-6 h-6 text-electric mb-4" />
+                <p className="text-foreground/90 mb-4">“{t(item.quoteKey)}”</p>
+                <p className="text-sm text-muted-foreground">— {t(item.attrKey)}</p>
+              </Card>
             ))}
           </div>
         </div>

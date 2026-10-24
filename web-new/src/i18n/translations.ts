@@ -1420,4 +1420,189 @@ export const translations = {
     en: "Book Free Audit Call",
     bm: "Tempah Panggilan Audit Percuma",
   },
+  // ---- DUTAOS (product positioning) ----
+  dutaosHeroBadge: {
+    en: "🚀 Introducing DutaOS — Built in Cyberjaya for Malaysian SMEs",
+    bm: "🚀 Memperkenalkan DutaOS — Dibina di Cyberjaya untuk SME Malaysia",
+  },
+  dutaosHeroTitle: {
+    en: "DutaOS: The AI Operating System",
+    bm: "DutaOS: Sistem Pengendalian AI",
+  },
+  dutaosHeroHighlight: {
+    en: "for Malaysian SMEs.",
+    bm: "untuk SME Malaysia.",
+  },
+  dutaosHeroDesc: {
+    en: "Automate your sales pipeline, streamline daily operations, and ensure PDPA compliance — all in one unified, secure platform. Stop managing disjointed tools. Start growing.",
+    bm: "Automasi saluran jualan anda, permudahkan operasi harian, dan pastikan pematuhan PDPA — semuanya dalam satu platform yang bersatu dan selamat. Berhenti mengurus alat yang berselerak. Mula berkembang.",
+  },
+  dutaosHeroCta1: {
+    en: "Get Your Free AI Readiness Assessment",
+    bm: "Dapatkan Penilaian Kesediaan AI Percuma",
+  },
+  dutaosHeroCta2: {
+    en: "View DutaOS Modules",
+    bm: "Lihat Modul DutaOS",
+  },
+  dutaosHeroWaMsg: {
+    en: "Hi Duta Integra, I'd like a free AI Readiness Assessment.",
+    bm: "Hai Duta Integra, saya ingin penilaian kesediaan AI percuma.",
+  },
+  dutaosModulesEyebrow: {
+    en: "DutaOS Modules",
+    bm: "Modul DutaOS",
+  },
+  dutaosModulesTitle: {
+    en: "One Platform. Modular Pricing.",
+    bm: "Satu Platform. Harga Modular.",
+  },
+  dutaosModulesSub: {
+    en: "Start with one module and scale as you grow. Month-to-month, no lock-in. All prices in MYR.",
+    bm: "Mulakan dengan satu modul dan berkembang mengikut keperluan. Bulan ke bulan, tiada pengikatan. Semua harga dalam MYR.",
+  },
+  dutaosFrom: {
+    en: "From",
+    bm: "Bermula",
+  },
+  dutaosPerMonth: {
+    en: "/month",
+    bm: "/bulan",
+  },
+  dutaosSaveBadge: {
+    en: "Best Value · Save 27%",
+    bm: "Nilai Terbaik · Jimat 27%",
+  },
+  dutaosConnectName: {
+    en: "DutaOS Connect",
+    bm: "DutaOS Connect",
+  },
+  dutaosConnectTag: {
+    en: "Sales automation — capture, score, and follow up every lead automatically.",
+    bm: "Automasi jualan — rakam, nilai, dan susul setiap prospek secara automatik.",
+  },
+  dutaosConnectF1: {
+    en: "AI lead scoring (intent, budget, urgency, fit)",
+    bm: "Penilaian prospek AI (niat, bajet, urgensi, kesesuaian)",
+  },
+  dutaosConnectF2: {
+    en: "Automated WhatsApp & email follow-up sequences",
+    bm: "Urutan susulan WhatsApp & emel automatik",
+  },
+  dutaosConnectF3: {
+    en: "Meeting scheduler with calendar sync",
+    bm: "Penjadual mesyuarat dengan penyegerakan kalendar",
+  },
+  dutaosConnectF4: {
+    en: "Basic CRM sync & pipeline view",
+    bm: "Penyegerakan CRM asas & paparan saluran",
+  },
+  dutaosOpsName: {
+    en: "DutaOS Ops",
+    bm: "DutaOS Ops",
+  },
+  dutaosOpsTag: {
+    en: "Workflow tracking — every job, resource, and bottleneck in real time.",
+    bm: "Penjejakan aliran kerja — setiap kerja, sumber, dan kesesakan secara masa nyata.",
+  },
+  dutaosOpsF1: {
+    en: "Real-time workflow & task tracking",
+    bm: "Penjejakan aliran kerja & tugas masa nyata",
+  },
+  dutaosOpsF2: {
+    en: "Resource allocation with AI suggestions",
+    bm: "Peruntukan sumber dengan cadangan AI",
+  },
+  dutaosOpsF3: {
+    en: "Automated reporting & daily business brief",
+    bm: "Pelaporan automatik & taklimat perniagaan harian",
+  },
+  dutaosOpsF4: {
+    en: "SLA management & escalation alerts",
+    bm: "Pengurusan SLA & amaran eskalasi",
+  },
+  dutaosGovernName: {
+    en: "DutaOS Govern",
+    bm: "DutaOS Govern",
+  },
+  dutaosGovernTag: {
+    en: "AI governance — run AI agents under PDPA-safe, human-approved control.",
+    bm: "Tadbir urus AI — jalankan ejen AI di bawah kawalan selamat PDPA dengan kelulusan manusia.",
+  },
+  dutaosGovernF1: {
+    en: "AI agent management (pause, resume, approve)",
+    bm: "Pengurusan ejen AI (jeda, sambung, lulus)",
+  },
+  dutaosGovernF2: {
+    en: "Human-in-the-loop approvals for risky actions",
+    bm: "Kelulusan manusia untuk tindakan berisiko",
+  },
+  dutaosGovernF3: {
+    en: "PII-safe routing to local AI models",
+    bm: "Penghalaan selamat PII ke model AI tempatan",
+  },
+  dutaosGovernF4: {
+    en: "Full audit log & compliance exports",
+    bm: "Log audit penuh & eksport pematuhan",
+  },
+  dutaosBundleName: {
+    en: "DutaOS Bundle",
+    bm: "DutaOS Bundle",
+  },
+  dutaosBundleTag: {
+    en: "The complete AI operating system for your business.",
+    bm: "Sistem pengendalian AI lengkap untuk perniagaan anda.",
+  },
+  dutaosBundleF1: {
+    en: "Everything in Connect, Ops & Govern",
+    bm: "Semua dalam Connect, Ops & Govern",
+  },
+  dutaosBundleF2: {
+    en: "Unified dashboard across all modules",
+    bm: "Papan pemuka bersatu merentasi semua modul",
+  },
+  dutaosBundleF3: {
+    en: "Priority support with 4-hour SLA",
+    bm: "Sokongan keutamaan dengan SLA 4 jam",
+  },
+  dutaosBundleF4: {
+    en: "Free monthly AI strategy call",
+    bm: "Panggilan strategi AI bulanan percuma",
+  },
+  dutaosPlanCta: {
+    en: "Get Started via WhatsApp",
+    bm: "Mula Melalui WhatsApp",
+  },
+  dutaosPlanWaMsg: {
+    en: "Hi Duta Integra, I'm interested in the {plan} plan. Can you share more details?",
+    bm: "Hai Duta Integra, saya berminat dengan pelan {plan}. Boleh kongsi maklumat lanjut?",
+  },
+  dutaosCustomQuote: {
+    en: "Need a custom setup? Book a free consultation →",
+    bm: "Perlukan persediaan tersuai? Tempah perundingan percuma →",
+  },
+  dutaosProofEyebrow: {
+    en: "Built for Malaysian Businesses",
+    bm: "Dibina untuk Perniagaan Malaysia",
+  },
+  dutaosProofTitle: {
+    en: "Early Results from the Field",
+    bm: "Keputusan Awal dari Medan",
+  },
+  dutaosProofQuote1: {
+    en: "We used to chase leads for days. Now DutaOS Connect scores and follows up within minutes — my team just shows up to close.",
+    bm: "Dulu kami mengejar prospek berhari-hari. Kini DutaOS Connect menilai dan menyusul dalam beberapa minit — pasukan saya hanya hadir untuk menutup jualan.",
+  },
+  dutaosProofQuote1Attr: {
+    en: "Operations Director, KL property agency",
+    bm: "Pengarah Operasi, agensi hartanah KL",
+  },
+  dutaosProofQuote2: {
+    en: "Monthly reporting used to take our team a full week. DutaOS Ops prepares it automatically every morning.",
+    bm: "Pelaporan bulanan dahulu mengambil masa seminggu penuh. DutaOS Ops menyediakannya secara automatik setiap pagi.",
+  },
+  dutaosProofQuote2Attr: {
+    en: "Founder, Selangor services SME",
+    bm: "Pengasas, SME perkhidmatan Selangor",
+  },
 } as const

@@ -3,6 +3,7 @@ import { Check, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { DutaosModulesSection } from "@/components/dutaos-modules"
 import { useLanguage } from "@/hooks/use-language"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import type { TranslationKey } from "@/i18n/translations"
@@ -95,6 +96,9 @@ export function PricingPage() {
           </p>
         </div>
       </section>
+
+      {/* DutaOS Modules — flagship product pricing (anchor target: #modules) */}
+      <DutaosModulesSection id="modules" />
 
       {/* Pricing Tiers */}
       <section ref={tiersRef} className="py-20 px-6">
