@@ -26,7 +26,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center" aria-label="Duta Integra — home">
-          <Logo variant={isDark ? "dark" : "light"} className="h-9 w-auto" />
+          <Logo variant={isDark ? "dark" : "light"} />
         </Link>
 
         {/* Desktop nav */}
