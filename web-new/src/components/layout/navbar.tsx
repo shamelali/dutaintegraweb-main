@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Moon, Sun, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/logo"
 import { useDarkMode } from "@/hooks/use-dark-mode"
 import { useLanguage } from "@/hooks/use-language"
 import type { TranslationKey } from "@/i18n/translations"
@@ -24,9 +25,8 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 font-heading font-bold text-lg text-foreground">
-          <span className="text-electric">⚡</span>
-          Duta Integra
+        <Link to="/" className="flex items-center" aria-label="Duta Integra — home">
+          <Logo variant={isDark ? "dark" : "light"} className="h-9 w-auto" />
         </Link>
 
         {/* Desktop nav */}

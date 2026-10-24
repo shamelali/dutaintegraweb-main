@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { Logo } from "@/components/logo"
 import { useLanguage } from "@/hooks/use-language"
 import type { TranslationKey } from "@/i18n/translations"
 
@@ -26,10 +27,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 font-heading font-bold text-lg text-white mb-4">
-              <span className="text-electric">⚡</span>
-              Duta Integra
-            </div>
+            <Link to="/" className="inline-block mb-4" aria-label="Duta Integra — home">
+              <Logo variant="dark" withTagline className="h-12 w-auto" />
+            </Link>
             <p className="text-sm leading-relaxed max-w-xs">
               {t("idxFooterDesc")}
             </p>
