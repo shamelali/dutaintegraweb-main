@@ -1,12 +1,19 @@
 #!/usr/bin/env node
-// Copies the built React app into Web/, replacing the entry HTML and bundle
-// while leaving the standalone static pages (audit.html, cases.html, ...) alone.
+// Copies the built React app into a static deploy directory, replacing the entry
+// HTML and bundle while leaving the standalone static pages (audit.html, cases.html, ...)
+// alone. Default destination is Web/ (Vercel); pass `--dest public` for Cloudflare Pages.
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs"
 import { join } from "node:path"
 
 const root = new URL("..", import.meta.url).pathname
 const dist = join(root, "web-new", "dist")
-const web = join(root, "Web")
+const destArg = process.argv.indexOf("--dest")
+const destName = destArg !== -1 ? process.argv[destArg + 1] : "Web"
+if (destArg !== -1 && !destName) {
+  console.error("--dest requires a directory name, e.g. --dest public")
+  process.exit(1)
+}
+const web = join(root, destName)
 
 if (!existsSync(dist)) {
   console.error("web-new/dist not found — run the web-new build first")
@@ -33,4 +40,4 @@ for (const f of readdirSync(dist)) {
   cpSync(join(dist, f), join(web, f), { recursive: true })
 }
 
-console.log("Synced web-new/dist -> Web/")
+console.log(`Synced web-new/dist -> ${destName}/`)
