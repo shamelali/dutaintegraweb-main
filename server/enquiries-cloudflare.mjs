@@ -93,9 +93,6 @@ const { randomUUID } = crypto;
 
 /** Append one enquiry record and return it. */
 export async function recordEnquiry(input) {
-  if (!supabaseConfigured()) {
-    throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured");
-  }
   const record = {
     id: randomUUID(),
     name: input.name,
@@ -109,13 +106,19 @@ export async function recordEnquiry(input) {
     created_at: new Date().toISOString(),
     emailed_at: null,
   };
+  if (!supabaseConfigured()) {
+    // Degrade loudly, don't lose the lead: the caller still emails the inbox.
+    console.error("[enquiries] SUPABASE_URL/SERVICE_ROLE_KEY not configured — enquiry NOT persisted, email-only path");
+    return record;
+  }
   return supabaseRecord(record);
 }
 
 /** Mark a stored enquiry as notified. */
 export async function markEnquiryEmailed(id, at = new Date().toISOString()) {
   if (!supabaseConfigured()) {
-    throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured");
+    console.warn(`[enquiries] SUPABASE not configured — emailed_at not recorded for ${id}`);
+    return at;
   }
   return supabaseMarkEmailed(id, at);
 }

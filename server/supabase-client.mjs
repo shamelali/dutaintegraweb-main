@@ -6,24 +6,43 @@
  *
  * Server-side only: SUPABASE_SERVICE_ROLE_KEY bypasses Row Level Security.
  * Never expose this key to the browser.
+ *
+ * Config is read lazily on first use, NOT at module scope: Pages injects
+ * environment bindings per deployment, and the request handler copies
+ * context.env into process.env before dispatch. A module-scope read broke
+ * worker boot ("process is not defined" at the old compatibility_date, then
+ * a boot throw when vars were missing) and took every /api route down.
+ * Missing config now surfaces as a per-request error plus
+ * supabaseConfigured() on /api/health — loud, but the worker boots.
  */
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+let cachedConfig = null;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required");
+export function supabaseConfigured() {
+  return Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
 }
 
-const REST_BASE = `${SUPABASE_URL}/rest/v1`;
-const AUTH_BASE = `${SUPABASE_URL}/auth/v1`;
-
-const SERVICE_HEADERS = {
-  apikey: SUPABASE_SERVICE_KEY,
-  Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-  "Content-Type": "application/json",
-  Prefer: "return=representation",
-};
+function getSupabaseConfig() {
+  if (cachedConfig) return cachedConfig;
+  const url = process.env.SUPABASE_URL?.trim();
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!url || !key) {
+    throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured");
+  }
+  cachedConfig = {
+    url: url.replace(/\/$/, ""),
+    key,
+    REST_BASE: `${url.replace(/\/$/, "")}/rest/v1`,
+    AUTH_BASE: `${url.replace(/\/$/, "")}/auth/v1`,
+    SERVICE_HEADERS: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    },
+  };
+  return cachedConfig;
+}
 
 // ── Admin client (service role, bypasses RLS) ──────────────────────────────────
 
@@ -31,6 +50,7 @@ const SERVICE_HEADERS = {
  * Make a Supabase REST request with service role key.
  */
 async function supabaseRequest(method, path, body = {}, headers = {}) {
+  const { REST_BASE, SERVICE_HEADERS } = getSupabaseConfig();
   const url = `${REST_BASE}/${path}`;
   const response = await fetch(url, {
     method,
@@ -100,10 +120,11 @@ export const supabaseAdmin = {
       },
     },
     signInWithPassword: async ({ email, password }) => {
+      const { AUTH_BASE, SERVICE_HEADERS } = getSupabaseConfig();
       const response = await fetch(`${AUTH_BASE}/token?grant_type=password`, {
         method: "POST",
         headers: {
-          apikey: SUPABASE_SERVICE_KEY,
+          apikey: SERVICE_HEADERS.apikey,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
@@ -123,9 +144,10 @@ export const supabaseAdmin = {
  * For client-side authenticated requests (portal, proposals, etc.).
  */
 export function createSupabaseClient(accessToken) {
+  const { REST_BASE, SERVICE_HEADERS } = getSupabaseConfig();
   const userHeaders = {
     Authorization: `Bearer ${accessToken}`,
-    apikey: SUPABASE_SERVICE_KEY,
+    apikey: SERVICE_HEADERS.apikey,
     "Content-Type": "application/json",
     Prefer: "return=representation",
   };

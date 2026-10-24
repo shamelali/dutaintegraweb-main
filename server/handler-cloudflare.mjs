@@ -20,6 +20,7 @@ import {
 
 import { handleStats } from "./stats-cloudflare.mjs";
 import { calculateSavings } from "./calculator.mjs";
+import { supabaseConfigured } from "./supabase-client.mjs";
 import { handleFeed, handleConsent, handleIngestEvent } from "./autonomous-ops-cloudflare.mjs";
 import {
   createTask,
@@ -544,7 +545,11 @@ async function handleCalculator(req) {
 }
 
 async function handleHealth(req) {
-  return sendJson(200, { ok: true, inboxConfigured: Boolean(resolveInboxEmail()) });
+  return sendJson(200, {
+    ok: true,
+    inboxConfigured: Boolean(resolveInboxEmail()),
+    supabaseConfigured: supabaseConfigured(),
+  });
 }
 
 // ── Main Router ───────────────────────────────────────────────────────────────
