@@ -65,6 +65,11 @@ beforeEach(async () => {
   process.env.CONTACT_INBOX_EMAIL = "sales@dutaintegrasolutions.com";
   delete process.env.ADMIN_EMAIL;
   delete process.env.ALLOWED_ORIGINS;
+  // Scrub mail provider keys so "no provider configured" assertions hold even
+  // when the developer's shell has real keys exported (see email.test.mjs).
+  delete process.env.RESEND_API_KEY;
+  delete process.env.BREVO_API_KEY;
+  delete process.env.POSTMARK_SERVER_TOKEN;
   resetRateLimit();
 });
 

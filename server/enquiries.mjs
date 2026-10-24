@@ -232,17 +232,11 @@ export function enquiryBody(enquiry) {
 
 /**
  * Deliver the notification through whichever provider is configured.
-<<<<<<< HEAD
- * Returns true on success. Returns false (without throwing) when no inbox or
- * no provider is configured, so the enquiry is still stored and the prospect
- * still sees success. Throws only on a genuine provider failure.
-=======
  * Priority is Brevo > Resend > Postmark (first key found wins), matching
  * `.env.example` ("set exactly ONE") and `digest.mjs`. Returns true on
  * success. Returns false (without throwing) when no inbox or no provider is
  * configured, so the enquiry is still stored and the prospect still sees
  * success. Throws only on a genuine provider failure.
->>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
  */
 export async function notifyEnquiry(enquiry) {
   const to = resolveInboxEmail();
@@ -252,17 +246,10 @@ export async function notifyEnquiry(enquiry) {
   const subject = enquirySubject(enquiry);
   const text = enquiryBody(enquiry);
 
-<<<<<<< HEAD
-  if (process.env.RESEND_API_KEY) {
-    await sendViaResend({ to, from, subject, text }, process.env.RESEND_API_KEY);
-  } else if (process.env.BREVO_API_KEY) {
-    await sendViaBrevo({ to, from, subject, text }, process.env.BREVO_API_KEY);
-=======
   if (process.env.BREVO_API_KEY) {
     await sendViaBrevo({ to, from, subject, text }, process.env.BREVO_API_KEY);
   } else if (process.env.RESEND_API_KEY) {
     await sendViaResend({ to, from, subject, text }, process.env.RESEND_API_KEY);
->>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
   } else if (process.env.POSTMARK_SERVER_TOKEN) {
     await sendViaPostmark({ to, from, subject, text }, process.env.POSTMARK_SERVER_TOKEN);
   } else {
@@ -279,22 +266,15 @@ async function assertOk(res, provider) {
   }
 }
 
-<<<<<<< HEAD
-=======
 // Default sender when EMAIL_FROM is unset. Must be a verified sender in the
 // chosen provider (Brevo: Settings → Senders & IP; Resend: Domains).
 const DEFAULT_FROM = "no-reply@dutaintegra.my";
 
->>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
 async function sendViaResend({ to, from, subject, text }, apiKey) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
-<<<<<<< HEAD
-    body: JSON.stringify({ from: from || "Duta Integra <no-reply@dutaintegrasolutions.com>", to, subject, text }),
-=======
     body: JSON.stringify({ from: from || `Duta Integra <${DEFAULT_FROM}>`, to, subject, text }),
->>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
   });
   await assertOk(res, "resend");
 }
@@ -304,11 +284,7 @@ async function sendViaBrevo({ to, from, subject, text }, apiKey) {
     method: "POST",
     headers: { "api-key": apiKey, "content-type": "application/json" },
     body: JSON.stringify({
-<<<<<<< HEAD
-      sender: from ? { name: "Duta Integra", email: from } : { name: "Duta Integra", email: "no-reply@dutaintegrasolutions.com" },
-=======
       sender: { name: "Duta Integra", email: from || DEFAULT_FROM },
->>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
       to: [{ email: to }],
       subject,
       textContent: text,
@@ -322,11 +298,7 @@ async function sendViaPostmark({ to, from, subject, text }, token) {
     method: "POST",
     headers: { "X-Postmark-Server-Token": token, "content-type": "application/json", Accept: "application/json" },
     body: JSON.stringify({
-<<<<<<< HEAD
-      From: from || "no-reply@dutaintegrasolutions.com",
-=======
       From: from || DEFAULT_FROM,
->>>>>>> 47bc3f5091a3a8a281b5730a0e34b7f22b009b60
       To: to,
       Subject: subject,
       TextBody: text,
