@@ -585,7 +585,7 @@ export const translations = {
   },
   aboutFounderTitle: {
     en: "Why I Started Duta Integra",
-    bm: "Mengapa Saya Menubuhkan Duta Integra",
+    bm: "Mengapa Duta Integra ditubuhkan",
   },
   aboutFounderP1: {
     en: "I spent years watching capable Malaysian businesses lose time and money to technology that was chosen for them rather than with them. Long contracts, unexplained invoices, and systems that quietly stopped working — because nobody was accountable once the deal was signed.",

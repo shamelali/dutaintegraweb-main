@@ -78,14 +78,14 @@ export function DutaConnectSlider() {
               <ReactCompareSliderImage
                 src={BEFORE_SRC}
                 alt={t("sliderAltBefore")}
-                onError={(e) => fallbackOnFail(e, beforePlaceholder)}
+                onError={(e: React.SyntheticEvent<HTMLImageElement>) => fallbackOnFail(e, beforePlaceholder)}
               />
             }
             itemTwo={
               <ReactCompareSliderImage
                 src={AFTER_SRC}
                 alt={t("sliderAltAfter")}
-                onError={(e) => fallbackOnFail(e, afterPlaceholder)}
+                onError={(e: React.SyntheticEvent<HTMLImageElement>) => fallbackOnFail(e, afterPlaceholder)}
               />
             }
             style={{ height: "clamp(280px, 50vw, 500px)" }}

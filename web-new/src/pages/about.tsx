@@ -108,12 +108,11 @@ export function AboutPage() {
                 <span className="text-2xl font-bold text-electric">S</span>
               </div>
               <div>
-                <h3 className="text-2xl font-heading font-bold">Shamel</h3>
-                <p className="text-electric text-sm mb-4">{t("aboutFounderRole")}</p>
                 <div className="space-y-4 text-muted-foreground">
                   <p>{t("aboutFounderP1")}</p>
                   <p>{t("aboutFounderP2")}</p>
                 </div>
+                <p className="text-sm text-muted-foreground mt-6">Founder</p>
               </div>
             </div>
           </Card>
