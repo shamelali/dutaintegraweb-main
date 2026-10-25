@@ -475,3 +475,8 @@ export async function handleAdminClients(req) {
 
   return sendJson(new Headers(), 405, { error: "Method not allowed" });
 }
+
+// Phase 4 digest trigger was reverted; keep a stub so route guards resolve.
+export async function handleAdminClientDigest() {
+  return sendJson(new Headers(), 404, { error: "Not found" });
+}

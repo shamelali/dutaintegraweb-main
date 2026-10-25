@@ -44,3 +44,4 @@ PHASE4_STATUS.md
 # Preview directories
 Web/preview/
 public/preview/
+.wrangler/
