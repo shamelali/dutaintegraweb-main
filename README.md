@@ -78,3 +78,8 @@ The site will be deployed to Cloudflare Pages and should be accessible at `https
 
 ### ✅ Final Note:
 The original Vercel setup remains intact for rollback. The migration to Cloudflare Pages is complete and successful.
+## Unified workspace (Phase 2–4)
+
+The current workspace implementation adds `/digital-assessment` and `/workspace`, plus Supabase-backed lead, assessment, proposal, project, task, approval and activity APIs. See [`docs/PHASE-4-UNIFIED-WORKSPACE.md`](docs/PHASE-4-UNIFIED-WORKSPACE.md) for the migration, routes, security requirements and staging checklist.
+
+Before deploying this snapshot, apply `supabase/migrations/202610250001_workspace_phase4.sql`, configure server-side Supabase credentials and `ADMIN_TOKEN`, run the frontend build, and test in a Cloudflare Pages preview. `scripts/sync-web.mjs` now synchronises the SPA output to both `Web/` (Vercel) and `public/` (Cloudflare Pages).

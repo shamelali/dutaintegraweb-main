@@ -19,6 +19,8 @@ import {
   handleAdminClientDigest,
 } from "./portal.mjs";
 
+import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
+
 /**
  * Request handler for dutaintegra.my.
  *
@@ -899,6 +901,8 @@ export async function handle(req, res) {
       return await handleAdminClientDigest(req, res, digestMatch[1]);
     }
 
+    if (pathname.startsWith("/api/workspace/")) return await handleWorkspaceNodeRequest(req, res);
+
     if (pathname === "/api/health") {
       return send(res, 200, { ok: true, inboxConfigured: Boolean(resolveInboxEmail()) });
     }
@@ -907,11 +911,62 @@ export async function handle(req, res) {
     if (pathname === "/api/ops/feed") return await handleFeed(req, res);
     if (pathname === "/api/ops/consent") return await handleConsent(req, res);
     if (pathname === "/api/ops/events") return await handleIngestEvent(req, res);
+
     if (pathname.startsWith("/api/")) return send(res, 404, { error: "Not found" });
     return await serveStatic(req, res, urlPath);
   } catch (err) {
     console.error("[server] unhandled error:", err);
     if (!res.headersSent) send(res, 500, { error: "Something went wrong. Please try again." });
     else res.end();
+  }
+}
+
+/**
+ * Node/http adapter for the shared fetch-based workspace API.
+ * Converts the incoming Node request to a fetch Request, runs
+ * handleWorkspaceApi, and writes the fetch Response back to res.
+ */
+async function handleWorkspaceNodeRequest(req, res) {
+  if (!pathnameStartsWith(req.url, "/api/workspace/")) return false;
+
+  const proto = String(req.headers["x-forwarded-proto"] || "https").split(",")[0].trim();
+  const host = req.headers.host || "localhost";
+  const url = new URL(req.url || "/", `${proto}://${host}`);
+  const headers = new Headers();
+  const hopByHop = new Set([
+    "connection", "transfer-encoding", "upgrade", "keep-alive", "host", "content-length",
+  ]);
+  for (const [key, value] of Object.entries(req.headers || {})) {
+    if (hopByHop.has(key.toLowerCase())) continue;
+    if (Array.isArray(value)) value.forEach((v) => headers.append(key, String(v)));
+    else if (value !== undefined) headers.set(key, String(v));
+  }
+  let body;
+  if (!["GET", "HEAD"].includes(req.method || "GET")) {
+    const chunks = [];
+    for await (const chunk of req) chunks.push(Buffer.from(chunk));
+    body = Buffer.concat(chunks).toString("utf8");
+  }
+  const webRequest = new Request(url, {
+    method: req.method || "GET",
+    headers,
+    ...(body === undefined ? {} : { body }),
+  });
+  const response = await handleWorkspaceApi(webRequest);
+  if (!response) return false;
+
+  res.statusCode = response.status;
+  response.headers.forEach((value, key) => {
+    res.setHeader(key, value);
+  });
+  res.end(Buffer.from(await response.arrayBuffer()));
+  return true;
+}
+
+function pathnameStartsWith(url, prefix) {
+  try {
+    return new URL(url, "http://localhost").pathname.startsWith(prefix);
+  } catch {
+    return false;
   }
 }

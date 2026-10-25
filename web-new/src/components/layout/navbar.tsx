@@ -11,7 +11,8 @@ const navLinks = [
   { key: "navServices" as TranslationKey, to: "/services" },
   { key: "navAbout" as TranslationKey, to: "/about" },
   { key: "navPricing" as TranslationKey, to: "/pricing" },
-  { key: "navQuiz" as TranslationKey, to: "/quiz", highlight: true },
+  { key: "navAssessment" as TranslationKey, to: "/digital-assessment", highlight: true },
+  { key: "navClientPortal" as TranslationKey, to: "/workspace" },
   { key: "navContact" as TranslationKey, to: "/contact", cta: true },
 ]
 

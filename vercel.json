@@ -7,43 +7,147 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
+        }
       ]
     }
   ],
   "redirects": [
-    { "source": "/ms", "destination": "/" },
-    { "source": "/ms/", "destination": "/" },
-    { "source": "/ms/:path+", "destination": "/:path+" }
+    {
+      "source": "/ms",
+      "destination": "/"
+    },
+    {
+      "source": "/ms/",
+      "destination": "/"
+    },
+    {
+      "source": "/ms/:path+",
+      "destination": "/:path+"
+    }
   ],
   "rewrites": [
-    { "source": "/api/send-email", "destination": "/api/gateway" },
-    { "source": "/api/quiz", "destination": "/api/gateway" },
-    { "source": "/api/case-studies", "destination": "/api/gateway" },
-    { "source": "/api/testimonial", "destination": "/api/gateway" },
-    { "source": "/api/pdpa-score", "destination": "/api/gateway" },
-    { "source": "/api/monthly-digest", "destination": "/api/gateway" },
-    { "source": "/api/health", "destination": "/api/gateway" },
-    { "source": "/api/stats", "destination": "/api/gateway" },
-    { "source": "/api/calculator", "destination": "/api/gateway" },
-    { "source": "/admin/enquiries", "destination": "/api/gateway" },
-    { "source": "/api/portal/login", "destination": "/api/gateway" },
-    { "source": "/api/portal/logout", "destination": "/api/gateway" },
-    { "source": "/api/portal/me", "destination": "/api/gateway" },
-    { "source": "/api/portal/health", "destination": "/api/gateway" },
-    { "source": "/api/portal/tickets/:id", "destination": "/api/gateway" },
-    { "source": "/api/portal/tickets", "destination": "/api/gateway" },
-    { "source": "/admin/clients/:id/send-digest", "destination": "/api/gateway" },
-    { "source": "/admin/clients", "destination": "/api/gateway" },
-    { "source": "/api/ops/feed", "destination": "/api/gateway" },
-    { "source": "/api/ops/consent", "destination": "/api/gateway" },
-    { "source": "/api/ops/events", "destination": "/api/gateway" },
-    { "source": "/((?!api/|admin/|assets/|.*\\.).*)", "destination": "/index.html" }
+    {
+      "source": "/api/workspace",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/workspace/:path*",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/send-email",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/quiz",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/case-studies",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/testimonial",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/pdpa-score",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/monthly-digest",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/health",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/stats",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/calculator",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/admin/enquiries",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/portal/login",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/portal/logout",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/portal/me",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/portal/health",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/portal/tickets/:id",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/portal/tickets",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/admin/clients/:id/send-digest",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/admin/clients",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/ops/feed",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/ops/consent",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/ops/events",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/((?!api/|admin/|assets/|.*\\.).*)",
+      "destination": "/index.html"
+    }
   ]
 }

@@ -1,43 +1,32 @@
 #!/usr/bin/env node
-// Copies the built React app into a static deploy directory, replacing the entry
-// HTML and bundle while leaving the standalone static pages (audit.html, cases.html, ...)
-// alone. Default destination is Web/ (Vercel); pass `--dest public` for Cloudflare Pages.
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs"
-import { join } from "node:path"
+// Copy the built React SPA into both deployment outputs. Vercel serves Web/;
+// Cloudflare Pages serves public/ according to wrangler.toml. Keep their entry
+// HTML and hashed bundles aligned while preserving legacy standalone pages.
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { join } from "node:path";
 
-const root = new URL("..", import.meta.url).pathname
-const dist = join(root, "web-new", "dist")
-const destArg = process.argv.indexOf("--dest")
-const destName = destArg !== -1 ? process.argv[destArg + 1] : "Web"
-if (destArg !== -1 && !destName) {
-  console.error("--dest requires a directory name, e.g. --dest public")
-  process.exit(1)
-}
-const web = join(root, destName)
+const root = new URL("..", import.meta.url).pathname;
+const dist = join(root, "web-new", "dist");
+const targets = [join(root, "Web"), join(root, "public")];
 
 if (!existsSync(dist)) {
-  console.error("web-new/dist not found — run the web-new build first")
-  process.exit(1)
+  console.error("web-new/dist not found — run the web-new build first");
+  process.exit(1);
 }
 
-// Drop previous hashed bundles so stale ones don't accumulate in Web/assets.
-const assets = join(web, "assets")
-if (existsSync(assets)) {
-  for (const f of readdirSync(assets)) {
-    if (/^index-.*\.(js|css)$/.test(f)) rmSync(join(assets, f))
+for (const target of targets) {
+  const assets = join(target, "assets");
+  if (existsSync(assets)) {
+    for (const file of readdirSync(assets)) {
+      if (/^index-.*\.(js|css)$/.test(file)) rmSync(join(assets, file));
+    }
   }
+  mkdirSync(assets, { recursive: true });
+  cpSync(join(dist, "index.html"), join(target, "index.html"));
+  for (const file of readdirSync(join(dist, "assets"))) cpSync(join(dist, "assets", file), join(assets, file));
+  for (const file of readdirSync(dist)) {
+    if (file === "assets" || file === "index.html") continue;
+    cpSync(join(dist, file), join(target, file), { recursive: true });
+  }
+  console.log(`Synced web-new/dist -> ${target.replace(root + "/", "")}/`);
 }
-
-mkdirSync(assets, { recursive: true })
-
-cpSync(join(dist, "index.html"), join(web, "index.html"))
-for (const f of readdirSync(join(dist, "assets"))) {
-  cpSync(join(dist, "assets", f), join(assets, f))
-}
-// Root-level public files (favicon, icons) that index.html references as /<name>.
-for (const f of readdirSync(dist)) {
-  if (f === "assets" || f === "index.html") continue
-  cpSync(join(dist, f), join(web, f), { recursive: true })
-}
-
-console.log(`Synced web-new/dist -> ${destName}/`)

@@ -5,3 +5,9 @@ Disallow: /admin/
 Disallow: /portal/
 
 Sitemap: https://dutaintegra.my/sitemap.xml
+
+# Client workspace is private; do not index it.
+Disallow: /workspace
+Disallow: /api/workspace/
+Disallow: /operations
+Disallow: /api/workspace/admin/

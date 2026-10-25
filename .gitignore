@@ -35,3 +35,12 @@ obsidian-knowledge-base/
 .next/
 next-env.d.ts
 tsconfig.tsbuildinfo
+
+# Phase 4 QA zip + extracted snapshot (not for commit)
+dutaintegraweb-phase4-unified.zip
+dutaintegraweb-main-main/
+PHASE4_STATUS.md
+
+# Preview directories
+Web/preview/
+public/preview/

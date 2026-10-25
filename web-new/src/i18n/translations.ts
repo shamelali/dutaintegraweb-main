@@ -23,6 +23,10 @@ export const translations = {
     en: "Free IT Audit",
     bm: "Audit IT Percuma",
   },
+  navAssessment: {
+    en: "Digital Assessment",
+    bm: "Penilaian Digital",
+  },
   navAutonomousOps: {
     en: "Autonomous Ops",
     bm: "Autonomous Ops",

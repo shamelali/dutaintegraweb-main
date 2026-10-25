@@ -22,6 +22,7 @@ import { handleStats } from "./stats-cloudflare.mjs";
 import { calculateSavings } from "./calculator.mjs";
 import { supabaseConfigured } from "./supabase-client.mjs";
 import { handleFeed, handleConsent, handleIngestEvent } from "./autonomous-ops-cloudflare.mjs";
+import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
 import {
   createTask,
   listTasks,
@@ -683,6 +684,12 @@ export async function handleApi(req) {
     const digestMatch = pathname.match(/^\/admin\/clients\/([a-f0-9-]+)\/send-digest$/);
     if (digestMatch && req.method === "POST") {
       return await handleAdminClientDigest(req, digestMatch[1]);
+    }
+
+    // Unified workspace API (assessment, client portal, admin)
+    if (pathname.startsWith("/api/workspace/")) {
+      const workspaceResponse = await handleWorkspaceApi(req);
+      if (workspaceResponse) return workspaceResponse;
     }
 
     // 404 for unknown API routes
