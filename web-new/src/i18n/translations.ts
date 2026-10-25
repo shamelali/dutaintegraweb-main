@@ -1605,4 +1605,144 @@ export const translations = {
     en: "Founder, Selangor services SME",
     bm: "Pengasas, SME perkhidmatan Selangor",
   },
+
+  /* ── V2 Engineering Handoff Spec components ───────────────────── */
+
+  // ProposalForm (§2) — 3-step fixed-price proposal funnel
+  proposalSectionEyebrow: {
+    en: "Fixed-Price Proposal",
+    bm: "Cadangan Harga Tetap",
+  },
+  proposalSectionTitle: {
+    en: "Your proposal starts here.",
+    bm: "Cadangan anda bermula di sini.",
+  },
+  proposalSectionDesc: {
+    en: "Three quick questions. A real, fixed-price proposal in your inbox within 3 working days — no obligation, no lock-in.",
+    bm: "Tiga soalan ringkas. Cadangan harga tetap sebenar dalam peti mel anda dalam 3 hari bekerja — tanpa ikatan, tanpa kontrak penguncian.",
+  },
+  proposalStep1Title: {
+    en: "What’s slowing your team down right now?",
+    bm: "Apakah yang memperlahkan pasukan anda sekarang?",
+  },
+  proposalOptIt: {
+    en: "IT & System Crashes",
+    bm: "Kerosakan IT & Sistem",
+  },
+  proposalOptDataEntry: {
+    en: "Manual Data Entry",
+    bm: "Masuk Data Manual",
+  },
+  proposalOptShipping: {
+    en: "E-commerce Shipping",
+    bm: "Penghantaran E-dagang",
+  },
+  proposalOptSoftware: {
+    en: "Custom Software",
+    bm: "Perisian Tersuai",
+  },
+  proposalStep2Title: {
+    en: "Roughly how many staff or users do you have?",
+    bm: "Kira-kira berapa ramai kakitangan atau pengguna anda?",
+  },
+  proposalStep3Title: {
+    en: "Where should we send your fixed-price proposal?",
+    bm: "Ke mana kami patut hantar cadangan harga tetap anda?",
+  },
+  proposalFieldName: {
+    en: "Full Name",
+    bm: "Nama Penuh",
+  },
+  proposalFieldCompany: {
+    en: "Company Name",
+    bm: "Nama Syarikat",
+  },
+  proposalFieldEmail: {
+    en: "Email Address",
+    bm: "Alamat E-mel",
+  },
+  proposalSubmit: {
+    en: "Submit & Get Proposal",
+    bm: "Hantar & Dapatkan Cadangan",
+  },
+  proposalBack: {
+    en: "Back",
+    bm: "Kembali",
+  },
+  proposalSuccessTitle: {
+    en: "Proposal in progress.",
+    bm: "Cadangan sedang disediakan.",
+  },
+  proposalSuccessDesc: {
+    en: "Thank you, {name}. We will WhatsApp you within 3 working days.",
+    bm: "Terima kasih, {name}. Kami akan WhatsApp anda dalam 3 hari bekerja.",
+  },
+  proposalOpenWhatsapp: {
+    en: "Open WhatsApp Now",
+    bm: "Buka WhatsApp Sekarang",
+  },
+
+  // RoiCalculator (§4) — IT & automation leakage calculator
+  roiTitle: {
+    en: "IT & Automation Leakage Calculator",
+    bm: "Kalkulator Kebocoran IT & Automasi",
+  },
+  roiSubtitle: {
+    en: "Move the sliders. The number you see is what inefficiency costs you every year.",
+    bm: "Gerakkan slider. Angka yang anda lihat ialah kos ketidakefisienan anda setiap tahun.",
+  },
+  roiStaffLabel: {
+    en: "Number of Staff",
+    bm: "Bilangan Kakitangan",
+  },
+  roiManualLabel: {
+    en: "Hours lost to manual data entry",
+    bm: "Jam hilang untuk masuk data manual",
+  },
+  roiDowntimeLabel: {
+    en: "Hours lost to IT downtime",
+    bm: "Jam hilang akibat masa mati IT",
+  },
+  roiHoursWeek: {
+    en: "/ week",
+    bm: "/ minggu",
+  },
+  roiHoursMonth: {
+    en: "/ month",
+    bm: "/ bulan",
+  },
+  roiLeaking: {
+    en: "You are leaking approximately",
+    bm: "Anda bocor lebih kurang",
+  },
+  roiEveryYear: {
+    en: "...every single year.",
+    bm: "...setiap tahun.",
+  },
+  roiCta: {
+    en: "Stop the Leakage",
+    bm: "Hentikan Kebocoran",
+  },
+  roiDisclaimer: {
+    en: "Estimate based on RM 25/hour fully-loaded average staff cost for Malaysian SMEs. Your actual figures may vary.",
+    bm: "Anggaran berdasarkan kos purata kakitangan RM25/jam sepenuhnya untuk SME Malaysia. Angka sebenar anda mungkin berbeza.",
+  },
+
+  // DutaConnectSlider (§3) — before/after comparison
+  sliderTitle: {
+    en: "From Shipping Chaos to One Unified Inbox",
+    bm: "Dari Kekacauan Penghantaran ke Satu Inbox Terpadu",
+  },
+  sliderSubtitle: {
+    en: "Drag the slider to see the Duta Connect difference.",
+    bm: "Seret slider untuk melihat perbezaan Duta Connect.",
+  },
+  sliderAltBefore: {
+    en: "Before: messy desktop with multiple shipping tabs and portals",
+    bm: "Sebelum: desktop bersepah dengan pelbagai tab dan portal penghantaran",
+  },
+  sliderAltAfter: {
+    en: "After: clean Duta Connect unified dashboard",
+    bm: "Selepas: papan pemuka terpadu Duta Connect yang kemas",
+  },
 } as const
