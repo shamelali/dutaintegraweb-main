@@ -48,6 +48,7 @@ import {
   handlePortalProposalById,
   handlePortalProjects,
   handleAdminClients,
+  handleAdminClientDigest,
 } from "./portal-cloudflare.mjs";
 
 // ── Security Headers ──────────────────────────────────────────────────────────
@@ -680,6 +681,10 @@ export async function handleApi(req) {
 
     // Admin client management
     if (pathname === "/admin/clients") return await handleAdminClients(req);
+    const digestMatch = pathname.match(/^\/admin\/clients\/([a-f0-9-]+)\/send-digest$/);
+    if (digestMatch && req.method === "POST") {
+      return await handleAdminClientDigest(req, digestMatch[1]);
+    }
 
     // Unified workspace API (assessment, client portal, admin)
     if (pathname.startsWith("/api/workspace/")) {

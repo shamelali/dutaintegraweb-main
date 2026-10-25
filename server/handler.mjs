@@ -69,11 +69,11 @@ const SECURITY_HEADERS = {
   "permissions-policy": "camera=(), microphone=(), geolocation=()",
   "content-security-policy":
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com https://static.cloudflareinsights.com; " +
+    "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com; " +
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
     "img-src 'self' data: https:; " +
     "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
-    "connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com https://static.cloudflareinsights.com; " +
+    "connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com; " +
     "object-src 'none'; base-uri 'self'; frame-ancestors 'none';",
 };
 

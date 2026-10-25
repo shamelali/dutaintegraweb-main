@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/hooks/use-language"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
+import { DutaConnectSlider } from "@/components/duta-connect-slider"
 import type { TranslationKey } from "@/i18n/translations"
 
 const services = [
@@ -112,6 +113,9 @@ export function ServicesPage() {
           </div>
         </div>
       </section>
+
+      {/* V2 spec §3 — Duta Connect before/after comparison (shipping service) */}
+      <DutaConnectSlider />
 
       {/* Process */}
       <section ref={processRef} className="py-20 px-6 bg-muted/30">
