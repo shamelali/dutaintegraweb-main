@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { useLanguage } from "@/hooks/use-language"
 import { useScrollReveal } from "@/hooks/use-scroll-reveal"
 import { useToast } from "@/hooks/use-toast"
+import { ProposalForm } from "@/components/proposal-form"
+import { RoiCalculator } from "@/components/roi-calculator"
 
 export function ContactPage() {
   const { t } = useLanguage()
@@ -259,6 +261,25 @@ export function ContactPage() {
             </Card>
           </div>
         </div>
+      </section>
+
+      {/* V2 spec §4 — ROI leakage calculator (feeds the proposal funnel) */}
+      <section className="py-16 px-6">
+        <div className="max-w-5xl mx-auto">
+          <RoiCalculator />
+        </div>
+      </section>
+
+      {/* V2 spec §2 — 3-step fixed-price proposal form. Per the handoff doc
+          this funnel is the primary conversion path; the classic contact
+          form above stays as a fallback ("or just email us"). */}
+      <section id="proposal" className="py-16 px-6 bg-muted/40 dark:bg-white/[0.02]">
+        <div className="max-w-4xl mx-auto text-center mb-10">
+          <Badge variant="electric" className="mb-4">{t("proposalSectionEyebrow")}</Badge>
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">{t("proposalSectionTitle")}</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">{t("proposalSectionDesc")}</p>
+        </div>
+        <ProposalForm />
       </section>
     </>
   )

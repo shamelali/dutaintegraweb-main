@@ -33,7 +33,7 @@
   --radius-sm: 0.28rem;
 
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-heading: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-heading: "Space Grotesk", "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", monospace;
 
   /* Animation tokens */
@@ -42,6 +42,13 @@
   --animate-slide-in-left: slide-in-left 0.5s ease-out;
   --animate-slide-in-right: slide-in-right 0.5s ease-out;
   --animate-scale-in: scale-in 0.3s ease-out;
+  /* V2 spec §1 — float animation for hero mockups */
+  --animate-float: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes fade-in {
@@ -96,6 +103,12 @@
 }
 
 /* ── Base styles ── */
+html {
+  /* Smooth scroll so in-page anchors (e.g. ROI calculator → #proposal-form)
+     glide instead of jumping. */
+  scroll-behavior: smooth;
+}
+
 body {
   @apply bg-background text-foreground font-sans antialiased;
   margin: 0;

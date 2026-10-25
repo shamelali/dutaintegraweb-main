@@ -21,6 +21,7 @@ export default function App() {
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/quiz" element={<QuizPage />} />
+            
           </Routes>
         </main>
         <Footer />
