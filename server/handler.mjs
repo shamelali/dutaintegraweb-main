@@ -912,11 +912,27 @@ export async function handle(req, res) {
 
     if (pathname === "/api/health") {
       const supabaseConfigured = Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+      let supabaseReachable = null;
+      if (supabaseConfigured) {
+        try {
+          const probe = await fetch(`${process.env.SUPABASE_URL.trim().replace(/\/$/, "")}/rest/v1/leads?select=id&limit=0`, {
+            headers: {
+              apikey: process.env.SUPABASE_SERVICE_ROLE_KEY.trim(),
+              authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY.trim()}`,
+            },
+            signal: AbortSignal.timeout(3000),
+          });
+          supabaseReachable = probe.ok;
+        } catch {
+          supabaseReachable = false;
+        }
+      }
       return send(res, 200, {
         ok: true,
         inboxConfigured: Boolean(resolveInboxEmail()),
         supabaseConfigured,
         storageBackend: supabaseConfigured ? "supabase" : "jsonl",
+        supabaseReachable,
       });
     }
     if (pathname === "/api/stats") return await handleStats(req, res);

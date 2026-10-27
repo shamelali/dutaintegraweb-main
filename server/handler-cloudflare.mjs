@@ -553,12 +553,27 @@ async function handleCalculator(req) {
 }
 
 async function handleHealth(req) {
-  const supabaseConfigured = supabaseConfigured();
+  const configured = supabaseConfigured();
+  let supabaseReachable = null;
+  if (configured) {
+    try {
+      const probe = await fetch(`${process.env.SUPABASE_URL.trim().replace(/\/$/, "")}/rest/v1/leads?select=id&limit=0`, {
+        headers: {
+          apikey: process.env.SUPABASE_SERVICE_ROLE_KEY.trim(),
+          authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY.trim()}`,
+        },
+      });
+      supabaseReachable = probe.ok;
+    } catch {
+      supabaseReachable = false;
+    }
+  }
   return sendJson(200, {
     ok: true,
     inboxConfigured: Boolean(resolveInboxEmail()),
-    supabaseConfigured,
-    storageBackend: supabaseConfigured ? "supabase" : "jsonl",
+    supabaseConfigured: configured,
+    storageBackend: configured ? "supabase" : "jsonl",
+    supabaseReachable,
   });
 }
 

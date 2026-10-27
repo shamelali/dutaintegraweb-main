@@ -225,11 +225,11 @@ describe("static site and health", () => {
 
   test("reports inbox configuration on /api/health", async () => {
     const withInbox = await fetch(`${base}/api/health`);
-    assert.deepEqual(await withInbox.json(), { ok: true, inboxConfigured: true, supabaseConfigured: false, storageBackend: "jsonl" });
+    assert.deepEqual(await withInbox.json(), { ok: true, inboxConfigured: true, supabaseConfigured: false, storageBackend: "jsonl", supabaseReachable: null });
 
     delete process.env.CONTACT_INBOX_EMAIL;
     const without = await fetch(`${base}/api/health`);
-    assert.deepEqual(await without.json(), { ok: true, inboxConfigured: false, supabaseConfigured: false, storageBackend: "jsonl" });
+    assert.deepEqual(await without.json(), { ok: true, inboxConfigured: false, supabaseConfigured: false, storageBackend: "jsonl", supabaseReachable: null });
   });
 });
 
