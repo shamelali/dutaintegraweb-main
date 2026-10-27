@@ -22,8 +22,14 @@ import { fileURLToPath } from "node:url";
  * mail-provider outage.
  */
 
+let _warnedJsonlFallback = false;
 function supabaseConfigured() {
-  return Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+  const ok = Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+  if (!ok && !_warnedJsonlFallback) {
+    _warnedJsonlFallback = true;
+    console.warn("[enquiries] Supabase not configured — falling back to local JSONL store (data will not persist on serverless).");
+  }
+  return ok;
 }
 
 // ── JSONL backend (local dev / tests) ───────────────────────────────────────

@@ -12,10 +12,16 @@ import { fileURLToPath } from "node:url";
  * Digest log is kept in data/digests.jsonl (local) or Supabase monthly_digests.
  */
 
+let _warnedJsonlFallback = false;
 function supabaseConfigured() {
-  return Boolean(
+  const ok = Boolean(
     process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(),
   );
+  if (!ok && !_warnedJsonlFallback) {
+    _warnedJsonlFallback = true;
+    console.warn("[digest] Supabase not configured — falling back to local JSONL store (data will not persist on serverless).");
+  }
+  return ok;
 }
 
 // ── JSONL digest log ─────────────────────────────────────────────────────────

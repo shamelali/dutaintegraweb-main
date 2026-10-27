@@ -8,10 +8,16 @@ import { fileURLToPath } from "node:url";
  * Follows the same dual-backend pattern as enquiries.mjs.
  */
 
+let _warnedJsonlFallback = false;
 function supabaseConfigured() {
-  return Boolean(
+  const ok = Boolean(
     process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(),
   );
+  if (!ok && !_warnedJsonlFallback) {
+    _warnedJsonlFallback = true;
+    console.warn("[clients] Supabase not configured — falling back to local JSONL store (data will not persist on serverless).");
+  }
+  return ok;
 }
 
 // ── JSONL backend ────────────────────────────────────────────────────────────
