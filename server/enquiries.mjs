@@ -292,7 +292,7 @@ export async function notifyEnquirer(enquiry) {
  * and the send succeeded, false if no provider is configured. Throws on
  * provider errors so callers can decide how to handle them.
  */
-async function sendMail({ to, from, subject, text }) {
+export async function sendMail({ to, from, subject, text }) {
   if (process.env.BREVO_API_KEY) {
     await sendViaBrevo({ to, from, subject, text }, process.env.BREVO_API_KEY);
   } else if (process.env.RESEND_API_KEY) {

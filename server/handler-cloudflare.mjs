@@ -17,6 +17,7 @@ import {
   notifyEnquiry,
   resolveInboxEmail,
   listEnquiries,
+  sendMail,
 } from "./enquiries-cloudflare.mjs";
 
 import { handleStats } from "./stats-cloudflare.mjs";
@@ -442,6 +443,28 @@ async function handleAdminCreateProposal(req) {
   if (!r.ok) return sendJson(502, { error: `db error: ${await r.text()}` });
   const rows = await r.json();
   const proposal = rows[0] || row;
+
+  if (b.leadId && supabaseConfigured()) {
+    try {
+      const lr = await cfSbFetch(`workspace_leads?id=eq.${encodeURIComponent(b.leadId)}&select=email,name`);
+      if (lr.ok) {
+        const leads = await lr.json();
+        const lead = leads[0];
+        if (lead?.email) {
+          const link = `${new URL(req.url).origin}/proposal/${proposal.id}`;
+          await sendMail({
+            to: lead.email,
+            from: process.env.EMAIL_FROM?.trim(),
+            subject: `Your proposal from Duta Integra — ${proposal.title}`,
+            text: `Hi ${lead.name || "there"},\\n\\nWe've prepared a proposal for you: ${proposal.title}\\nAmount: RM ${proposal.amount_myr}\\n\\nView and accept it here: ${link}\\n\\n— Duta Integra`,
+          });
+        }
+      }
+    } catch (err) {
+      console.error(`[proposal ${proposal.id}] auto-email failed: ${err.message}`);
+    }
+  }
+
   return sendJson(201, { proposal });
 }
 

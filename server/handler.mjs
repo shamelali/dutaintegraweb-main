@@ -2,7 +2,7 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { extname, join, normalize, resolve, sep } from "node:path";
 
-import { listEnquiries, notifyEnquiry, notifyEnquirer, recordEnquiry, resolveInboxEmail } from "./enquiries.mjs";
+import { listEnquiries, notifyEnquiry, notifyEnquirer, recordEnquiry, resolveInboxEmail, sendMail } from "./enquiries.mjs";
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import { handleStats } from "./stats.mjs";
 import { calculateSavings } from "./calculator.mjs";
@@ -604,6 +604,29 @@ async function handleAdminCreateProposal(req, res) {
   if (!r.ok) return send(res, 502, { error: `db error: ${await r.text()}` });
   const rows = await r.json();
   const proposal = rows[0] || row;
+
+  // Best-effort auto-email the proposal link to the linked lead.
+  if (b.leadId && supabaseConfigured()) {
+    try {
+      const lr = await sbFetch(`workspace_leads?id=eq.${encodeURIComponent(b.leadId)}&select=email,name`);
+      if (lr.ok) {
+        const leads = await lr.json();
+        const lead = leads[0];
+        if (lead?.email) {
+          const link = `${req.headers["x-forwarded-proto"] || "https"}://${req.headers.host || "dutaintegra.my"}/proposal/${proposal.id}`;
+          await sendMail({
+            to: lead.email,
+            from: process.env.EMAIL_FROM?.trim(),
+            subject: `Your proposal from Duta Integra — ${proposal.title}`,
+            text: `Hi ${lead.name || "there"},\\n\\nWe've prepared a proposal for you: ${proposal.title}\\nAmount: RM ${proposal.amount_myr}\\n\\nView and accept it here: ${link}\\n\\n— Duta Integra`,
+          });
+        }
+      }
+    } catch (err) {
+      console.error(`[proposal ${proposal.id}] auto-email failed: ${err.message}`);
+    }
+  }
+
   send(res, 201, { proposal });
 }
 
