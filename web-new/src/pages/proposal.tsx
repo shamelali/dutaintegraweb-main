@@ -22,6 +22,7 @@ export function ProposalPage() {
   const [error, setError] = useState("")
   const [busy, setBusy] = useState(false)
   const [accepted, setAccepted] = useState(false)
+  const [name, setName] = useState("")
 
   useEffect(() => {
     if (!id) return
@@ -40,7 +41,11 @@ export function ProposalPage() {
     setBusy(true)
     setError("")
     try {
-      const r = await fetch(`/api/proposals/${id}/accept`, { method: "POST" })
+      const r = await fetch(`/api/proposals/${id}/accept`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      })
       const data = await r.json()
       if (!r.ok) throw new Error(data.error || "Failed to accept")
       setProposal(data.proposal)
@@ -94,10 +99,19 @@ export function ProposalPage() {
           {accepted || proposal.status === "accepted" ? (
             <p className="text-emerald-600 font-semibold">Accepted — thank you. We'll be in touch shortly.</p>
           ) : (
-            <Button variant="electric" size="xl" onClick={accept} disabled={busy}>
-              {busy ? <LoaderCircle className="animate-spin mr-2" /> : null}
-              Accept proposal
-            </Button>
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder="Your name (for acceptance record)"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
+              <Button variant="electric" size="xl" onClick={accept} disabled={busy}>
+                {busy ? <LoaderCircle className="animate-spin mr-2" /> : null}
+                Accept proposal
+              </Button>
+            </div>
           )}
         </Card>
       </div>

@@ -382,9 +382,17 @@ async function handleGetProposal(req, id) {
 
 async function handleAcceptProposal(req, id) {
   if (!supabaseConfigured()) return sendJson(503, { error: "Supabase not configured" });
+  const parsed = await readJsonBody(req);
+  const name = parsed.error ? "" : String(parsed.data?.name || "").trim().slice(0, 120);
   const r = await cfSbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&status=eq.sent`, {
     method: "PATCH",
-    body: JSON.stringify({ status: "accepted", decided_at: new Date().toISOString(), updated_at: new Date().toISOString() }),
+    body: JSON.stringify({
+      status: "accepted",
+      decided_by: name || "customer",
+      decision_notes: parsed.error ? null : (parsed.data?.notes ? String(parsed.data.notes).slice(0, 2000) : null),
+      decided_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }),
     headers: { Prefer: "return=representation" },
   });
   if (!r.ok) return sendJson(502, { error: `db error: ${await r.text()}` });
