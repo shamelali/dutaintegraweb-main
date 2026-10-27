@@ -1445,6 +1445,9 @@ export async function handle(req, res) {
     if (pathname === "/admin/proposals" && req.method === "GET") {
       return await handleAdminProposalsPage(req, res);
     }
+    if (pathname === "/admin/pipeline" && req.method === "GET") {
+      return await handleAdminPipelinePage(req, res);
+    }
     if (pathname === "/admin/proposals" && req.method === "POST") {
       return await handleAdminCreateProposal(req, res);
     }
