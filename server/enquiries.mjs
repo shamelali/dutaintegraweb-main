@@ -84,6 +84,30 @@ async function jsonlMarkEmailed(id, at) {
   return at;
 }
 
+async function jsonlUpdateStatus(id, status, note, assignedRole) {
+  const path = storePath();
+  const rows = await jsonlList(Infinity);
+  let found = false;
+  const updated = rows.map((row) => {
+    if (row.id === id) {
+      found = true;
+      const patch = { updated_at: new Date().toISOString() };
+      if (status) patch.status = status;
+      if (note !== undefined) patch.note = note;
+      if (assignedRole !== undefined) patch.assigned_role = assignedRole;
+      return { ...row, ...patch };
+    }
+    return row;
+  });
+  if (!found) return null;
+  await writeFile(
+    path,
+    updated.map((row) => JSON.stringify(row)).join("\n") + (updated.length ? "\n" : ""),
+    "utf8",
+  );
+  return updated.find((r) => r.id === id);
+}
+
 // ── Supabase backend (production) ───────────────────────────────────────────
 
 function supabaseHeaders(extra = {}) {
@@ -143,6 +167,7 @@ function fromSupabaseRow(row) {
     emailed_at: row.emailed_at,
     status: row.status,
     leadScore: row.lead_score,
+    industry: row.industry,
   };
 }
 
@@ -179,6 +204,23 @@ async function supabaseMarkEmailed(id, at) {
  * CONTACT_INBOX_EMAIL falls through to ADMIN_EMAIL instead of silently
  * resolving to "no inbox configured".
  */
+async function supabaseUpdateStatus(id, status, note, assignedRole) {
+  const base = process.env.SUPABASE_URL.replace(/\/$/, "");
+  const url = `${base}/rest/v1/${LEADS_TABLE}?id=eq.${encodeURIComponent(id)}`;
+  const body = { updated_at: new Date().toISOString() };
+  if (status) body.status = status;
+  if (note !== undefined) body.note = note;
+  if (assignedRole !== undefined) body.assigned_role = assignedRole;
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: supabaseHeaders({ prefer: "return=representation" }),
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`Supabase update failed: ${res.status} ${await res.text()}`);
+  const rows = await res.json();
+  return Array.isArray(rows) && rows.length ? fromSupabaseRow(rows[0]) : null;
+}
+
 export function resolveInboxEmail() {
   for (const key of ["CONTACT_INBOX_EMAIL", "ADMIN_EMAIL"]) {
     const value = process.env[key]?.trim();
@@ -213,6 +255,11 @@ export async function markEnquiryEmailed(id, at = new Date().toISOString()) {
 /** Read stored enquiries, newest first. `limit` defaults to 50. */
 export async function listEnquiries(limit = 50) {
   return supabaseConfigured() ? supabaseList(limit) : jsonlList(limit);
+}
+
+/** Update a lead's status, note, and/or assigned_role. Returns the updated record, or null if not found. */
+export async function updateEnquiryStatus(id, status, note, assignedRole) {
+  return supabaseConfigured() ? supabaseUpdateStatus(id, status, note, assignedRole) : jsonlUpdateStatus(id, status, note, assignedRole);
 }
 
 export function enquirySubject(enquiry) {

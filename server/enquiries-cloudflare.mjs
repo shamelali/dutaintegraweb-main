@@ -62,6 +62,7 @@ function fromSupabaseRow(row) {
     emailed_at: row.emailed_at,
     status: row.status,
     leadScore: row.lead_score,
+    industry: row.industry,
   };
 }
 
@@ -87,6 +88,23 @@ async function supabaseMarkEmailed(id, at) {
   });
   if (!res.ok) throw new Error(`Supabase update failed: ${res.status} ${await res.text()}`);
   return at;
+}
+
+async function supabaseUpdateStatus(id, status, note, assignedRole) {
+  const base = process.env.SUPABASE_URL.replace(/\/$/, "");
+  const url = `${base}/rest/v1/${LEADS_TABLE}?id=eq.${encodeURIComponent(id)}`;
+  const body = { updated_at: new Date().toISOString() };
+  if (status) body.status = status;
+  if (note !== undefined) body.note = note;
+  if (assignedRole !== undefined) body.assigned_role = assignedRole;
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: supabaseHeaders({ prefer: "return=representation" }),
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`Supabase update failed: ${res.status} ${await res.text()}`);
+  const rows = await res.json();
+  return Array.isArray(rows) && rows.length ? fromSupabaseRow(rows[0]) : null;
 }
 
 const { randomUUID } = crypto;
@@ -129,6 +147,13 @@ export async function listEnquiries(limit = 50) {
     throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured");
   }
   return supabaseList(limit);
+}
+
+export async function updateEnquiryStatus(id, status, note, assignedRole) {
+  if (!supabaseConfigured()) {
+    throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured");
+  }
+  return supabaseUpdateStatus(id, status, note, assignedRole);
 }
 
 export function enquirySubject(enquiry) {

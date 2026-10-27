@@ -22,6 +22,8 @@ import {
   createTicket,
   updateTicket,
   countTicketsByStatus,
+  createTicketReply,
+  listTicketReplies,
 } from "./tickets-cloudflare.mjs";
 
 import {
@@ -39,6 +41,27 @@ function adminTokenValid(supplied) {
   const a = new TextEncoder().encode(ADMIN_TOKEN);
   const b = new TextEncoder().encode(supplied);
   return a.length === b.length && timingSafeEqual(a, b);
+}
+
+/** Check if request has an admin session (cookie or x-admin-token header). */
+export async function requireAdminSession(req) {
+  // Check Supabase JWT
+  const token = getAccessToken(req);
+  if (token) {
+    const { user, error } = await verifyUser(token);
+    if (!error && user) {
+      const client = await findClientById(user.id);
+      if (client && client.status === "active" && client.role === "admin") {
+        return { client, session: token };
+      }
+    }
+  }
+  // Fallback to ADMIN_TOKEN header (for scripts/cron)
+  const adminToken = req.headers.get("x-admin-token") ?? new URL(req.url).searchParams.get("token");
+  if (adminToken && adminTokenValid(adminToken)) {
+    return { client: { role: "admin" }, session: null };
+  }
+  return null;
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────────
@@ -293,6 +316,38 @@ export async function handlePortalTicketById(req, ticketId) {
     return sendJson(new Headers(), 404, { error: "Ticket not found" });
   }
 
+  const pathname = new URL(req.url).pathname;
+  const isReplies = pathname.endsWith("/replies");
+
+  if (isReplies) {
+    if (req.method === "GET") {
+      const replies = await listTicketReplies(ticketId);
+      const visible = replies.filter((r) => !r.isInternal);
+      return sendJson(new Headers(), 200, { replies: visible });
+    }
+
+    if (req.method === "POST") {
+      const parsed = await readJsonBody(req);
+      if (parsed.error) return sendJson(new Headers(), parsed.error.status, parsed.error.body);
+      const { body: replyBody, isInternal } = parsed.data ?? {};
+      if (!replyBody || typeof replyBody !== "string" || replyBody.trim().length < 1) {
+        return sendJson(new Headers(), 400, { error: "Reply body is required" });
+      }
+      const client = await findClientById(user.id);
+      const reply = await createTicketReply({
+        ticketId,
+        authorType: "client",
+        authorId: user.id,
+        authorEmail: client?.email,
+        body: replyBody.trim(),
+        isInternal: false,
+      });
+      return sendJson(new Headers(), 201, { reply });
+    }
+
+    return sendJson(new Headers(), 405, { error: "Method not allowed" });
+  }
+
   if (req.method === "GET") return sendJson(new Headers(), 200, { ticket });
 
   if (req.method === "PATCH") {
@@ -432,9 +487,8 @@ export async function handlePortalProjects(req) {
 // ── Admin: Client Management (unchanged, uses ADMIN_TOKEN) ──────────────────────
 
 export async function handleAdminClients(req) {
-  const url = new URL(req.url);
-  const token = req.headers.get("x-admin-token") ?? url.searchParams.get("token");
-  if (!adminTokenValid(token)) return sendJson(new Headers(), 401, { error: "Unauthorized" });
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(new Headers(), 401, { error: "Unauthorized" });
 
   if (req.method === "GET") {
     const clients = await listClients();
@@ -444,7 +498,7 @@ export async function handleAdminClients(req) {
   if (req.method === "POST") {
     const parsed = await readJsonBody(req);
     if (parsed.error) return sendJson(new Headers(), parsed.error.status, parsed.error.body);
-    const { name, email, password, company, tier } = parsed.data ?? {};
+    const { name, email, password, company, tier, role } = parsed.data ?? {};
     if (!name || !email || !password) {
       return sendJson(new Headers(), 400, { error: "name, email, and password are required" });
     }
@@ -456,7 +510,7 @@ export async function handleAdminClients(req) {
       email,
       password,
       email_confirm: true,
-      user_metadata: { name, company, tier: tier || "foundation" },
+      user_metadata: { name, company, tier: tier || "foundation", role: role || "client" },
     });
     if (error || !data.user) {
       return sendJson(new Headers(), 400, { error: error?.message || "Failed to create auth user" });
@@ -469,6 +523,7 @@ export async function handleAdminClients(req) {
       passwordHash: null,
       company: company?.trim() || null,
       tier,
+      role: role || "client",
     });
     return sendJson(new Headers(), 201, { client: safeClient(client) });
   }
@@ -476,7 +531,35 @@ export async function handleAdminClients(req) {
   return sendJson(new Headers(), 405, { error: "Method not allowed" });
 }
 
-// Phase 4 digest trigger was reverted; keep a stub so route guards resolve.
-export async function handleAdminClientDigest() {
-  return sendJson(new Headers(), 404, { error: "Not found" });
+export async function handleAdminClientDigest(req, clientId) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(new Headers(), 401, { error: "Unauthorized" });
+
+  if (req.method !== "POST") return sendJson(new Headers(), 405, { error: "Method not allowed" });
+
+  const client = await findClientById(clientId);
+  if (!client) return sendJson(new Headers(), 404, { error: "Client not found" });
+
+  // Note: digest functionality would need to be implemented for Cloudflare
+  // For now, return a stub response
+  return sendJson(new Headers(), 200, { ok: true, sent: false, digest: null, message: "Digest not yet implemented for Cloudflare" });
+}
+
+// ── portal: digests ────────────────────────────────────────────────────
+
+export async function handlePortalDigests(req) {
+  const accessToken = getAccessToken(req);
+  if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
+  const user = await verifyUser(accessToken);
+  if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
+
+  if (!supabaseConfigured()) return sendJson(new Headers(), 503, { error: "Supabase not configured" });
+  const base = process.env.SUPABASE_URL.trim().replace(/\/$/, "");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
+  const r = await fetch(`${base}/rest/v1/monthly_digests?client_id=eq.${encodeURIComponent(user.id)}&select=*&order=month.desc`, {
+    headers: { apikey: key, authorization: `Bearer ${key}` },
+  });
+  if (!r.ok) return sendJson(new Headers(), 502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  return sendJson(new Headers(), 200, { digests: rows });
 }

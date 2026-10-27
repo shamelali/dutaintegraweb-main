@@ -87,6 +87,7 @@ function fromRow(r) {
     company: r.company,
     tier: r.tier,
     status: r.status,
+    role: r.role,
     createdAt: r.created_at,
   };
 }
@@ -100,6 +101,7 @@ function toRow(c) {
     company: c.company ?? null,
     tier: c.tier ?? "foundation",
     status: c.status ?? "active",
+    role: c.role ?? "client",
     created_at: c.createdAt,
   };
 }
@@ -151,6 +153,7 @@ async function supabaseUpdate(id, patch) {
   if (patch.tier !== undefined) body.tier = patch.tier;
   if (patch.status !== undefined) body.status = patch.status;
   if (patch.company !== undefined) body.company = patch.company;
+  if (patch.role !== undefined) body.role = patch.role;
   const res = await fetch(url, {
     method: "PATCH",
     headers: headers({ prefer: "return=representation" }),
@@ -203,7 +206,7 @@ export async function deleteClient(id) {
 }
 
 /** Create a new client record with defaults. */
-export async function createClient({ name, email, passwordHash, company, tier }) {
+export async function createClient({ name, email, passwordHash, company, tier, role }) {
   const client = {
     id: randomUUID(),
     name,
@@ -212,6 +215,7 @@ export async function createClient({ name, email, passwordHash, company, tier })
     company: company ?? null,
     tier: tier ?? "foundation",
     status: "active",
+    role: role ?? "client",
     createdAt: new Date().toISOString(),
   };
   return upsertClient(client);

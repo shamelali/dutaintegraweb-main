@@ -225,11 +225,16 @@ describe("static site and health", () => {
 
   test("reports inbox configuration on /api/health", async () => {
     const withInbox = await fetch(`${base}/api/health`);
-    assert.deepEqual(await withInbox.json(), { ok: true, inboxConfigured: true, supabaseConfigured: false, storageBackend: "jsonl", supabaseReachable: null });
+    assert.deepEqual(await withInbox.json(), { ok: true, inboxConfigured: true, supabaseConfigured: false, storageBackend: "jsonl", storageDurable: true, supabaseReachable: null, warnings: [] });
 
     delete process.env.CONTACT_INBOX_EMAIL;
     const without = await fetch(`${base}/api/health`);
-    assert.deepEqual(await without.json(), { ok: true, inboxConfigured: false, supabaseConfigured: false, storageBackend: "jsonl", supabaseReachable: null });
+    const withoutBody = await without.json();
+    assert.equal(withoutBody.ok, true);
+    assert.equal(withoutBody.inboxConfigured, false);
+    assert.equal(withoutBody.storageBackend, "jsonl");
+    assert.equal(withoutBody.supabaseReachable, null);
+    assert.ok(Array.isArray(withoutBody.warnings) && withoutBody.warnings.length > 0);
   });
 });
 
@@ -339,6 +344,111 @@ describe("GET /admin/enquiries", () => {
     assert.equal(adminTokenValid(undefined), false);
     assert.equal(adminTokenValid("short"), false);
     assert.equal(adminTokenValid("s3cret-token"), true);
+  });
+});
+
+// ── leads pipeline ───────────────────────────────────────────────────────────
+
+describe("GET /admin/pipeline", () => {
+  beforeEach(() => {
+    process.env.ADMIN_TOKEN = "s3cret-token";
+  });
+
+  test("401s without a token", async () => {
+    const res = await fetch(`${base}/admin/pipeline`);
+    assert.equal(res.status, 401);
+    assert.deepEqual(await res.json(), { error: "Unauthorized" });
+  });
+
+  test("401s with a wrong token", async () => {
+    const res = await fetch(`${base}/admin/pipeline`, { headers: { "x-admin-token": "nope" } });
+    assert.equal(res.status, 401);
+    await res.text();
+  });
+
+  test("returns JSON for a valid header token", async () => {
+    await post(VALID);
+    const res = await fetch(`${base}/admin/pipeline`, {
+      headers: { "x-admin-token": "s3cret-token", accept: "application/json" },
+    });
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.count, 1);
+    assert.equal(data.leads[0].email, "ahmad@mokhtar-trading.my");
+    assert.ok(data.byStatus && data.byStatus.new.length === 1);
+  });
+
+  test("accepts the token as a query parameter", async () => {
+    await post(VALID);
+    const res = await fetch(`${base}/admin/pipeline?token=s3cret-token`, {
+      headers: { accept: "application/json" },
+    });
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.count, 1);
+  });
+
+  test("renders an HTML board when the browser asks for HTML, and escapes content", async () => {
+    await post({ ...VALID, name: "<script>alert(1)</script>" });
+    const res = await fetch(`${base}/admin/pipeline`, {
+      headers: { "x-admin-token": "s3cret-token", accept: "text/html" },
+    });
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("content-type"), /text\/html/);
+    assert.equal(res.headers.get("x-robots-tag"), "noindex, nofollow");
+    const html = await res.text();
+    assert.ok(!html.includes("<script>alert(1)</script>"), "HTML was not escaped");
+    assert.match(html, /&lt;script&gt;/);
+    assert.match(html, /Leads pipeline/);
+    assert.match(html, /Create proposal/);
+  });
+});
+
+describe("PATCH /admin/leads/:id", () => {
+  beforeEach(() => {
+    process.env.ADMIN_TOKEN = "s3cret-token";
+  });
+
+  test("401s without a token", async () => {
+    const res = await fetch(`${base}/admin/leads/00000000-0000-0000-0000-000000000000`, { method: "PATCH" });
+    assert.equal(res.status, 401);
+  });
+
+  test("400s on invalid status", async () => {
+    await post(VALID);
+    const rows = await listEnquiries();
+    const id = rows[0].id;
+    const res = await fetch(`${base}/admin/leads/${id}?token=s3cret-token`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ status: "bogus" }),
+    });
+    assert.equal(res.status, 400);
+  });
+
+  test("moves a lead to a new status", async () => {
+    await post(VALID);
+    const rows = await listEnquiries();
+    const id = rows[0].id;
+    const res = await fetch(`${base}/admin/leads/${id}?token=s3cret-token`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ status: "contacted" }),
+    });
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.lead.status, "contacted");
+    const after = await listEnquiries();
+    assert.equal(after[0].status, "contacted");
+  });
+
+  test("404s on unknown id", async () => {
+    const res = await fetch(`${base}/admin/leads/00000000-0000-0000-0000-000000000000?token=s3cret-token`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ status: "contacted" }),
+    });
+    assert.equal(res.status, 404);
   });
 });
 

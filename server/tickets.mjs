@@ -169,3 +169,101 @@ export async function countTicketsByStatus(clientId) {
   }
   return counts;
 }
+
+// ── Ticket Replies ────────────────────────────────────────────────────────────
+
+const REPLIES_TABLE = "ticket_replies";
+
+function replyFromRow(r) {
+  return {
+    id: r.id,
+    ticketId: r.ticket_id,
+    authorType: r.author_type,
+    authorId: r.author_id,
+    authorEmail: r.author_email,
+    body: r.body,
+    isInternal: r.is_internal,
+    createdAt: r.created_at,
+  };
+}
+
+function replyToRow(r) {
+  return {
+    id: r.id,
+    ticket_id: r.ticketId,
+    author_type: r.authorType,
+    author_id: r.authorId,
+    author_email: r.authorEmail,
+    body: r.body,
+    is_internal: r.isInternal,
+    created_at: r.createdAt,
+  };
+}
+
+async function supabaseCreateReply(reply) {
+  const base = process.env.SUPABASE_URL.replace(/\/$/, "");
+  const res = await fetch(`${base}/rest/v1/${REPLIES_TABLE}`, {
+    method: "POST",
+    headers: headers({ prefer: "return=representation" }),
+    body: JSON.stringify(replyToRow(reply)),
+  });
+  if (!res.ok) throw new Error(`Supabase reply insert failed: ${res.status}`);
+  const rows = await res.json();
+  return rows.length ? replyFromRow(rows[0]) : reply;
+}
+
+async function supabaseListReplies(ticketId) {
+  const base = process.env.SUPABASE_URL.replace(/\/$/, "");
+  const res = await fetch(
+    `${base}/rest/v1/${REPLIES_TABLE}?ticket_id=eq.${encodeURIComponent(ticketId)}&select=*&order=created_at.asc`,
+    { headers: headers() },
+  );
+  if (!res.ok) throw new Error(`Supabase reply list failed: ${res.status}`);
+  const rows = await res.json();
+  return rows.map(replyFromRow);
+}
+
+/** Add a reply to a ticket. */
+export async function createTicketReply({ ticketId, authorType, authorId, authorEmail, body, isInternal }) {
+  const now = new Date().toISOString();
+  const reply = {
+    id: randomUUID(),
+    ticketId,
+    authorType,
+    authorId,
+    authorEmail,
+    body,
+    isInternal: isInternal ?? false,
+    createdAt: now,
+  };
+
+  if (supabaseConfigured()) return supabaseCreateReply(reply);
+
+  // JSONL fallback
+  const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+  const REPLIES_STORE = join(PROJECT_ROOT, "data", "ticket-replies.jsonl");
+  await ensureDir();
+  let rows = [];
+  try {
+    const raw = await readFile(REPLIES_STORE, "utf8");
+    rows = raw.split("\n").filter((l) => l.trim()).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+  } catch {}
+  rows.push(reply);
+  await writeFile(REPLIES_STORE, rows.map((r) => JSON.stringify(r)).join("\n") + (rows.length ? "\n" : ""), "utf8");
+  return reply;
+}
+
+/** List replies for a ticket. */
+export async function listTicketReplies(ticketId) {
+  if (supabaseConfigured()) return supabaseListReplies(ticketId);
+
+  // JSONL fallback
+  const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+  const REPLIES_STORE = join(PROJECT_ROOT, "data", "ticket-replies.jsonl");
+  let rows = [];
+  try {
+    const raw = await readFile(REPLIES_STORE, "utf8");
+    rows = raw.split("\n").filter((l) => l.trim()).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+  } catch {}
+  return rows.filter((r) => r.ticketId === ticketId).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+}

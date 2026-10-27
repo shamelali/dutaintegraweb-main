@@ -76,7 +76,19 @@ export function ProposalPage() {
 
   return (
     <div className="min-h-screen bg-background py-16 px-6 print:py-0 print:px-0">
-      <style>{`@media print { .no-print { display: none !important; } body { background: white; } }`}</style>
+      <style>{`
+        @media print {
+          .no-print { display: none !important; }
+          nav, footer { display: none !important; }
+          body { background: white; color: #1c1917; }
+          .print-page { page-break-after: always; }
+          .print-footer { display: block !important; position: fixed; bottom: 0; left: 0; right: 0; font-size: 9pt; color: #57534e; text-align: center; border-top: 1px solid #e7e5e4; padding-top: 4pt; }
+          h1 { page-break-after: avoid; }
+          ul, li { page-break-inside: avoid; }
+          @page { margin: 18mm 16mm; }
+        }
+        .print-footer { display: none; }
+      `}</style>
       <div className="max-w-2xl mx-auto">
         <Card className="p-8 print:shadow-none print:border-0">
           <h1 className="text-3xl font-heading font-bold mb-2">{proposal.title}</h1>
@@ -120,6 +132,9 @@ export function ProposalPage() {
           </Button>
         </div>
         </Card>
+      </div>
+      <div className="print-footer">
+        Duta Integra Solutions · Cyberjaya, Malaysia · dutaintegra.my · Confidential proposal
       </div>
     </div>
   )

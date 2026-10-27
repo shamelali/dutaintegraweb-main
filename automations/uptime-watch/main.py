@@ -32,6 +32,9 @@ STATE_KEY = "watch-state"
 # covers the serverless gateway, which can fail independently of the static site.
 MUST_BE_200 = ["/", "/api/health"]
 
+# Paths that require auth; they should return 401 (not 404/500)
+AUTH_PATHS = ["/admin/pipeline", "/admin/enquiries", "/admin/proposals"]
+
 
 # --------------------------------------------------------------------------
 # Agent-server helpers (custom secrets are not in the environment by default)
@@ -183,6 +186,24 @@ def check_paths():
     return failures
 
 
+def check_auth_paths():
+    """Auth-protected paths should return 401 (unauthorized) not 404/500."""
+    failures = []
+    for path in AUTH_PATHS:
+        status, _, elapsed = fetch(path)
+        print(f"[watch] {path:<14} {status} {elapsed:.2f}s")
+        if status == 404:
+            failures.append(f"{path} returned 404 (route missing)")
+        elif status >= 500:
+            failures.append(f"{path} returned {status} (server error)")
+        elif status == 401:
+            # Expected: auth required
+            pass
+        else:
+            failures.append(f"{path} returned unexpected {status}")
+    return failures
+
+
 def check_asset_integrity():
     """The JS bundle referenced by the homepage must actually be fetchable.
 
@@ -235,6 +256,7 @@ def main():
     all_failures = []
     try:
         all_failures += check_paths()
+        all_failures += check_auth_paths()
         all_failures += check_asset_integrity()
     except Exception as exc:
         all_failures.append(f"unexpected error: {type(exc).__name__}: {exc}")

@@ -18,6 +18,7 @@ import {
   resolveInboxEmail,
   listEnquiries,
   sendMail,
+  updateEnquiryStatus,
 } from "./enquiries-cloudflare.mjs";
 
 import { handleStats } from "./stats-cloudflare.mjs";
@@ -49,9 +50,24 @@ import {
   handlePortalProposals,
   handlePortalProposalById,
   handlePortalProjects,
+  handlePortalDigests,
   handleAdminClients,
   handleAdminClientDigest,
+  requireAdminSession,
 } from "./portal-cloudflare.mjs";
+
+import {
+  listCaseStudies,
+  getCaseStudy,
+  createCaseStudy,
+  updateCaseStudy,
+  deleteCaseStudy,
+  listProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "./cms-cloudflare.mjs";
 
 // ── Security Headers ──────────────────────────────────────────────────────────
 // Cloudflare Pages serves static files with _headers; this applies to API responses
@@ -335,10 +351,11 @@ async function cfSbFetch(path, init = {}) {
 }
 
 async function handleAdminProposalsPage(req) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(401, { error: "Unauthorized" });
+  const token = auth.session ? "session" : auth.client.role;
   const url = new URL(req.url);
-  const supplied = req.headers.get("x-admin-token") ?? url.searchParams.get("token");
-  if (!adminTokenValid(supplied)) return sendJson(401, { error: "Unauthorized" });
-  const token = supplied;
+  const qLeadId = url.searchParams.get("leadId") || "";
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>Proposals — Duta Integra</title>
 <style>
@@ -361,7 +378,7 @@ async function handleAdminProposalsPage(req) {
   <label>Scope (one per line)</label><textarea name="scope" placeholder="Discovery&#10;Build&#10;Deploy"></textarea>
   <label>Amount (MYR)</label><input name="amountMyr" type="number" min="0" step="0.01" required />
   <label>Valid until (YYYY-MM-DD, optional)</label><input name="validUntil" pattern="\\d{4}-\\d{2}-\\d{2}" />
-  <label>Lead ID (optional)</label><input name="leadId" />
+  <label>Lead ID (optional)</label><input name="leadId" value="${cfEscapeHtml(qLeadId)}" />
   <button type="submit" id="btn">Create &amp; get link</button>
 </form>
 <div id="result"></div>
@@ -409,10 +426,149 @@ document.getElementById('f').addEventListener('submit', async (e) => {
   return new Response(html, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
 }
 
-async function handleAdminCreateProposal(req) {
+function cfEscapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+const CF_PIPELINE_STATUSES = ["new", "contacted", "qualified", "proposal", "won", "closed"];
+
+function cfAgeDays(created) {
+  const t = Date.parse(created);
+  if (!Number.isFinite(t)) return 0;
+  return Math.max(0, Math.floor((Date.now() - t) / 86400000));
+}
+
+function cfNormalizeLead(row) {
+  return { ...row, status: row.status || "new" };
+}
+
+async function handleAdminPipelinePage(req) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(401, { error: "Unauthorized" });
+  const token = auth.session ? "session" : auth.client.role;
+  const rows = (await listEnquiries(500)).map(cfNormalizeLead);
   const url = new URL(req.url);
-  const supplied = req.headers.get("x-admin-token") ?? url.searchParams.get("token");
-  if (!adminTokenValid(supplied)) return sendJson(401, { error: "Unauthorized" });
+  const format = url.searchParams.get("format");
+  const accept = req.headers.get("accept") || "";
+  if (format === "csv") {
+    const header = ["id", "name", "company", "email", "phone", "service", "status", "age_days", "created_at", "note"];
+    const csvRows = [header.join(",")].concat(rows.map((l) => [
+      l.id, l.name, l.company, l.email, l.phone, l.service, l.status, cfAgeDays(l.created_at), l.created_at, l.note,
+    ].map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")));
+    return new Response(csvRows.join("\n"), { status: 200, headers: { "content-type": "text/csv; charset=utf-8", "content-disposition": "attachment; filename=leads.csv", "cache-control": "no-store" } });
+  }
+  if (accept.includes("text/html")) {
+    const byStatus = Object.fromEntries(CF_PIPELINE_STATUSES.map((s) => [s, []]));
+    for (const l of rows) {
+      if (byStatus[l.status]) byStatus[l.status].push(l);
+      else byStatus.new.push(l);
+    }
+    for (const s of CF_PIPELINE_STATUSES) {
+      byStatus[s].sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+    }
+    const colHtml = CF_PIPELINE_STATUSES.map((status) => {
+      const cards = byStatus[status].map((l) => {
+        const age = cfAgeDays(l.created_at);
+        const stale = (status === "new" || status === "contacted") && age > 3;
+        const staleAttr = stale ? ' style="border-color:#dc2626;background:#fef2f2"' : "";
+        const proposalLink = `/admin/proposals?token=${encodeURIComponent(token)}&leadId=${encodeURIComponent(l.id)}`;
+        const waPhone = String(l.phone || "").replace(/[^0-9]/g, "");
+        const waLink = waPhone ? `https://wa.me/${waPhone}?text=${encodeURIComponent("Hi " + (l.name || "") + ", following up on your enquiry about " + (l.service || "") + ".")}` : "";
+        const opts = CF_PIPELINE_STATUSES.map((s) => `<option value="${s}"${s === l.status ? " selected" : ""}>${s}</option>`).join("");
+        const score = l.leadScore !== undefined && l.leadScore !== null ? ` · Score: ${l.leadScore}` : "";
+        const ind = l.industry ? ` · ${cfEscapeHtml(l.industry)}` : "";
+        return `<div class="card"${staleAttr}>
+          <div class="name">${cfEscapeHtml(l.name || "—")}</div>
+          <div class="meta">${cfEscapeHtml(l.company) || "—"} · ${cfEscapeHtml(l.service) || "—"}${ind}</div>
+          <div class="meta age">Age: ${age}d${stale ? " · STALE" : ""}${score}</div>
+          ${l.note ? `<div class="meta note">Note: ${cfEscapeHtml(l.note)}</div>` : ""}
+          <div class="actions">
+            <select data-id="${cfEscapeHtml(l.id)}" onchange="moveStatus(this)">${opts}</select>
+            <a href="${proposalLink}">Create proposal</a>
+            ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener">WhatsApp</a>` : ""}
+          </div>
+        </div>`;
+      }).join("");
+      return `<div class="col">
+        <h2>${status} <small>(${byStatus[status].length})</small></h2>
+        <div class="cards">${cards || '<div class="empty">—</div>'}</div>
+      </div>`;
+    }).join("");
+    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Leads pipeline — Duta Integra</title>
+<style>
+ body{font:14px/1.5 system-ui,sans-serif;margin:1.5rem;color:#1c1917}
+ h1{font-size:1.25rem;margin-bottom:1rem}
+ .board{display:grid;grid-template-columns:repeat(6,minmax(180px,1fr));gap:1rem;overflow-x:auto}
+ .col{background:#f5f5f4;border-radius:.5rem;padding:.75rem;min-height:12rem}
+ .col h2{font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;margin:0 0 .5rem;color:#57534e}
+ .card{background:#fff;border:1px solid #e7e5e4;border-radius:.375rem;padding:.6rem;margin-bottom:.5rem}
+ .name{font-weight:600;margin-bottom:.25rem}
+ .meta{font-size:.75rem;color:#57534e}
+ .age{margin:.25rem 0}
+ .actions{display:flex;gap:.5rem;align-items:center;margin-top:.5rem;flex-wrap:wrap}
+ .actions select{font-size:.75rem;padding:.2rem .3rem}
+ .actions a{font-size:.75rem;color:#2563eb;text-decoration:none}
+ .empty{color:#a8a29e;font-size:.75rem;text-align:center;padding:1rem 0}
+</style></head><body>
+<h1>Leads pipeline <small>(${rows.length})</small> <a href="/admin/pipeline?token=${encodeURIComponent(token)}&format=csv" style="font-size:.8rem;font-weight:400;margin-left:1rem">Export CSV</a></h1>
+<div class="board">${colHtml}</div>
+<script>
+const token = ${JSON.stringify(token)};
+async function moveStatus(sel) {
+  const id = sel.getAttribute('data-id');
+  const status = sel.value;
+  try {
+    const r = await fetch('/admin/leads/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(token), {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    if (!r.ok) { const d = await r.json().catch(()=>({})); alert(d.error || 'Failed to move'); return; }
+    location.reload();
+  } catch (e) { alert('Failed to move'); }
+}
+</script>
+</body></html>`;
+    return new Response(html, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
+  }
+  const byStatus = Object.fromEntries(CF_PIPELINE_STATUSES.map((s) => [s, []]));
+  for (const l of rows) {
+    if (byStatus[l.status]) byStatus[l.status].push(l);
+    else byStatus.new.push(l);
+  }
+  return sendJson(200, { count: rows.length, leads: rows, enquiries: rows, items: rows, byStatus });
+}
+
+const CF_ALLOWED_LEAD_STATUSES = new Set(CF_PIPELINE_STATUSES);
+
+async function handleAdminLeadStatus(req, id) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(401, { error: "Unauthorized" });
+  const parsed = await readJsonBody(req);
+  if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+  const status = String(parsed.data?.status || parsed.data?.newStatus || parsed.data?.state || "").trim();
+  const note = parsed.data?.note;
+  const assignedRole = parsed.data?.assignedRole || parsed.data?.assigned_role;
+  if (status && !CF_ALLOWED_LEAD_STATUSES.has(status)) return sendJson(400, { error: "invalid status" });
+  if (!status && note === undefined && assignedRole === undefined) return sendJson(400, { error: "status, note, or assignedRole required" });
+  try {
+    const updated = await updateEnquiryStatus(id, status || null, note, assignedRole);
+    if (!updated) return sendJson(404, { error: "Not found" });
+    const norm = cfNormalizeLead(updated);
+    return sendJson(200, { ok: true, lead: norm, enquiry: norm });
+  } catch (err) {
+    return sendJson(502, { error: `db error: ${err.message}` });
+  }
+}
+
+async function handleAdminCreateProposal(req) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(401, { error: "Unauthorized" });
   if (!supabaseConfigured()) return sendJson(503, { error: "Supabase not configured" });
 
   const parsed = await readJsonBody(req);
@@ -497,6 +653,102 @@ async function handleAcceptProposal(req, id) {
   const rows = await r.json();
   if (!rows.length) return sendJson(404, { error: "Proposal not found or not in sent state" });
   return sendJson(200, { proposal: rows[0] });
+}
+
+// ── Case Studies CMS (admin) ────────────────────────────────────────
+
+async function handleAdminCaseStudies(req) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(401, { error: "Unauthorized" });
+
+  if (req.method === "GET") {
+    const studies = await listCaseStudies();
+    return sendJson(200, { count: studies.length, caseStudies: studies });
+  }
+
+  if (req.method === "POST") {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+    const study = await createCaseStudy(parsed.data ?? {});
+    return sendJson(201, { caseStudy: study });
+  }
+
+  return sendJson(405, { error: "Method not allowed" });
+}
+
+async function handleAdminCaseStudyById(req, id) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(401, { error: "Unauthorized" });
+
+  if (req.method === "GET") {
+    const study = await getCaseStudy(id);
+    if (!study) return sendJson(404, { error: "Not found" });
+    return sendJson(200, { caseStudy: study });
+  }
+
+  if (req.method === "PATCH") {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+    const updated = await updateCaseStudy(id, parsed.data ?? {});
+    if (!updated) return sendJson(404, { error: "Not found" });
+    return sendJson(200, { caseStudy: updated });
+  }
+
+  if (req.method === "DELETE") {
+    const ok = await deleteCaseStudy(id);
+    if (!ok) return sendJson(404, { error: "Not found" });
+    return sendJson(200, { ok: true });
+  }
+
+  return sendJson(405, { error: "Method not allowed" });
+}
+
+// ── Products CMS (admin) ────────────────────────────────────────────
+
+async function handleAdminProducts(req) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(401, { error: "Unauthorized" });
+
+  if (req.method === "GET") {
+    const products = await listProducts();
+    return sendJson(200, { count: products.length, products });
+  }
+
+  if (req.method === "POST") {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+    const product = await createProduct(parsed.data ?? {});
+    return sendJson(201, { product });
+  }
+
+  return sendJson(405, { error: "Method not allowed" });
+}
+
+async function handleAdminProductById(req, id) {
+  const auth = await requireAdminSession(req);
+  if (!auth) return sendJson(401, { error: "Unauthorized" });
+
+  if (req.method === "GET") {
+    const product = await getProduct(id);
+    if (!product) return sendJson(404, { error: "Not found" });
+    return sendJson(200, { product });
+  }
+
+  if (req.method === "PATCH") {
+    const parsed = await readJsonBody(req);
+    if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+    const updated = await updateProduct(id, parsed.data ?? {});
+    if (!updated) return sendJson(404, { error: "Not found" });
+    return sendJson(200, { product });
+  }
+
+  if (req.method === "DELETE") {
+    const ok = await deleteProduct(id);
+    if (!ok) return sendJson(404, { error: "Not found" });
+    return sendJson(200, { ok: true });
+  }
+
+  return sendJson(405, { error: "Method not allowed" });
 }
 
 const VALID_PAIN_POINTS = new Set(["manual_work", "scaling", "security", "ai_automation"]);
@@ -603,32 +855,24 @@ async function handleQuiz(req) {
   }
 }
 
-const CASE_STUDIES = [
-  {
-    id: 'lapango', client: 'Lapango', tier: 'Growth',
-    title: 'Scaling Support Operations with Managed IT',
-    desc: 'Lapango needed to scale their support team without the overhead of building an internal IT department. We deployed a managed IT stack with proactive monitoring and SLA-backed response times.',
-    tags: ['Managed IT', 'SLA Support', 'Team Scaling'],
-    result: '30% reduction in downtime, 2x support capacity within 90 days.',
-  },
-  {
-    id: 'eastelpro', client: 'Eastelpro', tier: 'Foundation',
-    title: 'Predictable IT Budgeting for Growing SME',
-    desc: 'Eastelpro was spending unpredictably on IT emergencies. We moved them to a predictable monthly retainer with proactive maintenance and fast response guarantees.',
-    tags: ['Foundation', 'Predictable Billing', 'Proactive Maintenance'],
-    result: '40% lower IT costs year-over-year, zero emergency incidents.',
-  },
-  {
-    id: 'agmx', client: 'AGMX', tier: 'AI Partner',
-    title: 'Automating Compliance with AI-First Workflows',
-    desc: 'AGMX needed to automate their regulatory compliance tracking. We built custom AI workflows that monitor, flag, and report compliance status in real time.',
-    tags: ['AI Automation', 'Compliance', 'Custom Workflows'],
-    result: '60% faster compliance reporting, full audit trail automated.',
-  }
-];
-
 async function handleCaseStudies(req) {
-  return sendJson(200, { cases: CASE_STUDIES });
+  try {
+    const studies = await listCaseStudies();
+    return sendJson(200, { caseStudies: studies });
+  } catch (err) {
+    console.error("[case-studies] public API error:", err.message);
+    return sendJson(200, { caseStudies: [] });
+  }
+}
+
+async function handleProducts(req) {
+  try {
+    const products = await listProducts();
+    return sendJson(200, { products });
+  } catch (err) {
+    console.error("[products] public API error:", err.message);
+    return sendJson(200, { products: [] });
+  }
 }
 
 async function handleTestimonial(req) {
@@ -753,12 +997,19 @@ async function handleHealth(req) {
       supabaseReachable = false;
     }
   }
+  const storageBackend = configured ? "supabase" : "jsonl";
+  const warnings = [];
+  if (storageBackend === "jsonl") warnings.push("storage backend is jsonl on Cloudflare Pages - leads will not persist; configure SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY");
+  if (configured && supabaseReachable === false) warnings.push("Supabase configured but unreachable");
+  if (!resolveInboxEmail()) warnings.push("no CONTACT_INBOX_EMAIL/ADMIN_EMAIL configured - enquiry notifications disabled");
   return sendJson(200, {
-    ok: true,
+    ok: configured && supabaseReachable !== false,
     inboxConfigured: Boolean(resolveInboxEmail()),
     supabaseConfigured: configured,
-    storageBackend: configured ? "supabase" : "jsonl",
+    storageBackend,
+    storageDurable: configured,
     supabaseReachable,
+    warnings,
   });
 }
 
@@ -776,6 +1027,7 @@ export async function handleApi(req) {
     if (pathname === "/api/pdpa-score") return await handlePdpaScore(req);
     if (pathname === "/api/testimonial") return await handleTestimonial(req);
     if (pathname === "/api/case-studies") return await handleCaseStudies(req);
+    if (pathname === "/api/products") return await handleProducts(req);
     if (pathname === "/api/quiz") return await handleQuiz(req);
     if (pathname === "/api/health") return await handleHealth(req);
     if (pathname === "/api/stats") return await handleStats(req);
@@ -873,6 +1125,19 @@ export async function handleApi(req) {
     if (pathname === "/api/portal/health") return await handlePortalHealth(req);
     if (pathname === "/api/portal/tickets") return await handlePortalTickets(req);
 
+    // /api/portal/tickets/:id/replies
+    const ticketRepliesMatch = pathname.match(/^\/api\/portal\/tickets\/([a-f0-9-]+)\/replies$/);
+    if (ticketRepliesMatch) {
+      return await handlePortalTicketById(req, ticketRepliesMatch[1]);
+    }
+
+    // GET /api/portal/tickets/:id
+    const ticketGetMatch = pathname.match(/^\/api\/portal\/tickets\/([a-f0-9-]+)$/);
+    if (ticketGetMatch && req.method === "GET") {
+      return await handlePortalTicketById(req, ticketGetMatch[1]);
+    }
+
+    // PATCH /api/portal/tickets/:id
     const ticketMatch = pathname.match(/^\/api\/portal\/tickets\/([a-f0-9-]+)$/);
     if (ticketMatch && req.method === "PATCH") {
       return await handlePortalTicketById(req, ticketMatch[1]);
@@ -883,6 +1148,11 @@ export async function handleApi(req) {
     const proposalMatch = pathname.match(/^\/api\/portal\/proposals\/([a-f0-9-]+)$/);
     if (proposalMatch && req.method === "PATCH") {
       return await handlePortalProposalById(req, proposalMatch[1]);
+    }
+
+    // Portal: digests
+    if (pathname === "/api/portal/digests" && req.method === "GET") {
+      return await handlePortalDigests(req);
     }
 
     // Projects (Phase 3)
@@ -898,10 +1168,32 @@ export async function handleApi(req) {
     // Proposals
     if (pathname === "/admin/proposals" && req.method === "GET") return await handleAdminProposalsPage(req);
     if (pathname === "/admin/proposals" && req.method === "POST") return await handleAdminCreateProposal(req);
+    // Leads pipeline
+    if (pathname === "/admin/pipeline" && req.method === "GET") return await handleAdminPipelinePage(req);
+    const cfLeadStatusMatch = pathname.match(/^\/(?:admin\/leads|api\/leads|admin\/pipeline)\/([a-f0-9-]+)$/);
+    if (cfLeadStatusMatch && req.method === "PATCH") return await handleAdminLeadStatus(req, cfLeadStatusMatch[1]);
     const propMatch = pathname.match(/^\/api\/proposals\/([a-f0-9-]+)$/);
     if (propMatch && req.method === "GET") return await handleGetProposal(req, propMatch[1]);
     const propAcceptMatch = pathname.match(/^\/api\/proposals\/([a-f0-9-]+)\/accept$/);
     if (propAcceptMatch && req.method === "POST") return await handleAcceptProposal(req, propAcceptMatch[1]);
+
+    // ── Case Studies CMS (admin) ──────────────────────────────────────
+    if (pathname === "/admin/case-studies" && (req.method === "GET" || req.method === "POST")) {
+      return await handleAdminCaseStudies(req);
+    }
+    const csMatch = pathname.match(/^\/admin\/case-studies\/([a-f0-9-]+)$/);
+    if (csMatch && (req.method === "GET" || req.method === "PATCH" || req.method === "DELETE")) {
+      return await handleAdminCaseStudyById(req, csMatch[1]);
+    }
+
+    // ── Products CMS (admin) ──────────────────────────────────────────
+    if (pathname === "/admin/products" && (req.method === "GET" || req.method === "POST")) {
+      return await handleAdminProducts(req);
+    }
+    const prodMatch = pathname.match(/^\/admin\/products\/([a-f0-9-]+)$/);
+    if (prodMatch && (req.method === "GET" || req.method === "PATCH" || req.method === "DELETE")) {
+      return await handleAdminProductById(req, prodMatch[1]);
+    }
 
     // Unified workspace API (assessment, client portal, admin)
     if (pathname.startsWith("/api/workspace/")) {

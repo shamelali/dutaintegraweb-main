@@ -25,8 +25,27 @@ const scryptAsync = promisify(scrypt);
  */
 
 import { findClientByEmail, findClientById, createClient, listClients, updateClient } from "./clients.mjs";
-import { listTicketsForClient, findTicket, createTicket, updateTicket, countTicketsByStatus } from "./tickets.mjs";
+import { listTicketsForClient, findTicket, createTicket, updateTicket, countTicketsByStatus, createTicketReply, listTicketReplies } from "./tickets.mjs";
 import { buildDigestForClient, sendDigestEmail } from "./digest.mjs";
+
+function supabaseConfigured() {
+  return Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+}
+
+async function sbFetch(path, init = {}) {
+  const base = process.env.SUPABASE_URL.trim().replace(/\/$/, "");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
+  const res = await fetch(`${base}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: key,
+      authorization: `Bearer ${key}`,
+      "content-type": "application/json",
+      ...(init.headers || {}),
+    },
+  });
+  return res;
+}
 
 // ── password hashing ─────────────────────────────────────────────────────────
 
@@ -81,7 +100,7 @@ const SESSION_DAYS = 30;
 const MAX_SESSIONS = 1000;
 const sessions = new Map(); // token → { clientId, expiresAt }
 
-export function createSession(clientId) {
+export function createSession(clientId, role) {
   // Enforce session ceiling — evict oldest when at capacity
   if (sessions.size >= MAX_SESSIONS) {
     const oldest = sessions.keys().next().value;
@@ -89,7 +108,7 @@ export function createSession(clientId) {
   }
   const token = randomBytes(32).toString("hex");
   const expiresAt = Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000;
-  sessions.set(token, { clientId, expiresAt });
+  sessions.set(token, { clientId, role, expiresAt });
   return { token, expiresAt: new Date(expiresAt).toISOString() };
 }
 
@@ -156,7 +175,7 @@ async function readJsonBody(req) {
 }
 
 function safeClient(c) {
-  return { id: c.id, name: c.name, email: c.email, company: c.company, tier: c.tier, status: c.status };
+  return { id: c.id, name: c.name, email: c.email, company: c.company, tier: c.tier, status: c.status, role: c.role };
 }
 
 // ── admin auth ───────────────────────────────────────────────────────────────
@@ -167,6 +186,24 @@ function adminTokenValid(supplied) {
   const a = Buffer.from(configured);
   const b = Buffer.from(supplied);
   return a.length === b.length && timingSafeEqual(a, b);
+}
+
+/** Check if request has an admin session (cookie or x-admin-token header). */
+export async function requireAdminSession(req) {
+  // First check session cookie (preferred for browser clients)
+  const session = sessionFromReq(req);
+  if (session) {
+    const client = await findClientById(session.clientId);
+    if (client && client.status === "active" && client.role === "admin") {
+      return { client, session };
+    }
+  }
+  // Fallback to ADMIN_TOKEN header (for scripts/cron)
+  const token = req.headers["x-admin-token"] ?? new URL(req.url ?? "/", "http://localhost").searchParams.get("token");
+  if (token && adminTokenValid(token)) {
+    return { client: { role: "admin" }, session: null };
+  }
+  return null;
 }
 
 // ── route handlers ───────────────────────────────────────────────────────────
@@ -185,7 +222,7 @@ export async function handleLogin(req, res) {
     return send(res, 401, { error: "Invalid email or password" });
   }
 
-  const { token, expiresAt } = createSession(client.id);
+  const { token, expiresAt } = createSession(client.id, client.role);
   setSessionCookie(res, token, expiresAt);
   send(res, 200, { ok: true, client: safeClient(client) });
 }
@@ -242,6 +279,39 @@ export async function handlePortalTicketById(req, res, ticketId) {
     return send(res, 404, { error: "Ticket not found" });
   }
 
+  const pathname = new URL(req.url ?? "/", "http://localhost").pathname;
+  const isReplies = pathname.endsWith("/replies");
+
+  if (isReplies) {
+    if (req.method === "GET") {
+      const replies = await listTicketReplies(ticketId);
+      // Filter out internal replies for client view
+      const visible = replies.filter((r) => !r.isInternal);
+      return send(res, 200, { replies: visible });
+    }
+
+    if (req.method === "POST") {
+      const parsed = await readJsonBody(req);
+      if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
+      const { body: replyBody, isInternal } = parsed.data ?? {};
+      if (!replyBody || typeof replyBody !== "string" || replyBody.trim().length < 1) {
+        return send(res, 400, { error: "Reply body is required" });
+      }
+      const client = await findClientById(session.clientId);
+      const reply = await createTicketReply({
+        ticketId,
+        authorType: "client",
+        authorId: session.clientId,
+        authorEmail: client?.email,
+        body: replyBody.trim(),
+        isInternal: false, // clients cannot create internal replies
+      });
+      return send(res, 201, { reply });
+    }
+
+    return send(res, 405, { error: "Method not allowed" });
+  }
+
   if (req.method === "GET") return send(res, 200, { ticket });
 
   if (req.method === "PATCH") {
@@ -279,9 +349,8 @@ export async function handlePortalHealth(req, res) {
 // ── admin: client management ─────────────────────────────────────────────────
 
 export async function handleAdminClients(req, res) {
-  const query = new URL(req.url ?? "/", "http://localhost").searchParams;
-  const token = req.headers["x-admin-token"] ?? query.get("token");
-  if (!adminTokenValid(token)) return send(res, 401, { error: "Unauthorized" });
+  const auth = await requireAdminSession(req);
+  if (!auth) return send(res, 401, { error: "Unauthorized" });
 
   if (req.method === "GET") {
     const clients = await listClients();
@@ -291,7 +360,7 @@ export async function handleAdminClients(req, res) {
   if (req.method === "POST") {
     const parsed = await readJsonBody(req);
     if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
-    const { name, email, password, company, tier } = parsed.data ?? {};
+    const { name, email, password, company, tier, role } = parsed.data ?? {};
     if (!name || !email || !password) {
       return send(res, 400, { error: "name, email, and password are required" });
     }
@@ -304,6 +373,7 @@ export async function handleAdminClients(req, res) {
       passwordHash: await hashPassword(password),
       company: company?.trim() || null,
       tier,
+      role: role ?? "client",
     });
     return send(res, 201, { client: safeClient(client) });
   }
@@ -312,9 +382,8 @@ export async function handleAdminClients(req, res) {
 }
 
 export async function handleAdminClientDigest(req, res, clientId) {
-  const query = new URL(req.url ?? "/", "http://localhost").searchParams;
-  const token = req.headers["x-admin-token"] ?? query.get("token");
-  if (!adminTokenValid(token)) return send(res, 401, { error: "Unauthorized" });
+  const auth = await requireAdminSession(req);
+  if (!auth) return send(res, 401, { error: "Unauthorized" });
 
   if (req.method !== "POST") return send(res, 405, { error: "Method not allowed" });
 
@@ -330,4 +399,59 @@ export async function handleAdminClientDigest(req, res, clientId) {
   }
 
   return send(res, 200, { ok: true, sent, digest });
+}
+
+// ── portal: proposals ──────────────────────────────────────────────────
+
+export async function handlePortalProposals(req, res) {
+  const session = sessionFromReq(req);
+  if (!session) return send(res, 401, { error: "Not authenticated" });
+
+  // For now, return empty - would query proposals linked to client
+  // This could be extended to query workspace_proposals where lead.email = client.email
+  return send(res, 200, { proposals: [] });
+}
+
+export async function handlePortalProposalById(req, res, id) {
+  const session = sessionFromReq(req);
+  if (!session) return send(res, 401, { error: "Not authenticated" });
+
+  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  const r = await sbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&select=*`);
+  if (!r.ok) return send(res, 502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  const p = rows[0];
+  if (!p) return send(res, 404, { error: "Proposal not found" });
+
+  // Verify ownership (proposal lead email matches client email)
+  const client = await findClientById(session.clientId);
+  if (p.lead_id) {
+    const lr = await sbFetch(`workspace_leads?id=eq.${encodeURIComponent(p.lead_id)}&select=email`);
+    if (lr.ok) {
+      const leads = await lr.json();
+      const lead = leads[0];
+      if (lead?.email !== client?.email) return send(res, 404, { error: "Not found" });
+    }
+  }
+  send(res, 200, { proposal: p });
+}
+
+// ── portal: digests ────────────────────────────────────────────────────
+
+export async function handlePortalDigests(req, res) {
+  const session = sessionFromReq(req);
+  if (!session) return send(res, 401, { error: "Not authenticated" });
+
+  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  const client = await findClientById(session.clientId);
+  if (!client) return send(res, 404, { error: "Client not found" });
+
+  const base = process.env.SUPABASE_URL.trim().replace(/\/$/, "");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
+  const r = await fetch(`${base}/rest/v1/monthly_digests?client_id=eq.${encodeURIComponent(client.id)}&select=*&order=month.desc`, {
+    headers: { apikey: key, authorization: `Bearer ${key}` },
+  });
+  if (!r.ok) return send(res, 502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  send(res, 200, { digests: rows });
 }
