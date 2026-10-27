@@ -3,7 +3,7 @@ import { stat } from "node:fs/promises";
 import { extname, join, normalize, resolve, sep } from "node:path";
 
 import { listEnquiries, notifyEnquiry, notifyEnquirer, recordEnquiry, resolveInboxEmail } from "./enquiries.mjs";
-import { timingSafeEqual } from "node:crypto";
+import { randomUUID, timingSafeEqual } from "node:crypto";
 import { handleStats } from "./stats.mjs";
 import { calculateSavings } from "./calculator.mjs";
 import { handleFeed, handleConsent, handleIngestEvent, seedDemoEvents } from "./autonomous-ops.mjs";
@@ -473,6 +473,86 @@ async function handleAdminEnquiries(req, res) {
   send(res, 200, { count: rows.length, enquiries: rows });
 }
 
+// ── proposals (lightweight) ────────────────────────────────────────────────
+
+function supabaseConfigured() {
+  return Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+}
+
+async function sbFetch(path, init = {}) {
+  const base = process.env.SUPABASE_URL.trim().replace(/\/$/, "");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
+  const res = await fetch(`${base}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: key,
+      authorization: `Bearer ${key}`,
+      "content-type": "application/json",
+      ...(init.headers || {}),
+    },
+  });
+  return res;
+}
+
+async function handleAdminCreateProposal(req, res) {
+  const query = new URL(req.url ?? "/", "http://localhost").searchParams;
+  const supplied = req.headers["x-admin-token"] ?? query.get("token");
+  if (!adminTokenValid(supplied)) return send(res, 401, { error: "Unauthorized" });
+  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+
+  const parsed = await readJsonBody(req);
+  if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
+  const b = parsed.data || {};
+  const title = String(b.title || "").trim();
+  const summary = String(b.summary || "").trim();
+  const amount = Number(b.amountMyr);
+  if (!title || !summary || !Number.isFinite(amount) || amount < 0) {
+    return send(res, 400, { error: "title, summary and a non-negative amountMyr are required" });
+  }
+  const scope = Array.isArray(b.scope) ? b.scope.filter((x) => typeof x === "string").map((x) => x.trim()).filter(Boolean) : [];
+  const validUntil = b.validUntil && /^\d{4}-\d{2}-\d{2}$/.test(b.validUntil) ? b.validUntil : null;
+  const row = {
+    id: randomUUID(),
+    lead_id: b.leadId || null,
+    title,
+    summary,
+    scope,
+    amount_myr: amount,
+    valid_until: validUntil,
+    status: "sent",
+    created_by: "admin",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+  const r = await sbFetch("workspace_proposals", { method: "POST", body: JSON.stringify(row), headers: { Prefer: "return=representation" } });
+  if (!r.ok) return send(res, 502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  const proposal = rows[0] || row;
+  send(res, 201, { proposal });
+}
+
+async function handleGetProposal(req, res, id) {
+  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  const r = await sbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&select=*`);
+  if (!r.ok) return send(res, 502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  const p = rows[0];
+  if (!p) return send(res, 404, { error: "Proposal not found" });
+  send(res, 200, { proposal: p });
+}
+
+async function handleAcceptProposal(req, res, id) {
+  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  const r = await sbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&status=eq.sent`, {
+    method: "PATCH",
+    body: JSON.stringify({ status: "accepted", decided_at: new Date().toISOString(), updated_at: new Date().toISOString() }),
+    headers: { Prefer: "return=representation" },
+  });
+  if (!r.ok) return send(res, 502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  if (!rows.length) return send(res, 404, { error: "Proposal not found or not in sent state" });
+  send(res, 200, { proposal: rows[0] });
+}
 
 // ── tier-recommendation quiz ────────────────────────────────────────────
 // Score-based tier recommendation (Foundation / Growth / AI Partner)
@@ -906,6 +986,19 @@ export async function handle(req, res) {
     const digestMatch = pathname.match(/^\/admin\/clients\/([a-f0-9-]+)\/send-digest$/);
     if (digestMatch && req.method === "POST") {
       return await handleAdminClientDigest(req, res, digestMatch[1]);
+    }
+
+    // ── proposals ──────────────────────────────────────────────────────
+    if (pathname === "/admin/proposals" && req.method === "POST") {
+      return await handleAdminCreateProposal(req, res);
+    }
+    const propMatch = pathname.match(/^\/api\/proposals\/([a-f0-9-]+)$/);
+    if (propMatch && req.method === "GET") {
+      return await handleGetProposal(req, res, propMatch[1]);
+    }
+    const propAcceptMatch = pathname.match(/^\/api\/proposals\/([a-f0-9-]+)\/accept$/);
+    if (propAcceptMatch && req.method === "POST") {
+      return await handleAcceptProposal(req, res, propAcceptMatch[1]);
     }
 
     if (pathname.startsWith("/api/workspace/")) return await handleWorkspaceNodeRequest(req, res);

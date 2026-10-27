@@ -314,6 +314,85 @@ async function handleAdminEnquiries(req) {
   return sendJson(200, { count: rows.length, enquiries: rows });
 }
 
+function cfSupabaseConfigured() {
+  return supabaseConfigured();
+}
+
+async function cfSbFetch(path, init = {}) {
+  const base = process.env.SUPABASE_URL.trim().replace(/\/$/, "");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
+  const res = await fetch(`${base}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: key,
+      authorization: `Bearer ${key}`,
+      "content-type": "application/json",
+      ...(init.headers || {}),
+    },
+  });
+  return res;
+}
+
+async function handleAdminCreateProposal(req) {
+  const url = new URL(req.url);
+  const supplied = req.headers.get("x-admin-token") ?? url.searchParams.get("token");
+  if (!adminTokenValid(supplied)) return sendJson(401, { error: "Unauthorized" });
+  if (!supabaseConfigured()) return sendJson(503, { error: "Supabase not configured" });
+
+  const parsed = await readJsonBody(req);
+  if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
+  const b = parsed.data || {};
+  const title = String(b.title || "").trim();
+  const summary = String(b.summary || "").trim();
+  const amount = Number(b.amountMyr);
+  if (!title || !summary || !Number.isFinite(amount) || amount < 0) {
+    return sendJson(400, { error: "title, summary and a non-negative amountMyr are required" });
+  }
+  const scope = Array.isArray(b.scope) ? b.scope.filter((x) => typeof x === "string").map((x) => x.trim()).filter(Boolean) : [];
+  const validUntil = b.validUntil && /^\d{4}-\d{2}-\d{2}$/.test(b.validUntil) ? b.validUntil : null;
+  const row = {
+    id: globalThis.crypto?.randomUUID?.() || Math.random().toString(36).slice(2),
+    lead_id: b.leadId || null,
+    title,
+    summary,
+    scope,
+    amount_myr: amount,
+    valid_until: validUntil,
+    status: "sent",
+    created_by: "admin",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+  const r = await cfSbFetch("workspace_proposals", { method: "POST", body: JSON.stringify(row), headers: { Prefer: "return=representation" } });
+  if (!r.ok) return sendJson(502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  const proposal = rows[0] || row;
+  return sendJson(201, { proposal });
+}
+
+async function handleGetProposal(req, id) {
+  if (!supabaseConfigured()) return sendJson(503, { error: "Supabase not configured" });
+  const r = await cfSbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&select=*`);
+  if (!r.ok) return sendJson(502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  const p = rows[0];
+  if (!p) return sendJson(404, { error: "Proposal not found" });
+  return sendJson(200, { proposal: p });
+}
+
+async function handleAcceptProposal(req, id) {
+  if (!supabaseConfigured()) return sendJson(503, { error: "Supabase not configured" });
+  const r = await cfSbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&status=eq.sent`, {
+    method: "PATCH",
+    body: JSON.stringify({ status: "accepted", decided_at: new Date().toISOString(), updated_at: new Date().toISOString() }),
+    headers: { Prefer: "return=representation" },
+  });
+  if (!r.ok) return sendJson(502, { error: `db error: ${await r.text()}` });
+  const rows = await r.json();
+  if (!rows.length) return sendJson(404, { error: "Proposal not found or not in sent state" });
+  return sendJson(200, { proposal: rows[0] });
+}
+
 const VALID_PAIN_POINTS = new Set(["manual_work", "scaling", "security", "ai_automation"]);
 const MAX_SCORE = 100;
 
@@ -709,6 +788,13 @@ export async function handleApi(req) {
     if (digestMatch && req.method === "POST") {
       return await handleAdminClientDigest(req, digestMatch[1]);
     }
+
+    // Proposals
+    if (pathname === "/admin/proposals" && req.method === "POST") return await handleAdminCreateProposal(req);
+    const propMatch = pathname.match(/^\/api\/proposals\/([a-f0-9-]+)$/);
+    if (propMatch && req.method === "GET") return await handleGetProposal(req, propMatch[1]);
+    const propAcceptMatch = pathname.match(/^\/api\/proposals\/([a-f0-9-]+)\/accept$/);
+    if (propAcceptMatch && req.method === "POST") return await handleAcceptProposal(req, propAcceptMatch[1]);
 
     // Unified workspace API (assessment, client portal, admin)
     if (pathname.startsWith("/api/workspace/")) {

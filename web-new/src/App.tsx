@@ -6,6 +6,7 @@ import { ServicesPage } from "@/pages/services"
 import { AboutPage } from "@/pages/about"
 import { PricingPage } from "@/pages/pricing"
 import { ContactPage } from "@/pages/contact"
+import { ProposalPage } from "@/pages/proposal"
 import { QuizPage } from "@/pages/quiz"
 import { DigitalAssessmentPage } from "@/pages/digital-assessment"
 
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/quiz" element={<QuizPage />} />
             <Route path="/digital-assessment" element={<DigitalAssessmentPage />} />
+            <Route path="/proposal/:id" element={<ProposalPage />} />
 
           </Routes>
         </main>
