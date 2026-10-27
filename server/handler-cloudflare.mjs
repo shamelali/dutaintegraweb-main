@@ -13,6 +13,7 @@ import { timingSafeEqual } from "node:crypto";
 // Import Supabase-only versions of all modules
 import {
   recordEnquiry,
+  notifyEnquirer,
   notifyEnquiry,
   resolveInboxEmail,
   listEnquiries,
@@ -287,6 +288,12 @@ async function handleSendEmail(req) {
     delivered = await notifyEnquiry(enquiry);
   } catch (err) {
     console.error(`[enquiry ${enquiry.id}] stored but notification failed: ${err.message}`);
+  }
+
+  try {
+    await notifyEnquirer(enquiry);
+  } catch (err) {
+    console.error(`[enquiry ${enquiry.id}] auto-reply failed: ${err.message}`);
   }
 
   if (!delivered && !resolveInboxEmail()) {

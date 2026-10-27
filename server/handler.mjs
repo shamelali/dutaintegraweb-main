@@ -2,7 +2,7 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { extname, join, normalize, resolve, sep } from "node:path";
 
-import { listEnquiries, notifyEnquiry, recordEnquiry, resolveInboxEmail } from "./enquiries.mjs";
+import { listEnquiries, notifyEnquiry, notifyEnquirer, recordEnquiry, resolveInboxEmail } from "./enquiries.mjs";
 import { timingSafeEqual } from "node:crypto";
 import { handleStats } from "./stats.mjs";
 import { calculateSavings } from "./calculator.mjs";
@@ -369,6 +369,13 @@ async function handleSendEmail(req, res) {
     delivered = await notifyEnquiry(enquiry);
   } catch (err) {
     console.error(`[enquiry ${enquiry.id}] stored but notification failed: ${err.message}`);
+  }
+
+  // Best-effort auto-reply to the prospect (never blocks the response).
+  try {
+    await notifyEnquirer(enquiry);
+  } catch (err) {
+    console.error(`[enquiry ${enquiry.id}] auto-reply failed: ${err.message}`);
   }
 
   if (!delivered && !resolveInboxEmail()) {

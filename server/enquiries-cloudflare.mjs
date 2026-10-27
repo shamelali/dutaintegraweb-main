@@ -183,6 +183,39 @@ export async function notifyEnquiry(enquiry) {
   return true;
 }
 
+export async function notifyEnquirer(enquiry) {
+  if (!enquiry?.email) return false;
+
+  const from = process.env.EMAIL_FROM?.trim();
+  const subject = "We received your enquiry — Duta Integra";
+  const text = [
+    `Hi ${enquiry.name || "there"},`,
+    "",
+    `Thanks for reaching out to Duta Integra. We've received your enquiry about "${enquiry.service}" and a member of our team will get back to you within 1 business day.`,
+    "",
+    "For urgent matters, reply to this email or contact us directly.",
+    "",
+    "— Duta Integra Solutions",
+    "https://dutaintegra.my",
+  ].join("\\n");
+
+  try {
+    if (process.env.RESEND_API_KEY) {
+      await sendViaResend({ to: enquiry.email, from, subject, text }, process.env.RESEND_API_KEY);
+    } else if (process.env.BREVO_API_KEY) {
+      await sendViaBrevo({ to: enquiry.email, from, subject, text }, process.env.BREVO_API_KEY);
+    } else if (process.env.POSTMARK_SERVER_TOKEN) {
+      await sendViaPostmark({ to: enquiry.email, from, subject, text }, process.env.POSTMARK_SERVER_TOKEN);
+    } else {
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error(`[enquiry ${enquiry.id}] auto-reply failed: ${err.message}`);
+    return false;
+  }
+}
+
 async function assertOk(res, provider) {
   if (!res.ok) {
     throw new Error(`${provider} responded ${res.status}: ${await res.text()}`);

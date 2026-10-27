@@ -252,6 +252,47 @@ export async function notifyEnquiry(enquiry) {
   const subject = enquirySubject(enquiry);
   const text = enquiryBody(enquiry);
 
+  const sent = await sendMail({ to, from, subject, text });
+  if (!sent) return false;
+
+  await markEnquiryEmailed(enquiry.id);
+  return true;
+}
+
+/**
+ * Auto-reply to the person who submitted the enquiry, confirming receipt and
+ * setting expectations. Best-effort: never throws; returns true on success.
+ */
+export async function notifyEnquirer(enquiry) {
+  if (!enquiry?.email) return false;
+
+  const from = process.env.EMAIL_FROM?.trim();
+  const subject = `We received your enquiry — Duta Integra`;
+  const text = [
+    `Hi ${enquiry.name || "there"},`,
+    ``,
+    `Thanks for reaching out to Duta Integra. We've received your enquiry about "${enquiry.service}" and a member of our team will get back to you within 1 business day.`,
+    ``,
+    `For urgent matters, reply to this email or contact us directly.`,
+    ``,
+    `— Duta Integra Solutions`,
+    `https://dutaintegra.my`,
+  ].join("\\n");
+
+  try {
+    return await sendMail({ to: enquiry.email, from, subject, text });
+  } catch (err) {
+    console.error(`[enquiry ${enquiry.id}] auto-reply failed: ${err.message}`);
+    return false;
+  }
+}
+
+/**
+ * Provider-dispatching mail sender. Returns true if a provider was configured
+ * and the send succeeded, false if no provider is configured. Throws on
+ * provider errors so callers can decide how to handle them.
+ */
+async function sendMail({ to, from, subject, text }) {
   if (process.env.BREVO_API_KEY) {
     await sendViaBrevo({ to, from, subject, text }, process.env.BREVO_API_KEY);
   } else if (process.env.RESEND_API_KEY) {
@@ -261,8 +302,6 @@ export async function notifyEnquiry(enquiry) {
   } else {
     return false; // no provider configured — stored only
   }
-
-  await markEnquiryEmailed(enquiry.id);
   return true;
 }
 
