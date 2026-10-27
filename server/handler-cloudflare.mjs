@@ -333,6 +333,81 @@ async function cfSbFetch(path, init = {}) {
   return res;
 }
 
+async function handleAdminProposalsPage(req) {
+  const url = new URL(req.url);
+  const supplied = req.headers.get("x-admin-token") ?? url.searchParams.get("token");
+  if (!adminTokenValid(supplied)) return sendJson(401, { error: "Unauthorized" });
+  const token = supplied;
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Proposals — Duta Integra</title>
+<style>
+ body{font:14px/1.5 system-ui,sans-serif;margin:2rem;color:#1c1917;max-width:42rem}
+ h1{font-size:1.25rem;margin-bottom:1rem}
+ label{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;margin:.75rem 0 .25rem;color:#57534e}
+ input,textarea{width:100%;padding:.5rem .6rem;border:1px solid #d6d3d1;border-radius:.375rem;font:inherit}
+ textarea{min-height:5rem;resize:vertical}
+ button{margin-top:1rem;padding:.6rem 1.2rem;background:#2563eb;color:#fff;border:0;border-radius:.375rem;font:inherit;cursor:pointer}
+ button:disabled{opacity:.6}
+ #result{margin-top:1rem;padding:.75rem;border-radius:.375rem;background:#f0fdf4;border:1px solid #bbf7d0;display:none}
+ #result a{word-break:break-all}
+ #err{margin-top:1rem;padding:.75rem;border-radius:.375rem;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;display:none}
+</style>
+</head><body>
+<h1>Create proposal</h1>
+<form id="f">
+  <label>Title</label><input name="title" required maxlength="180" />
+  <label>Summary</label><textarea name="summary" required maxlength="5000"></textarea>
+  <label>Scope (one per line)</label><textarea name="scope" placeholder="Discovery&#10;Build&#10;Deploy"></textarea>
+  <label>Amount (MYR)</label><input name="amountMyr" type="number" min="0" step="0.01" required />
+  <label>Valid until (YYYY-MM-DD, optional)</label><input name="validUntil" pattern="\\d{4}-\\d{2}-\\d{2}" />
+  <label>Lead ID (optional)</label><input name="leadId" />
+  <button type="submit" id="btn">Create &amp; get link</button>
+</form>
+<div id="result"></div>
+<div id="err"></div>
+<script>
+const token = ${JSON.stringify(token)};
+document.getElementById('f').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const scope = String(fd.get('scope')||'').split('\\n').map(s=>s.trim()).filter(Boolean);
+  const body = {
+    title: fd.get('title'),
+    summary: fd.get('summary'),
+    scope,
+    amountMyr: Number(fd.get('amountMyr')),
+    validUntil: fd.get('validUntil') || null,
+    leadId: fd.get('leadId') || null,
+  };
+  const btn = document.getElementById('btn');
+  btn.disabled = true;
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('err').style.display = 'none';
+  try {
+    const r = await fetch('/admin/proposals?token=' + encodeURIComponent(token), {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Failed');
+    const link = location.origin + '/proposal/' + data.proposal.id;
+    const res = document.getElementById('result');
+    res.style.display = 'block';
+    res.innerHTML = 'Created. Share this link: <a href="' + link + '">' + link + '</a>';
+  } catch (err) {
+    const e2 = document.getElementById('err');
+    e2.style.display = 'block';
+    e2.textContent = err && err.message ? err.message : 'Failed';
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body></html>`;
+  return new Response(html, { status: 200, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
+}
+
 async function handleAdminCreateProposal(req) {
   const url = new URL(req.url);
   const supplied = req.headers.get("x-admin-token") ?? url.searchParams.get("token");
@@ -798,6 +873,7 @@ export async function handleApi(req) {
     }
 
     // Proposals
+    if (pathname === "/admin/proposals" && req.method === "GET") return await handleAdminProposalsPage(req);
     if (pathname === "/admin/proposals" && req.method === "POST") return await handleAdminCreateProposal(req);
     const propMatch = pathname.match(/^\/api\/proposals\/([a-f0-9-]+)$/);
     if (propMatch && req.method === "GET") return await handleGetProposal(req, propMatch[1]);

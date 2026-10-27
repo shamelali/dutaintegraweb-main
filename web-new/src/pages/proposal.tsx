@@ -75,9 +75,10 @@ export function ProposalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background py-16 px-6">
+    <div className="min-h-screen bg-background py-16 px-6 print:py-0 print:px-0">
+      <style>{`@media print { .no-print { display: none !important; } body { background: white; } }`}</style>
       <div className="max-w-2xl mx-auto">
-        <Card className="p-8">
+        <Card className="p-8 print:shadow-none print:border-0">
           <h1 className="text-3xl font-heading font-bold mb-2">{proposal.title}</h1>
           <p className="text-muted-foreground mb-6">{proposal.summary}</p>
           <div className="mb-6">
@@ -113,6 +114,11 @@ export function ProposalPage() {
               </Button>
             </div>
           )}
+        <div className="no-print mt-6">
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            Print / Save as PDF
+          </Button>
+        </div>
         </Card>
       </div>
     </div>
