@@ -8,8 +8,7 @@ import { PricingPage } from "@/pages/pricing"
 import { ContactPage } from "@/pages/contact"
 import { QuizPage } from "@/pages/quiz"
 import { DigitalAssessmentPage } from "@/pages/digital-assessment"
-import { WorkspacePage } from "@/pages/workspace"
-import { OperationsPage } from "@/pages/operations"
+
 
 export default function App() {
   return (
@@ -25,8 +24,7 @@ export default function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/quiz" element={<QuizPage />} />
             <Route path="/digital-assessment" element={<DigitalAssessmentPage />} />
-            <Route path="/workspace" element={<WorkspacePage />} />
-            <Route path="/operations" element={<OperationsPage />} />
+
           </Routes>
         </main>
         <Footer />
