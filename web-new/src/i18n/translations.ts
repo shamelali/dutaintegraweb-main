@@ -35,10 +35,6 @@ export const translations = {
     en: "Case Studies",
     bm: "Kajian Kes",
   },
-  navClientPortal: {
-    en: "Client Portal",
-    bm: "Portal Pelanggan",
-  },
   navFaq: {
     en: "FAQ",
     bm: "Soalan Lazim",
