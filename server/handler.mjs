@@ -945,7 +945,7 @@ async function handleWorkspaceNodeRequest(req, res) {
   for (const [key, value] of Object.entries(req.headers || {})) {
     if (hopByHop.has(key.toLowerCase())) continue;
     if (Array.isArray(value)) value.forEach((v) => headers.append(key, String(v)));
-    else if (value !== undefined) headers.set(key, String(v));
+    else if (value !== undefined) headers.set(key, String(value));
   }
   let body;
   if (!["GET", "HEAD"].includes(req.method || "GET")) {

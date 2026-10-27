@@ -499,6 +499,38 @@ export const translations = {
     en: "Technology With a Malaysian Heart",
     bm: "Teknologi Dengan Hati Malaysia",
   },
+  aboutHeroPrimary: {
+    en: "Start a Digital Assessment",
+    bm: "Mulakan Penilaian Digital",
+  },
+  aboutHeroSecondary: {
+    en: "Explore Our Services",
+    bm: "Terokai Perkhidmatan Kami",
+  },
+  aboutFact1Title: {
+    en: "Rooted in Malaysia",
+    bm: "Berteraskan Malaysia",
+  },
+  aboutFact1Desc: {
+    en: "Local context matters. We shape recommendations around the realities of Malaysian SMEs.",
+    bm: "Konteks tempatan penting. Kami membentuk cadangan berdasarkan realiti SME Malaysia.",
+  },
+  aboutFact2Title: {
+    en: "AI and IT, Together",
+    bm: "AI dan IT, Bersama",
+  },
+  aboutFact2Desc: {
+    en: "Connect practical automation with dependable systems instead of treating them as separate problems.",
+    bm: "Hubungkan automasi praktikal dengan sistem yang boleh diharap, bukan menganggapnya sebagai masalah berasingan.",
+  },
+  aboutFact3Title: {
+    en: "Clear Scope, Human Accountability",
+    bm: "Skop Jelas, Tanggungjawab Manusia",
+  },
+  aboutFact3Desc: {
+    en: "Understand the proposed work, trade-offs, and next steps before committing to a solution.",
+    bm: "Fahami skop kerja, pertimbangan dan langkah seterusnya sebelum membuat komitmen terhadap penyelesaian.",
+  },
   aboutStory1: {
     en: "Duta Integra started with a simple observation: Malaysian SMEs were being sold technology they didn't need, by people who never explained it.",
     bm: "Duta Integra bermula dengan satu pemerhatian mudah: SME Malaysia dijual teknologi yang mereka tidak perlukan, oleh pihak yang tidak pernah menjelaskannya.",

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Target, Handshake, Zap, Flag } from "lucide-react"
+import { Target, Handshake, Zap, Flag, MapPin, Workflow, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -14,11 +14,10 @@ const values = [
   { icon: Flag, titleKey: "aboutVal4Title" as TranslationKey, descKey: "aboutVal4Desc" as TranslationKey },
 ]
 
-const stats = [
-  { val: "2026", labelKey: "aboutFounded" as TranslationKey },
-  { val: "100%", labelKey: "aboutOwned" as TranslationKey },
-  { val: "AI + IT", labelKey: "aboutDual" as TranslationKey },
-  { val: "2+", labelKey: "aboutClients" as TranslationKey },
+const principles = [
+  { icon: MapPin, titleKey: "aboutFact1Title" as TranslationKey, descKey: "aboutFact1Desc" as TranslationKey },
+  { icon: Workflow, titleKey: "aboutFact2Title" as TranslationKey, descKey: "aboutFact2Desc" as TranslationKey },
+  { icon: ShieldCheck, titleKey: "aboutFact3Title" as TranslationKey, descKey: "aboutFact3Desc" as TranslationKey },
 ]
 
 export function AboutPage() {
@@ -32,21 +31,29 @@ export function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section ref={heroRef} className="py-20 md:py-28 bg-gradient-to-br from-navy via-slate-deep to-navy text-center">
+      <section ref={heroRef} className="py-14 md:py-20 bg-gradient-to-br from-navy via-slate-deep to-navy text-center">
         <div className="max-w-4xl mx-auto px-6">
           <Badge variant="electric" className="mb-6 reveal">{t("aboutHeroLabel")}</Badge>
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6 reveal reveal-delay-1">
             {t("aboutHeroTitle")}
           </h1>
-          <p className="text-lg text-white/60 max-w-2xl mx-auto reveal reveal-delay-2">
+          <p className="text-lg text-white/70 max-w-2xl mx-auto reveal reveal-delay-2">
             {t("aboutHeroDesc")}
           </p>
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 reveal reveal-delay-3">
+            <Button asChild variant="electric" size="xl">
+              <Link to="/digital-assessment">{t("aboutHeroPrimary")}</Link>
+            </Button>
+            <Button asChild variant="outline" size="xl" className="border-white/25 text-white hover:bg-white/10">
+              <Link to="/services">{t("aboutHeroSecondary")}</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* Story + Stats */}
-      <section ref={storyRef} className="py-20 px-6">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+      {/* Story + practical proof points */}
+      <section ref={storyRef} className="py-14 md:py-16 px-6">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
           <div>
             <h2 className="text-3xl font-heading font-bold mb-6 reveal">{t("aboutStoryTitle")}</h2>
             <div className="space-y-4 text-muted-foreground reveal reveal-delay-1">
@@ -59,11 +66,16 @@ export function AboutPage() {
               <Link to="/contact">{t("aboutWorkBtn")}</Link>
             </Button>
           </div>
-          <div className="grid grid-cols-2 gap-4 reveal reveal-delay-2">
-            {stats.map((stat) => (
-              <Card key={stat.labelKey} className="p-6 text-center">
-                <div className="text-3xl font-bold text-electric mb-2">{stat.val}</div>
-                <div className="text-sm text-muted-foreground">{t(stat.labelKey)}</div>
+          <div className="grid gap-4 reveal reveal-delay-2">
+            {principles.map((item) => (
+              <Card key={item.titleKey} className="flex items-start gap-4 p-5 md:p-6 border-border/80 bg-card/80">
+                <div className="w-11 h-11 rounded-lg bg-electric/10 flex items-center justify-center shrink-0">
+                  <item.icon className="w-5 h-5 text-electric" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-semibold mb-1">{t(item.titleKey)}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{t(item.descKey)}</p>
+                </div>
               </Card>
             ))}
           </div>
@@ -71,9 +83,9 @@ export function AboutPage() {
       </section>
 
       {/* Values */}
-      <section ref={valuesRef} className="py-20 px-6 bg-muted/30">
+      <section ref={valuesRef} className="py-14 md:py-16 px-6 bg-muted/30">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <Badge variant="outline" className="mb-4 reveal">{t("aboutValuesEyebrow")}</Badge>
             <h2 className="text-3xl md:text-4xl font-heading font-bold reveal reveal-delay-1">
               {t("aboutValuesTitle")}
@@ -94,9 +106,9 @@ export function AboutPage() {
       </section>
 
       {/* Founder */}
-      <section ref={founderRef} className="py-20 px-6">
+      <section ref={founderRef} className="py-14 md:py-16 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <Badge variant="outline" className="mb-4 reveal">{t("aboutFounderEyebrow")}</Badge>
             <h2 className="text-3xl md:text-4xl font-heading font-bold reveal reveal-delay-1">
               {t("aboutFounderTitle")}
@@ -108,11 +120,12 @@ export function AboutPage() {
                 <span className="text-2xl font-bold text-electric">S</span>
               </div>
               <div>
+                <h3 className="text-2xl font-heading font-bold">Shamel</h3>
+                <p className="text-electric text-sm mb-4">{t("aboutFounderRole")}</p>
                 <div className="space-y-4 text-muted-foreground">
                   <p>{t("aboutFounderP1")}</p>
                   <p>{t("aboutFounderP2")}</p>
                 </div>
-                <p className="text-sm text-muted-foreground mt-6">Founder</p>
               </div>
             </div>
           </Card>
@@ -120,7 +133,7 @@ export function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section ref={ctaRef} className="py-20 px-6 bg-gradient-to-br from-navy to-slate-deep text-center">
+      <section ref={ctaRef} className="py-14 md:py-16 px-6 bg-gradient-to-br from-navy to-slate-deep text-center">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4 reveal">
             {t("aboutCtaTitle")}
