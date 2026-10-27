@@ -45,3 +45,8 @@ PHASE4_STATUS.md
 Web/preview/
 public/preview/
 .wrangler/
+
+# generated patch artifacts
+.backup/
+DutaIntegra-*Patch*/
+DutaIntegra-*-Patch*.zip
