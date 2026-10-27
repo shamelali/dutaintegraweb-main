@@ -4,9 +4,9 @@ import { translations, type Language, type TranslationKey } from "@/i18n/transla
 export function useLanguage() {
   const [lang, setLang] = useState<Language>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("language") as Language) || "en"
+      return (localStorage.getItem("language") as Language) || "bm"
     }
-    return "en"
+    return "bm"
   })
 
   useEffect(() => {

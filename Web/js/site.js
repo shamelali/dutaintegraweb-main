@@ -30,7 +30,7 @@
   }
 
   /* ---------- LANGUAGE ---------- */
-  var currentLang = localStorage.getItem('language') || 'en';
+  var currentLang = localStorage.getItem('language') || 'bm';
 
   // Translations keyed by data-i18n attribute
   var T = {
