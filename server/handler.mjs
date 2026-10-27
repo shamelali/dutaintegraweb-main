@@ -904,7 +904,13 @@ export async function handle(req, res) {
     if (pathname.startsWith("/api/workspace/")) return await handleWorkspaceNodeRequest(req, res);
 
     if (pathname === "/api/health") {
-      return send(res, 200, { ok: true, inboxConfigured: Boolean(resolveInboxEmail()) });
+      const supabaseConfigured = Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
+      return send(res, 200, {
+        ok: true,
+        inboxConfigured: Boolean(resolveInboxEmail()),
+        supabaseConfigured,
+        storageBackend: supabaseConfigured ? "supabase" : "jsonl",
+      });
     }
     if (pathname === "/api/stats") return await handleStats(req, res);
     if (pathname === "/api/calculator") return await handleCalculator(req, res);

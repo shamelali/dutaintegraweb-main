@@ -546,10 +546,12 @@ async function handleCalculator(req) {
 }
 
 async function handleHealth(req) {
+  const supabaseConfigured = supabaseConfigured();
   return sendJson(200, {
     ok: true,
     inboxConfigured: Boolean(resolveInboxEmail()),
-    supabaseConfigured: supabaseConfigured(),
+    supabaseConfigured,
+    storageBackend: supabaseConfigured ? "supabase" : "jsonl",
   });
 }
 
