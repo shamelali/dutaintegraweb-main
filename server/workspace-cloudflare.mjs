@@ -38,6 +38,38 @@ export async function handleWorkspaceApi(req) {
       return new Response(JSON.stringify({ error: "Select at least one business priority." }), { status: 400, headers: { "content-type": "application/json" } });
     }
     const assessment = scoreAssessment(maturity, priorities);
+    // Persist as a lead when Supabase is configured (best-effort; never block the score).
+    const supabaseUrl = process.env.SUPABASE_URL?.trim();
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+    if (supabaseUrl && supabaseKey) {
+      try {
+        const persistRes = await fetch(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/leads`, {
+          method: "POST",
+          headers: {
+            apikey: supabaseKey,
+            authorization: `Bearer ${supabaseKey}`,
+            "content-type": "application/json",
+            prefer: "return=minimal",
+          },
+          body: JSON.stringify({
+            name: text(body.name, 120, true) || "Assessment lead",
+            email: text(body.email, 200, true)?.toLowerCase() || "unknown@example.com",
+            company: text(body.company, 160, true) || null,
+            service: "Digital Assessment",
+            status: "new",
+            source: "digital-assessment",
+            lead_score: assessment.score,
+            industry: text(body.industry, 100, true) || null,
+            message: `Maturity: ${maturity}/5; priorities: ${priorities.join(", ")}`,
+          }),
+        });
+        if (!persistRes.ok) {
+          console.error("[workspace] assessment lead persist failed:", persistRes.status, await persistRes.text());
+        }
+      } catch (err) {
+        console.error("[workspace] assessment lead persist failed:", err?.message || err);
+      }
+    }
     return new Response(JSON.stringify({
       score: assessment.score,
       maturityLabel: assessment.label,
