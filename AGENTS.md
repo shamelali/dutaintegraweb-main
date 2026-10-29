@@ -113,7 +113,7 @@ Two consequences worth remembering:
 ## Workflow
 
 ```bash
-npm test            # 175 tests, node:test, no deps; runs in a throwaway DATA_DIR
+npm test            # 183 tests, node:test, no deps; runs in a throwaway DATA_DIR
 npm run test:web    # 15 tests, Vitest + Testing Library (needs web-new/node_modules)
 npm start           # loads .env via --env-file-if-exists
 npm run build:web   # build web-new/ into Web/ (the deploy artifact)
@@ -231,9 +231,9 @@ and font origin only, and granting it `script-src` would be needless risk.
 it from a local HTTP server pins browsers to HTTPS on localhost.
 
 **Storage backend resolution lives in `server/store.mjs`, and nowhere else.**
-Every store (clients, enquiries, tickets, digest, cms, portal, handler) asks the
-resolver which backend owns the request. Do not re-add a local
-`supabaseConfigured()`. The rules:
+Every store (clients, enquiries, tickets, sessions, digest, cms, portal,
+handler) asks the resolver which backend owns the request. Do not re-add a
+local `supabaseConfigured()`. The rules:
 
 | `SUPABASE_URL` | `SUPABASE_SERVICE_ROLE_KEY` | Result |
 |---|---|---|
@@ -245,6 +245,14 @@ resolver which backend owns the request. Do not re-add a local
 Use `usingSupabase()` when a call site must fail loudly (it throws), and
 `supabaseReady()` in route guards that should answer 503 instead of 500.
 Supabase write failures propagate — no write may quietly land in a file.
+
+**Portal sessions live in `server/sessions.mjs`, never in process memory.** The
+table is `portal_sessions`, keyed on `token_hash` (SHA-256 of the cookie value —
+the live token is never stored, so a datastore leak hands out no sessions). A
+`Map` in `portal.mjs` cannot work here: Vercel runs the handler in short-lived
+processes, so every cold start would sign every client out, and clearing a cookie
+is not revocation. Expired rows are pruned on login rather than by a cron,
+because this deployment has no cron.
 
 `/api/health` proves the datastore rather than describing the config: with
 Supabase selected it writes, reads back and deletes a sentinel row in

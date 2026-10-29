@@ -1,7 +1,7 @@
 import test, { after, afterEach, before, beforeEach, describe } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -605,6 +605,7 @@ describe("POST /api/monthly-digest", () => {
 describe("client portal — auth and tickets", () => {
   let clientStore;
   let ticketStore;
+  let sessionStore;
 
   beforeEach(async () => {
     process.env.ADMIN_TOKEN = "admin-pass";
@@ -612,9 +613,8 @@ describe("client portal — auth and tickets", () => {
     clientStore = join(dir, "clients.jsonl");
     ticketStore = join(dir, "tickets.jsonl");
     process.env.ENQUIRY_STORE = join(dir, "enquiries.jsonl");
-    // Monkey-patch the store paths by setting an env var the modules read
-    // The modules use project-root-relative paths, but we can override
-    // by importing and setting via process.env — simplified here.
+    sessionStore = join(dir, "portal-sessions.jsonl");
+    process.env.PORTAL_SESSION_STORE = sessionStore;
   });
 
   async function createTestClient(email = `test-${Date.now()}@client.my`) {
@@ -770,6 +770,68 @@ describe("client portal — auth and tickets", () => {
 
     test("returns 401 when not authenticated", async () => {
       const res = await fetch(`${base}/api/portal/me`);
+      assert.equal(res.status, 401);
+    });
+  });
+
+  describe("portal sessions — durability and revocation", () => {
+    async function readSessionRows() {
+      const raw = await readFile(sessionStore, "utf8").catch(() => "");
+      return raw
+        .split("\n")
+        .filter((line) => line.trim())
+        .map((line) => JSON.parse(line));
+    }
+
+    test("logout revokes the token, not just the cookie", async () => {
+      const email = `revoke-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { token } = await loginAs(email);
+
+      const before = await fetch(`${base}/api/portal/me`, {
+        headers: { cookie: `di_session=${token}` },
+      });
+      assert.equal(before.status, 200);
+
+      const logout = await fetch(`${base}/api/portal/logout`, {
+        method: "POST",
+        headers: { cookie: `di_session=${token}` },
+      });
+      assert.equal(logout.status, 200);
+
+      // A captured token must stop working even presented by a client that
+      // ignores the cleared cookie.
+      const after = await fetch(`${base}/api/portal/me`, {
+        headers: { cookie: `di_session=${token}` },
+      });
+      assert.equal(after.status, 401, "a signed-out session must be dead server-side");
+    });
+
+    test("the session lives in the store as a hash of the token", async () => {
+      const email = `durable-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { token } = await loginAs(email);
+
+      const rows = await readSessionRows();
+      assert.equal(rows.length, 1, "login must persist one row");
+      assert.match(rows[0].tokenHash, /^[0-9a-f]{64}$/, "the key is a sha256 hex digest");
+      assert.ok(rows[0].clientId, "the row must carry the client for a cold-started process");
+      assert.ok(Date.parse(rows[0].expiresAt) > Date.now());
+      assert.ok(!rows.some((row) => JSON.stringify(row).includes(token)), "never the live token");
+    });
+
+    test("a session past its expiry is refused", async () => {
+      const email = `expired-${Date.now()}@client.my`;
+      await createTestClient(email);
+      const { token } = await loginAs(email);
+
+      const rows = await readSessionRows();
+      for (const row of rows) row.expiresAt = new Date(Date.now() - 1000).toISOString();
+      await writeFile(sessionStore, rows.map((row) => JSON.stringify(row)).join("\n") + "\n", "utf8");
+
+      const res = await fetch(`${base}/api/portal/me`, {
+        headers: { cookie: `di_session=${token}` },
+      });
       assert.equal(res.status, 401);
     });
   });

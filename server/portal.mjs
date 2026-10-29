@@ -28,6 +28,7 @@ import { findClientByEmail, findClientById, createClient, listClients, updateCli
 import { listTicketsForClient, findTicket, createTicket, updateTicket, countTicketsByStatus, createTicketReply, listTicketReplies } from "./tickets.mjs";
 import { buildDigestForClient, sendDigestEmail } from "./digest.mjs";
 import { supabaseFetch as sbFetch, supabaseReady } from "./store.mjs";
+import { putSession, readSession, deleteSession, pruneExpiredSessions } from "./sessions.mjs";
 
 // ── password hashing ─────────────────────────────────────────────────────────
 
@@ -79,27 +80,30 @@ export async function verifyPassword(password, stored) {
 // ── session management ───────────────────────────────────────────────────────
 
 const SESSION_DAYS = 30;
-const MAX_SESSIONS = 1000;
-const sessions = new Map(); // token → { clientId, expiresAt }
 
-export function createSession(clientId, role) {
-  // Enforce session ceiling — evict oldest when at capacity
-  if (sessions.size >= MAX_SESSIONS) {
-    const oldest = sessions.keys().next().value;
-    sessions.delete(oldest);
-  }
-  const token = randomBytes(32).toString("hex");
-  const expiresAt = Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000;
-  sessions.set(token, { clientId, role, expiresAt });
-  return { token, expiresAt: new Date(expiresAt).toISOString() };
+/** The store only ever sees the hash; see server/sessions.mjs. */
+function hashToken(token) {
+  return createHash("sha256").update(token).digest("hex");
 }
 
-export function getSession(token) {
-  if (typeof token !== "string") return null;
-  const s = sessions.get(token);
-  if (!s) return null;
-  if (Date.now() > s.expiresAt) { sessions.delete(token); return null; }
-  return s;
+export async function createSession(clientId) {
+  const token = randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  await pruneExpiredSessions();
+  await putSession({ tokenHash: hashToken(token), clientId, expiresAt });
+  return { token, expiresAt };
+}
+
+export async function getSession(token) {
+  if (typeof token !== "string" || !token) return null;
+  const tokenHash = hashToken(token);
+  const session = await readSession(tokenHash);
+  if (!session) return null;
+  if (Date.now() > Date.parse(session.expiresAt)) {
+    await deleteSession(tokenHash);
+    return null;
+  }
+  return { clientId: session.clientId, expiresAt: session.expiresAt };
 }
 
 function parseCookie(req) {
@@ -110,7 +114,7 @@ function parseCookie(req) {
   return cookies;
 }
 
-function sessionFromReq(req) {
+async function sessionFromReq(req) {
   const cookies = parseCookie(req);
   const token = cookies["di_session"];
   return getSession(token);
@@ -173,7 +177,7 @@ function adminTokenValid(supplied) {
 /** Check if request has an admin session (cookie or x-admin-token header). */
 export async function requireAdminSession(req) {
   // First check session cookie (preferred for browser clients)
-  const session = sessionFromReq(req);
+  const session = await sessionFromReq(req);
   if (session) {
     const client = await findClientById(session.clientId);
     if (client && client.status === "active" && client.role === "admin") {
@@ -204,20 +208,28 @@ export async function handleLogin(req, res) {
     return send(res, 401, { error: "Invalid email or password" });
   }
 
-  const { token, expiresAt } = createSession(client.id, client.role);
+  const { token, expiresAt } = await createSession(client.id);
   setSessionCookie(res, token, expiresAt);
   send(res, 200, { ok: true, client: safeClient(client) });
 }
 
 export async function handleLogout(req, res) {
-  const session = sessionFromReq(req);
-  if (session) sessions.delete(session.clientId); // best-effort
+  const token = parseCookie(req)["di_session"];
   clearSessionCookie(res);
+  try {
+    if (typeof token === "string" && token) await deleteSession(hashToken(token));
+  } catch (err) {
+    // A cookie the browser dropped is not a revoked session. Answering 200 here
+    // would be the same lie the in-process store told, so report the failure
+    // instead and let the caller retry.
+    if (err.code === "STORAGE_CONFIG") return send(res, 503, { error: "Storage not configured" });
+    return send(res, 502, { error: "Could not revoke session" });
+  }
   send(res, 200, { ok: true });
 }
 
 export async function handleMe(req, res) {
-  const session = sessionFromReq(req);
+  const session = await sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
   const client = await findClientById(session.clientId);
   if (!client || client.status !== "active") return send(res, 401, { error: "Account not found or inactive" });
@@ -225,7 +237,7 @@ export async function handleMe(req, res) {
 }
 
 export async function handlePortalTickets(req, res, pathname) {
-  const session = sessionFromReq(req);
+  const session = await sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
 
   if (req.method === "GET") {
@@ -253,7 +265,7 @@ export async function handlePortalTickets(req, res, pathname) {
 }
 
 export async function handlePortalTicketById(req, res, ticketId) {
-  const session = sessionFromReq(req);
+  const session = await sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
 
   const ticket = await findTicket(ticketId);
@@ -311,7 +323,7 @@ export async function handlePortalTicketById(req, res, ticketId) {
 }
 
 export async function handlePortalHealth(req, res) {
-  const session = sessionFromReq(req);
+  const session = await sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
 
   const client = await findClientById(session.clientId);
@@ -386,7 +398,7 @@ export async function handleAdminClientDigest(req, res, clientId) {
 // ── portal: proposals ──────────────────────────────────────────────────
 
 export async function handlePortalProposals(req, res) {
-  const session = sessionFromReq(req);
+  const session = await sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
 
   // For now, return empty - would query proposals linked to client
@@ -395,7 +407,7 @@ export async function handlePortalProposals(req, res) {
 }
 
 export async function handlePortalProposalById(req, res, id) {
-  const session = sessionFromReq(req);
+  const session = await sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
 
   if (!supabaseReady()) return send(res, 503, { error: "Supabase not configured" });
@@ -421,7 +433,7 @@ export async function handlePortalProposalById(req, res, id) {
 // ── portal: digests ────────────────────────────────────────────────────
 
 export async function handlePortalDigests(req, res) {
-  const session = sessionFromReq(req);
+  const session = await sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
 
   if (!supabaseReady()) return send(res, 503, { error: "Supabase not configured" });
