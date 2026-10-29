@@ -300,12 +300,12 @@ export const translations = {
     bm: "Keselamatan IT & Pematuhan PDPA",
   },
   svc5Title: {
-    en: "Business Intelligence (Launching Next)",
-    bm: "Perniagaan Pintar (Akan Datang)",
+    en: "Business Intelligence",
+    bm: "Kecerdasan Perniagaan",
   },
   svc5Desc: {
-    en: "Transform raw data into actionable insights with our upcoming Business Intelligence solutions — interactive dashboards, predictive analytics, and automated reporting.",
-    bm: "Tukar data mentah menjadi pandangan boleh diambil tindakan dengan penyelesaian Perniagaan Pintar kami yang akan datang — papan interaktif, analitik ramalan, dan pelaporan automatik.",
+    en: "Finance, sales, operations and people KPIs in one live scorecard — with ranked exceptions, a daily executive brief, and approval triage against your delegation of authority.",
+    bm: "KPI kewangan, jualan, operasi dan sumber manusia dalam satu kad skor langsung — dengan pengecualian berkedudukan, ringkasan eksekutif harian, dan triaj kelulusan mengikut kuasa melulus anda.",
   },
   svc1Feat1: {
     en: "Custom AI chatbots & virtual assistants",
@@ -404,32 +404,36 @@ export const translations = {
     bm: "Pemantauan keselamatan berterusan",
   },
   svc5Feat1: {
-    en: "Sales intelligence & revenue tracking",
-    bm: "Kepintaran jualan & penjejakan pendapatan",
+    en: "35+ KPIs with targets and thresholds",
+    bm: "35+ KPI dengan sasaran dan ambang",
   },
   svc5Feat2: {
-    en: "Marketing campaign performance analytics",
-    bm: "Analitik prestasi kempen pemasaran",
+    en: "Trend and days-to-breach projection",
+    bm: "Unjuran trend dan hari-ke-ambang",
   },
   svc5Feat3: {
-    en: "Inventory & fulfillment monitoring",
-    bm: "Pemantauan inventori & pemenuhan",
+    en: "Ranked alerts with owner and next actions",
+    bm: "Makluman berkedudukan dengan pemilik dan tindakan seterusnya",
   },
   svc5Feat4: {
-    en: "Retail & branch performance benchmarking",
-    bm: "Penanda aras prestasi runcit & cawangan",
+    en: "Daily brief and weekly leadership pack",
+    bm: "Ringkasan harian dan pek kepimpinan mingguan",
   },
   svc5Feat5: {
-    en: "AI-powered insights & recommendations",
-    bm: "Pandangan & cadangan bertenaga AI",
+    en: "13-week cash and what-if scenarios",
+    bm: "Tunai 13 minggu dan senario andaian",
   },
   svc5Feat6: {
-    en: "Real-time operational dashboards",
-    bm: "Papan pemuka operasi masa nyata",
+    en: "Approval triage with full audit trail",
+    bm: "Triaj kelulusan dengan jejak audit penuh",
   },
   svcGetQuote: {
     en: "Get a Quote",
     bm: "Dapatkan Sebut Harga",
+  },
+  svcViewPricing: {
+    en: "View Pricing",
+    bm: "Lihat Harga",
   },
   svcGetNotified: {
     en: "Get Notified",
@@ -1522,16 +1526,16 @@ export const translations = {
     bm: "Penilaian prospek AI (niat, bajet, urgensi, kesesuaian)",
   },
   dutaosConnectF2: {
-    en: "Automated WhatsApp & email follow-up sequences",
-    bm: "Urutan susulan WhatsApp & emel automatik",
+    en: "Automated WhatsApp follow-ups with a three-attempt cap",
+    bm: "Susulan WhatsApp automatik dengan had tiga percubaan",
   },
   dutaosConnectF3: {
-    en: "Meeting scheduler with calendar sync",
-    bm: "Penjadual mesyuarat dengan penyegerakan kalendar",
+    en: "Human approval queue for quotations above RM10k",
+    bm: "Baris kelulusan manusia untuk sebut harga melebihi RM10k",
   },
   dutaosConnectF4: {
-    en: "Basic CRM sync & pipeline view",
-    bm: "Penyegerakan CRM asas & paparan saluran",
+    en: "Tenant isolation, RBAC & full audit trail",
+    bm: "Pengasingan penyewa, RBAC & jejak audit penuh",
   },
   dutaosOpsName: {
     en: "DutaOS Ops",

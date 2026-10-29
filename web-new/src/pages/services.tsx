@@ -95,7 +95,7 @@ export function ServicesPage() {
                         <Link to="/contact">{t("svcGetQuote")}</Link>
                       </Button>
                       <Button asChild variant="outline" size="sm">
-                        <Link to="/pricing">{t("svcGetNotified")}</Link>
+                        <Link to="/pricing">{t("svcViewPricing")}</Link>
                       </Button>
                     </div>
                   </div>
