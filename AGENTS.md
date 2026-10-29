@@ -141,57 +141,66 @@ Consequences:
 2. **The schema guard watches the wrong entrypoint.** `server/schema.test.mjs`
    computes "live sources" by walking imports from `handler.mjs`, so it cannot
    see the deployed path. Re-running that walk from
-   `handler-cloudflare.mjs` instead finds five tables the deployed code names
-   with no migration declaring them, confirmed absent from the live database on
-   2026-10-29 by an anon-key REST probe (`404`, where `workspace_proposals`
-   answers `200`): `ops_tasks`, `ops_audit_log` and `profiles`
-   (`server/ops-tasks-cloudflare.mjs`), `proposals` and `projects`
-   (`server/portal-cloudflare.mjs`). See the next section for why none of them
-   is ever reached.
+   `handler-cloudflare.mjs` finds tables the deployed code names that no
+   migration declares and the live database does not have (anon-key REST probe,
+   2026-10-29: `404`, where `workspace_proposals` answers `200`) — `ops_tasks`
+   and `ops_audit_log`, plus `profiles`, which the same module names only inside
+   an embedded `select`. The guard's own test even asserts the fork stays
+   unreachable, so this blind spot is deliberate and now stale. See the next
+   section.
 3. **The two frontends are separate builds.** `Web/` is what `npm run
    build:web` writes and what Vercel would serve; Pages serves `public/`.
    Production's bundle hash matches neither.
 
-## The Cloudflare fork's Phase 3/4 layer does not run
+## The Cloudflare fork's data layer
 
-`server/supabase-client.mjs` exports `supabaseAdmin`, a hand-rolled builder with
-**zero runtime dependencies**. It is *not* supabase-js and it is *not* chainable:
-`from(table)` returns an object whose `select`, `insert`, `update`, `eq`, `order`
-and `limit` each fire a request immediately and return a promise of the parsed
-body. Real supabase-js returns a query builder and resolves to `{ data, error }`.
+`server/supabase-client.mjs` hand-rolls two clients (**zero runtime
+dependencies**, so nothing here is supabase-js) and neither behaves the way
+supabase-js does:
 
-`ops-tasks-cloudflare.mjs` and the proposals/projects half of
-`portal-cloudflare.mjs` are written against supabase-js. So
-`from("ops_tasks").select("...").order("created_at")` is `promise.order` — a
-`TypeError`, seen in the test log as
-`supabaseAdmin.from(...).select(...).order is not a function`. Every one of those
-handlers fails on its first statement, which is why the missing tables were never
-noticed: the query never reaches PostgREST. `const { data, error } = await ...`
-would also silently misread the shim's return even if chaining worked.
+- `supabaseAdmin.from(table)` is **flat, not chainable**. `select`, `insert`,
+  `update(updates, match)`, `delete(match)`, `eq`, `order` and `limit` each fire
+  immediately and resolve to the parsed body, not `{ data, error }`. Each method
+  builds its path from the table name alone, so a filter combined with an order
+  and a select cannot be expressed through it at all — which is why
+  `portal-cloudflare.mjs` has `sbRest()` and `handler-cloudflare.mjs` has
+  `cfSbFetch()`, both calling `/rest/v1/<table>?…` directly.
+- `createSupabaseClient(token)` resolves a caller via `client.auth.getUser()`.
+  Until 2026-10-29 `auth` was nested *inside* `from()` and `AUTH_BASE` was never
+  destructured into that scope, so both paths threw, `verifyUser` swallowed it
+  and returned `null` for **every** token. The whole logged-in portal —
+  `/api/portal/me`, tickets, digests, proposals — answered `401 Session
+  expired` whatever the client sent. Fixed, with tests.
 
-Consequences to keep in mind:
+`ops-tasks-cloudflare.mjs` is still written against supabase-js, so
+`from("ops_tasks").select("…").order("created_at")` is `promise.order` — a
+`TypeError` on the first statement of every handler, visible in the test log as
+`supabaseAdmin.from(...).select(...).order is not a function`. That is why its
+missing tables stayed unnoticed: the query never reaches PostgREST.
 
-- `/api/portal/proposals` and `/api/portal/proposals/:id` are called by
-  `web-new/src/pages/portal-proposals.tsx`, whose `Proposal` type
-  (`summary`, `scope`, `amount_myr`) is the `workspace_proposals` shape. The
-  Vercel fork already serves that table; the fork serves a `proposals` table that
-  exists nowhere, in a shape the UI could not render. Fixing this means porting
-  the handlers to the shim's REST style (as `cfSbFetch` in
-  `handler-cloudflare.mjs` does) *and* onto `workspace_proposals` — not creating
-  a `proposals` table.
+- `/api/portal/proposals`, `/api/portal/proposals/:id` and
+  `/api/portal/projects` are served from `workspace_proposals` /
+  `workspace_projects` as of 2026-10-29. Before that they named Phase 3 tables
+  that exist nowhere, in a shape the UI could not have rendered:
+  `web-new/src/pages/portal-proposals.tsx`'s `Proposal` type (`summary`, `scope`,
+  `amount_myr`) *is* the `workspace_proposals` row. Do not create a `proposals`
+  table to satisfy old code — the Phase 4 names are the contract, and the Vercel
+  fork already served them.
 - `clients.id = auth.users.id` by construction in this fork
-  (`portal-cloudflare.mjs:175` seeds the row from the signup response), so
-  `workspace_proposals.client_id` is a valid FK for it. The two forks still
-  disagree about what a client is.
-- The `/api/ops/tasks*`, `/api/ops/task-stats` and `/api/ops/audit-log` routes
-  reached the data layer with **no auth check at all**; they answered `500` to an
-  unauthenticated `GET`, which is what made the hole look harmless. Gated behind
-  `requireAdminSession` on 2026-10-29, covered by
-  `server/handler-cloudflare.test.mjs` — the first test over the deployed
-  entrypoint. Anyone who ships `ops_tasks` without that gate would be opening an
-  unauthenticated read/write API over an audit log.
-- Nothing in the suite exercises the fork's router, and no test covers
-  `ops-tasks-cloudflare.mjs`. Treat changes there as unverified.
+  (`portal-cloudflare.mjs` seeds the row from the signup response), so
+  `workspace_proposals.client_id` is a valid FK for it and `client_id=eq.<uid>`
+  doubles as the ownership check. The Vercel fork has to match proposal leads by
+  email instead; the two forks disagree about what a client is.
+- `/api/ops/tasks*`, `/api/ops/task-stats` and `/api/ops/audit-log` reached the
+  data layer with **no auth check at all**. They answered `500` to an
+  unauthenticated `GET`, which is what made the hole look harmless — the `500`
+  came from a missing table, not from protection. Gated behind
+  `requireAdminSession` on 2026-10-29. Anyone who ships `ops_tasks` without that
+  gate opens an unauthenticated read/write API over an audit log.
+- What is left undeclared for the deployed path: `ops_tasks` and `ops_audit_log`,
+  plus `profiles`, which `ops-tasks-cloudflare.mjs` names only inside an
+  embedded `select` — a shape the schema guard's table regex never sees. All
+  three are live-probed `404` against the database.
 
 - Locally, `server/index.mjs` serves both `Web/` and the API.
 - On Vercel, **`vercel.json` serves `Web/` directly** and never runs the
@@ -212,7 +221,7 @@ Two consequences worth remembering:
 ## Workflow
 
 ```bash
-npm test            # 189 tests, node:test, no deps; runs in a throwaway DATA_DIR
+npm test            # 194 tests, node:test, no deps; runs in a throwaway DATA_DIR
 npm run test:web    # 15 tests, Vitest + Testing Library (needs web-new/node_modules)
 npm start           # loads .env via --env-file-if-exists
 npm run build:web   # build web-new/ into Web/ (the deploy artifact)
@@ -317,7 +326,10 @@ Because the counters are process-global, **tests must pass an explicit
 
 **Tokens.** `ADMIN_TOKEN` and `DIGEST_TOKEN` both **fail closed**: unset means
 the route is refused, never open. Compare secrets with `constantTimeEqual()`,
-never `===`.
+never `===`. In the Cloudflare fork, read `process.env` **inside** the comparison
+— `functions/api/[[path]].js` copies the Pages bindings in per request, so a
+module-scope capture is `undefined` for the life of the worker. That is exactly
+how `portal-cloudflare.mjs` had disabled its own `x-admin-token` path.
 
 **CSP.** The policy is deliberately origin-by-origin and derived from what the
 pages actually load. Before adding an origin, check whether the page uses it as

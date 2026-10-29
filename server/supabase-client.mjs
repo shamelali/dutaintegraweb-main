@@ -144,7 +144,7 @@ export const supabaseAdmin = {
  * For client-side authenticated requests (portal, proposals, etc.).
  */
 export function createSupabaseClient(accessToken) {
-  const { REST_BASE, SERVICE_HEADERS } = getSupabaseConfig();
+  const { REST_BASE, AUTH_BASE, SERVICE_HEADERS } = getSupabaseConfig();
   const userHeaders = {
     Authorization: `Bearer ${accessToken}`,
     apikey: SERVICE_HEADERS.apikey,
@@ -153,6 +153,19 @@ export function createSupabaseClient(accessToken) {
   };
 
   return {
+    // verifyUser calls client.auth.getUser(), so auth belongs on the client.
+    // Nested under from() it was unreachable, and AUTH_BASE was out of scope
+    // besides — every token the portal checked came back null.
+    auth: {
+      getUser: async () => {
+        const response = await fetch(`${AUTH_BASE}/user`, {
+          headers: { ...userHeaders, Authorization: `Bearer ${accessToken}` },
+        });
+        if (!response.ok) return { error: { message: "Invalid token" }, data: { user: null } };
+        const data = await response.json();
+        return { error: null, data: { user: data } };
+      },
+    },
     from: (table) => ({
       select: (columns = "*") => {
         const url = `${REST_BASE}/${table}?select=${encodeURIComponent(columns)}`;
@@ -171,16 +184,6 @@ export function createSupabaseClient(accessToken) {
           if (!r.ok) throw new Error(`Supabase insert: ${r.status}`);
           return r.json();
         });
-      },
-      auth: {
-        getUser: async () => {
-          const response = await fetch(`${AUTH_BASE}/user`, {
-            headers: { ...userHeaders, Authorization: `Bearer ${accessToken}` },
-          });
-          if (!response.ok) return { error: { message: "Invalid token" }, data: { user: null } };
-          const data = await response.json();
-          return { error: null, data: { user: data } };
-        },
       },
     }),
   };

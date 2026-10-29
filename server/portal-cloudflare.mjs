@@ -3,7 +3,7 @@
  *
  * Auth: Supabase Auth (signup, login, JWT verification)
  * Sessions: HTTP-only cookies with Supabase JWT
- * Storage: Supabase (clients, tickets, proposals, projects)
+ * Storage: Supabase (clients, tickets, workspace_proposals, workspace_projects)
  */
 
 import { randomBytes, timingSafeEqual } from "node:crypto";
@@ -30,6 +30,7 @@ import {
   supabaseAdmin,
   createSupabaseClient,
   verifyUser,
+  supabaseConfigured,
 } from "./supabase-client.mjs";
 
 // ── Security ────────────────────────────────────────────────────────────────────
@@ -46,15 +47,15 @@ function adminTokenValid(supplied) {
 
 /** Check if request has an admin session (cookie or x-admin-token header). */
 export async function requireAdminSession(req) {
-  // Check Supabase JWT
+  // Check Supabase JWT. verifyUser resolves to the user or null — it is not the
+  // supabase-js { data, error }, so destructuring that shape made every JWT
+  // admin read fall through to the token branch.
   const token = getAccessToken(req);
-  if (token) {
-    const { user, error } = await verifyUser(token);
-    if (!error && user) {
-      const client = await findClientById(user.id);
-      if (client && client.status === "active" && client.role === "admin") {
-        return { client, session: token };
-      }
+  const user = await verifyUser(token);
+  if (user) {
+    const client = await findClientById(user.id);
+    if (client && client.status === "active" && client.role === "admin") {
+      return { client, session: token };
     }
   }
   // Fallback to ADMIN_TOKEN header (for scripts/cron)
@@ -87,6 +88,26 @@ async function readJsonBody(req) {
   } catch {
     return { error: { status: 400, body: { error: "Invalid JSON" } } };
   }
+}
+
+/**
+ * One PostgREST call. supabaseAdmin's builder is flat — every verb fires
+ * immediately and builds its path from the table alone — so a filter combined
+ * with an order and a select cannot be expressed through it. Call the REST
+ * endpoint directly instead, the way handlePortalDigests does.
+ */
+async function sbRest(path, init = {}) {
+  const base = process.env.SUPABASE_URL.trim().replace(/\/$/, "");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
+  return fetch(`${base}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: key,
+      authorization: `Bearer ${key}`,
+      "content-type": "application/json",
+      ...(init.headers ?? {}),
+    },
+  });
 }
 
 function parseCookie(req) {
@@ -383,46 +404,51 @@ export async function handlePortalHealth(req) {
   });
 }
 
-// ── Proposals (Phase 3) ─────────────────────────────────────────────────────────
+// ── Proposals ───────────────────────────────────────────────────────────────────
+
+const PROPOSAL_STATUSES = ["draft", "sent", "accepted", "declined", "expired"];
 
 export async function handlePortalProposals(req) {
   const accessToken = getAccessToken(req);
   if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
   const user = await verifyUser(accessToken);
   if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
+  if (!supabaseConfigured()) return sendJson(new Headers(), 503, { error: "Supabase not configured" });
 
   if (req.method === "GET") {
-    const { data, error } = await supabaseAdmin
-      .from("proposals")
-      .select("*")
-      .eq("client_id", user.id)
-      .order("created_at", { ascending: false });
-    if (error) return sendJson(new Headers(), 500, { error: error.message });
-    return sendJson(new Headers(), 200, { proposals: data ?? [] });
+    const qs = `select=*&client_id=eq.${encodeURIComponent(user.id)}&order=created_at.desc`;
+    const r = await sbRest(`workspace_proposals?${qs}`);
+    if (!r.ok) return sendJson(new Headers(), 502, { error: "Could not load proposals" });
+    return sendJson(new Headers(), 200, { proposals: await r.json() });
   }
 
   if (req.method === "POST") {
     const parsed = await readJsonBody(req);
     if (parsed.error) return sendJson(new Headers(), parsed.error.status, parsed.error.body);
-    const { title, description, totalAmount, tier, validUntil } = parsed.data ?? {};
-    if (!title || !description) {
+    const { title, description, summary, totalAmount, amountMyr, scope, validUntil } = parsed.data ?? {};
+    const text = description ?? summary;
+    if (!title || !text) {
       return sendJson(new Headers(), 400, { error: "title and description are required" });
     }
-    const { data, error } = await supabaseAdmin
-      .from("proposals")
-      .insert([{
-        client_id: user.id,
-        title,
-        description,
-        total_amount: totalAmount || 0,
-        tier: tier || "foundation",
-        valid_until: validUntil || null,
-        status: "draft",
-      }])
-      .select()
-      .single();
-    if (error) return sendJson(new Headers(), 500, { error: error.message });
-    return sendJson(new Headers(), 201, { proposal: data });
+    // tier is not a column here — it lives on clients.
+    const row = {
+      client_id: user.id,
+      title,
+      summary: text,
+      scope: Array.isArray(scope) ? scope : [],
+      amount_myr: Number(totalAmount ?? amountMyr ?? 0),
+      valid_until: validUntil || null,
+      status: "draft",
+      created_by: user.id,
+    };
+    const r = await sbRest("workspace_proposals", {
+      method: "POST",
+      headers: { prefer: "return=representation" },
+      body: JSON.stringify(row),
+    });
+    if (!r.ok) return sendJson(new Headers(), 502, { error: "Could not create proposal" });
+    const [proposal] = await r.json();
+    return sendJson(new Headers(), 201, { proposal });
   }
 
   return sendJson(new Headers(), 405, { error: "Method not allowed" });
@@ -433,53 +459,53 @@ export async function handlePortalProposalById(req, proposalId) {
   if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
   const user = await verifyUser(accessToken);
   if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
+  if (!supabaseConfigured()) return sendJson(new Headers(), 503, { error: "Supabase not configured" });
 
-  const { data, error } = await supabaseAdmin
-    .from("proposals")
-    .select("*")
-    .eq("id", proposalId)
-    .eq("client_id", user.id)
-    .single();
-  if (error || !data) return sendJson(new Headers(), 404, { error: "Proposal not found" });
+  // Scoping the read to client_id is the ownership check. In this fork
+  // clients.id is the auth.users id, so the FK holds without the email
+  // matching the Vercel fork has to do.
+  const owned = `id=eq.${encodeURIComponent(proposalId)}&client_id=eq.${encodeURIComponent(user.id)}`;
+  const r = await sbRest(`workspace_proposals?select=*&${owned}`);
+  if (!r.ok) return sendJson(new Headers(), 502, { error: "Could not load proposal" });
+  const [proposal] = await r.json();
+  if (!proposal) return sendJson(new Headers(), 404, { error: "Proposal not found" });
 
-  if (req.method === "GET") return sendJson(new Headers(), 200, { proposal: data });
+  if (req.method === "GET") return sendJson(new Headers(), 200, { proposal });
 
   if (req.method === "PATCH") {
     const parsed = await readJsonBody(req);
     if (parsed.error) return sendJson(new Headers(), parsed.error.status, parsed.error.body);
     const { status } = parsed.data ?? {};
-    if (!["draft", "sent", "accepted", "rejected"].includes(status)) {
+    if (!PROPOSAL_STATUSES.includes(status)) {
       return sendJson(new Headers(), 400, { error: "Invalid status" });
     }
-    const { data: updated, error: updateError } = await supabaseAdmin
-      .from("proposals")
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq("id", proposalId)
-      .select()
-      .single();
-    if (updateError) return sendJson(new Headers(), 500, { error: updateError.message });
-    return sendJson(new Headers(), 200, { proposal: updated });
+    const updated = await sbRest(`workspace_proposals?${owned}`, {
+      method: "PATCH",
+      headers: { prefer: "return=representation" },
+      body: JSON.stringify({ status, updated_at: new Date().toISOString() }),
+    });
+    if (!updated.ok) return sendJson(new Headers(), 502, { error: "Could not update proposal" });
+    const [row] = await updated.json();
+    return sendJson(new Headers(), 200, { proposal: row });
   }
 
   return sendJson(new Headers(), 405, { error: "Method not allowed" });
 }
 
-// ── Projects (Phase 3) ──────────────────────────────────────────────────────────
+// ── Projects ────────────────────────────────────────────────────────────────────
 
 export async function handlePortalProjects(req) {
   const accessToken = getAccessToken(req);
   if (!accessToken) return sendJson(new Headers(), 401, { error: "Not authenticated" });
   const user = await verifyUser(accessToken);
   if (!user) return sendJson(new Headers(), 401, { error: "Session expired" });
+  if (!supabaseConfigured()) return sendJson(new Headers(), 503, { error: "Supabase not configured" });
 
   if (req.method === "GET") {
-    const { data, error } = await supabaseAdmin
-      .from("projects")
-      .select("*")
-      .eq("client_id", user.id)
-      .order("created_at", { ascending: false });
-    if (error) return sendJson(new Headers(), 500, { error: error.message });
-    return sendJson(new Headers(), 200, { projects: data ?? [] });
+    const qs = `select=*&client_id=eq.${encodeURIComponent(user.id)}&order=created_at.desc`;
+    const r = await sbRest(`workspace_projects?${qs}`);
+    if (!r.ok) return sendJson(new Headers(), 502, { error: "Could not load projects" });
+    return sendJson(new Headers(), 200, { projects: await r.json() });
   }
 
   return sendJson(new Headers(), 405, { error: "Method not allowed" });
