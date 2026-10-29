@@ -30,18 +30,19 @@ function serverSources() {
 }
 
 /**
- * Only the modules reachable from the deployed entrypoint are checked.
+ * Only the modules reachable from an entrypoint are checked.
  *
  * server/ carries a second, parallel implementation of most stores under
- * *-cloudflare.mjs. handler.mjs reaches exactly one of them
- * (workspace-cloudflare.mjs), so scanning the whole directory would either
- * ignore the duplication or fail on tables that only the Cloudflare fork uses.
- * Reachability is computed, not asserted by hand, so a fork module pulled into
- * the live path is checked from that commit onward.
+ * *-cloudflare.mjs. Reachability is computed per entrypoint, not asserted by
+ * hand, so a fork module pulled into a live path is checked from that commit
+ * onward. Both roots are checked: handler.mjs is what `npm start` and Vercel
+ * run, handler-cloudflare.mjs is what Cloudflare Pages actually deploys (see
+ * AGENTS.md, "Production is the Cloudflare fork"). Checking only the first is
+ * how five undeclared tables in the deployed tree stayed green.
  */
-function liveSources() {
+function sourcesReachableFrom(root) {
   const seen = new Set();
-  const queue = ["handler.mjs"];
+  const queue = [root];
   const sources = serverSources();
   const byName = new Map(sources.map((s) => [s.file, s]));
 
@@ -57,6 +58,13 @@ function liveSources() {
   }
   return sources.filter((s) => seen.has(s.file));
 }
+
+const VERCEL_SOURCES = sourcesReachableFrom("handler.mjs");
+const FORK_SOURCES = sourcesReachableFrom("handler-cloudflare.mjs");
+const ROOTS = [
+  ["handler.mjs", VERCEL_SOURCES],
+  ["handler-cloudflare.mjs", FORK_SOURCES],
+];
 
 /** @returns {Map<string, string[]>} table -> column names */
 function parseTables(migrations) {
@@ -78,26 +86,42 @@ function parseTables(migrations) {
 }
 
 const MIGRATIONS = readMigrations();
-const SOURCES = liveSources();
 const TABLES = parseTables(MIGRATIONS);
 
-test("the live path is what is expected to be live", () => {
-  const files = SOURCES.map((s) => s.file);
-  assert.ok(files.includes("handler.mjs"), "handler.mjs is the deployed entrypoint");
-  assert.ok(files.includes("enquiries.mjs"), "the resolver's stores are reachable from the handler");
-  assert.ok(files.includes("store.mjs"));
+/**
+ * What the deployed fork names that no migration declares, all of it in
+ * server/ops-tasks-cloudflare.mjs. Shrink-only: adding a name here is a bug
+ * being filed rather than fixed, and a name that has since been declared must
+ * be removed. See task: decide the fate of ops-tasks-cloudflare.mjs.
+ */
+const FORK_PENDING_TABLES = ["ops_tasks", "ops_audit_log", "profiles"];
+
+test("both entrypoints are walked, and they are not the same tree", () => {
+  const vercel = VERCEL_SOURCES.map((s) => s.file);
+  const fork = FORK_SOURCES.map((s) => s.file);
+  assert.ok(vercel.includes("handler.mjs"), "handler.mjs is the local/Vercel entrypoint");
+  assert.ok(vercel.includes("enquiries.mjs"), "the resolver's stores are reachable from the handler");
+  assert.ok(vercel.includes("store.mjs"));
+  assert.ok(fork.includes("handler-cloudflare.mjs"), "the deployed entrypoint must be checked");
+  assert.notDeepEqual(
+    [...vercel].sort(),
+    [...fork].sort(),
+    "the two entrypoints reach the same modules, so one of the walks is not real",
+  );
   assert.ok(
-    !files.includes("handler-cloudflare.mjs"),
-    "the Cloudflare fork must stay unreachable from the Vercel entrypoint until Phase 2 decides its fate",
+    !vercel.includes("handler-cloudflare.mjs"),
+    "the forks must stay separate trees; handler.mjs importing the Cloudflare fork would serve the wrong stores",
   );
 });
 
 /** Tables the code names directly, plus those held in *_TABLE constants. */
-function tablesReferencedInCode() {
+function tablesReferencedInCode(sources) {
   const found = new Map();
-  for (const { file, src } of SOURCES) {
-    for (const m of src.matchAll(/(?:sbFetch|supabaseFetch|supabaseRequest)\(\s*[`"'](\w+)/g)) {
-      found.set(m[1], file);
+  // supabaseRequest("GET", ...) passes the verb first; it is not a table name.
+  const METHODS = /^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)$/;
+  for (const { file, src } of sources) {
+    for (const m of src.matchAll(/(?:sbFetch|supabaseFetch|supabaseRequest|cfSbFetch|sbRest)\(\s*[`"'](\w+)/g)) {
+      if (!METHODS.test(m[1])) found.set(m[1], file);
     }
     for (const m of src.matchAll(/(?:from|table)\(\s*["'`](\w+)["'`]/g)) {
       found.set(m[1], file);
@@ -117,25 +141,39 @@ test("the parser sees the schema at all", () => {
   }
 });
 
-test("every table named by server code exists in the migrations", () => {
-  const referenced = tablesReferencedInCode();
-  assert.ok(referenced.size >= 5, `expected to find table references, found ${referenced.size}`);
-  for (const [table, file] of referenced) {
-    assert.ok(
-      TABLES.has(table),
-      `${file} writes to "${table}" but no migration creates public.${table}`,
-    );
-  }
+for (const [root, sources] of ROOTS) {
+  test(`every table named by code reachable from ${root} exists in the migrations`, () => {
+    const referenced = tablesReferencedInCode(sources);
+    assert.ok(referenced.size >= 5, `expected to find table references, found ${referenced.size}`);
+    const pending = root === "handler-cloudflare.mjs" ? FORK_PENDING_TABLES : [];
+    for (const [table, file] of referenced) {
+      assert.ok(
+        TABLES.has(table) || pending.includes(table),
+        `${file} writes to "${table}" but no migration creates public.${table}`,
+      );
+    }
+  });
+}
+
+test("the fork's pending-table list only holds what is still undeclared", () => {
+  const declared = FORK_PENDING_TABLES.filter((t) => TABLES.has(t));
+  assert.deepEqual(
+    declared,
+    [],
+    `${declared.join(", ")} now has a migration — drop it from FORK_PENDING_TABLES`,
+  );
 });
 
 test("every filter column used against a table is declared for it", () => {
   const problems = [];
-  for (const { file, src } of SOURCES) {
-    for (const m of src.matchAll(/[`"'](\w+)\?(\w+)=(?:eq|in|gte|lte|is)\./g)) {
-      const [, table, column] = m;
-      if (!TABLES.has(table)) continue; // covered by the table test
-      if (!TABLES.get(table).includes(column)) {
-        problems.push(`${file}: ${table}.${column} is filtered on but not in the migration`);
+  for (const [, sources] of ROOTS) {
+    for (const { file, src } of sources) {
+      for (const m of src.matchAll(/[`"'](\w+)\?(\w+)=(?:eq|in|gte|lte|is)\./g)) {
+        const [, table, column] = m;
+        if (!TABLES.has(table)) continue; // covered by the table test
+        if (!TABLES.get(table).includes(column)) {
+          problems.push(`${file}: ${table}.${column} is filtered on but not in the migration`);
+        }
       }
     }
   }
@@ -144,14 +182,16 @@ test("every filter column used against a table is declared for it", () => {
 
 test("every explicit select list names real columns", () => {
   const problems = [];
-  for (const { file, src } of SOURCES) {
-    for (const m of src.matchAll(/[`"'](\w+)[?&]select=([\w,]+)(?=[&`"'])/g)) {
-      const [, table, list] = m;
-      if (!TABLES.has(table)) continue;
-      for (const column of list.split(",")) {
-        if (column === "*") continue;
-        if (!TABLES.get(table).includes(column)) {
-          problems.push(`${file}: ${table}.${column} is selected but not in the migration`);
+  for (const [, sources] of ROOTS) {
+    for (const { file, src } of sources) {
+      for (const m of src.matchAll(/[`"'](\w+)[?&]select=([\w,]+)(?=[&`"'])/g)) {
+        const [, table, list] = m;
+        if (!TABLES.has(table)) continue;
+        for (const column of list.split(",")) {
+          if (column === "*") continue;
+          if (!TABLES.get(table).includes(column)) {
+            problems.push(`${file}: ${table}.${column} is selected but not in the migration`);
+          }
         }
       }
     }

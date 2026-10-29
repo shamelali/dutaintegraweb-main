@@ -9,7 +9,7 @@ Marketing site + lead-capture API for dutaintegra.my. Node >= 22, ES modules,
 |---|---|
 | `Web/` | Static HTML. `vercel.json` sets `outputDirectory: "Web"`, so this is what deploys. |
 | `Web/assets/index-*.js` | The **built React bundle**, produced by `web-new/`. `Web/index.html` is a Vite build artifact, not hand-written. **Do not edit by hand — regenerate with `npm run build:web`.** |
-| `server/` | The Node server: `handler.mjs` (routing + most endpoints), `portal.mjs` (client auth), `enquiries.mjs` (storage), `stats.mjs`, `digest.mjs`, `autonomous-ops.mjs` |
+| `server/` | The Node server: `handler.mjs` (routing + most endpoints), `portal.mjs` (client auth), `enquiries.mjs` (storage), `stats.mjs`, `digest.mjs`, `autonomous-ops.mjs`. Every `*-cloudflare.mjs` is a **parallel fork** of its namesake for Cloudflare Pages — which is what production deploys (see "The thing that trips people up") |
 | `api/gateway.js` | Vercel serverless entrypoint. Just re-exports `handle` from `server/handler.mjs`. |
 | `api/audit.js` | Separate self-contained audit tool, wired to its own rewrites |
 | `vercel.json` | Deployment + the security headers production actually enforces |
@@ -138,16 +138,20 @@ Consequences:
    `portal.mjs` hand-rolls cookie sessions against `portal_sessions`, while
    `portal-cloudflare.mjs` uses Supabase Auth and puts an access token in the
    `di_session` cookie. A fix to one does not fix the other.
-2. **The schema guard watches the wrong entrypoint.** `server/schema.test.mjs`
-   computes "live sources" by walking imports from `handler.mjs`, so it cannot
-   see the deployed path. Re-running that walk from
-   `handler-cloudflare.mjs` finds tables the deployed code names that no
-   migration declares and the live database does not have (anon-key REST probe,
-   2026-10-29: `404`, where `workspace_proposals` answers `200`) — `ops_tasks`
-   and `ops_audit_log`, plus `profiles`, which the same module names only inside
-   an embedded `select`. The guard's own test even asserts the fork stays
-   unreachable, so this blind spot is deliberate and now stale. See the next
-   section.
+2. **The schema guard used to watch the wrong entrypoint.**
+   `server/schema.test.mjs` computed "live sources" by walking imports from
+   `handler.mjs` alone, so it could not see the deployed path — and one of its
+   tests asserted that the fork stayed unreachable, which made the blind spot
+   look deliberate. It now walks both roots (`sourcesReachableFrom`, checked per
+   entrypoint), because re-running the walk from `handler-cloudflare.mjs` found
+   tables the deployed code names that no migration declares and the live
+   database does not have (anon-key REST probe, 2026-10-29: `404`, where
+   `workspace_proposals` answers `200`) — `ops_tasks` and `ops_audit_log`, plus
+   `profiles`, which the same module names only inside an embedded `select` and
+   which no regex will ever catch. Those three sit in
+   `FORK_PENDING_TABLES`, a shrink-only list: adding to it files a bug rather
+   than fixing one, and a test fails if an entry gains a migration and is not
+   removed. See the next section for the module they belong to.
 3. **The two frontends are separate builds.** `Web/` is what `npm run
    build:web` writes and what Vercel would serve; Pages serves `public/`.
    Production's bundle hash matches neither.
@@ -221,7 +225,7 @@ Two consequences worth remembering:
 ## Workflow
 
 ```bash
-npm test            # 194 tests, node:test, no deps; runs in a throwaway DATA_DIR
+npm test            # 196 tests, node:test, no deps; runs in a throwaway DATA_DIR
 npm run test:web    # 15 tests, Vitest + Testing Library (needs web-new/node_modules)
 npm start           # loads .env via --env-file-if-exists
 npm run build:web   # build web-new/ into Web/ (the deploy artifact)
@@ -377,7 +381,10 @@ error bodies, because those name tables and columns. The uptime automation reads
 The schema is versioned under `supabase/migrations/`; `server/schema.test.mjs`
 fails if code references a table or column no migration declares, if a table
 ships without RLS, or if a `create policy` omits a `to <role>` clause (which
-grants access to role `public`, and `anon` inherits it). Read
+grants access to role `public`, and `anon` inherits it). It walks both
+entrypoints — `handler.mjs` and `handler-cloudflare.mjs` — because production
+runs the second; checking only the first is what let five undeclared tables sit
+in the deployed tree. Read
 `supabase/README.md` before adding a column.
 
 `SUPABASE_SERVICE_ROLE_KEY` bypasses Row Level Security entirely. It must stay
