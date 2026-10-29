@@ -143,15 +143,13 @@ Consequences:
    `handler.mjs` alone, so it could not see the deployed path — and one of its
    tests asserted that the fork stayed unreachable, which made the blind spot
    look deliberate. It now walks both roots (`sourcesReachableFrom`, checked per
-   entrypoint), because re-running the walk from `handler-cloudflare.mjs` found
+   entrypoint). Re-running the walk from `handler-cloudflare.mjs` had found
    tables the deployed code names that no migration declares and the live
    database does not have (anon-key REST probe, 2026-10-29: `404`, where
-   `workspace_proposals` answers `200`) — `ops_tasks` and `ops_audit_log`, plus
-   `profiles`, which the same module names only inside an embedded `select` and
-   which no regex will ever catch. Those three sit in
-   `FORK_PENDING_TABLES`, a shrink-only list: adding to it files a bug rather
-   than fixing one, and a test fails if an entry gains a migration and is not
-   removed. See the next section for the module they belong to.
+   `workspace_proposals` answers `200`). Those are gone, so
+   `FORK_PENDING_TABLES` is empty and stays that way: adding a name files a bug
+   rather than fixing one, and a name that gains a migration fails the
+   stale-list test until it is dropped.
 3. **The two frontends are separate builds.** `Web/` is what `npm run
    build:web` writes and what Vercel would serve; Pages serves `public/`.
    Production's bundle hash matches neither.
@@ -176,11 +174,13 @@ supabase-js does:
   `/api/portal/me`, tickets, digests, proposals — answered `401 Session
   expired` whatever the client sent. Fixed, with tests.
 
-`ops-tasks-cloudflare.mjs` is still written against supabase-js, so
-`from("ops_tasks").select("…").order("created_at")` is `promise.order` — a
-`TypeError` on the first statement of every handler, visible in the test log as
+The third consequence of writing against supabase-js by mistake:
+`ops-tasks-cloudflare.mjs` had `from("ops_tasks").select("…").order("created_at")`,
+which is `promise.order` — a `TypeError` on the first statement of every
+handler, visible in the test log as
 `supabaseAdmin.from(...).select(...).order is not a function`. That is why its
-missing tables stayed unnoticed: the query never reaches PostgREST.
+missing tables went unnoticed for as long as the module existed: the query never
+reaches PostgREST to fail loudly.
 
 - `/api/portal/proposals`, `/api/portal/proposals/:id` and
   `/api/portal/projects` are served from `workspace_proposals` /
@@ -195,16 +195,18 @@ missing tables stayed unnoticed: the query never reaches PostgREST.
   `workspace_proposals.client_id` is a valid FK for it and `client_id=eq.<uid>`
   doubles as the ownership check. The Vercel fork has to match proposal leads by
   email instead; the two forks disagree about what a client is.
-- `/api/ops/tasks*`, `/api/ops/task-stats` and `/api/ops/audit-log` reached the
-  data layer with **no auth check at all**. They answered `500` to an
-  unauthenticated `GET`, which is what made the hole look harmless — the `500`
-  came from a missing table, not from protection. Gated behind
-  `requireAdminSession` on 2026-10-29. Anyone who ships `ops_tasks` without that
-  gate opens an unauthenticated read/write API over an audit log.
-- What is left undeclared for the deployed path: `ops_tasks` and `ops_audit_log`,
-  plus `profiles`, which `ops-tasks-cloudflare.mjs` names only inside an
-  embedded `select` — a shape the schema guard's table regex never sees. All
-  three are live-probed `404` against the database.
+- **`ops-tasks-cloudflare.mjs` is deleted** (2026-10-29). It exposed
+  `/api/ops/tasks*`, `/api/ops/task-stats` and `/api/ops/audit-log` with **no
+  auth check at all**; those routes reached the data layer directly and answered
+  `500` to an unauthenticated `GET`, which is what made the hole look harmless —
+  the `500` came from a missing table, not from protection. Commit `4061ff3` put
+  a `requireAdminSession` gate in front of them; deleting the module finishes
+  the job, because nothing in either frontend, in `automations/`, or in the test
+  suite ever called them, and `workspace_tasks` / `workspace_approvals` at
+  `/api/workspace/*` already model the same thing. If the feature is wanted
+  again, recover it from `32f2d4d` and port it to `sbRest()` — do not ship a
+  migration for `ops_tasks`, `ops_audit_log` and `profiles` before that port,
+  or the gate has to be rebuilt from scratch.
 
 - Locally, `server/index.mjs` serves both `Web/` and the API.
 - On Vercel, **`vercel.json` serves `Web/` directly** and never runs the
@@ -225,7 +227,7 @@ Two consequences worth remembering:
 ## Workflow
 
 ```bash
-npm test            # 196 tests, node:test, no deps; runs in a throwaway DATA_DIR
+npm test            # 194 tests, node:test, no deps; runs in a throwaway DATA_DIR
 npm run test:web    # 15 tests, Vitest + Testing Library (needs web-new/node_modules)
 npm start           # loads .env via --env-file-if-exists
 npm run build:web   # build web-new/ into Web/ (the deploy artifact)

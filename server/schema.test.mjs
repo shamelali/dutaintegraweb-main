@@ -89,12 +89,13 @@ const MIGRATIONS = readMigrations();
 const TABLES = parseTables(MIGRATIONS);
 
 /**
- * What the deployed fork names that no migration declares, all of it in
- * server/ops-tasks-cloudflare.mjs. Shrink-only: adding a name here is a bug
- * being filed rather than fixed, and a name that has since been declared must
- * be removed. See task: decide the fate of ops-tasks-cloudflare.mjs.
+ * Tables the deployed fork names that no migration declares. This must stay
+ * empty: adding a name files a bug rather than fixing one, and a name that
+ * gains a migration fails the stale-list test until it is dropped. It was empty
+ * for the first time when ops-tasks-cloudflare.mjs was removed — before that it
+ * carried ops_tasks, ops_audit_log and profiles.
  */
-const FORK_PENDING_TABLES = ["ops_tasks", "ops_audit_log", "profiles"];
+const FORK_PENDING_TABLES = [];
 
 test("both entrypoints are walked, and they are not the same tree", () => {
   const vercel = VERCEL_SOURCES.map((s) => s.file);

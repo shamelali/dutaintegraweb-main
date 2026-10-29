@@ -38,6 +38,9 @@ obsidian-knowledge-base/
 # CLI-local permissions/rules. `.qoder/settings.json` is the shareable project
 # scope and stays committable; the .local file carries this machine's approvals.
 .qoder/settings.local.json
+# Session transcripts and workflow run artifacts: full prompts, file excerpts
+# and tool output, per machine.
+.qoder/sessions/
 
 # next.js build output
 .next/

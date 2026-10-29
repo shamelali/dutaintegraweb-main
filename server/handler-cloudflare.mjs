@@ -27,18 +27,6 @@ import { recordTestimonial } from "./testimonials.mjs";
 import { supabaseConfigured } from "./supabase-client.mjs";
 import { handleFeed, handleConsent, handleIngestEvent } from "./autonomous-ops-cloudflare.mjs";
 import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
-import {
-  createTask,
-  listTasks,
-  getTask,
-  updateTask,
-  approveTask,
-  requestTaskApproval,
-  deleteTask,
-  getTaskStats,
-  getAuditLog,
-  logAudit,
-} from "./ops-tasks-cloudflare.mjs";
 
 import {
   handleAuthSignup,
@@ -1058,98 +1046,12 @@ export async function handleApi(req) {
     if (pathname === "/api/ops/consent") return await handleConsent(req);
     if (pathname === "/api/ops/events") return await handleIngestEvent(req);
 
-    // Phase 4: Managed AI Operations — Task Management
-    // The task routes reach the data layer directly, so the gate has to sit in
-    // front of the whole family. Without ops_tasks they only 500; the day the
-    // table ships they would answer unauthenticated.
-    if (
-      pathname.startsWith("/api/ops/tasks") ||
-      pathname === "/api/ops/task-stats" ||
-      pathname === "/api/ops/audit-log"
-    ) {
-      const auth = await requireAdminSession(req);
-      if (!auth) return sendJson(401, { error: "Unauthorized" });
-    }
-
-    if (pathname === "/api/ops/tasks") {
-      if (req.method === "GET") {
-        const filters = {};
-        const url = new URL(req.url);
-        if (url.searchParams.get("status")) filters.status = url.searchParams.get("status");
-        if (url.searchParams.get("priority")) filters.priority = url.searchParams.get("priority");
-        if (url.searchParams.get("assigneeId")) filters.assigneeId = url.searchParams.get("assigneeId");
-        if (url.searchParams.get("createdBy")) filters.createdBy = url.searchParams.get("createdBy");
-        const tasks = await listTasks(filters);
-        return sendJson(200, { tasks });
-      }
-      if (req.method === "POST") {
-        const parsed = await readJsonBody(req);
-        if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
-        const task = await createTask(parsed.data);
-        return sendJson(201, { task });
-      }
-      return sendJson(405, { error: "Method not allowed" });
-    }
-
-    const taskMatch = pathname.match(/^\/api\/ops\/tasks\/([a-f0-9-]+)$/);
-    if (taskMatch) {
-      const taskId = taskMatch[1];
-      if (req.method === "GET") {
-        const task = await getTask(taskId);
-        return sendJson(200, { task });
-      }
-      if (req.method === "PATCH") {
-        const parsed = await readJsonBody(req);
-        if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
-        const actorId = parsed.data?.actorId || "system";
-        const task = await updateTask(taskId, parsed.data, actorId);
-        return sendJson(200, { task });
-      }
-      if (req.method === "DELETE") {
-        const actorId = "system";
-        await deleteTask(taskId, actorId);
-        return sendJson(200, { ok: true });
-      }
-      return sendJson(405, { error: "Method not allowed" });
-    }
-
-    // Task approval workflow
-    const approveMatch = pathname.match(/^\/api\/ops\/tasks\/([a-f0-9-]+)\/approve$/);
-    if (approveMatch && req.method === "POST") {
-      const taskId = approveMatch[1];
-      const parsed = await readJsonBody(req);
-      if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
-      const { rejectionReason } = parsed.data ?? {};
-      const actorId = parsed.data?.actorId || "system";
-      const task = await approveTask(taskId, actorId, rejectionReason);
-      return sendJson(200, { task });
-    }
-
-    const requestApprovalMatch = pathname.match(/^\/api\/ops\/tasks\/([a-f0-9-]+)\/request-approval$/);
-    if (requestApprovalMatch && req.method === "POST") {
-      const taskId = requestApprovalMatch[1];
-      const actorId = "system";
-      const task = await requestTaskApproval(taskId, actorId);
-      return sendJson(200, { task });
-    }
-
-    // Task stats
-    if (pathname === "/api/ops/task-stats") {
-      const stats = await getTaskStats();
-      return sendJson(200, { stats });
-    }
-
-    // Audit log
-    if (pathname === "/api/ops/audit-log") {
-      const url = new URL(req.url);
-      const filters = {};
-      if (url.searchParams.get("entityType")) filters.entityType = url.searchParams.get("entityType");
-      if (url.searchParams.get("entityId")) filters.entityId = url.searchParams.get("entityId");
-      if (url.searchParams.get("actorId")) filters.actorId = url.searchParams.get("actorId");
-      if (url.searchParams.get("action")) filters.action = url.searchParams.get("action");
-      const logs = await getAuditLog(filters);
-      return sendJson(200, { logs: logs });
-    }
+    // The Phase 4 /api/ops/tasks surface was removed here: it had no caller in
+    // either frontend or in automations, named tables that exist in neither the
+    // migrations nor the database, and was written against supabase-js
+    // chaining that this repo's flat shim cannot perform. Tasks and approvals
+    // live in workspace_tasks / workspace_approvals at /api/workspace/*.
+    // History: 4061ff3 gated it, 32f2d4d proved why it could not work.
 
     // Portal auth routes (Supabase Auth)
     if (pathname === "/api/auth/signup") return await handleAuthSignup(req);
