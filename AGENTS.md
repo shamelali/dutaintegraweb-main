@@ -121,10 +121,39 @@ throughout this file is not the canonical origin.
 
 ## The thing that trips people up
 
-**Two entrypoints run the same handler, but only one serves the site.**
+**Production is the Cloudflare fork, not the Vercel path.** Established on
+2026-10-29 by probing the live site: `/api/auth/me` and `/api/auth/logout` —
+routes that exist only in `server/handler-cloudflare.mjs` — answer 401 and 200,
+while `/api/portal/me` and `/api/portal/logout` return 404. Static assets carry
+`server: cloudflare` with `etag`/`cf-cache-status` and no `x-vercel-*`. The
+wiring is `functions/api/[[path]].js` and `functions/admin/[[path]].js`, both of
+which import `handler-cloudflare.mjs` and copy Pages env into `process.env`
+before calling it, over the `public/` directory with `_headers` and `_redirects`.
+
+Consequences:
+
+1. **`handler.mjs` is the local and Vercel entrypoint, and it is not what users
+   hit.** Everything below about `vercel.json` describes a deployment that is
+   not live. The two forks have also diverged in substance, not just plumbing:
+   `portal.mjs` hand-rolls cookie sessions against `portal_sessions`, while
+   `portal-cloudflare.mjs` uses Supabase Auth and puts an access token in the
+   `di_session` cookie. A fix to one does not fix the other.
+2. **The schema guard watches the wrong entrypoint.** `server/schema.test.mjs`
+   computes "live sources" by walking imports from `handler.mjs`, so it cannot
+   see the deployed path. Re-running that walk from
+   `handler-cloudflare.mjs` instead finds four tables the deployed code queries
+   with no migration declaring them and no table in the database —
+   `ops_tasks` and `ops_audit_log` (`server/ops-tasks-cloudflare.mjs`),
+   `proposals` and `projects` (`server/portal-cloudflare.mjs`). Those are
+   reachable as `/api/portal/proposals`, `/api/portal/projects` and
+   `/api/workspace/*`, so they 404 at PostgREST behind an auth gate rather than
+   failing loudly.
+3. **The two frontends are separate builds.** `Web/` is what `npm run
+   build:web` writes and what Vercel would serve; Pages serves `public/`.
+   Production's bundle hash matches neither.
 
 - Locally, `server/index.mjs` serves both `Web/` and the API.
-- In production, **`vercel.json` serves `Web/` directly** and never runs the
+- On Vercel, **`vercel.json` serves `Web/` directly** and never runs the
   static logic in `handler.mjs`. Only `/api/*`, `/admin/*` reach
   `api/gateway.js`.
 
@@ -133,7 +162,7 @@ Two consequences worth remembering:
 1. Security headers for the static site live in `vercel.json`, **not** in
    `handler.mjs`. Editing one does not affect the other. They are intentionally
    kept in sync via `SECURITY_HEADERS` in `handler.mjs`; if you change a policy,
-   change both.
+   change both. The live equivalent for Pages is `public/_headers`.
 2. Vercel runs `buildCommand: "npm run build:web"` before uploading, so the
    committed `Web/index.html` + `Web/assets/index-*` are **build outputs**. They
    are committed anyway so the repo works without a build step; regenerate them
