@@ -141,16 +141,57 @@ Consequences:
 2. **The schema guard watches the wrong entrypoint.** `server/schema.test.mjs`
    computes "live sources" by walking imports from `handler.mjs`, so it cannot
    see the deployed path. Re-running that walk from
-   `handler-cloudflare.mjs` instead finds four tables the deployed code queries
-   with no migration declaring them and no table in the database —
-   `ops_tasks` and `ops_audit_log` (`server/ops-tasks-cloudflare.mjs`),
-   `proposals` and `projects` (`server/portal-cloudflare.mjs`). Those are
-   reachable as `/api/portal/proposals`, `/api/portal/projects` and
-   `/api/workspace/*`, so they 404 at PostgREST behind an auth gate rather than
-   failing loudly.
+   `handler-cloudflare.mjs` instead finds five tables the deployed code names
+   with no migration declaring them, confirmed absent from the live database on
+   2026-10-29 by an anon-key REST probe (`404`, where `workspace_proposals`
+   answers `200`): `ops_tasks`, `ops_audit_log` and `profiles`
+   (`server/ops-tasks-cloudflare.mjs`), `proposals` and `projects`
+   (`server/portal-cloudflare.mjs`). See the next section for why none of them
+   is ever reached.
 3. **The two frontends are separate builds.** `Web/` is what `npm run
    build:web` writes and what Vercel would serve; Pages serves `public/`.
    Production's bundle hash matches neither.
+
+## The Cloudflare fork's Phase 3/4 layer does not run
+
+`server/supabase-client.mjs` exports `supabaseAdmin`, a hand-rolled builder with
+**zero runtime dependencies**. It is *not* supabase-js and it is *not* chainable:
+`from(table)` returns an object whose `select`, `insert`, `update`, `eq`, `order`
+and `limit` each fire a request immediately and return a promise of the parsed
+body. Real supabase-js returns a query builder and resolves to `{ data, error }`.
+
+`ops-tasks-cloudflare.mjs` and the proposals/projects half of
+`portal-cloudflare.mjs` are written against supabase-js. So
+`from("ops_tasks").select("...").order("created_at")` is `promise.order` — a
+`TypeError`, seen in the test log as
+`supabaseAdmin.from(...).select(...).order is not a function`. Every one of those
+handlers fails on its first statement, which is why the missing tables were never
+noticed: the query never reaches PostgREST. `const { data, error } = await ...`
+would also silently misread the shim's return even if chaining worked.
+
+Consequences to keep in mind:
+
+- `/api/portal/proposals` and `/api/portal/proposals/:id` are called by
+  `web-new/src/pages/portal-proposals.tsx`, whose `Proposal` type
+  (`summary`, `scope`, `amount_myr`) is the `workspace_proposals` shape. The
+  Vercel fork already serves that table; the fork serves a `proposals` table that
+  exists nowhere, in a shape the UI could not render. Fixing this means porting
+  the handlers to the shim's REST style (as `cfSbFetch` in
+  `handler-cloudflare.mjs` does) *and* onto `workspace_proposals` — not creating
+  a `proposals` table.
+- `clients.id = auth.users.id` by construction in this fork
+  (`portal-cloudflare.mjs:175` seeds the row from the signup response), so
+  `workspace_proposals.client_id` is a valid FK for it. The two forks still
+  disagree about what a client is.
+- The `/api/ops/tasks*`, `/api/ops/task-stats` and `/api/ops/audit-log` routes
+  reached the data layer with **no auth check at all**; they answered `500` to an
+  unauthenticated `GET`, which is what made the hole look harmless. Gated behind
+  `requireAdminSession` on 2026-10-29, covered by
+  `server/handler-cloudflare.test.mjs` — the first test over the deployed
+  entrypoint. Anyone who ships `ops_tasks` without that gate would be opening an
+  unauthenticated read/write API over an audit log.
+- Nothing in the suite exercises the fork's router, and no test covers
+  `ops-tasks-cloudflare.mjs`. Treat changes there as unverified.
 
 - Locally, `server/index.mjs` serves both `Web/` and the API.
 - On Vercel, **`vercel.json` serves `Web/` directly** and never runs the
@@ -171,7 +212,7 @@ Two consequences worth remembering:
 ## Workflow
 
 ```bash
-npm test            # 183 tests, node:test, no deps; runs in a throwaway DATA_DIR
+npm test            # 189 tests, node:test, no deps; runs in a throwaway DATA_DIR
 npm run test:web    # 15 tests, Vitest + Testing Library (needs web-new/node_modules)
 npm start           # loads .env via --env-file-if-exists
 npm run build:web   # build web-new/ into Web/ (the deploy artifact)

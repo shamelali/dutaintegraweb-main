@@ -1059,6 +1059,18 @@ export async function handleApi(req) {
     if (pathname === "/api/ops/events") return await handleIngestEvent(req);
 
     // Phase 4: Managed AI Operations — Task Management
+    // The task routes reach the data layer directly, so the gate has to sit in
+    // front of the whole family. Without ops_tasks they only 500; the day the
+    // table ships they would answer unauthenticated.
+    if (
+      pathname.startsWith("/api/ops/tasks") ||
+      pathname === "/api/ops/task-stats" ||
+      pathname === "/api/ops/audit-log"
+    ) {
+      const auth = await requireAdminSession(req);
+      if (!auth) return sendJson(401, { error: "Unauthorized" });
+    }
+
     if (pathname === "/api/ops/tasks") {
       if (req.method === "GET") {
         const filters = {};
@@ -1104,6 +1116,7 @@ export async function handleApi(req) {
     // Task approval workflow
     const approveMatch = pathname.match(/^\/api\/ops\/tasks\/([a-f0-9-]+)\/approve$/);
     if (approveMatch && req.method === "POST") {
+      const taskId = approveMatch[1];
       const parsed = await readJsonBody(req);
       if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
       const { rejectionReason } = parsed.data ?? {};
@@ -1114,6 +1127,7 @@ export async function handleApi(req) {
 
     const requestApprovalMatch = pathname.match(/^\/api\/ops\/tasks\/([a-f0-9-]+)\/request-approval$/);
     if (requestApprovalMatch && req.method === "POST") {
+      const taskId = requestApprovalMatch[1];
       const actorId = "system";
       const task = await requestTaskApproval(taskId, actorId);
       return sendJson(200, { task });

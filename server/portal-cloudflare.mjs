@@ -34,11 +34,12 @@ import {
 
 // ── Security ────────────────────────────────────────────────────────────────────
 
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN?.trim();
-
 function adminTokenValid(supplied) {
-  if (!ADMIN_TOKEN || typeof supplied !== "string" || !supplied) return false;
-  const a = new TextEncoder().encode(ADMIN_TOKEN);
+  // Read per call: Pages Functions copy the env bindings into process.env
+  // inside the request, so a value captured at import time is always undefined.
+  const configured = process.env.ADMIN_TOKEN?.trim();
+  if (!configured || typeof supplied !== "string" || !supplied) return false;
+  const a = new TextEncoder().encode(configured);
   const b = new TextEncoder().encode(supplied);
   return a.length === b.length && timingSafeEqual(a, b);
 }
