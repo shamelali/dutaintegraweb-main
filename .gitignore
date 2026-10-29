@@ -54,6 +54,10 @@ Web/preview/
 public/preview/
 .wrangler/
 
+# CLI scratch — the Supabase CLI writes its resolved version here on every
+# invocation, and a linked project ref would land here too.
+supabase/.temp/
+
 # generated patch artifacts
 .backup/
 DutaIntegra-*Patch*/

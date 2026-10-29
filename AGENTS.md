@@ -173,10 +173,17 @@ Dependabot (`.github/dependabot.yml`) watches `web-new/` npm packages weekly and
 the workflow actions monthly. Minor and patch bumps are grouped into one PR;
 majors arrive separately so they get read properly.
 
-Be aware that GitHub Actions runs for this repo were failing at the time of
-writing with `runner_id: 0` and zero steps executed, i.e. the job never started —
-consistent with Actions being disabled or billing-locked on the account rather
-than a workflow defect. Check that before assuming a red X means broken code.
+**GitHub Actions cannot run jobs for this account.** Every CI job — 20+ runs
+across all of `shamelali`'s repos — ends `failed` with `runner_name: ""`, zero
+steps and an empty log archive: GitHub never allocated a runner, so the workflow
+never started. `actions/permissions` reports `enabled: true, allowed_actions:
+all`, `ci.yml` parses and its four jobs are all `runs-on: ubuntu-latest`, so
+this is *not* a repo or workflow defect. The only runs that succeed are
+GitHub-managed ones (`path: dynamic/dependabot/...`), which do not use the
+hosted-runner queue and so are not evidence that runners work. Resolve it at
+`github.com/account` (Actions usage / billing hold / verification notice) before
+reading a red X as broken code — until then CI tells you nothing, and `npm run
+verify` locally is the only real gate.
 
 ## Automations
 
