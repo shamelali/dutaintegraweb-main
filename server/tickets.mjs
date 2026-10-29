@@ -1,28 +1,17 @@
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+import { usingSupabase } from "./store.mjs";
+import { dataFile } from "./paths.mjs";
 
 /**
  * Ticket persistence — Supabase (prod) or JSONL fallback.
+ * Backend selection lives in store.mjs.
  */
-
-let _warnedJsonlFallback = false;
-function supabaseConfigured() {
-  const ok = Boolean(
-    process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(),
-  );
-  if (!ok && !_warnedJsonlFallback) {
-    _warnedJsonlFallback = true;
-    console.warn("[tickets] Supabase not configured — falling back to local JSONL store (data will not persist on serverless).");
-  }
-  return ok;
-}
 
 // ── JSONL backend ────────────────────────────────────────────────────────────
 
-const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const STORE = join(PROJECT_ROOT, "data", "tickets.jsonl");
+const STORE = dataFile("tickets.jsonl");
 
 async function ensureDir() { await mkdir(dirname(STORE), { recursive: true }); }
 
@@ -90,7 +79,7 @@ export async function createTicket({ clientId, subject, description, priority })
     updatedAt: now,
   };
 
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const base = process.env.SUPABASE_URL.replace(/\/$/, "");
     const res = await fetch(`${base}/rest/v1/${TABLE}`, {
       method: "POST",
@@ -109,7 +98,7 @@ export async function createTicket({ clientId, subject, description, priority })
 }
 
 export async function findTicket(id) {
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const base = process.env.SUPABASE_URL.replace(/\/$/, "");
     const res = await fetch(
       `${base}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(id)}&select=*`,
@@ -124,7 +113,7 @@ export async function findTicket(id) {
 }
 
 export async function listTicketsForClient(clientId) {
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const base = process.env.SUPABASE_URL.replace(/\/$/, "");
     const res = await fetch(
       `${base}/rest/v1/${TABLE}?client_id=eq.${encodeURIComponent(clientId)}&select=*&order=created_at.desc`,
@@ -140,7 +129,7 @@ export async function listTicketsForClient(clientId) {
 
 export async function updateTicket(id, patch) {
   const now = new Date().toISOString();
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const base = process.env.SUPABASE_URL.replace(/\/$/, "");
     const body = { updated_at: now };
     if (patch.status) body.status = patch.status;
@@ -237,11 +226,10 @@ export async function createTicketReply({ ticketId, authorType, authorId, author
     createdAt: now,
   };
 
-  if (supabaseConfigured()) return supabaseCreateReply(reply);
+  if (usingSupabase()) return supabaseCreateReply(reply);
 
   // JSONL fallback
-  const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const REPLIES_STORE = join(PROJECT_ROOT, "data", "ticket-replies.jsonl");
+  const REPLIES_STORE = dataFile("ticket-replies.jsonl");
   await ensureDir();
   let rows = [];
   try {
@@ -255,11 +243,10 @@ export async function createTicketReply({ ticketId, authorType, authorId, author
 
 /** List replies for a ticket. */
 export async function listTicketReplies(ticketId) {
-  if (supabaseConfigured()) return supabaseListReplies(ticketId);
+  if (usingSupabase()) return supabaseListReplies(ticketId);
 
   // JSONL fallback
-  const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const REPLIES_STORE = join(PROJECT_ROOT, "data", "ticket-replies.jsonl");
+  const REPLIES_STORE = dataFile("ticket-replies.jsonl");
   let rows = [];
   try {
     const raw = await readFile(REPLIES_STORE, "utf8");

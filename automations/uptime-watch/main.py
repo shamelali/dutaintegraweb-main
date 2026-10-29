@@ -10,10 +10,13 @@ What it catches that a naive "is the homepage up" ping does not:
     mode this repo is most exposed to, since every build renames the bundle)
   * the API gateway going down while the static site still serves
   * routes silently regressing to 404
+  * a deployment that answers 200 while storing leads in the disposable JSONL
+    fallback instead of Supabase - the site is up and the data is still lost
 
 Alerting is optional and off unless an ALERT_WEBHOOK_URL secret is configured.
 A single blip does not alert; ALERT_AFTER consecutive failures do, and a
-recovery notice is sent when it comes back.
+recovery notice is sent when it comes back. Outages and persistence failures
+count separately and page with different headlines.
 """
 
 import json
@@ -28,9 +31,14 @@ TIMEOUT = float(os.environ.get("WATCH_TIMEOUT", "20"))
 ALERT_AFTER = int(os.environ.get("WATCH_ALERT_AFTER", "3"))
 STATE_KEY = "watch-state"
 
-# Paths that must always answer 200. "/" is the React app; the API health probe
-# covers the serverless gateway, which can fail independently of the static site.
-MUST_BE_200 = ["/", "/api/health"]
+# A preview deployment legitimately runs on the local JSONL store. Set this to
+# keep the persistence check from paging about a backend chosen on purpose.
+EXPECT_JSONL = os.environ.get("WATCH_ALLOW_JSONL", "") == "1"
+
+# Paths that must always answer 200. "/" is the React app. /api/health is
+# deliberately not here: it answers 503 when the datastore is unusable, and
+# check_datastore() classifies that as persistence rather than an outage.
+MUST_BE_200 = ["/"]
 
 # Paths that require auth; they should return 401 (not 404/500)
 AUTH_PATHS = ["/admin/pipeline", "/admin/enquiries", "/admin/proposals"]
@@ -170,19 +178,65 @@ def check_paths():
         print(f"[watch] {path:<14} {status} {elapsed:.2f}s")
         if not ok:
             failures.append(f"{path} returned {status} (expected 200)")
-            continue
-        if path == "/api/health":
-            # A 200 that says ok:false is still a failure worth reporting.
-            try:
-                payload = json.loads(body)
-            except Exception:
-                failures.append("/api/health did not return JSON")
-                continue
-            if payload.get("ok") is not True:
-                failures.append(f"/api/health reported ok={payload.get('ok')!r}")
-            if payload.get("inboxConfigured") is not True:
-                # Not fatal: the site serves without outbound email.
-                print("[watch]   warning: inboxConfigured is not true")
+    return failures
+
+
+PERSISTENCE = "persistence: "
+
+
+def check_datastore():
+    """Classify /api/health into outage vs persistence so the two read
+    differently in the alert channel.
+
+    The persistence case used to be invisible: the endpoint answered 200 with
+    ok:true while lead writes went to a file that the next redeploy discards.
+    """
+    status, body, elapsed = fetch("/api/health")
+    print(f"[watch] {'/api/health':<14} {status} {elapsed:.2f}s")
+
+    if status == -1:
+        return [f"/api/health unreachable ({body.strip()[:120]})"]
+
+    try:
+        payload = json.loads(body)
+    except Exception:
+        return [f"/api/health returned {status} without JSON"]
+
+    if payload.get("inboxConfigured") is not True:
+        # Not fatal: the site serves without outbound email.
+        print("[watch]   warning: inboxConfigured is not true")
+
+    datastore = payload.get("datastore") or {}
+    backend = datastore.get("backend", payload.get("storageBackend"))
+    probe = datastore.get("probe")
+    print(f"[watch]   backend={backend} probe={probe} ok={payload.get('ok')}")
+    failures = []
+
+    if backend == "jsonl":
+        if EXPECT_JSONL:
+            print("[watch]   jsonl backend tolerated (WATCH_ALLOW_JSONL=1)")
+        else:
+            failures.append(
+                PERSISTENCE
+                + "store in use is the local JSONL file, not Supabase - leads are being "
+                  "written somewhere a redeploy discards. Set SUPABASE_URL and "
+                  "SUPABASE_SERVICE_ROLE_KEY."
+            )
+    elif backend is None:
+        failures.append(
+            PERSISTENCE
+            + "no usable storage backend: "
+            + "; ".join(str(w) for w in payload.get("warnings", []))
+        )
+    elif probe == "migration_missing":
+        failures.append(
+            PERSISTENCE
+            + "Supabase is reachable but the health_probe table is missing - apply "
+              "supabase/migrations/202610280001_health_probe_and_rls_fix.sql"
+        )
+    elif probe in ("unreachable", "read_failed"):
+        failures.append(f"/api/health reported datastore probe {probe!r}")
+
     return failures
 
 
@@ -249,55 +303,80 @@ def send_alert(webhook, text):
 def main():
     state = load_state()
     previous_failures = int(state.get("consecutive_failures", 0))
+    previous_persistence = int(state.get("consecutive_persistence", 0))
     alerted = bool(state.get("alerted", False))
+    persistence_alerted = bool(state.get("persistence_alerted", False))
 
     print(f"[watch] probing {BASE}")
 
     all_failures = []
     try:
         all_failures += check_paths()
+        all_failures += check_datastore()
         all_failures += check_auth_paths()
         all_failures += check_asset_integrity()
     except Exception as exc:
         all_failures.append(f"unexpected error: {type(exc).__name__}: {exc}")
 
+    # A site that is up but writing leads to disposable storage is a different
+    # incident than a site that is down, so the two count and page separately.
+    outage = [f for f in all_failures if not f.startswith(PERSISTENCE)]
+    persistence = [f for f in all_failures if f.startswith(PERSISTENCE)]
+
     webhook = get_secret("ALERT_WEBHOOK_URL")
 
-    if all_failures:
+    if outage:
         consecutive = previous_failures + 1
         print(f"[watch] FAIL ({consecutive} consecutive)")
-        for f in all_failures:
+        for f in outage:
             print(f"[watch]   - {f}")
         if consecutive >= ALERT_AFTER and not alerted:
             send_alert(
                 webhook,
                 f":rotating_light: {BASE} failing {consecutive}x in a row\n"
-                + "\n".join(f"- {f}" for f in all_failures),
+                + "\n".join(f"- {f}" for f in outage),
             )
             alerted = True
-        state.update(
-            consecutive_failures=consecutive,
-            alerted=alerted,
-            last_failures=all_failures,
-            last_status="fail",
-        )
     else:
+        consecutive = 0
         print("[watch] OK")
         if alerted:
             send_alert(webhook, f":white_check_mark: {BASE} recovered")
-        state.update(
-            consecutive_failures=0,
-            alerted=False,
-            last_failures=[],
-            last_status="ok",
-        )
+        alerted = False
 
+    if persistence:
+        persistence_count = previous_persistence + 1
+        print(f"[watch] PERSISTENCE FAIL ({persistence_count} consecutive)")
+        for f in persistence:
+            print(f"[watch]   - {f}")
+        if persistence_count >= ALERT_AFTER and not persistence_alerted:
+            send_alert(
+                webhook,
+                f":card_index_dividers: {BASE} is up but not storing durably "
+                f"({persistence_count}x in a row)\n"
+                + "\n".join(f"- {f[len(PERSISTENCE):]}" for f in persistence),
+            )
+            persistence_alerted = True
+    else:
+        persistence_count = 0
+        if persistence_alerted:
+            send_alert(webhook, f":white_check_mark: {BASE} data layer recovered - durable store in use")
+        persistence_alerted = False
+
+    state.update(
+        consecutive_failures=consecutive,
+        alerted=alerted,
+        consecutive_persistence=persistence_count,
+        persistence_alerted=persistence_alerted,
+        last_failures=all_failures,
+        last_status="fail" if all_failures else "ok",
+    )
     state["last_checked"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     save_state(state)
 
     if all_failures:
-        # Report FAILED so the run history shows the outage, but the site being
-        # down is data, not a script crash.
+        # Report FAILED so the run history shows the problem, but the site being
+        # down or undurable is data, not a script crash.
         fire_callback("FAILED", "; ".join(all_failures))
     else:
         fire_callback("COMPLETED")

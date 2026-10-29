@@ -23,6 +23,7 @@ import {
 
 import { handleStats } from "./stats-cloudflare.mjs";
 import { calculateSavings } from "./calculator.mjs";
+import { recordTestimonial } from "./testimonials.mjs";
 import { supabaseConfigured } from "./supabase-client.mjs";
 import { handleFeed, handleConsent, handleIngestEvent } from "./autonomous-ops-cloudflare.mjs";
 import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
@@ -74,6 +75,7 @@ import {
 const SECURITY_HEADERS = {
   "x-content-type-options": "nosniff",
   "x-frame-options": "DENY",
+  "x-permitted-cross-domain-policies": "none",
   "referrer-policy": "strict-origin-when-cross-origin",
   "permissions-policy": "camera=(), microphone=(), geolocation=()",
   "content-security-policy":
@@ -876,16 +878,36 @@ async function handleProducts(req) {
 }
 
 async function handleTestimonial(req) {
+  const blocked = checkOrigin(req);
+  if (blocked) return sendJson(blocked.status, blocked.body);
+
+  const limited = rateLimit(`testimonial:${clientIp(req)}`);
+  if (!limited.allowed) {
+    return sendJson(429, { error: "Too many attempts. Please try again later." },
+      { "retry-after": String(Math.ceil(limited.retryAfterMs / 1000)) });
+  }
+
   try {
     const parsed = await readJsonBody(req);
     if (parsed.error) return sendJson(parsed.error.status, parsed.error.body);
-    const { client, tier, quote, author } = parsed.data ?? {};
+    const body = parsed.data;
+    if (!body || typeof body !== "object") return sendJson(400, { error: "Invalid payload" });
+    const { client, tier, quote, author } = body;
     if (!client || !quote || !author) return sendJson(400, { error: "Missing client, quote, or author" });
     if (typeof quote !== 'string' || quote.length > 500) return sendJson(400, { error: "Quote must be 1-500 characters" });
-    console.log("[testimonial] received:", { client, tier, author, quote: quote.slice(0, 60) + '...' });
-    return sendJson(201, { ok: true, message: "Testimonial recorded. Thank you!" });
+    if (typeof client !== 'string' || client.length > 200) return sendJson(400, { error: "Client must be 1-200 characters" });
+    if (typeof author !== 'string' || author.length > 200) return sendJson(400, { error: "Author must be 1-200 characters" });
+    if (tier != null && (typeof tier !== 'string' || tier.length > 60)) return sendJson(400, { error: "Tier must be at most 60 characters" });
+
+    const record = await recordTestimonial({ client, tier, quote, author });
+    // The quote is customer words, so it stays out of stdout; the id is enough
+    // to trace a submission when support needs it.
+    console.log(`[testimonial ${record.id}] recorded`);
+    return sendJson(201, { ok: true, id: record.id });
   } catch (err) {
-    console.error("[server] testimonial error:", err);
+    console.error("[server] testimonial error:", err.message);
+    if (err.code === "STORAGE_CONFIG")
+      return sendJson(503, { error: "Testimonial storage is unavailable." });
     return sendJson(500, { error: "Failed to record testimonial. Please try again." });
   }
 }

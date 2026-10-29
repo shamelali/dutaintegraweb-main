@@ -1,12 +1,14 @@
 import test, { after, afterEach, before, beforeEach, describe } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { adminTokenValid, handle, resetRateLimit, validateEnquiry } from "./handler.mjs";
 import { listEnquiries, resolveInboxEmail, storePath } from "./enquiries.mjs";
+import { storePath as testimonialStorePath } from "./testimonials.mjs";
+import { dataFile } from "./paths.mjs";
 
 /**
  * End-to-end tests against a real HTTP server running the real handler —
@@ -194,6 +196,91 @@ describe("POST /api/send-email", () => {
   });
 });
 
+describe("testimonial capture", () => {
+  const SUBMISSION = {
+    client: "Mokhtar Trading Sdn Bhd",
+    tier: "growth",
+    quote: "They cut our ticket backlog in half.",
+    author: "Ahmad Mokhtar",
+  };
+
+  async function postTestimonial(body, headers = {}) {
+    const res = await fetch(`${base}/api/testimonial`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-forwarded-for": nextIp(),
+        ...headers,
+      },
+      body: JSON.stringify(body),
+    });
+    return { status: res.status, body: await res.json().catch(() => null), headers: res.headers };
+  }
+
+  async function storedRows() {
+    let raw;
+    try {
+      raw = await readFile(testimonialStorePath(), "utf8");
+    } catch {
+      return []; // no store written yet
+    }
+    return raw
+      .split("\n")
+      .filter((line) => line.trim())
+      .map((line) => JSON.parse(line));
+  }
+
+  test("stores the submission and answers 201 with its id", async () => {
+    const res = await postTestimonial(SUBMISSION);
+    assert.equal(res.status, 201);
+    assert.ok(res.body.id, "expected the id of the stored record");
+    // Customer words must not come back in the response body.
+    assert.equal(res.body.quote, undefined);
+
+    const stored = (await storedRows()).find((row) => row.id === res.body.id);
+    assert.equal(stored.client, SUBMISSION.client);
+    assert.equal(stored.tier, SUBMISSION.tier);
+    assert.equal(stored.quote, SUBMISSION.quote);
+    assert.equal(stored.author, SUBMISSION.author);
+    assert.ok(stored.createdAt, "expected a creation timestamp");
+  });
+
+  test("rejects an invalid payload before storing anything", async () => {
+    const before = await storedRows();
+
+    const missing = await postTestimonial({ client: "Nobody Trading" });
+    assert.equal(missing.status, 400);
+
+    const tooLong = await postTestimonial({
+      client: "Nobody Trading",
+      author: "A. Nobody",
+      quote: "x".repeat(501),
+    });
+    assert.equal(tooLong.status, 400);
+
+    const badTier = await postTestimonial({ ...SUBMISSION, tier: { nested: true } });
+    assert.equal(badTier.status, 400);
+
+    assert.deepEqual(await storedRows(), before, "a rejected payload must not be stored");
+  });
+
+  test("refuses a cross-origin submission", async () => {
+    const res = await postTestimonial(SUBMISSION, { origin: "https://evil.example" });
+    assert.equal(res.status, 403);
+  });
+
+  test("rate limits repeat submissions from one client ip", async () => {
+    const forwarded = { "x-forwarded-for": "203.0.113.77" };
+    for (let i = 0; i < 5; i += 1) {
+      const res = await postTestimonial(SUBMISSION, forwarded);
+      assert.equal(res.status, 201, `submission ${i + 1} should still be accepted`);
+    }
+    const limited = await postTestimonial(SUBMISSION, forwarded);
+    assert.equal(limited.status, 429);
+    assert.ok(limited.headers.get("retry-after"));
+  });
+});
+
 describe("static site and health", () => {
   test("serves the marketing homepage", async () => {
     const res = await fetch(`${base}/`);
@@ -225,15 +312,27 @@ describe("static site and health", () => {
 
   test("reports inbox configuration on /api/health", async () => {
     const withInbox = await fetch(`${base}/api/health`);
-    assert.deepEqual(await withInbox.json(), { ok: true, inboxConfigured: true, supabaseConfigured: false, storageBackend: "jsonl", storageDurable: true, supabaseReachable: null, warnings: [] });
+    const body = await withInbox.json();
+    assert.equal(body.ok, true);
+    assert.equal(body.inboxConfigured, true);
+    assert.equal(body.inbox.ok, true);
+    assert.equal(body.supabaseConfigured, false);
+    assert.equal(body.storageBackend, "jsonl");
+    assert.equal(body.storageDurable, true);
+    assert.equal(body.datastore.backend, "jsonl");
+    assert.equal(body.datastore.ok, true);
+    assert.equal(body.datastore.probe, "skipped");
+    assert.ok(body.datastore.checkedAt);
+    assert.deepEqual(body.warnings, []);
 
     delete process.env.CONTACT_INBOX_EMAIL;
-    const without = await fetch(`${base}/api/health`);
+    // ?fresh=1 bypasses the 60s probe cache, which is process-global.
+    const without = await fetch(`${base}/api/health?fresh=1`);
     const withoutBody = await without.json();
     assert.equal(withoutBody.ok, true);
     assert.equal(withoutBody.inboxConfigured, false);
     assert.equal(withoutBody.storageBackend, "jsonl");
-    assert.equal(withoutBody.supabaseReachable, null);
+    assert.equal(withoutBody.datastore.probe, "skipped");
     assert.ok(Array.isArray(withoutBody.warnings) && withoutBody.warnings.length > 0);
   });
 });
@@ -268,19 +367,24 @@ describe("validateEnquiry", () => {
 });
 
 describe("store location", () => {
-  test("defaults to the project's data/ directory, independent of process.cwd()", () => {
+  test("defaults to the configured store directory, independent of process.cwd()", () => {
     const saved = process.env.ENQUIRY_STORE;
+    const savedCwd = process.cwd();
     delete process.env.ENQUIRY_STORE;
     try {
       const resolved = storePath();
-      // Absolute, and anchored to this project rather than to process.cwd().
+      // Absolute and fully resolved, anchored to paths.mjs rather than cwd.
       assert.ok(resolved.startsWith("/"), `expected an absolute path, got ${resolved}`);
-      assert.ok(resolved.endsWith("data/enquiries.jsonl"), `unexpected store path ${resolved}`);
       assert.ok(
         !resolved.includes(".."),
         `store path should be fully resolved, got ${resolved}`,
       );
+      assert.ok(resolved.endsWith("enquiries.jsonl"), `unexpected store path ${resolved}`);
+      assert.equal(resolved, dataFile("enquiries.jsonl"));
+      process.chdir(tmpdir());
+      assert.equal(storePath(), resolved, "store path must not follow process.cwd()");
     } finally {
+      process.chdir(savedCwd);
       if (saved === undefined) delete process.env.ENQUIRY_STORE;
       else process.env.ENQUIRY_STORE = saved;
     }
@@ -1183,7 +1287,77 @@ describe("vercel.json security headers", () => {
     const headers = await loadHeaders();
     assert.equal(headers.get("x-content-type-options"), "nosniff");
     assert.equal(headers.get("x-frame-options"), "DENY");
+    assert.equal(headers.get("x-permitted-cross-domain-policies"), "none");
     assert.ok(headers.get("referrer-policy"));
     assert.ok(headers.get("permissions-policy"));
+  });
+
+  test("this process sends the same cross-domain policy as the config", async () => {
+    const headers = await loadHeaders();
+    const res = await fetch(`${base}/index.html`);
+    const sent = res.headers.get("x-permitted-cross-domain-policies");
+    await res.text();
+    assert.equal(sent, headers.get("x-permitted-cross-domain-policies"));
+  });
+
+  test("public/_headers agrees with vercel.json", async () => {
+    /**
+     * Cloudflare Pages reads public/_headers and Vercel reads vercel.json. The
+     * same site is served by both, so a header added to one and not the other
+     * means the policy depends on which platform answers the request.
+     */
+    const raw = await readFile(new URL("../public/_headers", import.meta.url), "utf8");
+    const lines = raw.split("\n");
+    const start = lines.findIndex((line) => line.trim() === "/*");
+    assert.ok(start >= 0, "public/_headers must have a global /* block");
+    const values = new Map();
+    for (const line of lines.slice(start + 1)) {
+      if (!line.startsWith("  ")) break;
+      const idx = line.indexOf(":");
+      values.set(line.slice(0, idx).trim().toLowerCase(), line.slice(idx + 1).trim());
+    }
+    const vercel = await loadHeaders();
+    for (const key of ["x-content-type-options", "x-frame-options", "x-permitted-cross-domain-policies"]) {
+      assert.equal(values.get(key), vercel.get(key), `${key} must match across both platforms`);
+    }
+  });
+});
+
+// ── the two deploy outputs ───────────────────────────────────────────────────
+
+describe("deploy outputs", () => {
+  async function walk(dir, prefix = "") {
+    const out = [];
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      if (entry.name.startsWith(".fuse_hidden")) continue;
+      const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) out.push(...(await walk(join(dir, entry.name), rel)));
+      else out.push(rel);
+    }
+    return out;
+  }
+
+  test("Web/ and public/ carry the same site", async () => {
+    /**
+     * `npm run build:web` writes both, but a file placed by hand in one of them
+     * is invisible to the other platform. security.txt lived in Web/ only, so
+     * Cloudflare Pages — which answers www.dutaintegra.my — served the SPA
+     * shell at that URL instead of the disclosure contact.
+     */
+    const web = await walk(new URL("../Web", import.meta.url).pathname);
+    const pages = await walk(new URL("../public", import.meta.url).pathname);
+    const onlyWeb = web.filter((f) => !pages.includes(f));
+    const onlyPages = pages.filter((f) => !web.includes(f));
+
+    assert.deepEqual(onlyWeb, [], "Vercel's output has files Cloudflare's output is missing");
+    assert.deepEqual(
+      onlyPages.sort(),
+      ["_headers", "_redirects"],
+      "Cloudflare's output may only add its own platform config",
+    );
+    assert.ok(
+      web.includes(".well-known/security.txt") && pages.includes(".well-known/security.txt"),
+      "security.txt must ship in both outputs",
+    );
   });
 });

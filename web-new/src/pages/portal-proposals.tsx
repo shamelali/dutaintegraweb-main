@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { LoaderCircle, Check, AlertCircle, Download, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { PortalAccountBar } from "@/components/portal-account-bar"
 // import { useLanguage } from "@/hooks/use-language" // unused
 
 type Proposal = {
@@ -25,7 +26,7 @@ export function PortalProposalsPage() {
   useEffect(() => {
     fetch("/api/portal/proposals")
       .then(async (r) => {
-        if (r.status === 401) return navigate("/login")
+        if (r.status === 401) return navigate(`/login?next=${encodeURIComponent(window.location.pathname)}`)
         const data = await r.json()
         if (!r.ok) throw new Error(data.error || "Failed to load")
         setProposals(data.proposals || [])
@@ -40,6 +41,7 @@ export function PortalProposalsPage() {
   return (
     <div className="min-h-screen bg-background py-12 px-6">
       <div className="max-w-4xl mx-auto">
+        <PortalAccountBar />
         <h1 className="text-3xl font-heading font-bold mb-8">My Proposals</h1>
         {proposals.length === 0 ? (
           <Card className="p-12 text-center">

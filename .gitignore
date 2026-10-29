@@ -7,8 +7,10 @@
 /env
 /env.*
 
-# runtime data — inbound enquiries are stored here
-/data/
+# runtime data — JSONL fallback stores. The README is tracked; its
+# contents never are.
+/data/*
+!/data/README.md
 
 # logs & debug
 *.log
@@ -17,6 +19,9 @@ npm-debug.log*
 # misc
 .DS_Store
 *.pem
+# FUSE leaves these behind when a running dev server still holds a replaced
+# build artifact, and `git add Web/` would sweep one into a commit.
+.fuse_hidden*
 
 # prevent git bundles from being committed
 *.bundle
@@ -30,6 +35,9 @@ Web-backup-*/
 
 # personal tool configs
 obsidian-knowledge-base/
+# CLI-local permissions/rules. `.qoder/settings.json` is the shareable project
+# scope and stays committable; the .local file carries this machine's approvals.
+.qoder/settings.local.json
 
 # next.js build output
 .next/

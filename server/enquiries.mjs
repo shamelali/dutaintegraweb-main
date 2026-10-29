@@ -1,43 +1,28 @@
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+import { usingSupabase } from "./store.mjs";
+import { dataFile } from "./paths.mjs";
 
 /**
  * Enquiry persistence and notification.
  *
- * Storage backend is chosen at call time, not at import time, so tests can
- * toggle env vars between cases without re-importing the module:
- *
- *   - SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY set  -> Supabase Postgres
- *     (production / Vercel — serverless functions have no durable local
- *     filesystem, so a JSONL file would silently lose every lead on the
- *     next cold start. This is exactly the bug this whole rebuild exists
- *     to fix, so it must not be reintroduced here.)
- *   - otherwise                                     -> local JSONL file
- *     (local dev and the existing test suite; zero setup required)
+ * Backend choice is delegated to store.mjs and made at call time, not import
+ * time, so tests can toggle env vars between cases without re-importing.
+ * Supabase is the production backend: serverless functions have no durable
+ * local filesystem, so the JSONL fallback would silently lose every lead on
+ * the next cold start.
  *
  * In both modes the row is ALWAYS written before the notification is
  * attempted — a lead must survive a restart, a crash mid-request, or a
  * mail-provider outage.
  */
 
-let _warnedJsonlFallback = false;
-function supabaseConfigured() {
-  const ok = Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
-  if (!ok && !_warnedJsonlFallback) {
-    _warnedJsonlFallback = true;
-    console.warn("[enquiries] Supabase not configured — falling back to local JSONL store (data will not persist on serverless).");
-  }
-  return ok;
-}
-
 // ── JSONL backend (local dev / tests) ───────────────────────────────────────
 
 // Resolved relative to this file, NOT process.cwd() — enquiries must land in
 // the project's data/ directory however the server is launched.
-const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const DEFAULT_STORE = join(PROJECT_ROOT, "data", "enquiries.jsonl");
+const DEFAULT_STORE = dataFile("enquiries.jsonl");
 
 export function storePath() {
   return process.env.ENQUIRY_STORE || DEFAULT_STORE;
@@ -244,22 +229,22 @@ export async function recordEnquiry(input) {
     created_at: new Date().toISOString(),
     emailed_at: null,
   };
-  return supabaseConfigured() ? supabaseRecord(record) : jsonlRecord(record);
+  return usingSupabase() ? supabaseRecord(record) : jsonlRecord(record);
 }
 
 /** Mark a stored enquiry as notified. */
 export async function markEnquiryEmailed(id, at = new Date().toISOString()) {
-  return supabaseConfigured() ? supabaseMarkEmailed(id, at) : jsonlMarkEmailed(id, at);
+  return usingSupabase() ? supabaseMarkEmailed(id, at) : jsonlMarkEmailed(id, at);
 }
 
 /** Read stored enquiries, newest first. `limit` defaults to 50. */
 export async function listEnquiries(limit = 50) {
-  return supabaseConfigured() ? supabaseList(limit) : jsonlList(limit);
+  return usingSupabase() ? supabaseList(limit) : jsonlList(limit);
 }
 
 /** Update a lead's status, note, and/or assigned_role. Returns the updated record, or null if not found. */
 export async function updateEnquiryStatus(id, status, note, assignedRole) {
-  return supabaseConfigured() ? supabaseUpdateStatus(id, status, note, assignedRole) : jsonlUpdateStatus(id, status, note, assignedRole);
+  return usingSupabase() ? supabaseUpdateStatus(id, status, note, assignedRole) : jsonlUpdateStatus(id, status, note, assignedRole);
 }
 
 export function enquirySubject(enquiry) {

@@ -6,6 +6,7 @@ import { join } from "node:path";
 
 import { notifyEnquiry, recordEnquiry } from "./enquiries.mjs";
 import { sendDigestEmail } from "./digest.mjs";
+import { dataFile } from "./paths.mjs";
 
 /**
  * Email provider wiring: priority Brevo > Resend > Postmark, identical in
@@ -92,8 +93,9 @@ test("digest: postmark is supported and brevo outranks resend", async () => {
   };
   const client = { id: "c1", email: "client@example.com" };
 
-  // Size-restore cleanup: the digest log has no env override (data/digests.jsonl).
-  const logPath = new URL("../data/digests.jsonl", import.meta.url);
+  // The digest log is written through paths.mjs, so it lands in the same
+  // directory every other JSONL store uses (a temp dir under the test runner).
+  const logPath = dataFile("digests.jsonl");
   let before = 0;
   try {
     before = (await stat(logPath)).size;

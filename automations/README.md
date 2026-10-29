@@ -12,10 +12,23 @@ The homepage can return 200 while the site is completely broken. Every build
 emits a new hashed bundle (`index-<hash>.js`), so a deploy that ships a stale
 `index.html` or fails to upload assets yields a blank page that still answers
 200. The watch therefore also fetches every `/assets/*` reference the homepage
-declares, and treats a 404 there as a failure. It also probes `/api/health` on
-its own, since the serverless gateway can fail while the static site keeps
-serving — and checks `ok: true` in the response body, because a 200 alone
-doesn't prove the API is healthy.
+declares, and treats a 404 there as a failure.
+
+It also reads `/api/health` and classifies what it finds into two kinds of
+incident, counted and alerted separately:
+
+| Kind | Headline | What it means |
+|---|---|---|
+| outage | `:rotating_light:` | A route is down, a bundle 404s, or the gateway is unreachable |
+| persistence | `:card_index_dividers:` | The site is up but the data layer is not durable |
+
+The persistence case is the one that used to be invisible. `/api/health`
+reported `ok: true` while leads were appended to `data/*.jsonl`, which a
+serverless redeploy throws away. It now answers 503 when the store is unusable,
+and the watch flags a `jsonl` backend, a missing `health_probe` table (an
+unapplied migration), or a failed write/read round-trip — each named in the
+alert so it is not mistaken for downtime. `/api/health` is therefore not in the
+must-be-200 list; `check_datastore()` owns it.
 
 ### Configuration
 
@@ -26,6 +39,7 @@ Defaults are baked in; override with environment variables on the automation.
 | `WATCH_BASE_URL` | `https://www.dutaintegra.my` | Target site |
 | `WATCH_TIMEOUT` | `20` | Per-request timeout, seconds |
 | `WATCH_ALERT_AFTER` | `3` | Consecutive failures before alerting |
+| `WATCH_ALLOW_JSONL` | unset | Set to `1` on a preview that deliberately uses the JSONL store, so the persistence check stays quiet |
 
 ### Alerting is opt-in
 

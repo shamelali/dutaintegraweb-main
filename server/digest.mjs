@@ -1,6 +1,7 @@
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+import { usingSupabase } from "./store.mjs";
+import { dataFile } from "./paths.mjs";
 
 /**
  * Monthly digest — compose and send a summary to each retainer client.
@@ -10,24 +11,12 @@ import { fileURLToPath } from "node:url";
  *   - Bulk cron:       POST /api/monthly-digest (existing)
  *
  * Digest log is kept in data/digests.jsonl (local) or Supabase monthly_digests.
+ * Backend selection lives in store.mjs.
  */
-
-let _warnedJsonlFallback = false;
-function supabaseConfigured() {
-  const ok = Boolean(
-    process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(),
-  );
-  if (!ok && !_warnedJsonlFallback) {
-    _warnedJsonlFallback = true;
-    console.warn("[digest] Supabase not configured — falling back to local JSONL store (data will not persist on serverless).");
-  }
-  return ok;
-}
 
 // ── JSONL digest log ─────────────────────────────────────────────────────────
 
-const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const DIGEST_STORE = join(PROJECT_ROOT, "data", "digests.jsonl");
+const DIGEST_STORE = dataFile("digests.jsonl");
 
 async function ensureDir() { await mkdir(dirname(DIGEST_STORE), { recursive: true }); }
 
@@ -145,7 +134,7 @@ export async function sendDigestEmail(client, digest) {
     health: digest.health,
   };
 
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const base = process.env.SUPABASE_URL.replace(/\/$/, "");
     await fetch(`${base}/rest/v1/monthly_digests`, {
       method: "POST",
@@ -166,7 +155,7 @@ export async function sendDigestEmail(client, digest) {
 
 /** Get the last digest log entry for a client (JSONL only; Supabase uses list). */
 export async function getDigestLog(clientId) {
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const base = process.env.SUPABASE_URL.replace(/\/$/, "");
     const res = await fetch(
       `${base}/rest/v1/monthly_digests?client_id=eq.${encodeURIComponent(clientId)}&select=*&order=sent_at.desc&limit=1`,

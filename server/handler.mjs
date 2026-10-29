@@ -1,8 +1,9 @@
 import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
-import { extname, join, normalize, resolve, sep } from "node:path";
+import { appendFile, mkdir, stat } from "node:fs/promises";
+import { dirname, extname, join, normalize, resolve, sep } from "node:path";
 
 import { listEnquiries, notifyEnquiry, notifyEnquirer, recordEnquiry, resolveInboxEmail, sendMail, updateEnquiryStatus } from "./enquiries.mjs";
+import { recordTestimonial } from "./testimonials.mjs";
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import { handleStats } from "./stats.mjs";
 import { calculateSavings } from "./calculator.mjs";
@@ -37,6 +38,10 @@ import {
 } from "./cms.mjs";
 
 import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
+
+import { supabaseFetch as sbFetch, supabaseReady, resolveBackend } from "./store.mjs";
+import { healthReport } from "./health.mjs";
+import { dataFile } from "./paths.mjs";
 
 /**
  * Request handler for dutaintegra.my.
@@ -82,6 +87,7 @@ const MAX_BODY_BYTES = 32 * 1024;
 const SECURITY_HEADERS = {
   "x-content-type-options": "nosniff",
   "x-frame-options": "DENY",
+  "x-permitted-cross-domain-policies": "none",
   "referrer-policy": "strict-origin-when-cross-origin",
   "permissions-policy": "camera=(), microphone=(), geolocation=()",
   "content-security-policy":
@@ -489,27 +495,8 @@ async function handleAdminEnquiries(req, res) {
 
 // ── proposals (lightweight) ────────────────────────────────────────────────
 
-function supabaseConfigured() {
-  return Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
-}
-
-async function sbFetch(path, init = {}) {
-  const base = process.env.SUPABASE_URL.trim().replace(/\/$/, "");
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
-  const res = await fetch(`${base}/rest/v1/${path}`, {
-    ...init,
-    headers: {
-      apikey: key,
-      authorization: `Bearer ${key}`,
-      "content-type": "application/json",
-      ...(init.headers || {}),
-    },
-  });
-  return res;
-}
-
 async function writeAuditLog({ actorType, actorId, actorEmail, action, entityType, entityId, before, after, metadata }) {
-  if (!supabaseConfigured()) return;
+  if (!supabaseReady()) return;
   try {
     await sbFetch("audit_log", {
       method: "POST",
@@ -747,7 +734,7 @@ async function handleAdminLeadStatus(req, res, id) {
 
   // Fetch current lead for audit log
   let before = null;
-  if (supabaseConfigured()) {
+  if (supabaseReady()) {
     const r = await sbFetch(`leads?id=eq.${encodeURIComponent(id)}&select=*`);
     if (r.ok) {
       const rows = await r.json();
@@ -795,7 +782,7 @@ async function handleAdminLeadStatus(req, res, id) {
 async function handleAdminCreateProposal(req, res) {
   const auth = await requireAdminSession(req);
   if (!auth) return send(res, 401, { error: "Unauthorized" });
-  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  if (!supabaseReady()) return send(res, 503, { error: "Supabase not configured" });
 
   const parsed = await readJsonBody(req);
   if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
@@ -827,7 +814,7 @@ async function handleAdminCreateProposal(req, res) {
   const proposal = rows[0] || row;
 
   // Best-effort auto-email the proposal link to the linked lead.
-  if (b.leadId && supabaseConfigured()) {
+  if (b.leadId && supabaseReady()) {
     try {
       const lr = await sbFetch(`workspace_leads?id=eq.${encodeURIComponent(b.leadId)}&select=email,name`);
       if (lr.ok) {
@@ -866,7 +853,7 @@ async function handleAdminCreateProposal(req, res) {
 }
 
 async function handleGetProposal(req, res, id) {
-  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  if (!supabaseReady()) return send(res, 503, { error: "Supabase not configured" });
   const r = await sbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&select=*`);
   if (!r.ok) return send(res, 502, { error: `db error: ${await r.text()}` });
   const rows = await r.json();
@@ -876,7 +863,7 @@ async function handleGetProposal(req, res, id) {
 }
 
 async function handleAcceptProposal(req, res, id) {
-  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  if (!supabaseReady()) return send(res, 503, { error: "Supabase not configured" });
   const parsed = await readJsonBody(req);
   const name = parsed.error ? "" : String(parsed.data?.name || "").trim().slice(0, 120);
   const r = await sbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&status=eq.sent`, {
@@ -1025,10 +1012,6 @@ function scoreQuiz(body) {
 
 /** Persist a quiz completion for analytics. */
 async function recordQuizAudit(data) {
-  const { appendFile, mkdir } = await import("node:fs/promises");
-  const { dirname, join } = await import("node:path");
-  const { randomUUID } = await import("node:crypto");
-
   const record = {
     id: randomUUID(),
     team_size: data.teamSize,
@@ -1041,33 +1024,20 @@ async function recordQuizAudit(data) {
     created_at: new Date().toISOString(),
   };
 
-  // JSONL local store
-  const store = process.env.QUIZ_STORE || join(
-    dirname(new URL(import.meta.url).pathname),
-    "..", "data", "quiz-audits.jsonl"
-  );
-  await mkdir(dirname(store), { recursive: true });
-  await appendFile(store, JSON.stringify(record) + "\n", "utf8");
-
-  // Supabase if configured
-  if (process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
-    try {
-      const { default: fetch } = await import("node:fetch");
-      await fetch(`${process.env.SUPABASE_URL}/rest/v1/quiz_audits`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": process.env.SUPABASE_SERVICE_ROLE_KEY,
-          "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-          "Prefer": "return=minimal",
-        },
-        body: JSON.stringify(record),
-      });
-    } catch (err) {
-      console.error(`[quiz] supabase persist failed: ${err.message}`);
-    }
+  // JSONL is the development store; Supabase is the production one.
+  if (resolveBackend() === "supabase") {
+    const res = await sbFetch("quiz_audits", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify(record),
+    });
+    if (!res.ok) throw new Error(`quiz_audits insert failed: ${res.status}`);
+    return record;
   }
 
+  const store = process.env.QUIZ_STORE || dataFile("quiz-audits.jsonl");
+  await mkdir(dirname(store), { recursive: true });
+  await appendFile(store, JSON.stringify(record) + "\n", "utf8");
   return record;
 }
 
@@ -1213,23 +1183,48 @@ async function handleProducts(req, res) {
 // Records a submitted testimonial for a client.
 
 async function handleTestimonial(req, res) {
+  const blocked = checkOrigin(req);
+  if (blocked) return send(res, blocked.status, blocked.body);
+
+  const limited = rateLimit(`testimonial:${clientIp(req)}`);
+  if (!limited.allowed) {
+    return send(
+      res,
+      429,
+      { error: "Too many attempts. Please try again later." },
+      { "retry-after": String(Math.ceil(limited.retryAfterMs / 1000)) },
+    );
+  }
+
   try {
     const parsed = await readJsonBody(req);
     if (parsed.error) return send(res, parsed.error.status, parsed.error.body);
     const body = parsed.data;
+
+    if (!body || typeof body !== "object")
+      return send(res, 400, { error: "Invalid payload" });
 
     const { client, tier, quote, author } = body;
     if (!client || !quote || !author)
       return send(res, 400, { error: "Missing client, quote, or author" });
     if (typeof quote !== 'string' || quote.length > 500)
       return send(res, 400, { error: "Quote must be 1-500 characters" });
+    if (typeof client !== 'string' || client.length > 200)
+      return send(res, 400, { error: "Client must be 1-200 characters" });
+    if (typeof author !== 'string' || author.length > 200)
+      return send(res, 400, { error: "Author must be 1-200 characters" });
+    if (tier != null && (typeof tier !== 'string' || tier.length > 60))
+      return send(res, 400, { error: "Tier must be at most 60 characters" });
 
-    // TODO: Persist to Supabase or JSONL store
-    console.log("[testimonial] received:", { client, tier, author, quote: quote.slice(0, 60) + '...' });
-
-    return send(res, 201, { ok: true, message: "Testimonial recorded. Thank you!" });
+    const record = await recordTestimonial({ client, tier, quote, author });
+    // The quote is customer words, so it stays out of stdout; the id is enough
+    // to trace a submission when support needs it.
+    console.log(`[testimonial ${record.id}] recorded`);
+    return send(res, 201, { ok: true, id: record.id });
   } catch (err) {
     console.error("[server] testimonial error:", err);
+    if (err.code === "STORAGE_CONFIG")
+      return send(res, 503, { error: "Testimonial storage is unavailable." });
     return send(res, 500, { error: "Failed to record testimonial. Please try again." });
   }
 }
@@ -1445,9 +1440,6 @@ export async function handle(req, res) {
     if (pathname === "/admin/proposals" && req.method === "GET") {
       return await handleAdminProposalsPage(req, res);
     }
-    if (pathname === "/admin/pipeline" && req.method === "GET") {
-      return await handleAdminPipelinePage(req, res);
-    }
     if (pathname === "/admin/proposals" && req.method === "POST") {
       return await handleAdminCreateProposal(req, res);
     }
@@ -1489,44 +1481,9 @@ export async function handle(req, res) {
     if (pathname.startsWith("/api/workspace/")) return await handleWorkspaceNodeRequest(req, res);
 
     if (pathname === "/api/health") {
-      const supabaseConfigured = Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
-      let supabaseReachable = null;
-      if (supabaseConfigured) {
-        try {
-          const probe = await fetch(`${process.env.SUPABASE_URL.trim().replace(/\/$/, "")}/rest/v1/leads?select=id&limit=0`, {
-            headers: {
-              apikey: process.env.SUPABASE_SERVICE_ROLE_KEY.trim(),
-              authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY.trim()}`,
-            },
-            signal: AbortSignal.timeout(3000),
-          });
-          supabaseReachable = probe.ok;
-        } catch {
-          supabaseReachable = false;
-        }
-      }
-      const storageBackend = supabaseConfigured ? "supabase" : "jsonl";
-      const onServerless = Boolean(process.env.VERCEL);
-      const storageDurable = storageBackend === "supabase" || !onServerless;
-      const warnings = [];
-      if (storageBackend === "jsonl" && onServerless) {
-        warnings.push("storage backend is jsonl on a serverless platform - leads will not persist across cold starts; configure SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY");
-      }
-      if (supabaseConfigured && supabaseReachable === false) {
-        warnings.push("Supabase configured but unreachable");
-      }
-      if (!resolveInboxEmail()) {
-        warnings.push("no CONTACT_INBOX_EMAIL/ADMIN_EMAIL configured - enquiry notifications disabled");
-      }
-      return send(res, 200, {
-        ok: storageDurable && (supabaseReachable !== false),
-        inboxConfigured: Boolean(resolveInboxEmail()),
-        supabaseConfigured,
-        storageBackend,
-        storageDurable,
-        supabaseReachable,
-        warnings,
-      });
+      const fresh = new URL(urlPath, "http://localhost").searchParams.get("fresh") === "1";
+      const { status, ...report } = await healthReport({ force: fresh });
+      return send(res, status, report);
     }
     if (pathname === "/api/stats") return await handleStats(req, res);
     if (pathname === "/api/calculator") return await handleCalculator(req, res);

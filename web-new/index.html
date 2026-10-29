@@ -2,6 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Arms the scroll-reveal start state. Keep this inline and above the
+      // stylesheet so nothing paints hidden then shifts; without it the
+      // .reveal rules leave every below-fold section invisible.
+      document.documentElement.classList.add("js-reveal");
+    </script>
     <link rel="icon" type="image/png" href="/mark.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

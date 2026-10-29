@@ -119,13 +119,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── Scroll reveal ── */
-.reveal {
+/* The hidden start state is only applied once the inline script in index.html
+   has armed it. Otherwise a crawler that does not run JS, a print, or a bundle
+   that fails to parse renders these sections as blank space. */
+.js-reveal .reveal {
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.55s ease, transform 0.55s ease;
 }
 
-.reveal.visible {
+.js-reveal .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -136,7 +139,7 @@ h1, h2, h3, h4, h5, h6 {
 .reveal-delay-4 { transition-delay: 0.4s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .js-reveal .reveal {
     opacity: 1;
     transform: none;
     transition: none;

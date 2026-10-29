@@ -27,25 +27,7 @@ const scryptAsync = promisify(scrypt);
 import { findClientByEmail, findClientById, createClient, listClients, updateClient } from "./clients.mjs";
 import { listTicketsForClient, findTicket, createTicket, updateTicket, countTicketsByStatus, createTicketReply, listTicketReplies } from "./tickets.mjs";
 import { buildDigestForClient, sendDigestEmail } from "./digest.mjs";
-
-function supabaseConfigured() {
-  return Boolean(process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim());
-}
-
-async function sbFetch(path, init = {}) {
-  const base = process.env.SUPABASE_URL.trim().replace(/\/$/, "");
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY.trim();
-  const res = await fetch(`${base}/rest/v1/${path}`, {
-    ...init,
-    headers: {
-      apikey: key,
-      authorization: `Bearer ${key}`,
-      "content-type": "application/json",
-      ...(init.headers || {}),
-    },
-  });
-  return res;
-}
+import { supabaseFetch as sbFetch, supabaseReady } from "./store.mjs";
 
 // ── password hashing ─────────────────────────────────────────────────────────
 
@@ -416,7 +398,7 @@ export async function handlePortalProposalById(req, res, id) {
   const session = sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
 
-  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  if (!supabaseReady()) return send(res, 503, { error: "Supabase not configured" });
   const r = await sbFetch(`workspace_proposals?id=eq.${encodeURIComponent(id)}&select=*`);
   if (!r.ok) return send(res, 502, { error: `db error: ${await r.text()}` });
   const rows = await r.json();
@@ -442,7 +424,7 @@ export async function handlePortalDigests(req, res) {
   const session = sessionFromReq(req);
   if (!session) return send(res, 401, { error: "Not authenticated" });
 
-  if (!supabaseConfigured()) return send(res, 503, { error: "Supabase not configured" });
+  if (!supabaseReady()) return send(res, 503, { error: "Supabase not configured" });
   const client = await findClientById(session.clientId);
   if (!client) return send(res, 404, { error: "Client not found" });
 

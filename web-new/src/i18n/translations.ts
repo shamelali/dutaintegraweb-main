@@ -19,6 +19,10 @@ export const translations = {
     en: "Contact Us",
     bm: "Hubungi Kami",
   },
+  navPortal: {
+    en: "Client Portal",
+    bm: "Portal Klien",
+  },
   navQuiz: {
     en: "Free IT Audit",
     bm: "Audit IT Percuma",

@@ -1,29 +1,17 @@
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+import { usingSupabase } from "./store.mjs";
+import { dataFile } from "./paths.mjs";
 
 /**
  * Client CRUD — Supabase (prod) or JSONL fallback (local dev / tests).
- * Follows the same dual-backend pattern as enquiries.mjs.
+ * Backend selection lives in store.mjs.
  */
-
-let _warnedJsonlFallback = false;
-function supabaseConfigured() {
-  const ok = Boolean(
-    process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(),
-  );
-  if (!ok && !_warnedJsonlFallback) {
-    _warnedJsonlFallback = true;
-    console.warn("[clients] Supabase not configured — falling back to local JSONL store (data will not persist on serverless).");
-  }
-  return ok;
-}
 
 // ── JSONL backend ────────────────────────────────────────────────────────────
 
-const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const STORE = join(PROJECT_ROOT, "data", "clients.jsonl");
+const STORE = dataFile("clients.jsonl");
 
 async function ensureDir() {
   await mkdir(dirname(STORE), { recursive: true });
@@ -174,23 +162,23 @@ async function supabaseDelete(id) {
 // ── public API ───────────────────────────────────────────────────────────────
 
 export async function findClientByEmail(email) {
-  return supabaseConfigured() ? supabaseFindByEmail(email) : jsonlFindByEmail(email);
+  return usingSupabase() ? supabaseFindByEmail(email) : jsonlFindByEmail(email);
 }
 
 export async function findClientById(id) {
-  return supabaseConfigured() ? supabaseFindById(id) : jsonlFindById(id);
+  return usingSupabase() ? supabaseFindById(id) : jsonlFindById(id);
 }
 
 export async function upsertClient(client) {
-  return supabaseConfigured() ? supabaseUpsert(client) : jsonlUpsert(client);
+  return usingSupabase() ? supabaseUpsert(client) : jsonlUpsert(client);
 }
 
 export async function listClients() {
-  return supabaseConfigured() ? supabaseListAll() : jsonlReadAll();
+  return usingSupabase() ? supabaseListAll() : jsonlReadAll();
 }
 
 export async function updateClient(id, patch) {
-  if (supabaseConfigured()) return supabaseUpdate(id, patch);
+  if (usingSupabase()) return supabaseUpdate(id, patch);
   const rows = await jsonlReadAll();
   const idx = rows.findIndex((r) => r.id === id);
   if (idx < 0) return null;
@@ -200,7 +188,7 @@ export async function updateClient(id, patch) {
 }
 
 export async function deleteClient(id) {
-  if (supabaseConfigured()) return supabaseDelete(id);
+  if (usingSupabase()) return supabaseDelete(id);
   const rows = await jsonlReadAll();
   await jsonlWriteAll(rows.filter((r) => r.id !== id));
 }

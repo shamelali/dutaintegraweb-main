@@ -24,7 +24,7 @@ jobs:
           node-version: "22"
 
       - name: Test
-        run: node --test "server/**/*.test.mjs"
+        run: npm test
 
   # web-new is where the frontend actually lives. Without this job its TypeScript
   # errors go unnoticed, which is how 70 of them accumulated.
@@ -45,6 +45,10 @@ jobs:
       - name: Install dependencies
         working-directory: web-new
         run: npm ci
+
+      - name: Unit tests
+        working-directory: web-new
+        run: npm test
 
       - name: Lint
         working-directory: web-new

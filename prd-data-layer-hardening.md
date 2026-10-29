@@ -17,7 +17,12 @@ This document specifies the work to make the data layer honest: fail loudly when
 misconfigured, version the schema, and make health checks actually verify that
 data can be written and read back.
 
-**This is a PRD. Nothing here is implemented yet.**
+> **Status (2026-10-28): US-001, US-002, US-003, US-004 and US-005 are
+> implemented in the working tree and covered by tests** — 165 passing, 0 failing.
+> Three things remain *operational*, not code: the new migration has not been
+> applied to the Supabase project, the uptime automation has not been redeployed,
+> and no preview deploy has been checked with `SUPABASE_*` removed. GitHub Actions
+> still cannot execute (account billing lock), so none of this is gated remotely.
 
 ## 2. Goals
 
@@ -42,9 +47,9 @@ Recorded so the requirements are grounded in observed behaviour, not theory.
 | Five stores share the same silent fallback | `supabaseConfigured()` duplicated in `clients.mjs`, `enquiries.mjs`, `tickets.mjs`, `digest.mjs`, and inline in `handler.mjs:521` |
 | Production likely runs on the fallback path | `GET /api/ops/feed` returns `{"stats":{"total":0}}` while the repository's `data/ops-events.jsonl` holds 8.9 KB of events |
 | `/api/health` never touches the data layer | `handler.mjs:898` returns only `{ ok, inboxConfigured }` |
-| The schema is unversioned | No `.sql` or migration files in the repo; tables (`leads`, `clients`, `tickets`, `monthly_digests`, `quiz_audits`) exist only as string constants in code |
+| The schema was unversioned | No `.sql` or migration files in the repo at drafting; tables (`leads`, `clients`, `tickets`, `monthly_digests`, `quiz_audits`) existed only as string constants in code. **Since corrected:** `supabase/migrations/` now carries the schema, and `server/schema.test.mjs` fails if code and migrations drift |
 | A `service_role` key is in play | Used in five modules; bypasses RLS entirely. `.env.example:41` already warns about this |
-| The fallback writes real PII to disk | `data/clients.jsonl` (200 KB), `data/quiz-audits.jsonl` (74 KB), `data/tickets.jsonl` (20 KB) |
+| The fallback accumulates records on disk | `data/clients.jsonl`, `data/quiz-audits.jsonl`, `data/tickets.jsonl`. **Since measured:** the contents were synthetic test output, not customer PII — every client row was `{"name":"Test Client"}`, every ticket one of two fixture subjects, and every ops event `"Test event"`. Cause: `npm test` had no store isolation and appended into the working tree on every run. Fixed by `server/paths.mjs` + `scripts/test-server.mjs` (US-005) |
 
 Two important nuances:
 
@@ -66,12 +71,12 @@ loudly, so that I find out before leads are lost.
 
 **Acceptance Criteria:**
 
-- [ ] A single shared resolver replaces the five copies of `supabaseConfigured()`, returning one of: `supabase`, `jsonl`, or an error.
-- [ ] When `SUPABASE_URL` is set but `SUPABASE_SERVICE_ROLE_KEY` is missing (or vice versa), the resolver raises a configuration error rather than silently choosing JSONL.
-- [ ] When Supabase is configured and a write fails, the error propagates to the caller and the request returns a 5xx — it does **not** fall back to a file.
-- [ ] When Supabase is unconfigured and `NODE_ENV=production`, the resolver raises a configuration error instead of using JSONL.
-- [ ] When Supabase is unconfigured and `NODE_ENV` is not `production`, JSONL is used and a single startup warning is logged, once per process rather than per request.
-- [ ] Existing tests that rely on the JSONL path continue to pass without setting `SUPABASE_*` variables.
+- [x] A single shared resolver replaces the five copies of `supabaseConfigured()`, returning one of: `supabase`, `jsonl`, or an error.
+- [x] When `SUPABASE_URL` is set but `SUPABASE_SERVICE_ROLE_KEY` is missing (or vice versa), the resolver raises a configuration error rather than silently choosing JSONL.
+- [x] When Supabase is configured and a write fails, the error propagates to the caller and the request returns a 5xx — it does **not** fall back to a file.
+- [x] When Supabase is unconfigured and `NODE_ENV=production`, the resolver raises a configuration error instead of using JSONL.
+- [x] When Supabase is unconfigured and `NODE_ENV` is not `production`, JSONL is used and a single startup warning is logged, once per process rather than per request.
+- [x] Existing tests that rely on the JSONL path continue to pass without setting `SUPABASE_*` variables.
 
 ### US-002: Make the health endpoint prove the data layer works
 
@@ -80,13 +85,13 @@ platform can actually store data, so that "healthy" means something.
 
 **Acceptance Criteria:**
 
-- [ ] `/api/health` reports the active backend (`supabase` or `jsonl`) in its response.
-- [ ] `/api/health` reports a distinct status per dependency: `inbox` and `datastore`, each `ok` or `error`.
-- [ ] When the datastore is reachable, the response includes a round-trip `write`/`read`/`delete` probe of a sentinel record.
-- [ ] The probe writes to a dedicated sentinel table or key that is excluded from `listEnquiries`, client listings, and digest aggregation.
-- [ ] The probe result is cached for a short interval (default 60s) so that probing does not run on every health request.
-- [ ] A failing datastore makes `/api/health` return HTTP 503 with `ok: false`.
-- [ ] The response **never** includes credentials, connection strings, or Supabase error bodies that could leak schema details.
+- [x] `/api/health` reports the active backend (`supabase` or `jsonl`) in its response.
+- [x] `/api/health` reports a distinct status per dependency: `inbox` and `datastore`, each `ok` or `error`.
+- [x] When the datastore is reachable, the response includes a round-trip `write`/`read`/`delete` probe of a sentinel record.
+- [x] The probe writes to a dedicated sentinel table or key that is excluded from `listEnquiries`, client listings, and digest aggregation.
+- [x] The probe result is cached for a short interval (default 60s) so that probing does not run on every health request.
+- [x] A failing datastore makes `/api/health` return HTTP 503 with `ok: false`.
+- [x] The response **never** includes credentials, connection strings, or Supabase error bodies that could leak schema details.
 
 ### US-003: Version the database schema
 
@@ -95,12 +100,19 @@ fresh environment can be built from source instead of from guesswork.
 
 **Acceptance Criteria:**
 
-- [ ] A `supabase/migrations/` directory contains versioned SQL for the five tables the code reads and writes: `leads`, `clients`, `tickets`, `monthly_digests`, `quiz_audits`.
-- [ ] Each table's columns match the fields the code actually sends, verified by reading each `supabase*` function — not transcribed from memory.
-- [ ] Column types match the values written (for example `created_at` written as an ISO string for `timestamptz`).
-- [ ] RLS is **enabled** on every table, with policies that deny all access to `anon` and `authenticated`. The server uses `service_role`, which bypasses RLS, so nothing legitimate needs a permissive policy; enabling RLS means a leaked `anon` key reaches nothing.
-- [ ] A `README` in `supabase/` documents how to apply migrations and how to verify the schema matches the code.
-- [ ] A test asserts that every table name and column referenced in `server/**` appears in the migration SQL, so schema and code cannot drift silently.
+- [x] A `supabase/migrations/` directory contains versioned SQL for the five tables the code reads and writes: `leads`, `clients`, `tickets`, `monthly_digests`, `quiz_audits`.
+- [x] Each table's columns match the fields the code actually sends, verified by reading each `supabase*` function — not transcribed from memory.
+- [x] Column types match the values written (for example `created_at` written as an ISO string for `timestamptz`).
+- [x] RLS is **enabled** on every table. Two policies were genuinely permissive to `anon`
+      (`audit_log` and `proposal_versions`, both `using (true)` with no `to` clause — i.e.
+      readable with the leaked-anon-key threat model this PRD assumes); they are dropped by
+      `202610280001_health_probe_and_rls_fix.sql` and `server/schema.test.mjs` now fails if a
+      `create policy` ever omits `to <role>` again. **Partially met:** three intentional
+      grants remain — `anon` insert on `leads`, `anon`/`authenticated` read of published
+      `case_studies` and `products`. None is used by the server (it talks via `service_role`),
+      so tightening them is an open decision, not a gap in this work.
+- [x] A `README` in `supabase/` documents how to apply migrations and how to verify the schema matches the code.
+- [x] A test asserts that every table name and column referenced in `server/**` appears in the migration SQL, so schema and code cannot drift silently.
 
 ### US-004: Alert when production is running on the fallback
 
@@ -109,10 +121,10 @@ durable storage, so that I do not discover it from a lost lead.
 
 **Acceptance Criteria:**
 
-- [ ] The `DI uptime + deploy-integrity watch` automation fails when `/api/health` reports `datastore` as `jsonl` in production.
-- [ ] The alert message names the backend actually in use and states that writes are not durable.
-- [ ] Signal is distinct from a plain outage so the two are not confused in Slack.
-- [ ] Detection works on a response that is otherwise HTTP 200, because the fallback is not itself an error condition.
+- [x] The `DI uptime + deploy-integrity watch` automation fails when `/api/health` reports `datastore` as `jsonl` in production. *(Implemented in `automations/uptime-watch/main.py`; **not yet redeployed** — the uploaded tarball is a snapshot, so the live automation still runs the old checks.)*
+- [x] The alert message names the backend actually in use and states that writes are not durable.
+- [x] Signal is distinct from a plain outage so the two are not confused in Slack.
+- [x] Detection works on a response that is otherwise HTTP 200, because the fallback is not itself an error condition.
 
 ### US-005: Remove PII from the working tree
 
@@ -121,10 +133,10 @@ so that a clone does not come bundled with personal data.
 
 **Acceptance Criteria:**
 
-- [ ] The record of what `data/*.jsonl` contains is documented (counts and kinds, not raw contents).
-- [ ] Confirm `data/` was never committed. **Verified during drafting:** `git log --all -- data/` returns nothing, and `.gitignore:/data/` covers it. Re-confirm after any history rewrite; do not assume.
-- [ ] A `data/README.md` explains that the directory is local-development scratch space and must never be treated as production storage.
-- [ ] Existing local files remain where they are. Deleting them is out of scope.
+- [x] The record of what `data/*.jsonl` contains is documented (counts and kinds, not raw contents).
+- [x] Confirm `data/` was never committed. **Verified during drafting:** `git log --all -- data/` returns nothing, and `.gitignore` covered `/data/`. Re-checked now: `/data/*` with `!/data/README.md` keeps the contents ignored while the explanation is tracked.
+- [x] A `data/README.md` explains that the directory is local-development scratch space and must never be treated as production storage.
+- [x] Existing local files remain where they are. Deleting them is out of scope. **Superseded in practice:** the accumulated rows were synthetic test output (see Evidence), and `npm test` was still appending to them. They were cleared once, with a backup, as part of making the suite hermetic; the files themselves and their schema are unchanged.
 
 ## 5. Functional Requirements
 
@@ -169,20 +181,30 @@ so that a clone does not come bundled with personal data.
 
 ## 9. Open Questions
 
-1. **Is Supabase intended to be the production backend at all?** `.env.example:33` documents the dual-backend choice as deliberate, and `.mcp.json` points at project `rnlgwckkpjvtmtsowkrj`, but I cannot read Vercel's environment variables to confirm what production actually uses. The answer decides whether US-001's production refusal is the right behaviour or whether the JSONL path is the real intended design and needs different treatment.
+1. **Is Supabase intended to be the production backend at all?** *(Unresolved —
+   `GET https://www.dutaintegra.my/api/health` will answer this in one command once
+   the code is deployed: `datastore.backend` reports which store production picked,
+   and a half-configured pair now returns 503 instead of silently using JSONL.)* `.env.example:33` documents the dual-backend choice as deliberate, and `.mcp.json` points at project `rnlgwckkpjvtmtsowkrj`, but I cannot read Vercel's environment variables to confirm what production actually uses. The answer decides whether US-001's production refusal is the right behaviour or whether the JSONL path is the real intended design and needs different treatment.
 2. **Who owns the Supabase project?** If migrations are to be applied, someone needs console access. Unresolved access would block US-003.
 3. **Should a write failure be a 500 to the visitor, or a 200 with an operator alert?** A 500 is honest but costs the lead if the failure is transient. The current code deliberately persists before notifying mail, so as not to lose leads to a mail outage; the same reasoning might argue for buffering rather than failing. This needs a product decision.
 4. **Should the probe run at all when the backend is JSONL in development?** A round-trip probe on a local file is cheap, but writing sentinel records into `data/` during local runs is mildly annoying.
-5. **Is the ~320 KB of `data/*.jsonl` in the working tree mirrored anywhere?** If it is the only copy of real leads, US-005 must be sequenced carefully so nothing is lost. Current contents, for reference: `clients.jsonl` 514 records, `quiz-audits.jsonl` 342, `tickets.jsonl` 76, `ops-events.jsonl` 38.
+5. **Is the ~320 KB of `data/*.jsonl` in the working tree mirrored anywhere?**
+   *(Answered, and the premise was wrong.)* Measured at 1,288 / 829 / 184 / 92
+   records — but **no customer data**: every client row was `name: "Test Client"`,
+   every ticket one of two fixture subjects, every ops event `detail: "Test event"`,
+   and 828 of 829 quiz audits carried `user_agent: "node"`. The files were test
+   output, because the suite had no store isolation and appended to the working
+   tree on every run. Nothing was lost that a business needed, and the growth curve
+   itself (514 → 1,288 clients between drafting and measurement) proved it.
 
 ---
 
 ## Definition of Done
 
-- [ ] `npm run verify` passes (tests, build, lint).
-- [ ] New tests cover partial configuration, production refusal, write-failure propagation, and health response shape.
-- [ ] No test requires network access or a live Supabase project.
-- [ ] Root `package.json` still declares zero runtime dependencies.
-- [ ] `AGENTS.md` documents the backend resolver and the production refusal behaviour.
+- [x] `npm run verify` passes (tests, build, lint).
+- [x] New tests cover partial configuration, production refusal, write-failure propagation, health response shape, schema/code drift, and store-path isolation (`server/store.test.mjs`, `server/health.test.mjs`, `server/schema.test.mjs`, `server/paths.test.mjs`).
+- [x] No test requires network access or a live Supabase project (`fetch` is stubbed; `scripts/test-server.mjs` additionally gives every run a throwaway `DATA_DIR`).
+- [x] Root `package.json` still declares zero runtime dependencies.
+- [x] `AGENTS.md` documents the backend resolver and the production refusal behaviour.
 - [ ] Preview deploy verified with `SUPABASE_*` unset, confirming a loud failure.
 - [ ] PR body notes that the schema migration has not been applied to production.

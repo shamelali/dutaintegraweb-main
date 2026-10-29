@@ -12,6 +12,8 @@ import { DigitalAssessmentPage } from "@/pages/digital-assessment"
 import { PortalProposalsPage } from "@/pages/portal-proposals"
 import { PortalProposalDetailPage } from "@/pages/portal-proposal-detail"
 import { PortalDigestsPage } from "@/pages/portal-digests"
+import { PortalLoginPage } from "@/pages/portal-login"
+import { NotFoundPage } from "@/pages/not-found"
 import { CaseStudiesPage } from "@/pages/case-studies"
 import { ProductsPage } from "@/pages/products"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
@@ -28,6 +30,7 @@ const routes = [
   { path: "/proposal/:id", element: <ProposalPage /> },
   { path: "/case-studies", element: <CaseStudiesPage /> },
   { path: "/products", element: <ProductsPage /> },
+  { path: "/login", element: <PortalLoginPage /> },
   { path: "/portal/proposals", element: <PortalProposalsPage /> },
   { path: "/portal/proposals/:id", element: <PortalProposalDetailPage /> },
   { path: "/portal/digests", element: <PortalDigestsPage /> },
@@ -48,6 +51,7 @@ export default function App() {
                 <Route key={`ms-${r.path}`} path={`/ms${r.path === "/" ? "" : r.path}`} element={r.element} />
               ))}
               <Route path="/ms" element={<Navigate to="/ms/" replace />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
           <Footer />

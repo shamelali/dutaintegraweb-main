@@ -10,12 +10,11 @@
 
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+import { dataFile } from "./paths.mjs";
 
-const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const EVENTS_STORE = join(PROJECT_ROOT, "data", "ops-events.jsonl");
-const CONSENT_STORE = join(PROJECT_ROOT, "data", "ops-consent.json");
+const EVENTS_STORE = dataFile("ops-events.jsonl");
+const CONSENT_STORE = dataFile("ops-consent.json");
 
 // ── anonymized client labels ─────────────────────────────────────────────────
 

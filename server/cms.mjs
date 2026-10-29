@@ -1,31 +1,19 @@
 import { randomUUID } from "node:crypto";
+import { usingSupabase } from "./store.mjs";
 
 /**
  * Case Studies & Products CMS — Supabase (prod) or JSONL fallback (local dev / tests).
- * Follows the same dual-backend pattern as enquiries.mjs.
+ * Backend selection lives in store.mjs.
  */
-
-let _warnedJsonlFallback = false;
-function supabaseConfigured() {
-  const ok = Boolean(
-    process.env.SUPABASE_URL?.trim() && process.env.SUPABASE_SERVICE_ROLE_KEY?.trim(),
-  );
-  if (!ok && !_warnedJsonlFallback) {
-    _warnedJsonlFallback = true;
-    console.warn("[cms] Supabase not configured — falling back to local JSONL store (data will not persist on serverless).");
-  }
-  return ok;
-}
 
 // ── JSONL backend ────────────────────────────────────────────────────────────
 import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+import { dataFile } from "./paths.mjs";
 
-const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 function storePath(name) {
-  return join(PROJECT_ROOT, "data", `${name}.jsonl`);
+  return dataFile(`${name}.jsonl`);
 }
 
 async function ensureDir(path) {
@@ -74,7 +62,7 @@ async function sbFetch(table, path, init = {}) {
 // ── Generic CRUD helpers ─────────────────────────────────────────────────────
 
 async function listAll(table, storeName, order = "created_at.desc") {
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const res = await sbFetch(table, `?select=*&order=${order}`);
     if (!res.ok) throw new Error(`Supabase list failed: ${res.status}`);
     return res.json();
@@ -83,7 +71,7 @@ async function listAll(table, storeName, order = "created_at.desc") {
 }
 
 async function getOne(table, storeName, id) {
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const res = await sbFetch(table, `?id=eq.${encodeURIComponent(id)}&select=*`);
     if (!res.ok) throw new Error(`Supabase read failed: ${res.status}`);
     const rows = await res.json();
@@ -94,7 +82,7 @@ async function getOne(table, storeName, id) {
 }
 
 async function createOne(table, storeName, item) {
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const res = await sbFetch(table, "", {
       method: "POST",
       headers: { Prefer: "return=representation" },
@@ -112,7 +100,7 @@ async function createOne(table, storeName, item) {
 }
 
 async function updateOne(table, storeName, id, patch) {
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const res = await sbFetch(table, `?id=eq.${encodeURIComponent(id)}`, {
       method: "PATCH",
       headers: { Prefer: "return=representation" },
@@ -132,7 +120,7 @@ async function updateOne(table, storeName, id, patch) {
 }
 
 async function deleteOne(table, storeName, id) {
-  if (supabaseConfigured()) {
+  if (usingSupabase()) {
     const res = await sbFetch(table, `?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
     if (!res.ok) throw new Error(`Supabase delete failed: ${res.status}`);
     return true;

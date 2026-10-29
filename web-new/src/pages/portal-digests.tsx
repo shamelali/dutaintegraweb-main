@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { LoaderCircle, AlertCircle, FileText, Download, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { PortalAccountBar } from "@/components/portal-account-bar"
 // import { useLanguage } from "@/hooks/use-language" // unused
 
 type Digest = {
@@ -24,7 +25,7 @@ export function PortalDigestsPage() {
   useEffect(() => {
     fetch("/api/portal/digests")
       .then(async (r) => {
-        if (r.status === 401) return navigate("/login")
+        if (r.status === 401) return navigate(`/login?next=${encodeURIComponent(window.location.pathname)}`)
         const data = await r.json()
         if (!r.ok) throw new Error(data.error || "Failed to load")
         setDigests(data.digests || [])
@@ -54,6 +55,7 @@ export function PortalDigestsPage() {
   return (
     <div className="min-h-screen bg-background py-12 px-6">
       <div className="max-w-4xl mx-auto">
+        <PortalAccountBar />
         <h1 className="text-3xl font-heading font-bold mb-8">Monthly Digests</h1>
         {digests.length === 0 ? (
           <Card className="p-12 text-center">

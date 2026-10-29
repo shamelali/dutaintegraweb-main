@@ -113,18 +113,33 @@ Two consequences worth remembering:
 ## Workflow
 
 ```bash
-npm test            # 89 tests, node:test, no deps
+npm test            # 175 tests, node:test, no deps; runs in a throwaway DATA_DIR
+npm run test:web    # 15 tests, Vitest + Testing Library (needs web-new/node_modules)
 npm start           # loads .env via --env-file-if-exists
 npm run build:web   # build web-new/ into Web/ (the deploy artifact)
 npm run lint:web    # oxlint over web-new/ (needs web-new/node_modules)
-npm run verify      # tests + build + lint — run this before pushing
+npm run verify      # tests + build + web tests + lint — run this before pushing
 ```
 
 `npm start`/`dev` pass `--env-file-if-exists=.env`, so a missing `.env` is fine.
 There is no `dotenv` and shouldn't be.
 
 `npm run verify` is the whole gate in one command: it runs `build:web` before
-`lint:web` because lint needs `web-new/node_modules`, which the build installs.
+`test:web` and `lint:web` because both need `web-new/node_modules`, which the
+build installs.
+
+Frontend tests live next to what they cover (`src/**/*.test.tsx`) and run under
+Vitest with `environment: "jsdom"` — configured in `web-new/vite.config.ts`, so
+one config serves the build and the tests. `tsconfig.app.json` excludes them and
+`tsconfig.vitest.json` type-checks them with Node types; the browser build never
+sees Node's globals.
+
+**Scroll reveal is armed by an inline script, not by CSS.** `Web/index.html` and
+`public/index.html` add `js-reveal` to `<html>` before the stylesheet paints,
+and `web-new/src/index.css` hides `.reveal` only under that class. A client that
+does not run the bundle — a crawler, a print, a failed script load — sees every
+section, instead of 35 blocks of `opacity: 0`. Re-adding a bare
+`.reveal { opacity: 0 }` fails `src/hooks/use-scroll-reveal.test.tsx`.
 
 ## CI
 
@@ -132,8 +147,8 @@ There is no `dotenv` and shouldn't be.
 
 | Job | What it does |
 |---|---|
-| `test` | `node --test` over `server/**/*.test.mjs`. Needs no install (root has zero deps). |
-| `frontend` | `npm ci`, `oxlint`, and `tsc -b && vite build` in `web-new/`; uploads `dist/`. |
+| `test` | `npm test` — `node --test` over `server/**/*.test.mjs`. Needs no install (root has zero deps). |
+| `frontend` | `npm ci`, Vitest unit tests, `oxlint`, and `tsc -b && vite build` in `web-new/`; uploads `dist/`. |
 | `secret-scan` | `scripts/scan-secrets.mjs` over the working tree and full git history. |
 | `artifact-drift` | Runs `npm run build:web`, then fails if `Web/` no longer matches source. |
 
@@ -208,26 +223,50 @@ and font origin only, and granting it `script-src` would be needless risk.
 **Headers over plain HTTP.** `SECURITY_HEADERS` omits HSTS on purpose. Sending
 it from a local HTTP server pins browsers to HTTPS on localhost.
 
-**The dual-backend storage is silent, and that is a live risk.** `clients.mjs`,
-`enquiries.mjs`, `tickets.mjs`, `digest.mjs`, and `handler.mjs` each decide at
-request time between Supabase and a JSONL file in `data/`, based on whether
-`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are both set. The fallback is not
-logged. On Vercel the function filesystem is ephemeral, so if production is
-running on the fallback, writes go somewhere that a redeploy discards.
+**Storage backend resolution lives in `server/store.mjs`, and nowhere else.**
+Every store (clients, enquiries, tickets, digest, cms, portal, handler) asks the
+resolver which backend owns the request. Do not re-add a local
+`supabaseConfigured()`. The rules:
 
-`/api/health` does not detect this — it returns only `{ ok, inboxConfigured }`,
-so a site can report healthy while lead capture writes nowhere durable. There is
-also no schema file anywhere in the repo: `leads`, `clients`, `tickets`,
-`monthly_digests`, and `quiz_audits` exist only as string constants in code.
-See `prd-data-layer-hardening.md`.
+| `SUPABASE_URL` | `SUPABASE_SERVICE_ROLE_KEY` | Result |
+|---|---|---|
+| set | set | Supabase |
+| either set, other unset | — | `StorageConfigError`, **in every environment including dev** |
+| both unset, `NODE_ENV=production` | — | `StorageConfigError` |
+| both unset, elsewhere | — | JSONL in `data/`, warned once per process |
 
-Watch the distinction: Supabase *reads* throw on a non-OK response, so a
-configured-but-broken Supabase fails loudly on read. The silent path is
-*unset* variables, and *writes*.
+Use `usingSupabase()` when a call site must fail loudly (it throws), and
+`supabaseReady()` in route guards that should answer 503 instead of 500.
+Supabase write failures propagate — no write may quietly land in a file.
+
+`/api/health` proves the datastore rather than describing the config: with
+Supabase selected it writes, reads back and deletes a sentinel row in
+`health_probe`, caches that for 60s, and answers **503** when the round-trip
+fails, when the pair is half-configured, or when the JSONL fallback is active on
+a serverless platform. `?fresh=1` bypasses the cache. It never echoes provider
+error bodies, because those name tables and columns. The uptime automation reads
+`datastore.backend` and pages persistence separately from outages — see
+`automations/README.md`.
+
+The schema is versioned under `supabase/migrations/`; `server/schema.test.mjs`
+fails if code references a table or column no migration declares, if a table
+ships without RLS, or if a `create policy` omits a `to <role>` clause (which
+grants access to role `public`, and `anon` inherits it). Read
+`supabase/README.md` before adding a column.
 
 `SUPABASE_SERVICE_ROLE_KEY` bypasses Row Level Security entirely. It must stay
 server-side — never Vite-prefixed (`VITE_*`), never in a client bundle, never in
 a response body or log line.
+
+**Store paths live in `server/paths.mjs` (`dataFile()`), and `npm test` never
+touches `data/`.** Every JSONL path resolves through `DATA_DIR`, and
+`scripts/test-server.mjs` — which is what `npm test` now runs — starts the suite
+with `DATA_DIR` pointed at a temporary directory. This matters because each store
+module used to build `join(PROJECT_ROOT, "data", ...)` itself, so every test run
+appended synthetic rows into the developer's real local files (1,288 fake
+`Test Client` accounts at the time it was found). If you add a store, use
+`dataFile("name.jsonl")`; `server/paths.test.mjs` fails the build if a module
+rebuilds the path by hand instead.
 
 ## Environment variables
 
