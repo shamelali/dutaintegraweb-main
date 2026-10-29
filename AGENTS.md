@@ -79,6 +79,35 @@ Both sets now resolve. The `.html` variants are the *legacy* static
 implementations of pages that React also serves; React is canonical, and the
 static ones remain for deep links and standalone tools.
 
+**Production is 26 commits behind, and pushing does not fix it.** Verified
+against the live site on 2026-10-29: `https://dutaintegra.my/` serves
+`assets/index-B54e6WfU.js`, the bundle this repo had at `9b0d08e` (2026-10-26
+00:20). `main` ships `index-CBW-nu39.js`. Two pushes landed on `main` that day
+and `/api/health` kept answering the old three-key body, so nothing deployed
+them.
+
+Three consequences worth internalising before trusting any statement in this
+file about production behaviour:
+
+1. `da96b03` "Revert Phase 4 deployment — restore pre-Phase 4 production state"
+   replaced that bundle in the repo, but the revert never reached the live
+   site — production is still serving the Phase 4 build the revert deleted.
+2. Everything after `9b0d08e` is unreleased: the client portal, admin auth, the
+   CMS, the leads pipeline, the datastore health probe, testimonial capture and
+   durable sessions.
+3. The route table above describes what *this tree would* serve, not what the
+   deployed bundle does. A 200 from a live path is not evidence the deployed
+   code produced it — `/admin/pipeline` answers 200 there by serving the app
+   shell.
+
+The deployment mechanism is unverified: Cloudflare terminates TLS at the edge
+and hides the origin's `server` header, no `x-vercel-*` header survives, and
+neither `vercel` nor `wrangler` was logged in at the time of writing. Confirm
+which project owns the domain and why its builds stopped on 2026-10-26 before
+assuming a merge to `main` ships anything. Note also that
+`www.dutaintegra.my` 301-redirects to the apex, so the `www` host used
+throughout this file is not the canonical origin.
+
 **Fonts.** Both frontends now load the fonts they declare.
 
 - `Web/audit.html` is the only static page that requests Google Fonts
