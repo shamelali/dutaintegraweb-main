@@ -359,6 +359,11 @@ Deployed:
 | Automation | ID | Schedule |
 |---|---|---|
 | DI uptime + deploy-integrity watch | `1aebf583-b3f9-44d3-af7f-227398cedf4a` | `*/15 * * * *` UTC |
+| Lead pipeline watch | (not deployed) | intended `*/15 * * * *` UTC |
+
+`lead-pipeline-watch` is available in `automations/lead-pipeline-watch/` but not
+deployed; its auth now uses `x-admin-token` (was a broken Bearer header).
+See `automations/README.md`.
 
 Deploying a change means rebuilding the tarball and re-uploading, which creates
 a *new* automation — the tarball is snapshotted at upload time, so editing

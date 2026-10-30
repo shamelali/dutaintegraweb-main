@@ -74,3 +74,26 @@ Every 15 minutes (`*/15 * * * *`) is a reasonable balance — the probe is a
 handful of requests, and the damping means brief deploy windows don't page
 anyone. Going tighter than 5 minutes buys little for a marketing site and adds
 load.
+
+## Lead pipeline watch (`lead-pipeline-watch/`)
+
+A second deterministic script that polls `/admin/pipeline`, auto-assigns
+high-score leads to the `sales` role, flags stale leads, notifies on status
+changes, and posts a daily pipeline summary to a webhook.
+
+**Status: available but not yet deployed.** It is not in the deployed table
+above and nothing invokes it. To use it:
+
+1. Set `ADMIN_TOKEN` (and optionally `LEAD_PIPELINE_WEBHOOK`) on the
+   automation. Auth uses the `x-admin-token` header — the same token the
+   server's `requireAdminSession` accepts for scripts/cron. Do **not** use a
+   Bearer token.
+2. Upload the tarball (`automations/lead-pipeline-watch/`) as a new OpenHands
+   automation on a 15-minute cron. Re-uploading creates a *new* automation;
+   editing the file in the repo changes nothing until redeployed.
+3. State is persisted in the automation KV store (`lead-pipeline-state` key)
+   with a `/tmp` fallback for local runs.
+
+It targets the legacy `/admin/pipeline` + `/admin/leads/:id` endpoints, which
+both forks still serve. If you migrate ops to the Phase-4 workspace API
+(`/api/workspace/admin/*`), update the paths here too.

@@ -8,6 +8,10 @@ Runs on a schedule (e.g., every 15 min) to:
   * Generate daily pipeline summary
 
 Deterministic, no LLM required.
+
+Auth note: the admin routes accept an `x-admin-token` header (or `?token=`),
+NOT a Bearer token. This script uses `x-admin-token`, matching requireAdminSession
+in server/portal.mjs and server/portal-cloudflare.mjs.
 """
 
 import json
@@ -18,8 +22,8 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 BASE = os.environ.get("WATCH_BASE_URL", "https://www.dutaintegra.my")
-ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
 TIMEOUT = float(os.environ.get("WATCH_TIMEOUT", "20"))
+STATE_KEY = "lead-pipeline-state"
 
 # Thresholds
 NEW_STALE_HOURS = 24
@@ -27,19 +31,129 @@ CONTACTED_STALE_DAYS = 3
 HIGH_SCORE_THRESHOLD = 70
 AUTO_ASSIGN_ROLE = "sales"
 
-# Webhook for notifications (Slack, Teams, etc.)
-NOTIFY_WEBHOOK = os.environ.get("LEAD_PIPELINE_WEBHOOK", "")
 
-STATE_FILE = "/tmp/lead-pipeline-state.json"
+# --------------------------------------------------------------------------
+# Agent-server helpers (custom secrets are not in the environment by default)
+# --------------------------------------------------------------------------
 
+def get_secret(name):
+    """Fetch a named secret from the agent server, or '' if unavailable."""
+    url = os.environ.get("AGENT_SERVER_URL", "").rstrip("/")
+    key = os.environ.get("SESSION_API_KEY") or os.environ.get("OH_SESSION_API_KEYS_0", "")
+    if not url or not key:
+        return ""
+    try:
+        req = urllib.request.Request(
+            f"{url}/api/settings/secrets/{name}",
+            headers={"X-Session-API-Key": key},
+        )
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+            return r.read().decode().strip()
+    except Exception as exc:
+        print(f"[pipeline] secret {name} unavailable: {exc}")
+        return ""
+
+
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "") or get_secret("ADMIN_TOKEN")
+NOTIFY_WEBHOOK = (
+    os.environ.get("LEAD_PIPELINE_WEBHOOK", "")
+    or get_secret("LEAD_PIPELINE_WEBHOOK")
+)
+
+
+def fire_callback(status="COMPLETED", error=None):
+    """Signal run completion. Must be called on every exit path."""
+    url = os.environ.get("AUTOMATION_CALLBACK_URL", "")
+    if not url:
+        return
+    body = {"status": status, "run_id": os.environ.get("AUTOMATION_RUN_ID", "")}
+    if error:
+        body["error"] = error
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(body).encode(),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {os.environ.get('AUTOMATION_CALLBACK_API_KEY', '')}",
+        },
+    )
+    try:
+        urllib.request.urlopen(req, timeout=TIMEOUT)
+    except Exception as exc:
+        print(f"[pipeline] callback error (non-fatal): {exc}")
+
+
+# --------------------------------------------------------------------------
+# State, persisted in the automation KV store with a local-file fallback
+# --------------------------------------------------------------------------
+
+_KV_TOKEN = os.environ.get("AUTOMATION_KV_TOKEN", "")
+_KV_BASE = os.environ.get("AUTOMATION_API_URL", "").rstrip("/")
+_LOCAL_STATE = "/tmp/lead-pipeline-state.json"
+
+
+def _kv_available():
+    return bool(_KV_TOKEN and _KV_BASE)
+
+
+def load_state():
+    if _kv_available():
+        try:
+            req = urllib.request.Request(
+                f"{_KV_BASE}/v1/kv/{STATE_KEY}",
+                headers={"Authorization": f"Bearer {_KV_TOKEN}"},
+            )
+            with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+                return json.loads(r.read())["value"]
+        except urllib.error.HTTPError as exc:
+            if exc.code != 404:
+                print(f"[pipeline] kv read failed ({exc}); falling back to local file")
+        except Exception as exc:
+            print(f"[pipeline] kv read failed ({exc}); falling back to local file")
+    try:
+        with open(_LOCAL_STATE) as fh:
+            return json.load(fh)
+    except Exception:
+        return {"last_seen_status": {}, "last_summary_sent": None}
+
+
+def save_state(state):
+    if _kv_available():
+        try:
+            req = urllib.request.Request(
+                f"{_KV_BASE}/v1/kv/{STATE_KEY}",
+                data=json.dumps(state).encode(),
+                headers={
+                    "Authorization": f"Bearer {_KV_TOKEN}",
+                    "Content-Type": "application/json",
+                },
+                method="PUT",
+            )
+            with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+                r.read()
+            return
+        except Exception as exc:
+            print(f"[pipeline] kv write failed ({exc}); falling back to local file")
+    try:
+        with open(_LOCAL_STATE, "w") as fh:
+            json.dump(state, fh)
+    except Exception as exc:
+        print(f"[pipeline] local state write failed: {exc}")
+
+
+# --------------------------------------------------------------------------
+# HTTP
+# --------------------------------------------------------------------------
 
 def fetch(path, method="GET", body=None, headers=None):
     """Return (status, body, elapsed_seconds). Status -1 = transport error."""
     url = BASE.rstrip("/") + path
-    hdrs = {"User-Agent": "di-pipeline/1.0", "Authorization": f"Bearer {ADMIN_TOKEN}"}
+    hdrs = {"User-Agent": "di-pipeline/1.0"}
+    if ADMIN_TOKEN:
+        hdrs["x-admin-token"] = ADMIN_TOKEN
     if headers:
         hdrs.update(headers)
-    if body:
+    if body is not None:
         hdrs["Content-Type"] = "application/json"
         data = json.dumps(body).encode()
     else:
@@ -59,22 +173,6 @@ def fetch(path, method="GET", body=None, headers=None):
         return -1, f"{type(exc).__name__}: {exc}", time.monotonic() - started
 
 
-def load_state():
-    try:
-        with open(STATE_FILE) as f:
-            return json.load(f)
-    except Exception:
-        return {"last_seen_status": {}, "last_summary_sent": None}
-
-
-def save_state(state):
-    try:
-        with open(STATE_FILE, "w") as f:
-            json.dump(state, f)
-    except Exception as exc:
-        print(f"[pipeline] state write failed: {exc}")
-
-
 def send_webhook(text):
     if not NOTIFY_WEBHOOK:
         return
@@ -86,6 +184,10 @@ def send_webhook(text):
     except Exception as exc:
         print(f"[pipeline] webhook failed: {exc}")
 
+
+# --------------------------------------------------------------------------
+# Checks
+# --------------------------------------------------------------------------
 
 def check_leads(state):
     """Fetch leads, auto-assign, flag stale, notify on status changes."""
@@ -99,10 +201,9 @@ def check_leads(state):
     except Exception as exc:
         return [f"Pipeline response not JSON: {exc}"]
 
-    leads = data.get("leads", [])
+    leads = data.get("leads", data.get("items", []))
     failures = []
 
-    # Track status changes for notifications
     last_seen = state.get("last_seen_status", {})
     current_seen = {}
 
@@ -113,34 +214,33 @@ def check_leads(state):
 
         # Notify on status change
         if lead_id in last_seen and last_seen[lead_id] != current_status:
-            msg = (f":arrows_counterclockwise: Lead *{lead.get('name')}* ({lead.get('company','—')}) "
+            msg = (f":arrows_counterclockwise: Lead *{lead.get('name')}* ({lead.get('company', '—')}) "
                    f"moved: `{last_seen[lead_id]}` → `{current_status}` "
-                   f"({lead.get('service','—')})")
+                   f"({lead.get('service', '—')})")
             send_webhook(msg)
 
         # Auto-assign high-score unassigned leads
-        score = lead.get("leadScore", 0)
+        score = lead.get("leadScore", 0) or 0
         role = lead.get("assignedRole") or lead.get("assigned_role")
-        if score >= HIGH_SCORE_THRESHOLD and not role:
-            # PATCH to assign role
+        if score >= HIGH_SCORE_THRESHOLD and not role and lead_id:
             patch_status, patch_body, _ = fetch(
                 f"/admin/leads/{lead_id}",
                 method="PATCH",
-                body={"status": current_status, "assigned_role": AUTO_ASSIGN_ROLE},
+                body={"assigned_role": AUTO_ASSIGN_ROLE},
             )
             if patch_status == 200:
                 msg = (f":star: High-score lead auto-assigned to *{AUTO_ASSIGN_ROLE}*: "
-                       f"*{lead.get('name')}* ({lead.get('company','—')}) score={score}")
+                       f"*{lead.get('name')}* ({lead.get('company', '—')}) score={score}")
                 send_webhook(msg)
                 print(f"[pipeline] auto-assigned {lead_id} to {AUTO_ASSIGN_ROLE}")
             else:
-                failures.append(f"Auto-assign failed for {lead_id}: {patch_status}")
+                failures.append(f"Auto-assign failed for {lead_id}: {patch_status} {patch_body[:120]}")
 
         # Flag stale leads
         created = lead.get("created_at")
         if created:
             try:
-                created_dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
+                created_dt = datetime.fromisoformat(str(created).replace("Z", "+00:00"))
                 age = datetime.now(timezone.utc) - created_dt
                 if current_status == "new" and age > timedelta(hours=NEW_STALE_HOURS):
                     print(f"[pipeline] STALE new > {NEW_STALE_HOURS}h: {lead_id}")
@@ -169,14 +269,14 @@ def send_daily_summary(state):
     except Exception:
         return
 
-    leads = data.get("leads", [])
+    leads = data.get("leads", data.get("items", []))
     by_status = {}
     for l in leads:
         s = l.get("status", "unknown")
         by_status[s] = by_status.get(s, 0) + 1
 
     lines = [f":clipboard: *Daily Pipeline Summary* ({today})"]
-    for s in ["new", "contacted", "qualified", "proposal", "won", "closed"]:
+    for s in ["new", "contacted", "qualified", "proposal", "won", "closed", "lost", "archived"]:
         if by_status.get(s):
             lines.append(f"  • {s}: {by_status[s]}")
     lines.append(f"  • *Total*: {len(leads)}")
@@ -186,6 +286,11 @@ def send_daily_summary(state):
 
 
 def main():
+    if not ADMIN_TOKEN:
+        print("[pipeline] ERROR: ADMIN_TOKEN is not set; cannot authenticate. Aborting.")
+        fire_callback("FAILED", "ADMIN_TOKEN not set")
+        return 1
+
     print(f"[pipeline] probing {BASE}")
     state = load_state()
     failures = []
@@ -202,9 +307,11 @@ def main():
         print(f"[pipeline] FAIL: {len(failures)} issues")
         for f in failures:
             print(f"[pipeline]   - {f}")
+        fire_callback("FAILED", "; ".join(failures))
         return 1
     else:
         print("[pipeline] OK")
+        fire_callback("COMPLETED")
         return 0
 
 
@@ -212,5 +319,6 @@ if __name__ == "__main__":
     try:
         exit(main())
     except Exception as exc:
+        fire_callback("FAILED", f"{type(exc).__name__}: {exc}")
         print(f"[pipeline] CRASH: {exc}")
         exit(1)
