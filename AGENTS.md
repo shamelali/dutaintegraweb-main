@@ -13,8 +13,8 @@ Marketing site + lead-capture API for dutaintegra.my. Node >= 22, ES modules,
 | `api/gateway.js` | Vercel serverless entrypoint. Just re-exports `handle` from `server/handler.mjs`. |
 | `api/audit.js` | Separate self-contained audit tool, wired to its own rewrites |
 | `vercel.json` | Deployment + the security headers production actually enforces |
-| `web-new/` | React 19 + Vite + Tailwind 4 source, 7 routes. This **is** the canonical frontend; `npm run build:web` builds it into `Web/`. |
-| `scripts/sync-web.mjs` | Copies `web-new/dist` into `Web/`, replacing only `index.html`, `assets/index-*.{js,css}`, and root public files. Leaves the standalone static pages alone. |
+| `web-new/` | React 19 + Vite + Tailwind 4 source, 7 routes. This **is** the canonical frontend; `npm run build:web` builds it into both `Web/` and `public/`. |
+| `scripts/sync-web.mjs` | Copies `web-new/dist` into both `Web/` and `public/`, replacing only `index.html`, `assets/index-*.{js,css}`, and root public files. Leaves the standalone static pages alone. |
 
 ## Frontend: `web-new/` is canonical
 
@@ -79,32 +79,31 @@ Both sets now resolve. The `.html` variants are the *legacy* static
 implementations of pages that React also serves; React is canonical, and the
 static ones remain for deep links and standalone tools.
 
-**Production is 34 commits behind, and pushing cannot fix it.** Verified
-against the live site on 2026-10-30: `https://dutaintegra.my/` serves
-`assets/index-B54e6WfU.js`, the bundle this repo had at `9b0d08e` (2026-10-26
-00:20), and `/api/health` still answers the old three-key body
-`{ok, inboxConfigured, supabaseConfigured}`. `main` ships
-`index-Djs7j6Hj.js` and the datastore-probe body.
+**Production now matches `main` (2026-10-30).** Until then it was 34 commits
+behind: `https://dutaintegra.my/` served `assets/index-B54e6WfU.js`, the bundle
+this repo had at `9b0d08e` (2026-10-26 00:20), and `/api/health` answered the
+old three-key body `{ok, inboxConfigured, supabaseConfigured}`. A direct upload
+(`npm run cf:deploy`) of `89a4b83` — deployment `ac108f20` — put `main`'s
+`index-Djs7j6Hj.js` and the datastore-probe health body live. Verified on the
+apex afterwards: `/` carries the new bundle, `/api/health` answers 200 with
+`storageBackend: "supabase"` and `supabaseReachable: true`, and clean URLs
+still resolve.
 
-The mechanism is now verified, with `wrangler` logged in as the account that
-owns the zone:
+The mechanism, with `wrangler` logged in as the account that owns the zone:
 
 | Cloudflare Pages project | Git | Domain | State |
 |---|---|---|---|
-| `dutaintegra` | **No** — direct `wrangler pages deploy` uploads | `dutaintegra.my`, `www.dutaintegra.my` | Last successful **Production** deploy is from `9b0d08e`. Nothing has been uploaded since. |
+| `dutaintegra` | **No** — direct `wrangler pages deploy` uploads | `dutaintegra.my`, `www.dutaintegra.my` | Production deploy `ac108f20` (source `89a4b83`, 2026-10-30) is live. Only `npm run cf:deploy` changes it. |
 | `dutaintegraweb-main` | Yes — this repo, `main` | `dutaintegraweb-main.pages.dev` only | Builds on every push and **every build is `Failure`**. Not wired to the real domain. |
 
-So there are two independent reasons nothing ships, and neither is a git
-problem:
+Pushing `main` still does not ship, and neither problem is git: the project
+that owns the domain has no git integration (production changes only when
+someone runs `npm run cf:deploy`, which uploads `public/`), while the project
+that *does* watch `main` fails its builds and its hostname is not the one
+anyone visits.
 
-1. The project that owns the domain has no git integration. Production changes
-   only when someone runs `npm run cf:deploy`, which uploads `public/`. Pushing
-   `main` is invisible to it.
-2. The project that *does* watch `main` fails its builds, and its hostname is
-   not the one anyone visits.
-
-**Deploying the current `main` to the domain would have taken the whole API
-down until `f542612`+1.** `server/paths.mjs` resolved `PROJECT_ROOT` at module
+**Deploying `main` before `5a90c04` would have taken the whole API down.**
+`server/paths.mjs` resolved `PROJECT_ROOT` at module
 scope with `fileURLToPath(import.meta.url)`, and Pages concatenates every module
 reachable from `functions/` — including `paths.mjs`, pulled in by
 `testimonials.mjs` — into one bundle in which `import.meta.url` is `undefined`.
@@ -121,12 +120,16 @@ wrangler pages dev public --port 8791 --ip 127.0.0.1   # must print "Ready", not
 
 Two loose ends worth remembering:
 
-- `public/` **does** carry the current bundle (`index-Djs7j6Hj.js`), so the
-  upload artifact is ready; it is only the *upload* that has not happened.
-- Two Production uploads to `dutaintegra` name sources — `c460733` and
-  `4d12ba5` — that do not exist in this repo. Those uploads came from a
-  checkout with commits that were never pushed here. Do not assume this tree is
-  the only source of deployed state until that is tracked down.
+- `public/` carries the current bundle (`index-Djs7j6Hj.js`); `npm run
+  build:web` syncs it along with `Web/` via `scripts/sync-web.mjs`. The Pages
+  project deploys whatever is in `public/` at upload time, so re-check it
+  before `npm run cf:deploy`.
+- Uploads record the uploading shell's `CF_PAGES_COMMIT_SHA` as their Source,
+  so the column is provenance from the deployer, not proof a commit exists
+  here. The deployment history shows `c460733` as a Preview (2026-10-29) and
+  `4d12ba5` as a Production upload whose build is marked `Failure`; neither
+  hash exists in this repo. Do not assume this tree is the only source of
+  deployed state.
 
 Note also that `www.dutaintegra.my` 301-redirects to the apex, so the `www` host
 used throughout this file is not the canonical origin.
@@ -173,13 +176,12 @@ Consequences:
    `FORK_PENDING_TABLES` is empty and stays that way: adding a name files a bug
    rather than fixing one, and a name that gains a migration fails the
    stale-list test until it is dropped.
-3. **The two frontends are separate builds.** `Web/` is what `npm run
-   build:web` writes and what Vercel would serve; Pages serves `public/`, which
-   is kept in step by hand, not by a script. As of 2026-10-30 both carry
-   `index-Djs7j6Hj.js` — the bundle HEAD builds — while production still serves
-   `index-B54e6WfU.js`. Nothing regenerates `public/` when you build, so
-   re-check it there before an upload: `grep -o 'index-[A-Za-z0-9_-]*\.js'
-   public/index.html`.
+3. **The two deployment trees are separate outputs.** `Web/` is what Vercel
+   would serve; Pages serves `public/`. `npm run build:web` writes both in one
+   pass (`scripts/sync-web.mjs`), and as of 2026-10-30 both carry
+   `index-Djs7j6Hj.js` — the same bundle production serves since deployment
+   `ac108f20`. Still confirm the upload will carry it before deploying:
+   `grep -o 'index-[A-Za-z0-9_-]*\.js' public/index.html`.
 
 ## The Cloudflare fork's data layer
 
