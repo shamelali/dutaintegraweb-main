@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { dataDir, dataFile } from "./paths.mjs";
 
@@ -59,4 +59,37 @@ test("no store module rebuilds the data/ path instead of using paths.mjs", () =>
     if (/"data",\s*"[^"]*\.jsonl"/.test(source)) offenders.push(entry);
   }
   assert.deepEqual(offenders, [], `${offenders.join(", ")} hardcode a store path; use dataFile() from paths.mjs so DATA_DIR is honoured`);
+});
+
+/**
+ * Cloudflare Pages concatenates every module reachable from `functions/` into a
+ * single bundle, and in that bundle `import.meta.url` is undefined. A module that
+ * reads it while evaluating — rather than when asked for a path — throws before
+ * the first request is served, so the whole API answers errors while the static
+ * site looks healthy. This imports a copy with the URL stripped, which is the
+ * only way to exercise that shape without running workerd.
+ */
+test("dataDir survives a bundle with no import.meta.url", async () => {
+  const dir = mkdtempSync(join("/tmp", "duta-bundle-"));
+  const bundled = join(dir, "paths-bundled.mjs");
+  const source = readFileSync(join(SERVER_DIR, "paths.mjs"), "utf8").replaceAll("import.meta.url", "undefined");
+  assert.ok(!source.includes("import.meta.url"), "the copy must not read the module URL anywhere");
+  writeFileSync(bundled, source);
+
+  const previousDataDir = process.env.DATA_DIR;
+  const previousCwd = process.cwd();
+  try {
+    delete process.env.DATA_DIR;
+    process.chdir(SERVER_DIR);
+    const mod = await import(pathToFileURL(bundled).href);
+    assert.equal(mod.dataDir(), join(resolve(SERVER_DIR), "data"), "resolves under the working directory when the URL is gone");
+    assert.equal(mod.dataFile("clients.jsonl"), join(resolve(SERVER_DIR), "data", "clients.jsonl"));
+
+    process.env.DATA_DIR = "/tmp/duta-bundle-store";
+    assert.equal(mod.dataDir(), resolve("/tmp/duta-bundle-store"), "DATA_DIR still wins once the root was cached");
+  } finally {
+    process.chdir(previousCwd);
+    if (previousDataDir === undefined) delete process.env.DATA_DIR;
+    else process.env.DATA_DIR = previousDataDir;
+  }
 });

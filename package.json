@@ -16,11 +16,11 @@
     "scan:secrets": "node scripts/scan-secrets.mjs --verify",
     "scan:secrets:history": "node scripts/scan-secrets.mjs --history --verify",
     "lint:web": "npm --prefix web-new run lint",
-    "build:web": "npm --prefix web-new ci && npm --prefix web-new run build && node scripts/sync-web.mjs",
+    "build:web": "npm_config_allow_scripts= npm --prefix web-new ci && npm --prefix web-new run build && node scripts/sync-web.mjs",
     "verify": "npm run test && npm run build:web && npm run test:web && npm run lint:web && npm run validate:env",
     "cf:preview": "wrangler pages dev public --port 8788 --ip 127.0.0.1",
     "cf:deploy": "wrangler pages deploy public --project-name=dutaintegra",
-    "cf:build": "npm --prefix web-new ci && npm --prefix web-new run build",
+    "cf:build": "npm_config_allow_scripts= npm --prefix web-new ci && npm --prefix web-new run build",
     "validate:env": "node scripts/validate-env.mjs"
   }
 }
