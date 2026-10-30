@@ -79,34 +79,57 @@ Both sets now resolve. The `.html` variants are the *legacy* static
 implementations of pages that React also serves; React is canonical, and the
 static ones remain for deep links and standalone tools.
 
-**Production is 26 commits behind, and pushing does not fix it.** Verified
-against the live site on 2026-10-29: `https://dutaintegra.my/` serves
+**Production is 34 commits behind, and pushing cannot fix it.** Verified
+against the live site on 2026-10-30: `https://dutaintegra.my/` serves
 `assets/index-B54e6WfU.js`, the bundle this repo had at `9b0d08e` (2026-10-26
-00:20). `main` ships `index-CBW-nu39.js`. Two pushes landed on `main` that day
-and `/api/health` kept answering the old three-key body, so nothing deployed
-them.
+00:20), and `/api/health` still answers the old three-key body
+`{ok, inboxConfigured, supabaseConfigured}`. `main` ships
+`index-Djs7j6Hj.js` and the datastore-probe body.
 
-Three consequences worth internalising before trusting any statement in this
-file about production behaviour:
+The mechanism is now verified, with `wrangler` logged in as the account that
+owns the zone:
 
-1. `da96b03` "Revert Phase 4 deployment — restore pre-Phase 4 production state"
-   replaced that bundle in the repo, but the revert never reached the live
-   site — production is still serving the Phase 4 build the revert deleted.
-2. Everything after `9b0d08e` is unreleased: the client portal, admin auth, the
-   CMS, the leads pipeline, the datastore health probe, testimonial capture and
-   durable sessions.
-3. The route table above describes what *this tree would* serve, not what the
-   deployed bundle does. A 200 from a live path is not evidence the deployed
-   code produced it — `/admin/pipeline` answers 200 there by serving the app
-   shell.
+| Cloudflare Pages project | Git | Domain | State |
+|---|---|---|---|
+| `dutaintegra` | **No** — direct `wrangler pages deploy` uploads | `dutaintegra.my`, `www.dutaintegra.my` | Last successful **Production** deploy is from `9b0d08e`. Nothing has been uploaded since. |
+| `dutaintegraweb-main` | Yes — this repo, `main` | `dutaintegraweb-main.pages.dev` only | Builds on every push and **every build is `Failure`**. Not wired to the real domain. |
 
-The deployment mechanism is unverified: Cloudflare terminates TLS at the edge
-and hides the origin's `server` header, no `x-vercel-*` header survives, and
-neither `vercel` nor `wrangler` was logged in at the time of writing. Confirm
-which project owns the domain and why its builds stopped on 2026-10-26 before
-assuming a merge to `main` ships anything. Note also that
-`www.dutaintegra.my` 301-redirects to the apex, so the `www` host used
-throughout this file is not the canonical origin.
+So there are two independent reasons nothing ships, and neither is a git
+problem:
+
+1. The project that owns the domain has no git integration. Production changes
+   only when someone runs `npm run cf:deploy`, which uploads `public/`. Pushing
+   `main` is invisible to it.
+2. The project that *does* watch `main` fails its builds, and its hostname is
+   not the one anyone visits.
+
+**Deploying the current `main` to the domain would have taken the whole API
+down until `f542612`+1.** `server/paths.mjs` resolved `PROJECT_ROOT` at module
+scope with `fileURLToPath(import.meta.url)`, and Pages concatenates every module
+reachable from `functions/` — including `paths.mjs`, pulled in by
+`testimonials.mjs` — into one bundle in which `import.meta.url` is `undefined`.
+The TypeError was thrown while the worker was being instantiated, before any
+handler ran, so it killed all of `/api/*` at once while the static site kept
+serving and looked healthy. Reproduced with `wrangler pages dev public` (worker
+refused to boot) and fixed by resolving the root lazily; `server/paths.test.mjs`
+now imports a copy of the module with `import.meta.url` stripped, because that is
+the only way to exercise the bundled shape without workerd. Re-check with:
+
+```bash
+wrangler pages dev public --port 8791 --ip 127.0.0.1   # must print "Ready", not "failed to start"
+```
+
+Two loose ends worth remembering:
+
+- `public/` **does** carry the current bundle (`index-Djs7j6Hj.js`), so the
+  upload artifact is ready; it is only the *upload* that has not happened.
+- Two Production uploads to `dutaintegra` name sources — `c460733` and
+  `4d12ba5` — that do not exist in this repo. Those uploads came from a
+  checkout with commits that were never pushed here. Do not assume this tree is
+  the only source of deployed state until that is tracked down.
+
+Note also that `www.dutaintegra.my` 301-redirects to the apex, so the `www` host
+used throughout this file is not the canonical origin.
 
 **Fonts.** Both frontends now load the fonts they declare.
 
@@ -151,8 +174,12 @@ Consequences:
    rather than fixing one, and a name that gains a migration fails the
    stale-list test until it is dropped.
 3. **The two frontends are separate builds.** `Web/` is what `npm run
-   build:web` writes and what Vercel would serve; Pages serves `public/`.
-   Production's bundle hash matches neither.
+   build:web` writes and what Vercel would serve; Pages serves `public/`, which
+   is kept in step by hand, not by a script. As of 2026-10-30 both carry
+   `index-Djs7j6Hj.js` — the bundle HEAD builds — while production still serves
+   `index-B54e6WfU.js`. Nothing regenerates `public/` when you build, so
+   re-check it there before an upload: `grep -o 'index-[A-Za-z0-9_-]*\.js'
+   public/index.html`.
 
 ## The Cloudflare fork's data layer
 
@@ -227,7 +254,7 @@ Two consequences worth remembering:
 ## Workflow
 
 ```bash
-npm test            # 194 tests, node:test, no deps; runs in a throwaway DATA_DIR
+npm test            # 195 tests, node:test, no deps; runs in a throwaway DATA_DIR
 npm run test:web    # 15 tests, Vitest + Testing Library (needs web-new/node_modules)
 npm start           # loads .env via --env-file-if-exists
 npm run build:web   # build web-new/ into Web/ (the deploy artifact)
@@ -241,6 +268,17 @@ There is no `dotenv` and shouldn't be.
 `npm run verify` is the whole gate in one command: it runs `build:web` before
 `test:web` and `lint:web` because both need `web-new/node_modules`, which the
 build installs.
+
+**`build:web` and `cf:build` prefix the install with `npm_config_allow_scripts=`
+for a reason.** npm 11 forwards a developer's `allow-scripts` setting from
+`~/.npmrc` into the child process as `npm_config_allow_scripts`, and rejects that
+key outright for a `--prefix` install (`EALLOWSCRIPTS: --allow-scripts is not
+allowed in project-scoped installs`). So `npm --prefix web-new ci` succeeds when
+typed directly and fails when nested inside `npm run`, which is the shape
+`build:web` needs. Clearing the variable for the child is what makes the gate run
+on a machine whose owner allows scripts globally for other projects. Do not
+"tidy" the assignment away; the failure it prevents is invisible from the outer
+command's help text.
 
 Frontend tests live next to what they cover (`src/**/*.test.tsx`) and run under
 Vitest with `environment: "jsdom"` — configured in `web-new/vite.config.ts`, so
@@ -287,17 +325,25 @@ Dependabot (`.github/dependabot.yml`) watches `web-new/` npm packages weekly and
 the workflow actions monthly. Minor and patch bumps are grouped into one PR;
 majors arrive separately so they get read properly.
 
-**GitHub Actions cannot run jobs for this account.** Every CI job — 20+ runs
-across all of `shamelali`'s repos — ends `failed` with `runner_name: ""`, zero
-steps and an empty log archive: GitHub never allocated a runner, so the workflow
-never started. `actions/permissions` reports `enabled: true, allowed_actions:
-all`, `ci.yml` parses and its four jobs are all `runs-on: ubuntu-latest`, so
-this is *not* a repo or workflow defect. The only runs that succeed are
-GitHub-managed ones (`path: dynamic/dependabot/...`), which do not use the
-hosted-runner queue and so are not evidence that runners work. Resolve it at
-`github.com/account` (Actions usage / billing hold / verification notice) before
-reading a red X as broken code — until then CI tells you nothing, and `npm run
-verify` locally is the only real gate.
+**GitHub Actions cannot run jobs for this account, and the cause is now
+named.** Every CI job — 20+ runs across all of `shamelali`'s repos — ends
+`failed` with `runner_name: ""`, zero steps and no log archive (`log not found`).
+The check-run annotations say why:
+
+> The job was not started because your account is locked due to a billing issue.
+
+`actions/permissions` still reports `enabled: true, allowed_actions: all`,
+`ci.yml` parses, and all four jobs are `runs-on: ubuntu-latest`, so this is not a
+repo or workflow defect — it is an account-level hold, and it is fixed at
+`github.com/account`, not in code. Until it is cleared, CI tells you nothing:
+a red X is not evidence of broken code, and `npm run verify` locally is the only
+real gate. `gh api repos/<repo>/check-runs/<id>/annotations` is how to read the
+reason again without a dashboard.
+
+While diagnosing it, one further fact about the queue: `actions/runners` for this
+repo returns an empty list, which is *expected* — that endpoint lists
+self-hosted runners only, and these jobs ask for GitHub-hosted ones. An empty
+list there is not the fault.
 
 ## Automations
 
