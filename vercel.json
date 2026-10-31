@@ -162,6 +162,22 @@
       "destination": "/api/gateway"
     },
     {
+      "source": "/api/billing/checkout",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/billing/payments",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/payments/webhook/hitpay",
+      "destination": "/api/gateway"
+    },
+    {
+      "source": "/api/payments/webhook/billplz",
+      "destination": "/api/gateway"
+    },
+    {
       "source": "/((?!api/|admin/|assets/|.*\\.).*)",
       "destination": "/index.html"
     }

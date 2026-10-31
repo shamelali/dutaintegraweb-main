@@ -2227,4 +2227,60 @@ export const translations = {
     en: "Online payment coming soon — contact us to activate your plan.",
     bm: "Pembayaran atas talian akan hadir segera — hubungi kami untuk mengaktifkan pelan anda.",
   },
+  billingCheckout: {
+    en: "Set up payment",
+    bm: "Siapkan pembayaran",
+  },
+  billingPayWith: {
+    en: "Pay with",
+    bm: "Bayar dengan",
+  },
+  billingProviderHitpay: {
+    en: "HitPay",
+    bm: "HitPay",
+  },
+  billingProviderBillplz: {
+    en: "Billplz",
+    bm: "Billplz",
+  },
+  billingPlan: {
+    en: "Plan",
+    bm: "Pelan",
+  },
+  billingAmount: {
+    en: "Amount",
+    bm: "Amaun",
+  },
+  billingCheckoutButton: {
+    en: "Proceed to payment",
+    bm: "Teruskan kepada pembayaran",
+  },
+  billingPaymentSuccess: {
+    en: "Payment successful — your subscription is now active.",
+    bm: "Pembayaran berjaya — pelan anda sekarang aktif.",
+  },
+  billingPaymentCancelled: {
+    en: "Payment cancelled.",
+    bm: "Pembayaran dibatalkan.",
+  },
+  billingPaymentHistory: {
+    en: "Payment history",
+    bm: "Sejarah pembayaran",
+  },
+  billingNoPayments: {
+    en: "No payments yet.",
+    bm: "Belum ada pembayaran.",
+  },
+  billingDate: {
+    en: "Date",
+    bm: "Tarikh",
+  },
+  billingStatus: {
+    en: "Status",
+    bm: "Status",
+  },
+  billingProvider: {
+    en: "Provider",
+    bm: "Penyedia",
+  },
 } as const

@@ -125,6 +125,32 @@ async function updateCompany(id, companyId, patch) {
   return normalizeCompany(rows[idx]);
 }
 
+// ── server-only: subscription tier/status (set by webhooks / admin) ───────
+
+async function updateCompanySubscription(companyId, patch) {
+  const fields = { updated_at: new Date().toISOString() };
+  if ("subscriptionTier" in patch) fields.subscription_tier = patch.subscriptionTier;
+  if ("subscriptionStatus" in patch) fields.subscription_status = patch.subscriptionStatus;
+
+  if (usingSupabase()) {
+    const res = await sbFetch(COMPANY_TABLE, `?id=eq.${encodeURIComponent(companyId)}`, {
+      method: "PATCH",
+      headers: { Prefer: "return=representation" },
+      body: JSON.stringify(fields),
+    });
+    if (!res.ok) throw new Error(`Supabase company subscription update failed: ${res.status}`);
+    const rows = await res.json();
+    return rows.length ? normalizeCompany(rows[0]) : null;
+  }
+  const path = storePath(COMPANY_STORE);
+  const rows = await jsonlReadAll(path);
+  const idx = rows.findIndex((r) => r.id === companyId);
+  if (idx < 0) return null;
+  Object.assign(rows[idx], fields);
+  await jsonlWriteAll(path, rows);
+  return normalizeCompany(rows[idx]);
+}
+
 // ── HTTP route handlers ──────────────────────────────────────────────────────
 
 function sendJson(res, status, body) {
@@ -181,4 +207,4 @@ async function handleCompaniesPatch(req, res, id) {
   return sendJson(res, 405, { error: "Method not allowed" });
 }
 
-export { getCompany, updateCompany, handleCompaniesGet, handleCompaniesPatch };
+export { getCompany, updateCompany, updateCompanySubscription, handleCompaniesGet, handleCompaniesPatch };

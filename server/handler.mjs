@@ -61,6 +61,13 @@ import {
 } from "./companies.mjs";
 
 import {
+  handleBillingCheckout,
+  handlePaymentsList,
+  handleHitpayWebhook,
+  handleBillplzWebhook,
+} from "./payments.mjs";
+
+import {
   handleAIChat,
   handleDutaosBrief,
 } from "./ai.mjs";
@@ -1534,6 +1541,12 @@ export async function handle(req, res) {
       if (req.method === "PATCH") return await handleCompaniesPatch(req, res, companyMatch[1]);
       return send(res, 405, { error: "Method not allowed" });
     }
+
+    // ── DutaOS billing / payments (HitPay + Billplz) ─────────────────────────
+    if (pathname === "/api/billing/checkout") return await handleBillingCheckout(req, res);
+    if (pathname === "/api/billing/payments") return await handlePaymentsList(req, res);
+    if (pathname === "/api/payments/webhook/hitpay") return await handleHitpayWebhook(req, res);
+    if (pathname === "/api/payments/webhook/billplz") return await handleBillplzWebhook(req, res);
 
     // ── DutaOS AI (grounded on the company's compliance brief) ───────────────
     if (pathname === "/api/dutaos/brief") return await handleDutaosBrief(req, res);
