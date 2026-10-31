@@ -56,6 +56,11 @@ import {
 } from "./compliance.mjs";
 
 import {
+  handleCompaniesGet,
+  handleCompaniesPatch,
+} from "./companies.mjs";
+
+import {
   handleAIChat,
   handleDutaosBrief,
 } from "./ai.mjs";
@@ -1520,6 +1525,14 @@ export async function handle(req, res) {
     const compMatch = pathname.match(/^\/api\/compliance-items\/([a-f0-9-]+)$/);
     if (compMatch && (req.method === "PATCH" || req.method === "DELETE" || req.method === "POST")) {
       return await handleComplianceItemById(req, res);
+    }
+
+    // ── DutaOS company profile ───────────────────────────────────────────────
+    if (pathname === "/api/companies") return await handleCompaniesGet(req, res);
+    const companyMatch = pathname.match(/^\/api\/companies\/([a-f0-9-]+)$/);
+    if (companyMatch) {
+      if (req.method === "PATCH") return await handleCompaniesPatch(req, res, companyMatch[1]);
+      return send(res, 405, { error: "Method not allowed" });
     }
 
     // ── DutaOS AI (grounded on the company's compliance brief) ───────────────
