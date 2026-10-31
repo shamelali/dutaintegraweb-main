@@ -2177,4 +2177,54 @@ export const translations = {
     en: "Signing out…",
     bm: "Sedang log keluar…",
   },
+
+  // ---- DUTAOS BILLING ----
+  billingPageTitle: {
+    en: "Subscription",
+    bm: "Langganan",
+  },
+  billingPageSub: {
+    en: "Manage your DutaOS plan and billing.",
+    bm: "urus pelan dan pembayaran DutaOS anda.",
+  },
+  billingCurrentPlan: {
+    en: "Current plan",
+    bm: "Pelan terkini",
+  },
+  billingPlanStarter: {
+    en: "Starter",
+    bm: "Permulaan",
+  },
+  billingPlanGrowth: {
+    en: "Growth",
+    bm: "Pertumbuhan",
+  },
+  billingPlanStatus: {
+    en: "Status",
+    bm: "Status",
+  },
+  billingStatusActive: {
+    en: "Active",
+    bm: "Aktif",
+  },
+  billingStatusInactive: {
+    en: "Inactive",
+    bm: "Tidak aktif",
+  },
+  billingPricePerMonth: {
+    en: "/ month",
+    bm: "/ bulan",
+  },
+  billingSubscribe: {
+    en: "Subscribe",
+    bm: "Langgan",
+  },
+  billingUpgrade: {
+    en: "Upgrade plan",
+    bm: "Naik taraf pelan",
+  },
+  billingComingSoon: {
+    en: "Online payment coming soon — contact us to activate your plan.",
+    bm: "Pembayaran atas talian akan hadir segera — hubungi kami untuk mengaktifkan pelan anda.",
+  },
 } as const

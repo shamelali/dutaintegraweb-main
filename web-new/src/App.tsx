@@ -18,6 +18,7 @@ import { AuthPage } from "@/pages/auth-page"
 import { CatalogEnrichmentPage } from "@/pages/catalog-enrichment"
 import { DutaosDashboardPage } from "@/pages/dutaos-dashboard"
 import { CompliancePage } from "@/pages/compliance"
+import { BillingPage } from "@/pages/billing"
 import { NotFoundPage } from "@/pages/not-found"
 import { CaseStudiesPage } from "@/pages/case-studies"
 import { ProductsPage } from "@/pages/products"
@@ -40,6 +41,7 @@ const routes = [
   { path: "/signup", element: <AuthPage mode="signup" /> },
   { path: "/dashboard", element: <DutaosDashboardPage /> },
   { path: "/compliance", element: <CompliancePage /> },
+  { path: "/billing", element: <BillingPage /> },
   { path: "/catalog-enrichment", element: <CatalogEnrichmentPage /> },
   { path: "/portal/proposals", element: <PortalProposalsPage /> },
   { path: "/portal/proposals/:id", element: <PortalProposalDetailPage /> },
