@@ -37,6 +37,19 @@ import {
   deleteProduct,
 } from "./cms.mjs";
 
+import {
+  handleCatalogEnrich,
+  handleCatalogItems,
+  handleCatalogItemById,
+} from "./catalog.mjs";
+
+import {
+  handleAuthSignup,
+  handleAuthLogin,
+  handleAuthLogout,
+  handleAuthMe,
+} from "./auth.mjs";
+
 import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
 
 import { supabaseFetch as sbFetch, supabaseReady, resolveBackend } from "./store.mjs";
@@ -92,11 +105,11 @@ const SECURITY_HEADERS = {
   "permissions-policy": "camera=(), microphone=(), geolocation=()",
   "content-security-policy":
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com; " +
+    "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://va.vercel-scripts.com https://www.googletagmanager.com https://static.cloudflareinsights.com; " +
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
     "img-src 'self' data: https:; " +
     "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; " +
-    "connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com; " +
+    "connect-src 'self' https://va.vercel-scripts.com https://www.google-analytics.com https://cloudflareinsights.com; " +
     "object-src 'none'; base-uri 'self'; frame-ancestors 'none';",
 };
 
@@ -1477,6 +1490,20 @@ export async function handle(req, res) {
     if (prodMatch && (req.method === "GET" || req.method === "PATCH" || req.method === "DELETE")) {
       return await handleAdminProductById(req, res, prodMatch[1]);
     }
+
+    // ── Catalog enrichment ────────────────────────────────────────────────
+    if (pathname === "/api/catalog/enrich") return await handleCatalogEnrich(req, res);
+    if (pathname === "/api/catalog/items") return await handleCatalogItems(req, res);
+    const catMatch = pathname.match(/^\/api\/catalog\/items\/([a-f0-9-]+)$/);
+    if (catMatch && (req.method === "GET" || req.method === "PATCH" || req.method === "DELETE")) {
+      return await handleCatalogItemById(req, res, catMatch[1]);
+    }
+
+    // ── DutaOS auth ──────────────────────────────────────────────────────────
+    if (pathname === "/api/auth/signup") return await handleAuthSignup(req, res);
+    if (pathname === "/api/auth/login") return await handleAuthLogin(req, res);
+    if (pathname === "/api/auth/logout") return await handleAuthLogout(req, res);
+    if (pathname === "/api/auth/me") return await handleAuthMe(req, res);
 
     if (pathname.startsWith("/api/workspace/")) return await handleWorkspaceNodeRequest(req, res);
 
