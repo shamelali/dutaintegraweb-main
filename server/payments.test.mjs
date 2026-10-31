@@ -301,3 +301,24 @@ describe("POST /api/payments/webhook/billplz", () => {
     assert.equal(paid.status, "paid");
   });
 });
+
+describe("webhook rate limiting", () => {
+  test("429s when a single IP exceeds 60 requests in a minute", async () => {
+    process.env.HITPAY_SECRET_KEY = "hp_secret";
+    const fixedIp = "203.0.113.99";
+    const path = "/api/payments/webhook/hitpay";
+    const body = JSON.stringify({ order_id: "nope", paid: false });
+    const sig = sign("hp_secret", body);
+    let lastStatus = 0;
+    for (let i = 0; i < 61; i++) {
+      const res = await fetch(`${base}${path}`, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": fixedIp, "x-signature": sig },
+        body,
+      });
+      lastStatus = res.status;
+      await res.text();
+    }
+    assert.equal(lastStatus, 429);
+  });
+});

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { healthReport, resetHealthProbeCache } from "./health.mjs";
 import { resetBackendWarnings } from "./store.mjs";
 
-const ENV_KEYS = ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "NODE_ENV", "VERCEL", "CONTACT_INBOX_EMAIL", "ADMIN_EMAIL"];
+const ENV_KEYS = ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "NODE_ENV", "VERCEL", "CONTACT_INBOX_EMAIL", "ADMIN_EMAIL", "HITPAY_API_KEY", "HITPAY_SECRET_KEY", "BILLPLZ_API_KEY", "BILLPLZ_COLLECTION_ID"];
 
 let saved;
 let originalFetch;
@@ -164,4 +164,22 @@ test("inbox status is reported separately from the datastore", async () => {
   assert.equal(report.datastore.ok, true);
   assert.equal(report.ok, true, "a missing inbox alone does not make the datastore unhealthy");
   assert.match(report.warnings.join(" "), /enquiry notifications disabled/);
+});
+
+test("payments.providersConfigured reflects whether each provider has its keys", async () => {
+  let report = await healthReport();
+  assert.deepEqual(report.payments.providersConfigured, { hitpay: false, billplz: false });
+
+  process.env.HITPAY_API_KEY = "hp_key";
+  process.env.HITPAY_SECRET_KEY = "hp_secret";
+  resetHealthProbeCache();
+  report = await healthReport();
+  assert.equal(report.payments.providersConfigured.hitpay, true);
+  assert.equal(report.payments.providersConfigured.billplz, false);
+
+  process.env.BILLPLZ_API_KEY = "bp_key";
+  process.env.BILLPLZ_COLLECTION_ID = "bp_coll";
+  resetHealthProbeCache();
+  report = await healthReport();
+  assert.deepEqual(report.payments.providersConfigured, { hitpay: true, billplz: true });
 });

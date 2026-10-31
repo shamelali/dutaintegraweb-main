@@ -5,6 +5,7 @@ import { dirname } from "node:path";
 import { dataFile } from "./paths.mjs";
 import { usingSupabase, supabaseFetch } from "./store.mjs";
 import { getCompanyIdFromReq } from "./auth.mjs";
+import { rateLimit } from "./auth.mjs";
 import { updateCompanySubscription } from "./companies.mjs";
 
 /**
@@ -429,6 +430,8 @@ async function handlePaymentsList(req, res) {
 
 async function handleHitpayWebhook(req, res) {
   if (req.method !== "POST") return sendJson(res, 405, { error: "Method not allowed" });
+  const rl = webhookRateLimit(req);
+  if (!rl.allowed) return sendJson(res, 429, { error: "Too many requests" });
   const rawBody = await readRawBody(req);
   const result = await processHitpayWebhook(rawBody, req.headers);
   return sendJson(res, result.status, result.body);
@@ -436,9 +439,16 @@ async function handleHitpayWebhook(req, res) {
 
 async function handleBillplzWebhook(req, res) {
   if (req.method !== "POST") return sendJson(res, 405, { error: "Method not allowed" });
+  const rl = webhookRateLimit(req);
+  if (!rl.allowed) return sendJson(res, 429, { error: "Too many requests" });
   const rawBody = await readRawBody(req);
   const result = await processBillplzWebhook(rawBody, req.headers);
   return sendJson(res, result.status, result.body);
+}
+
+function webhookRateLimit(req) {
+  const ip = String(req.headers["x-forwarded-for"] ?? "").split(",")[0]?.trim() || "unknown";
+  return rateLimit(`payments-webhook:${ip}`, Date.now(), 60, 60_000);
 }
 
 async function readJsonBodyLocal(req) {

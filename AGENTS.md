@@ -9,7 +9,7 @@ Marketing site + lead-capture API for dutaintegra.my. Node >= 22, ES modules,
 |---|---|
 | `Web/` | Static HTML. `vercel.json` sets `outputDirectory: "Web"`, so this is what deploys. |
 | `Web/assets/index-*.js` | The **built React bundle**, produced by `web-new/`. `Web/index.html` is a Vite build artifact, not hand-written. **Do not edit by hand — regenerate with `npm run build:web`.** |
-| `server/` | The Node server: `handler.mjs` (routing + most endpoints), `portal.mjs` (client auth), `enquiries.mjs` (storage), `stats.mjs`, `digest.mjs`, `autonomous-ops.mjs`. Every `*-cloudflare.mjs` is a **parallel fork** of its namesake for Cloudflare Pages — which is what production deploys (see "The thing that trips people up") |
+| `server/` | The Node server: `handler.mjs` (routing + most endpoints), `portal.mjs` (client auth), `enquiries.mjs` (storage), `stats.mjs`, `digest.mjs`, `autonomous-ops.mjs`, `payments.mjs` (DutaOS HitPay/Billplz checkout + webhooks). Every `*-cloudflare.mjs` is a **parallel fork** of its namesake for Cloudflare Pages — which is what production deploys (see "The thing that trips people up") |
 | `api/gateway.js` | Vercel serverless entrypoint. Just re-exports `handle` from `server/handler.mjs`. |
 | `api/audit.js` | Separate self-contained audit tool, wired to its own rewrites |
 | `vercel.json` | Deployment + the security headers production actually enforces |
@@ -455,6 +455,44 @@ appended synthetic rows into the developer's real local files (1,288 fake
 `Test Client` accounts at the time it was found). If you add a store, use
 `dataFile("name.jsonl")`; `server/paths.test.mjs` fails the build if a module
 rebuilds the path by hand instead.
+
+## DutaOS payments (HitPay + Billplz)
+
+`server/payments.mjs` (added 2026-10-31) implements the DutaOS billing
+checkout. The Cloudflare fork does **not** have a payments mirror yet, so
+`handler-cloudflare.mjs` still serves 404 for `/api/billing/*` and
+`/api/payments/webhook/*`. The Vercel entrypoint works and the Cloudflare
+Pages deploy carries it because `functions/api/[[path]].js` copies Pages env
+into `process.env` and re-exports `handle` from `handler.mjs` — but check
+before shipping a payments change: any fix in `payments.mjs` needs its
+equivalent ported to a `payments-cloudflare.mjs` when that fork exists.
+
+Four routes, all company-scoped via the `dutaos_session` cookie (`getCompanyIdFromReq`
+in `server/auth.mjs`):
+
+| Method | Path | Auth | Purpose |
+|---|---|---|---|
+| POST | `/api/billing/checkout` | cookie | Creates a pending payment, returns the provider's checkout URL |
+| GET | `/api/billing/payments` | cookie | Lists the authenticated company's payments (newest first) |
+| POST | `/api/payments/webhook/hitpay` | HMAC-SHA256 sig | Flips payment to paid/failed, upgrades subscription on paid |
+| POST | `/api/payments/webhook/billplz` | HMAC-SHA256 sig | Same, against the `x-signature` header |
+
+Both webhook routes are rate-limited at 60 requests/minute per source IP
+(`x-forwarded-for`) via `auth.mjs:rateLimit` — see `webhookRateLimit` in
+`payments.mjs`. Signatures are verified with `timingSafeEqual`. A provider
+is only offered at checkout when its keys are set; unset means hidden, not
+an error — the same fail-closed rule as `ADMIN_TOKEN`.
+
+`payments` lives in `supabase/migrations/202610310004_payments.sql` with
+RLS enabled and no public policies (service-role writes only). `companies.mjs`
+exposes `updateCompanySubscription(companyId, patch)` — a server-only setter
+that bypasses the `UPDATABLE_FIELDS` whitelist; do not route subscription
+changes through the normal `updateCompany`, or the tier/status fields are
+silently dropped.
+
+`/api/health` reports `payments.providersConfigured.{hitpay,billplz}` so the
+uptime automation can page when a key disappears; the flag is not part of
+the health `ok` calculation.
 
 ## Environment variables
 

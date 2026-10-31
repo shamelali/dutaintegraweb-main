@@ -138,6 +138,12 @@ export async function healthReport({ now = Date.now(), force = false } = {}) {
     ok: datastore.ok && !error,
     inbox: { ok: inboxConfigured },
     datastore,
+    payments: {
+      providersConfigured: {
+        hitpay: Boolean(process.env.HITPAY_API_KEY && process.env.HITPAY_SECRET_KEY),
+        billplz: Boolean(process.env.BILLPLZ_API_KEY && process.env.BILLPLZ_COLLECTION_ID),
+      },
+    },
     // Retained so the deployed uptime automation keeps parsing while it is
     // updated to read `datastore` instead.
     inboxConfigured,
