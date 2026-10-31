@@ -1336,6 +1336,23 @@ describe("vercel.json security headers", () => {
     assert.ok(csp.includes("frame-ancestors 'none'"), "should prevent framing");
   });
 
+  test("allows the Cloudflare Web Analytics beacon", async () => {
+    /**
+     * Cloudflare injects beacon.min.js into every HTML response on the Pages
+     * deployment. If script-src or connect-src omits these origins the browser
+     * logs a CSP violation on every page load and no analytics is recorded.
+     */
+    const csp = (await loadHeaders()).get("content-security-policy");
+    assert.ok(
+      csp.includes("https://static.cloudflareinsights.com"),
+      "script-src must allow the injected beacon script",
+    );
+    assert.ok(
+      csp.includes("https://cloudflareinsights.com"),
+      "connect-src must allow the RUM endpoint the beacon posts to",
+    );
+  });
+
   test("sends HSTS with preload", async () => {
     const headers = await loadHeaders();
     const hsts = headers.get("strict-transport-security");
@@ -1379,7 +1396,7 @@ describe("vercel.json security headers", () => {
       values.set(line.slice(0, idx).trim().toLowerCase(), line.slice(idx + 1).trim());
     }
     const vercel = await loadHeaders();
-    for (const key of ["x-content-type-options", "x-frame-options", "x-permitted-cross-domain-policies"]) {
+    for (const key of ["x-content-type-options", "x-frame-options", "x-permitted-cross-domain-policies", "content-security-policy"]) {
       assert.equal(values.get(key), vercel.get(key), `${key} must match across both platforms`);
     }
   });

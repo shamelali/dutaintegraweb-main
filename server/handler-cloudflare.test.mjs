@@ -247,3 +247,37 @@ describe("portal proposals + projects — workspace_* tables, working auth", () 
     }
   });
 });
+
+describe("portal auth — the route names the React portal actually calls", () => {
+  let env;
+  before(() => {
+    env = {
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    };
+    process.env.SUPABASE_URL = "https://stub.supabase.co";
+    process.env.SUPABASE_SERVICE_ROLE_KEY = "stub-service-role";
+  });
+  after(() => { Object.assign(process.env, env); });
+
+  test("POST /api/portal/login validates the body instead of answering 404", async () => {
+    const res = await call("/api/portal/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    assert.equal(res.status, 400, "a missing body must be a validation error, not an unrouted 404");
+    assert.match((await res.json()).error, /Email and password/);
+  });
+
+  test("GET /api/portal/me without a token is 401, not 404", async () => {
+    const res = await call("/api/portal/me");
+    assert.equal(res.status, 401);
+  });
+
+  test("POST /api/portal/logout clears di_session", async () => {
+    const res = await call("/api/portal/logout", { method: "POST" });
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("set-cookie") ?? "", /di_session=.*Max-Age=0/);
+  });
+});
