@@ -1843,4 +1843,338 @@ export const translations = {
     en: "Mark done",
     bm: "Tandai selesai",
   },
+
+  // ---- DUTAOS AUTH ----
+  authSignIn: {
+    en: "Sign in",
+    bm: "Log masuk",
+  },
+  authSignUp: {
+    en: "Create account",
+    bm: "Cipta akaun",
+  },
+  authSignInDesc: {
+    en: "Sign in to your DutaOS workspace.",
+    bm: "Log masuk ke ruang kerja DutaOS anda.",
+  },
+  authSignUpDesc: {
+    en: "Register your company and start tracking compliance.",
+    bm: "Daftarkan syarikat anda dan mula menjejak pematuhan.",
+  },
+  authEmail: {
+    en: "Email",
+    bm: "Emel",
+  },
+  authPassword: {
+    en: "Password",
+    bm: "Kata laluan",
+  },
+  authPasswordHint: {
+    en: "At least 8 characters.",
+    bm: "Sekurang-kurangnya 8 aksara.",
+  },
+  authCompanyName: {
+    en: "Company name",
+    bm: "Nama syarikat",
+  },
+  authCompanyPlaceholder: {
+    en: "Mokhtar Trading Sdn Bhd",
+    bm: "Mokhtar Trading Sdn Bhd",
+  },
+  authIndustry: {
+    en: "Industry (optional)",
+    bm: "Industri (pilihan)",
+  },
+  authIndustryPlaceholder: {
+    en: "e.g. retail, services, manufacturing",
+    bm: "cth. runcit, perkhidmatan, pembuatan",
+  },
+  authSubmitting: {
+    en: "Please wait…",
+    bm: "Sila tunggu…",
+  },
+  authNoAccount: {
+    en: "No account yet?",
+    bm: "Belum ada akaun?",
+  },
+  authHaveAccount: {
+    en: "Already have an account?",
+    bm: "Sudah ada akaun?",
+  },
+  authCreateAccount: {
+    en: "Create one",
+    bm: "Cipta satu",
+  },
+  authSignInLink: {
+    en: "Sign in",
+    bm: "Log masuk",
+  },
+  authFailed: {
+    en: "Sign in failed. Please try again.",
+    bm: "Log masuk gagal. Sila cuba lagi.",
+  },
+  authSignupFailed: {
+    en: "Registration failed. Please try again.",
+    bm: "Pendaftaran gagal. Sila cuba lagi.",
+  },
+  authConnectionError: {
+    en: "Could not reach the server. Check your connection and try again.",
+    bm: "Tidak dapat menghubungi pelayan. Semak sambungan anda dan cuba lagi.",
+  },
+
+  // ---- CATALOG ENRICHMENT ----
+  catalogPageTitle: {
+    en: "Catalog Enrichment",
+    bm: "Pengayaan Katalog",
+  },
+  catalogPageSub: {
+    en: "Turn product images into structured catalog entries. Upload a photo, let the VLM extract the details, then save.",
+    bm: "Tukar imej produk kepada entri katalog berstruktur. Muat naik foto, biar VLM mengekstrak butiran, kemudian simpan.",
+  },
+  catalogUploadTitle: {
+    en: "1. Upload product image",
+    bm: "1. Muat naik imej produk",
+  },
+  catalogChooseImage: {
+    en: "Choose an image…",
+    bm: "Pilih imej…",
+  },
+  catalogRemoveImage: {
+    en: "Remove image",
+    bm: "Buang imej",
+  },
+  catalogEnrichBtn: {
+    en: "Enrich with VLM",
+    bm: "Perkaya dengan VLM",
+  },
+  catalogExtracting: {
+    en: "Extracting details…",
+    bm: "Mengekstrak butiran…",
+  },
+  catalogVlmExtracts: {
+    en: "What the VLM extracts:",
+    bm: "Apa yang VLM ekstrak:",
+  },
+  catalogProductTitle: {
+    en: "Product title",
+    bm: "Tajuk produk",
+  },
+  catalogDescription: {
+    en: "Description",
+    bm: "Penerangan",
+  },
+  catalogCategory: {
+    en: "Category",
+    bm: "Kategori",
+  },
+  catalogSpecs: {
+    en: "Specifications (key/value)",
+    bm: "Spesifikasi (kunci/nilai)",
+  },
+  catalogTags: {
+    en: "Tags",
+    bm: "Tag",
+  },
+  catalogPoweredBy: {
+    en: "Powered by a local VLM via Ollama. Review and edit extracted fields before saving.",
+    bm: "Dikuasakan oleh VLM tempatan melalui Ollama. Semak dan edit medan yang diekstrak sebelum menyimpan.",
+  },
+  catalogReviewTitle: {
+    en: "2. Review & edit",
+    bm: "2. Semak & edit",
+  },
+  catalogTitleLabel: {
+    en: "Title *",
+    bm: "Tajuk *",
+  },
+  catalogTitlePlaceholder: {
+    en: "Product name",
+    bm: "Nama produk",
+  },
+  catalogCategoryPlaceholder: {
+    en: "e.g. lighting, furniture",
+    bm: "cth. pencahayaan, perabot",
+  },
+  catalogDescriptionPlaceholder: {
+    en: "What is this product?",
+    bm: "Apakah produk ini?",
+  },
+  catalogSpecsLabel: {
+    en: "Specifications",
+    bm: "Spesifikasi",
+  },
+  catalogAddSpec: {
+    en: "+ Add spec",
+    bm: "+ Tambah spesifikasi",
+  },
+  catalogKey: {
+    en: "Key",
+    bm: "Kunci",
+  },
+  catalogValue: {
+    en: "Value",
+    bm: "Nilai",
+  },
+  catalogTagsLabel: {
+    en: "Tags (comma-separated)",
+    bm: "Tag (dipisahkan koma)",
+  },
+  catalogTagsPlaceholder: {
+    en: "e.g. led, energy-efficient, indoor",
+    bm: "cth. led, cekap tenaga, dalaman",
+  },
+  catalogImageUrl: {
+    en: "Image URL",
+    bm: "URL imej",
+  },
+  catalogSaving: {
+    en: "Saving…",
+    bm: "Menyimpan…",
+  },
+  catalogUpdate: {
+    en: "Update item",
+    bm: "Kemas kini item",
+  },
+  catalogSave: {
+    en: "Save to catalog",
+    bm: "Simpan ke katalog",
+  },
+  catalogCancel: {
+    en: "Cancel",
+    bm: "Batal",
+  },
+  catalogSavedItems: {
+    en: "Saved catalog items",
+    bm: "Item katalog tersimpan",
+  },
+  catalogNewItem: {
+    en: "New item",
+    bm: "Item baharu",
+  },
+  catalogEmpty: {
+    en: "No catalog items yet. Enrich your first image above.",
+    bm: "Belum ada item katalog. Perkaya imej pertama anda di atas.",
+  },
+  catalogUntitled: {
+    en: "Untitled",
+    bm: "Tanpa tajuk",
+  },
+  catalogPublished: {
+    en: "Published",
+    bm: "Diterbitkan",
+  },
+  catalogEdit: {
+    en: "Edit",
+    bm: "Edit",
+  },
+  catalogDeleteConfirm: {
+    en: "Delete this catalog item?",
+    bm: "Padam item katalog ini?",
+  },
+  catalogErrLoad: {
+    en: "Failed to load catalog items",
+    bm: "Gagal memuatkan item katalog",
+  },
+  catalogErrSave: {
+    en: "Failed to save catalog item",
+    bm: "Gagal menyimpan item katalog",
+  },
+  catalogErrEnrich: {
+    en: "Enrichment failed",
+    bm: "Pengayaan gagal",
+  },
+  catalogErrDelete: {
+    en: "Failed to delete catalog item",
+    bm: "Gagal memadam item katalog",
+  },
+
+  // ---- DUTAOS DASHBOARD (Duta CEO) ----
+  dashboardTitle: {
+    en: "Your daily brief",
+    bm: "Ringkasan harian anda",
+  },
+  dashboardSub: {
+    en: "Compliance at a glance, with Duta CEO ready to answer.",
+    bm: "Pematuhan sekilas pandang, dengan Duta CEO sedia menjawab.",
+  },
+  dashboardPending: {
+    en: "Pending",
+    bm: "Bertunggu",
+  },
+  dashboardCompleted: {
+    en: "Completed",
+    bm: "Selesai",
+  },
+  dashboardOverdue: {
+    en: "Overdue",
+    bm: "Lewat tempoh",
+  },
+  dashboardNextDue: {
+    en: "Next deadline",
+    bm: "Tarikh akhir seterusnya",
+  },
+  dashboardNoDue: {
+    en: "Nothing scheduled — add an item to the checklist.",
+    bm: "Tiada jadual — tambah item ke senarai semak.",
+  },
+  dashboardManage: {
+    en: "Manage checklist",
+    bm: "Urus senarai semak",
+  },
+  dashboardError: {
+    en: "Could not load your brief.",
+    bm: "Gagal memuatkan ringkasan anda.",
+  },
+  dashboardChatTitle: {
+    en: "Ask Duta CEO",
+    bm: "Tanya Duta CEO",
+  },
+  dashboardChatPlaceholder: {
+    en: "Ask about your compliance, operations, or next steps…",
+    bm: "Tanya tentang pematuhan, operasi, atau langkah seterusnya…",
+  },
+  dashboardChatSend: {
+    en: "Send",
+    bm: "Hantar",
+  },
+  dashboardChatWelcome: {
+    en: "Hi! I can see your company's compliance checklist. Ask me what needs attention this month.",
+    bm: "Hai! Saya boleh lihat senarai semak pematuhan syarikat anda. Tanya apa yang perlu diberi perhatian bulan ini.",
+  },
+  dashboardChatThinking: {
+    en: "Thinking…",
+    bm: "Sedang berfikir…",
+  },
+  dashboardChatError: {
+    en: "Duta CEO is unavailable right now. Please try again.",
+    bm: "Duta CEO tidak tersedia sekarang. Sila cuba lagi.",
+  },
+  dashboardChatDisclaimer: {
+    en: "Duta CEO gives general guidance, not legal or financial advice.",
+    bm: "Duta CEO memberi panduan umum, bukan nasihat undang-undang atau kewangan.",
+  },
+  dashboardQuick1: {
+    en: "What do I need to do this month?",
+    bm: "Apa yang perlu saya buat bulan ini?",
+  },
+  dashboardQuick2: {
+    en: "Which items are overdue?",
+    bm: "Item mana yang lewat tempoh?",
+  },
+  dashboardQuick3: {
+    en: "How do I prepare for MyInvois?",
+    bm: "Bagaimana saya bersedia untuk MyInvois?",
+  },
+  dashboardSignedInAs: {
+    en: "Signed in as",
+    bm: "Log masuk sebagai",
+  },
+  dashboardSignOut: {
+    en: "Sign out",
+    bm: "Log keluar",
+  },
+  dashboardSigningOut: {
+    en: "Signing out…",
+    bm: "Sedang log keluar…",
+  },
 } as const

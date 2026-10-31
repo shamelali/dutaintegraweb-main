@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { PortalAccountBar } from "@/components/portal-account-bar"
+import { DutaosAccountBar } from "@/components/dutaos-account-bar"
 import { useLanguage } from "@/hooks/use-language"
 
 type ComplianceItem = {
@@ -42,7 +42,7 @@ export function PortalCompliancePage() {
   async function loadItems() {
     try {
       const res = await fetch("/api/compliance-items")
-      if (res.status === 401) return navigate(`/login?next=${encodeURIComponent(window.location.pathname)}`)
+      if (res.status === 401) return navigate(`/signin?next=${encodeURIComponent(window.location.pathname)}`)
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Failed to load")
       setItems(data.items || [])
@@ -61,7 +61,7 @@ export function PortalCompliancePage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ type: newType, due_date: newDueDate || null }),
       })
-      if (res.status === 401) return navigate(`/login?next=${encodeURIComponent(window.location.pathname)}`)
+      if (res.status === 401) return navigate(`/signin?next=${encodeURIComponent(window.location.pathname)}`)
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Failed to create")
       setItems([data.item, ...items])
@@ -80,7 +80,7 @@ export function PortalCompliancePage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: nextStatus }),
       })
-      if (res.status === 401) return navigate(`/login?next=${encodeURIComponent(window.location.pathname)}`)
+      if (res.status === 401) return navigate(`/signin?next=${encodeURIComponent(window.location.pathname)}`)
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Failed to update")
       setItems(items.map((i) => (i.id === item.id ? data.item : i)))
@@ -93,7 +93,7 @@ export function PortalCompliancePage() {
     if (!window.confirm("Delete this compliance item?")) return
     try {
       const res = await fetch(`/api/compliance-items/${id}`, { method: "DELETE" })
-      if (res.status === 401) return navigate(`/login?next=${encodeURIComponent(window.location.pathname)}`)
+      if (res.status === 401) return navigate(`/signin?next=${encodeURIComponent(window.location.pathname)}`)
       if (!res.ok) throw new Error("Failed to delete")
       setItems(items.filter((i) => i.id !== id))
     } catch (e) {
@@ -117,7 +117,7 @@ export function PortalCompliancePage() {
   return (
     <div className="min-h-screen bg-background py-12 px-6">
       <div className="max-w-4xl mx-auto">
-        <PortalAccountBar />
+        <DutaosAccountBar />
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-heading font-bold">{t("compliancePageTitle")}</h1>

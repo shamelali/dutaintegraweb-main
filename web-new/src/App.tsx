@@ -14,6 +14,9 @@ import { PortalProposalDetailPage } from "@/pages/portal-proposal-detail"
 import { PortalDigestsPage } from "@/pages/portal-digests"
 import { PortalCompliancePage } from "@/pages/portal-compliance"
 import { PortalLoginPage } from "@/pages/portal-login"
+import { AuthPage } from "@/pages/auth-page"
+import { CatalogEnrichmentPage } from "@/pages/catalog-enrichment"
+import { DutaosDashboardPage } from "@/pages/dutaos-dashboard"
 import { NotFoundPage } from "@/pages/not-found"
 import { CaseStudiesPage } from "@/pages/case-studies"
 import { ProductsPage } from "@/pages/products"
@@ -32,6 +35,10 @@ const routes = [
   { path: "/case-studies", element: <CaseStudiesPage /> },
   { path: "/products", element: <ProductsPage /> },
   { path: "/login", element: <PortalLoginPage /> },
+  { path: "/signin", element: <AuthPage mode="login" /> },
+  { path: "/signup", element: <AuthPage mode="signup" /> },
+  { path: "/dashboard", element: <DutaosDashboardPage /> },
+  { path: "/catalog-enrichment", element: <CatalogEnrichmentPage /> },
   { path: "/portal/proposals", element: <PortalProposalsPage /> },
   { path: "/portal/proposals/:id", element: <PortalProposalDetailPage /> },
   { path: "/portal/digests", element: <PortalDigestsPage /> },
