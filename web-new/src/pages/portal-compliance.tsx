@@ -193,7 +193,7 @@ export function PortalCompliancePage() {
                         </>
                       )}
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => deleteItem(item)}>
+                    <Button variant="ghost" size="sm" onClick={() => deleteItem(item.id)}>
                       <AlertCircle className="w-3 h-3 mr-1" />
                     </Button>
                   </div>
