@@ -58,6 +58,11 @@ import {
   deleteProduct,
 } from "./cms-cloudflare.mjs";
 
+import {
+  handleComplianceItems,
+  handleComplianceItemById,
+} from "./compliance.mjs";
+
 // ── Security Headers ──────────────────────────────────────────────────────────
 // Cloudflare Pages serves static files with _headers; this applies to API responses
 const SECURITY_HEADERS = {
@@ -1058,6 +1063,20 @@ export async function handleApi(req) {
     if (pathname === "/api/auth/login") return await handleAuthLogin(req);
     if (pathname === "/api/auth/logout") return await handleAuthLogout(req);
     if (pathname === "/api/auth/me") return await handleAuthMe(req);
+
+    // DutaOS compliance (company-scoped via session cookie)
+    if (pathname === "/api/compliance-items") return await handleComplianceItems(req);
+    if (pathname.match(/^\/api\/compliance-items\/[a-f0-9-]+$/) && (req.method === "PATCH" || req.method === "DELETE" || req.method === "POST")) {
+      return await handleComplianceItemById(req);
+    }
+
+    // The React portal (web-new/src/pages/portal-login.tsx, portal-account-bar.tsx)
+    // calls /api/portal/login|logout|me, which is the Vercel fork's route table.
+    // This fork only ever served /api/auth/*, so every portal sign-in and
+    // sign-out answered 404 in production. Same handlers, portal names.
+    if (pathname === "/api/portal/login") return await handleAuthLogin(req);
+    if (pathname === "/api/portal/logout") return await handleAuthLogout(req);
+    if (pathname === "/api/portal/me") return await handleAuthMe(req);
 
     // Portal routes (authenticated via Supabase JWT)
     if (pathname === "/api/portal/health") return await handlePortalHealth(req);

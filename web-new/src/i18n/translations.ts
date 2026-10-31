@@ -1785,4 +1785,62 @@ export const translations = {
     en: "After: clean Duta Connect unified dashboard",
     bm: "Selepas: papan pemuka terpadu Duta Connect yang kemas",
   },
+
+  // ---- COMPLIANCE PORTAL (DutaOS Govern) ----
+  compliancePageTitle: {
+    en: "Compliance Checklist",
+    bm: "Senarai Semak Pematuhan",
+  },
+  compliancePageSub: {
+    en: "Track SSM, PDPA, e-invoice and tax obligations for your company.",
+    bm: "Jejak kewajiban SSM, PDPA, e-invois, dan cukai untuk syarikat anda.",
+  },
+  complianceMarkAll: {
+    en: "Mark All Reviewed",
+    bm: "Tandai Semua Telah Ditinjau",
+  },
+  complianceAddType: {
+    en: "Compliance type",
+    bm: "Jenis pematuhan",
+  },
+  complianceSelectType: {
+    en: "Select a type",
+    bm: "Pilih jenis",
+  },
+  complianceDueDate: {
+    en: "Due date",
+    bm: "Tarikh tamat",
+  },
+  complianceAdd: {
+    en: "Add item",
+    bm: "Tambah item",
+  },
+  complianceNoItems: {
+    en: "No compliance items yet",
+    bm: "Belum ada item pematuhan",
+  },
+  complianceNoItemsDesc: {
+    en: "Add SSM, PDPA, MyInvois, and tax obligations to track them here.",
+    bm: "Tambah kewajiban SSM, PDPA, MyInvois, dan cukai untuk jejak di sini.",
+  },
+  complianceDone: {
+    en: "Done",
+    bm: "Selesai",
+  },
+  compliancePending: {
+    en: "Pending",
+    bm: "Bertunggu",
+  },
+  complianceDue: {
+    en: "Due",
+    bm: "Tamat",
+  },
+  complianceReopen: {
+    en: "Reopen",
+    bm: "Buka semula",
+  },
+  complianceMarkDone: {
+    en: "Mark done",
+    bm: "Tandai selesai",
+  },
 } as const

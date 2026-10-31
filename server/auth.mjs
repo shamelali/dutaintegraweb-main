@@ -328,6 +328,12 @@ async function sessionFromReq(req) {
   return getSession(token);
 }
 
+/** Returns the companyId bound to the request's session cookie, or null. */
+export async function getCompanyIdFromReq(req) {
+  const session = await sessionFromReq(req);
+  return session ? session.companyId : null;
+}
+
 // ── route handlers ───────────────────────────────────────────────────────────
 
 export async function handleAuthSignup(req, res) {

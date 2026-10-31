@@ -50,6 +50,11 @@ import {
   handleAuthMe,
 } from "./auth.mjs";
 
+import {
+  handleComplianceItems,
+  handleComplianceItemById,
+} from "./compliance.mjs";
+
 import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
 
 import { supabaseFetch as sbFetch, supabaseReady, resolveBackend } from "./store.mjs";
@@ -1504,6 +1509,13 @@ export async function handle(req, res) {
     if (pathname === "/api/auth/login") return await handleAuthLogin(req, res);
     if (pathname === "/api/auth/logout") return await handleAuthLogout(req, res);
     if (pathname === "/api/auth/me") return await handleAuthMe(req, res);
+
+    // ── DutaOS compliance ────────────────────────────────────────────────────
+    if (pathname === "/api/compliance-items") return await handleComplianceItems(req, res);
+    const compMatch = pathname.match(/^\/api\/compliance-items\/([a-f0-9-]+)$/);
+    if (compMatch && (req.method === "PATCH" || req.method === "DELETE" || req.method === "POST")) {
+      return await handleComplianceItemById(req, res);
+    }
 
     if (pathname.startsWith("/api/workspace/")) return await handleWorkspaceNodeRequest(req, res);
 

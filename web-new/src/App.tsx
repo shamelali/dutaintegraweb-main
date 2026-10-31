@@ -12,6 +12,7 @@ import { DigitalAssessmentPage } from "@/pages/digital-assessment"
 import { PortalProposalsPage } from "@/pages/portal-proposals"
 import { PortalProposalDetailPage } from "@/pages/portal-proposal-detail"
 import { PortalDigestsPage } from "@/pages/portal-digests"
+import { PortalCompliancePage } from "@/pages/portal-compliance"
 import { PortalLoginPage } from "@/pages/portal-login"
 import { NotFoundPage } from "@/pages/not-found"
 import { CaseStudiesPage } from "@/pages/case-studies"
@@ -34,6 +35,7 @@ const routes = [
   { path: "/portal/proposals", element: <PortalProposalsPage /> },
   { path: "/portal/proposals/:id", element: <PortalProposalDetailPage /> },
   { path: "/portal/digests", element: <PortalDigestsPage /> },
+  { path: "/portal/compliance", element: <PortalCompliancePage /> },
 ]
 
 export default function App() {
