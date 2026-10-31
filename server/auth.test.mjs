@@ -54,7 +54,7 @@ async function get(path, headers = {}) {
 
 function sessionToken(headers) {
   const setCookie = headers.getSetCookie?.() ?? [];
-  const cookie = setCookie.find((c) => c.startsWith("di_session="));
+  const cookie = setCookie.find((c) => c.startsWith("dutaos_session="));
   return cookie?.split(";")[0]?.split("=")?.[1] ?? null;
 }
 
@@ -109,7 +109,7 @@ describe("POST /api/auth/signup", () => {
     assert.equal(res.body.company.subscriptionTier, "starter");
     assert.equal(res.body.company.subscriptionStatus, "active");
     assert.ok(res.body.company.id);
-    assert.ok(sessionToken(res.headers), "should set a di_session cookie");
+    assert.ok(sessionToken(res.headers), "should set a dutaos_session cookie");
     const setCookie = res.headers.getSetCookie?.() ?? [];
     assert.ok(setCookie.some((c) => c.includes("HttpOnly") && c.includes("SameSite=Lax")));
   });
@@ -146,7 +146,7 @@ describe("POST /api/auth/login", () => {
     assert.equal(status, 200);
     assert.equal(body.success, true);
     assert.equal(body.company.email, VALID.email.toLowerCase());
-    assert.ok(sessionToken(headers), "should set a di_session cookie");
+    assert.ok(sessionToken(headers), "should set a dutaos_session cookie");
   });
 
   test("rejects wrong password", async () => {
@@ -186,7 +186,7 @@ describe("GET /api/auth/me", () => {
     const token = sessionToken(headers);
     assert.ok(token);
 
-    const res = await get("/api/auth/me", { cookie: `di_session=${token}` });
+    const res = await get("/api/auth/me", { cookie: `dutaos_session=${token}` });
     assert.equal(res.status, 200);
     assert.equal(res.body.success, true);
     assert.equal(res.body.company.email, VALID.email.toLowerCase());
@@ -200,14 +200,14 @@ describe("GET /api/auth/me", () => {
   });
 
   test("401s with an unknown session cookie", async () => {
-    const res = await get("/api/auth/me", { cookie: "di_session=deadbeef" });
+    const res = await get("/api/auth/me", { cookie: "dutaos_session=deadbeef" });
     assert.equal(res.status, 401);
   });
 
   test("rejects non-GET methods", async () => {
     const { headers } = await signup();
     const token = sessionToken(headers);
-    const res = await post("/api/auth/me", {}, { cookie: `di_session=${token}` });
+    const res = await post("/api/auth/me", {}, { cookie: `dutaos_session=${token}` });
     assert.equal(res.status, 405);
   });
 });
@@ -218,13 +218,13 @@ describe("POST /api/auth/logout", () => {
     const token = sessionToken(headers);
     assert.ok(token);
 
-    const res = await post("/api/auth/logout", {}, { cookie: `di_session=${token}` });
+    const res = await post("/api/auth/logout", {}, { cookie: `dutaos_session=${token}` });
     assert.equal(res.status, 200);
     assert.equal(res.body.success, true);
     const cookies = res.headers.getSetCookie?.() ?? [];
-    assert.ok(cookies.some((c) => c.startsWith("di_session=") && c.includes("Max-Age=0")));
+    assert.ok(cookies.some((c) => c.startsWith("dutaos_session=") && c.includes("Max-Age=0")));
 
-    const me = await get("/api/auth/me", { cookie: `di_session=${token}` });
+    const me = await get("/api/auth/me", { cookie: `dutaos_session=${token}` });
     assert.equal(me.status, 401);
   });
 

@@ -157,6 +157,18 @@ async function findCompanyByEmail(email) {
   return rows.find((r) => r.email === email) || null;
 }
 
+export async function getCompanyById(companyId) {
+  if (usingSupabase()) {
+    const res = await sbFetch(COMPANY_TABLE, `?id=eq.${encodeURIComponent(companyId)}&select=*`);
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return rows[0] ? normalizeCompany(rows[0]) : null;
+  }
+  const rows = await jsonlReadAll(storePath(COMPANY_STORE));
+  const row = rows.find((r) => r.id === companyId);
+  return row ? normalizeCompany(row) : null;
+}
+
 async function createCompany(company) {
   if (usingSupabase()) {
     const res = await sbFetch(COMPANY_TABLE, "", {
@@ -308,23 +320,27 @@ function parseCookie(req) {
   return cookies;
 }
 
+// DutaOS sessions use their own cookie: the legacy client portal signs in with
+// Supabase tokens in di_session, and one cookie cannot hold both.
+const SESSION_COOKIE = "dutaos_session";
+
 function setSessionCookie(res, token, expiresAt) {
   const expires = new Date(expiresAt).toUTCString();
   res.setHeader(
     "Set-Cookie",
-    `di_session=${token}; Path=/; HttpOnly; SameSite=Lax; Expires=${expires}`,
+    `${SESSION_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Expires=${expires}`,
   );
 }
 
 function clearSessionCookie(res) {
   res.setHeader(
     "Set-Cookie",
-    "di_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0",
+    `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`,
   );
 }
 
 async function sessionFromReq(req) {
-  const token = parseCookie(req)["di_session"];
+  const token = parseCookie(req)[SESSION_COOKIE];
   return getSession(token);
 }
 
@@ -414,7 +430,7 @@ export async function handleAuthLogin(req, res) {
 export async function handleAuthLogout(req, res) {
   if (req.method !== "POST") return sendAuth(res, 405, { error: "Method not allowed" });
 
-  const token = parseCookie(req)["di_session"];
+  const token = parseCookie(req)[SESSION_COOKIE];
   clearSessionCookie(res);
   if (typeof token === "string" && token) {
     try { await deleteSession(hashToken(token)); } catch { /* revocation failure is not a client error */ }

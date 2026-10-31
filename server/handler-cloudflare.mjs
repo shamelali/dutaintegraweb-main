@@ -29,10 +29,9 @@ import { handleFeed, handleConsent, handleIngestEvent } from "./autonomous-ops-c
 import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
 
 import {
-  handleAuthSignup,
-  handleAuthLogin,
-  handleAuthLogout,
-  handleAuthMe,
+  handleAuthLogin as handlePortalAuthLogin,
+  handleAuthLogout as handlePortalAuthLogout,
+  handleAuthMe as handlePortalAuthMe,
   handlePortalTickets,
   handlePortalTicketById,
   handlePortalHealth,
@@ -44,6 +43,14 @@ import {
   handleAdminClientDigest,
   requireAdminSession,
 } from "./portal-cloudflare.mjs";
+
+// DutaOS company accounts: the Node-style handlers the local server runs.
+import {
+  handleAuthSignup as handleDutaosSignup,
+  handleAuthLogin as handleDutaosLogin,
+  handleAuthLogout as handleDutaosLogout,
+  handleAuthMe as handleDutaosMe,
+} from "./auth.mjs";
 
 import {
   listCaseStudies,
@@ -62,6 +69,17 @@ import {
   handleComplianceItems,
   handleComplianceItemById,
 } from "./compliance.mjs";
+
+import {
+  handleAIChat,
+  handleDutaosBrief,
+} from "./ai.mjs";
+
+import {
+  handleCatalogEnrich,
+  handleCatalogItems,
+  handleCatalogItemById,
+} from "./catalog.mjs";
 
 // ── Security Headers ──────────────────────────────────────────────────────────
 // Cloudflare Pages serves static files with _headers; this applies to API responses
@@ -239,6 +257,67 @@ async function readJsonBody(req) {
   } catch {
     return { error: { status: 400, body: { error: "Invalid JSON body" } } };
   }
+}
+
+// ── Node-style handler adapter ────────────────────────────────────────────────
+// auth.mjs, compliance.mjs and catalog.mjs implement the Node req/res contract
+// that server/index.mjs serves locally. Pages Functions hand us a Web Request
+// and expect a Response. This bridge lets production run those same handlers
+// instead of a second implementation. Bodies are buffered once — every route
+// behind it reads the body at most once, and none of them stream.
+
+function toNodeRequest(request) {
+  return {
+    method: request.method,
+    url: request.url,
+    headers: {
+      ...Object.fromEntries(request.headers),
+      "x-forwarded-for":
+        request.headers.get("x-forwarded-for") ??
+        request.headers.get("cf-connecting-ip") ??
+        "unknown",
+    },
+    async *[Symbol.asyncIterator]() {
+      const body = await request.arrayBuffer();
+      if (body.byteLength > 0) yield new Uint8Array(body);
+    },
+  };
+}
+
+function nodeResponseCollector() {
+  let status = 200;
+  const headers = new Headers();
+  let body = "";
+  const res = {
+    writeHead(code, extra = {}) {
+      status = code;
+      for (const [key, value] of Object.entries(extra)) headers.set(key, String(value));
+      return res;
+    },
+    setHeader(key, value) {
+      headers.set(key, String(value));
+      return res;
+    },
+    end(chunk) {
+      if (typeof chunk === "string") body += chunk;
+    },
+  };
+  return {
+    res,
+    toResponse() {
+      for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+        if (!headers.has(key)) headers.set(key, value);
+      }
+      return new Response(body || null, { status, headers });
+    },
+  };
+}
+
+async function runNodeHandler(request, handler, ...args) {
+  const req = toNodeRequest(request);
+  const { res, toResponse } = nodeResponseCollector();
+  await handler(req, res, ...args);
+  return toResponse();
 }
 
 function constantTimeEqual(configured, supplied) {
@@ -1058,25 +1137,40 @@ export async function handleApi(req) {
     // live in workspace_tasks / workspace_approvals at /api/workspace/*.
     // History: 4061ff3 gated it, 32f2d4d proved why it could not work.
 
-    // Portal auth routes (Supabase Auth)
-    if (pathname === "/api/auth/signup") return await handleAuthSignup(req);
-    if (pathname === "/api/auth/login") return await handleAuthLogin(req);
-    if (pathname === "/api/auth/logout") return await handleAuthLogout(req);
-    if (pathname === "/api/auth/me") return await handleAuthMe(req);
+    // DutaOS auth — company accounts, session cookie dutaos_session. These are
+    // the same handler modules the local server runs. Pointing /api/auth/* at
+    // the portal's Supabase Auth handlers made Week 1 unreachable in production
+    // and left compliance with no session to read.
+    if (pathname === "/api/auth/signup") return await runNodeHandler(req, handleDutaosSignup);
+    if (pathname === "/api/auth/login") return await runNodeHandler(req, handleDutaosLogin);
+    if (pathname === "/api/auth/logout") return await runNodeHandler(req, handleDutaosLogout);
+    if (pathname === "/api/auth/me") return await runNodeHandler(req, handleDutaosMe);
 
-    // DutaOS compliance (company-scoped via session cookie)
-    if (pathname === "/api/compliance-items") return await handleComplianceItems(req);
+    // DutaOS compliance (company-scoped via dutaos_session cookie)
+    if (pathname === "/api/compliance-items") return await runNodeHandler(req, handleComplianceItems);
     if (pathname.match(/^\/api\/compliance-items\/[a-f0-9-]+$/) && (req.method === "PATCH" || req.method === "DELETE" || req.method === "POST")) {
-      return await handleComplianceItemById(req);
+      return await runNodeHandler(req, handleComplianceItemById);
+    }
+
+    // DutaOS AI — grounded on the company's compliance brief, audited in ai_actions
+    if (pathname === "/api/dutaos/brief") return await runNodeHandler(req, handleDutaosBrief);
+    if (pathname === "/api/ai/chat") return await runNodeHandler(req, handleAIChat);
+
+    // Catalog enrichment (staff-internal; DutaOS session required)
+    if (pathname === "/api/catalog/enrich") return await runNodeHandler(req, handleCatalogEnrich);
+    if (pathname === "/api/catalog/items") return await runNodeHandler(req, handleCatalogItems);
+    const catMatch = pathname.match(/^\/api\/catalog\/items\/([a-f0-9-]+)$/);
+    if (catMatch && (req.method === "GET" || req.method === "PATCH" || req.method === "DELETE")) {
+      return await runNodeHandler(req, handleCatalogItemById, catMatch[1]);
     }
 
     // The React portal (web-new/src/pages/portal-login.tsx, portal-account-bar.tsx)
     // calls /api/portal/login|logout|me, which is the Vercel fork's route table.
     // This fork only ever served /api/auth/*, so every portal sign-in and
     // sign-out answered 404 in production. Same handlers, portal names.
-    if (pathname === "/api/portal/login") return await handleAuthLogin(req);
-    if (pathname === "/api/portal/logout") return await handleAuthLogout(req);
-    if (pathname === "/api/portal/me") return await handleAuthMe(req);
+    if (pathname === "/api/portal/login") return await handlePortalAuthLogin(req);
+    if (pathname === "/api/portal/logout") return await handlePortalAuthLogout(req);
+    if (pathname === "/api/portal/me") return await handlePortalAuthMe(req);
 
     // Portal routes (authenticated via Supabase JWT)
     if (pathname === "/api/portal/health") return await handlePortalHealth(req);

@@ -55,6 +55,11 @@ import {
   handleComplianceItemById,
 } from "./compliance.mjs";
 
+import {
+  handleAIChat,
+  handleDutaosBrief,
+} from "./ai.mjs";
+
 import { handleWorkspaceApi } from "./workspace-cloudflare.mjs";
 
 import { supabaseFetch as sbFetch, supabaseReady, resolveBackend } from "./store.mjs";
@@ -1516,6 +1521,10 @@ export async function handle(req, res) {
     if (compMatch && (req.method === "PATCH" || req.method === "DELETE" || req.method === "POST")) {
       return await handleComplianceItemById(req, res);
     }
+
+    // ── DutaOS AI (grounded on the company's compliance brief) ───────────────
+    if (pathname === "/api/dutaos/brief") return await handleDutaosBrief(req, res);
+    if (pathname === "/api/ai/chat") return await handleAIChat(req, res);
 
     if (pathname.startsWith("/api/workspace/")) return await handleWorkspaceNodeRequest(req, res);
 

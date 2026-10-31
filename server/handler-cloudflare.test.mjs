@@ -281,3 +281,120 @@ describe("portal auth — the route names the React portal actually calls", () =
     assert.match(res.headers.get("set-cookie") ?? "", /di_session=.*Max-Age=0/);
   });
 });
+
+describe("DutaOS auth, compliance and catalog on the Pages entrypoint", () => {
+  let originalFetch;
+  let sessions;
+
+  before(() => {
+    process.env.SUPABASE_URL = "https://stub.supabase.co";
+    process.env.SUPABASE_SERVICE_ROLE_KEY = "stub-service-role";
+    sessions = [];
+    originalFetch = globalThis.fetch;
+    globalThis.fetch = async (input, init = {}) => {
+      const url = new URL(String(input));
+      const method = (init.method ?? "GET").toUpperCase();
+      const body = init.body ? JSON.parse(init.body) : null;
+      if (url.pathname.endsWith("/dutaos_sessions")) {
+        if (method === "POST") {
+          const row = Array.isArray(body) ? body[0] : body;
+          sessions.push(row);
+          return Response.json([row], { status: 201 });
+        }
+        if (method === "GET") {
+          const tokenHash = (url.searchParams.get("token_hash") ?? "").replace(/^eq\./, "");
+          return Response.json(sessions.filter((s) => s.token_hash === tokenHash));
+        }
+        return Response.json([]);
+      }
+      if (method === "POST") return Response.json([body], { status: 201 });
+      return Response.json([]);
+    };
+  });
+
+  after(() => {
+    globalThis.fetch = originalFetch;
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+  });
+
+  async function signup() {
+    const res = await call("/api/auth/signup", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        email: `cf-${nextIp()}@example.my`,
+        password: "securePass1",
+        companyName: "CF Test Sdn Bhd",
+      }),
+    });
+    assert.equal(res.status, 201);
+    const setCookie = res.headers.get("set-cookie") ?? "";
+    assert.match(setCookie, /dutaos_session=/, "signup must mint a DutaOS session");
+    assert.doesNotMatch(setCookie, /(^|,\s*)di_session=/, "must not clobber the portal cookie");
+    return { cookie: setCookie.split(";")[0] };
+  }
+
+  test("signup authenticates, and compliance answers with that session", async () => {
+    const { cookie } = await signup();
+    const res = await call("/api/compliance-items", { headers: { cookie } });
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.deepEqual(body.items, []);
+  });
+
+  test("compliance without a session is 401, not a crash", async () => {
+    const res = await call("/api/compliance-items");
+    assert.equal(res.status, 401);
+  });
+
+  test("catalog is closed to anonymous callers and open to a DutaOS session", async () => {
+    const anonymous = await call("/api/catalog/items");
+    assert.equal(anonymous.status, 401);
+
+    const { cookie } = await signup();
+    const list = await call("/api/catalog/items", { headers: { cookie } });
+    assert.equal(list.status, 200);
+
+    const created = await call("/api/catalog/items", {
+      method: "POST",
+      headers: { "content-type": "application/json", cookie },
+      body: JSON.stringify({ title: "CF chair" }),
+    });
+    assert.equal(created.status, 201);
+    assert.equal((await created.json()).item.title, "CF chair");
+  });
+
+  test("the DutaOS brief is session-gated and zeroed for a fresh company", async () => {
+    const anonymous = await call("/api/dutaos/brief");
+    assert.equal(anonymous.status, 401);
+
+    const { cookie } = await signup();
+    const res = await call("/api/dutaos/brief", { headers: { cookie } });
+    assert.equal(res.status, 200);
+    const { brief } = await res.json();
+    assert.equal(brief.compliance.pending, 0);
+    assert.equal(brief.compliance.overdue, 0);
+    assert.equal(brief.compliance.nextDue, null);
+  });
+
+  test("chat on Pages is session-gated and falls back when the model call fails", async () => {
+    const anonymous = await call("/api/ai/chat", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ message: "hi" }),
+    });
+    assert.equal(anonymous.status, 401);
+
+    const { cookie } = await signup();
+    const res = await call("/api/ai/chat", {
+      method: "POST",
+      headers: { "content-type": "application/json", cookie },
+      body: JSON.stringify({ message: "What should I do this month?", lang: "en" }),
+    });
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.model, "fallback");
+    assert.match(body.response, /0 compliance item\(s\) still pending, 0 overdue/);
+  });
+});
